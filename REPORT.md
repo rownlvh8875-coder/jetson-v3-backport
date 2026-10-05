@@ -478,6 +478,13 @@ TensorRT production integration이 NO-GO로 판정됐다. 아래를 수정했다
 ## 7. GitHub 반영
 
 - 저장소: `rownlvh8875-coder/jetson-v3-backport`, branch `main`
+- 2차 리뷰 반영 커밋 (3개, 2026-10-05):
+  - `7c8a67d3` — fix TRT10 FP16 flag; v3 uint8 patch; atomicity wording (항목 1, 3, 5, 6)
+  - `3794dd5b` — dtype_transforms seam in _check_shapes; regenerate patches (항목 4)
+  - `3d315f92` — 40 safety tests (B/E/G fixes, v2 regression, identity gate); report+guide update
+- 766MB ONNX는 푸시하지 않음 (`.gitignore` 유지)
+
+### 이전 커밋 (1차 리뷰 반영, 참고)
 - 커밋 (5개):
   - `ad555ef188` — fail-closed: strict state_pairs + atomic state commit (items 2,3,8)
   - `dce4b6bd36` — session validation gate + TRT10 API + ONNX identity + dtypes in spec (items 1,4,5,8,9,10,11)
