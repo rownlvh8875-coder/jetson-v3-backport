@@ -26,7 +26,7 @@ from __future__ import annotations
 
 import hashlib
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from jetlink.onnx_meta import OnnxMeta, parse_file
 from jetlink.protocol import INFER_REQ_SIZE, INFER_RESP_SIZE
@@ -58,6 +58,10 @@ class ModelSpec:
   output_shapes: dict[str, tuple[int, ...]]
   output_slices: dict[str, slice]
   checkpoint: str | None
+  # ONNX TensorProto elem types as names ('float32', 'uint8', ...).
+  # Optional: older spec JSONs predate them and still load.
+  input_dtypes: dict[str, str] = field(default_factory=dict)
+  output_dtypes: dict[str, str] = field(default_factory=dict)
 
   # --- layout ---
   @property
@@ -71,12 +75,49 @@ class ModelSpec:
 
     Empty for a queued graph. Derived from the ONNX, so no model-specific
     names are hardcoded here.
+
+    Fail-closed: a candidate pair is only admitted when the shapes match
+    exactly (tuple comparison, not element count) and, where the spec
+    carries dtypes, the dtypes match too. A shape-mismatched pair is not
+    silently half-accepted; use validate_stateful() to fail loudly.
     """
     pairs = []
     for name in self.input_shapes:
       nxt = STATE_OUTPUT_PREFIX + name
-      if nxt in self.output_shapes:
-        pairs.append((name, nxt))
+      if nxt not in self.output_shapes:
+        continue
+      if tuple(self.input_shapes[name]) != tuple(self.output_shapes[nxt]):
+        continue
+      in_dt = self.input_dtypes.get(name)
+      out_dt = self.output_dtypes.get(nxt)
+      if in_dt is not None and out_dt is not None and in_dt != out_dt:
+        continue
+      pairs.append((name, nxt))
+    return pairs
+
+  def validate_stateful(self) -> list[tuple[str, str]]:
+    """Strict contract check for a stateful spec. Raises ValueError.
+
+    Fails on: not stateful, no pairs, a state_* input with no admitted
+    pair, a next_state_* output with no admitted pair, or a shape/dtype
+    mismatch on what looks like a pair. Unexpected state tensors are
+    never quietly ignored.
+    """
+    if not self.stateful:
+      raise ValueError('validate_stateful on a non-stateful spec')
+    pairs = self.state_pairs
+    if not pairs:
+      raise ValueError('stateful spec admits no state pairs')
+    paired_in = {a for a, _ in pairs}
+    paired_out = {b for _, b in pairs}
+    for name in self.input_shapes:
+      if name.startswith('state_') and name not in paired_in:
+        nxt = STATE_OUTPUT_PREFIX + name
+        why = 'missing output' if nxt not in self.output_shapes else 'shape/dtype mismatch'
+        raise ValueError(f'state input {name!r}: {why} with {nxt!r}')
+    for name in self.output_shapes:
+      if name.startswith('next_state_') and name not in paired_out:
+        raise ValueError(f'state output {name!r} has no admitted input pair')
     return pairs
 
   # --- vision ---
@@ -187,7 +228,7 @@ class ModelSpec:
   # would drift the moment a field is added.
 
   def to_dict(self) -> dict:
-    return {
+    d = {
       'sha256': self.sha256,
       'nbytes': self.nbytes,
       'frame_skip': self.frame_skip,
@@ -196,16 +237,24 @@ class ModelSpec:
       'output_shapes': {k: list(v) for k, v in self.output_shapes.items()},
       'output_slices': {k: [v.start, v.stop] for k, v in self.output_slices.items()},
     }
+    # dtypes are optional: specs written before them still round-trip.
+    if self.input_dtypes:
+      d['input_dtypes'] = dict(self.input_dtypes)
+    if self.output_dtypes:
+      d['output_dtypes'] = dict(self.output_dtypes)
+    return d
 
   @classmethod
-  def from_dict(cls, d: dict) -> ModelSpec:
+  def from_dict(cls, d: dict) -> 'ModelSpec':
     return cls(
       sha256=d['sha256'], nbytes=d['nbytes'],
       frame_skip=d.get('frame_skip', DEFAULT_FRAME_SKIP),
       input_shapes={k: tuple(v) for k, v in d['input_shapes'].items()},
       output_shapes={k: tuple(v) for k, v in d['output_shapes'].items()},
       output_slices={k: slice(*v) for k, v in d['output_slices'].items()},
-      checkpoint=d.get('checkpoint'))
+      checkpoint=d.get('checkpoint'),
+      input_dtypes=dict(d.get('input_dtypes', {})),
+      output_dtypes=dict(d.get('output_dtypes', {})))
 
 
 def sha256_file(path: str, bufsize: int = 1 << 20) -> tuple[str, int]:
@@ -236,4 +285,6 @@ def spec_from_meta(meta: OnnxMeta, sha256: str, nbytes: int,
     output_shapes=dict(meta.outputs),
     output_slices=meta.output_slices,
     checkpoint=meta.model_checkpoint,
+    input_dtypes=dict(meta.input_types),
+    output_dtypes=dict(meta.output_types),
   )

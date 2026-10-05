@@ -58,6 +58,17 @@ def main() -> None:
   assert spec.stateful, "v3 spec is not stateful (no new_img input)"
   pairs = spec.state_pairs
   assert len(pairs) == 3, f"expected 3 state pairs, got {pairs}"
+  # Item 8: per-pair dtype agreement, measured from the ONNX itself.
+  for state_in, state_out in pairs:
+    in_dt = meta.input_types.get(state_in)
+    out_dt = meta.output_types.get(state_out)
+    assert in_dt is not None and out_dt is not None, (
+      f"missing dtype metadata for pair {(state_in, state_out)}")
+    assert in_dt == out_dt, (
+      f"dtype mismatch on pair {(state_in, state_out)}: {in_dt} != {out_dt}")
+    print(f"pair dtype ok: {state_in} ({in_dt}) -> {state_out} ({out_dt})")
+  # The strict contract check: exact shapes, no orphan state tensors.
+  spec.validate_stateful()
   assert spec.output_shapes.get("outputs") is not None, "no 'outputs' output"
   assert spec.output_nelem == EXPECT_OUTPUT_NELEM, (
     f"outputs nelem {spec.output_nelem} != {EXPECT_OUTPUT_NELEM}")

@@ -188,6 +188,15 @@ class PolicyQueues:
     dest['action_t'][...] = action_t.reshape(dest['action_t'].shape)
 
 
+class StateValidationError(ValueError):
+  """A next_state_* output failed validation.
+
+  Raised before any state is touched: when this propagates, the previous
+  frame's state is byte-for-byte intact and the caller must not serve the
+  frame as OK (fail-closed).
+  """
+
+
 class StatefulState:
   """Server-side state for one stateful model (openpilot #38916).
 
@@ -202,12 +211,10 @@ class StatefulState:
   """
 
   def __init__(self, spec: ModelSpec, host_inputs: dict | None = None):
-    if not spec.stateful:
-      raise ValueError('StatefulState needs a stateful spec (no new_img input)')
+    # Strict contract check: raises on shape/dtype mismatch or orphan
+    # state tensors instead of silently running with a wrong pairing.
+    self.pairs = spec.validate_stateful()
     self.spec = spec
-    self.pairs = spec.state_pairs
-    if not self.pairs:
-      raise ValueError('stateful spec names no next_state_<q> outputs')
     self.frame_skip = spec.frame_skip
     # The state lives in the engine's pinned input buffers: keeping it is a
     # copy between buffers the engine owns, not an extra allocation. Held by
@@ -256,13 +263,61 @@ class StatefulState:
       dest['traffic_convention'].shape)
     dest['action_t'][...] = action_t.reshape(dest['action_t'].shape)
 
-  def after_run(self, outputs: dict) -> None:
-    """Keep this frame's next states for the next one.
+  def validate_next_states(self, outputs: dict) -> list[tuple[str, str, np.ndarray]]:
+    """Phase 1 of the state update: check everything, change nothing.
 
-    Only after a frame whose outputs are all finite, like the queued path.
+    For every (state_in, state_out) pair verifies the output exists, has
+    exactly the state input's shape (tuple comparison), has a compatible
+    dtype, and is fully finite. Returns staged (state_in, state_out, array)
+    triples ready for commit_next_states().
+
+    Raises StateValidationError on the first problem. The host state
+    buffers are not modified by this method, so a failure leaves the
+    previous frame's state byte-for-byte intact.
     """
     if self.host_inputs is None:
-      raise RuntimeError('StatefulState.after_run needs host_inputs (pass at construction)')
+      raise RuntimeError('StatefulState.validate_next_states needs host_inputs (pass at construction)')
+    staged = []
     for state_in, state_out in self.pairs:
-      self.host_inputs[state_in][...] = outputs[state_out].reshape(
-        self.host_inputs[state_in].shape)
+      if state_out not in outputs:
+        raise StateValidationError(f'missing state output {state_out!r}')
+      arr = np.asarray(outputs[state_out])
+      buf = self.host_inputs[state_in]
+      if tuple(arr.shape) != tuple(buf.shape):
+        raise StateValidationError(
+          f'{state_out!r} shape {tuple(arr.shape)} != state input shape {tuple(buf.shape)}')
+      # dtype: must be assignable into the host buffer. 'same_kind' mirrors
+      # what buf[...] = arr itself would accept (e.g. float32 -> float16),
+      # but as an explicit pre-check so a bad dtype fails before any copy.
+      if not (arr.dtype == buf.dtype or np.can_cast(arr.dtype, buf.dtype, casting='same_kind')):
+        raise StateValidationError(
+          f'{state_out!r} dtype {arr.dtype} not castable to state buffer {buf.dtype}')
+      # isfinite on float32: exact for float16/float32, trivially true for ints.
+      if not np.all(np.isfinite(arr.astype(np.float32, copy=False))):
+        raise StateValidationError(f'non-finite values in {state_out!r}')
+      staged.append((state_in, state_out, arr))
+    return staged
+
+  def commit_next_states(self, staged: list[tuple[str, str, np.ndarray]]) -> None:
+    """Phase 2 of the state update: all-or-nothing copy.
+
+    `staged` must come from validate_next_states(). Every state is copied;
+    there is no partial commit. Called only after validation succeeded, so
+    this cannot fail partway for data reasons.
+    """
+    if self.host_inputs is None:
+      raise RuntimeError('StatefulState.commit_next_states needs host_inputs (pass at construction)')
+    for state_in, _state_out, arr in staged:
+      buf = self.host_inputs[state_in]
+      buf[...] = arr.reshape(buf.shape)
+
+  def after_run(self, outputs: dict) -> None:
+    """Keep this frame's next states for the next one, atomically.
+
+    Validates all next_state_* outputs first; only when every check passes
+    are the three states committed. On any failure a StateValidationError
+    propagates with the previous state untouched, and the caller must
+    report the frame as failed (fail-closed) rather than serve it.
+    """
+    staged = self.validate_next_states(outputs)
+    self.commit_next_states(staged)
