@@ -452,9 +452,22 @@ class EngineHost:
     if 'spec' not in meta:
       entry.write_meta({**meta, 'spec': spec.to_dict()})
 
+  def _backend_dtype_transforms(self) -> dict | None:
+    """Engine I/O dtypes the backend intentionally changed at build time.
+
+    Production TRT backend retypes v2's img/big_img uint8->fp16
+    (onnx_patch.py) and, once the v3 patch lands there, v3's
+    new_img/state_img_q uint8->fp16 (tools/patch_v3_uint8.py). Declared
+    here so _check_shapes enforces the declared transform instead of
+    rejecting a legitimately rebuilt engine. Backends that retype
+    nothing return None: strict ONNX-dtype comparison.
+    """
+    get = getattr(self.backend, 'dtype_transforms', None)
+    return get() if callable(get) else None
+
   def _warm(self, engine, spec: ModelSpec) -> Loaded:
     from jetlink.queues import PolicyQueues, StatefulState
-    _check_shapes(engine, spec)
+    _check_shapes(engine, spec, dtype_transforms=self._backend_dtype_transforms())
     # Warm runs on zeros, so the first real frame pays for nothing lazy: CUDA
     # state and the graph capture for TensorRT, a first replay for the others.
     host_inputs = {n: engine.host_input(n) for n in engine.inputs}
@@ -523,7 +536,7 @@ def _model_complete(model_path: Path, nbytes: int) -> bool:
   return model_path.is_file() and model_path.stat().st_size == nbytes
 
 
-def _check_shapes(engine, spec: ModelSpec) -> None:
+def _check_shapes(engine, spec: ModelSpec, dtype_transforms=None) -> None:
   """The engine is what will execute and the spec came from the file, so
   disagreement means the artifact on disk is not this model's.
 
@@ -532,6 +545,15 @@ def _check_shapes(engine, spec: ModelSpec) -> None:
   element-count equality is not enough), and dtypes where the spec
   carries them. Anything missing, unexpected, or mismatched fails the
   engine load — never silently tolerated.
+
+  dtype_transforms: ONNX semantic dtype vs engine physical I/O dtype are
+  NOT the same concept. A backend may intentionally retype inputs at
+  build time (production onnx_patch.py: v2 img/big_img uint8 -> fp16;
+  v3 patch: new_img/state_img_q uint8 -> fp16, next_state_img_q -> fp16).
+  Pass the backend's declared transforms {tensor_name: engine_dtype} and
+  the engine must match THOSE exactly. Without a declared transform the
+  engine must match the spec's ONNX dtype exactly. An undeclared or
+  wrongly-declared retype still fails: this narrows nothing.
   """
   eng_in, eng_out = set(engine.inputs), set(engine.outputs)
   spec_in, spec_out = set(spec.input_shapes), set(spec.output_shapes)
@@ -552,14 +574,21 @@ def _check_shapes(engine, spec: ModelSpec) -> None:
     if es != ss:
       raise ValueError(f"output {name}: engine shape {es} != spec shape {ss}")
   # dtypes, where the spec carries them (specs generated from real ONNX do).
-  for name, want in spec.input_dtypes.items():
+  # A backend-declared transform replaces the ONNX dtype as the expectation;
+  # anything else must match the spec exactly.
+  transforms = dtype_transforms or {}
+  for name, want_onnx in spec.input_dtypes.items():
+    want = transforms.get(name, want_onnx)
     got = str(getattr(engine.inputs[name], 'dtype', ''))
     if got and got != want:
-      raise ValueError(f"input {name}: engine dtype {got} != spec dtype {want}")
-  for name, want in spec.output_dtypes.items():
+      raise ValueError(f"input {name}: engine dtype {got} != expected {want}"
+                       + (" (backend-declared transform)" if name in transforms else " (spec ONNX dtype)"))
+  for name, want_onnx in spec.output_dtypes.items():
+    want = transforms.get(name, want_onnx)
     got = str(getattr(engine.outputs[name], 'dtype', ''))
     if got and got != want:
-      raise ValueError(f"output {name}: engine dtype {got} != spec dtype {want}")
+      raise ValueError(f"output {name}: engine dtype {got} != expected {want}"
+                       + (" (backend-declared transform)" if name in transforms else " (spec ONNX dtype)"))
 
 
 class Session:
@@ -809,9 +838,11 @@ class Session:
       # The recurrent state is safety-critical: every next_state_* must
       # exist, match its state_* input shape exactly, and be fully finite
       # BEFORE any of it is committed. validate_next_states() changes
-      # nothing; only a fully-validated stage is committed, atomically.
-      # Any failure leaves the previous state untouched and the frame is
-      # reported failed so the comma takes its fallback path (fail-closed).
+      # nothing; only a fully-validated stage is committed. "Atomic" here
+      # means no partial update on validation failure (see
+      # commit_next_states for the exact guarantee). Any failure leaves
+      # the previous state untouched and the frame is reported failed so
+      # the comma takes its fallback path (fail-closed).
       from jetlink.queues import StateValidationError
       try:
         staged = loaded.queues.validate_next_states(outputs)
