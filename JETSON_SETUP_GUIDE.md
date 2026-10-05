@@ -80,10 +80,14 @@ python3 tools/build_trt_v3.py \
   --onnx artifacts/big_driving_supercombo_v3.onnx \
   --spec artifacts/cinque_v3.json \
   --out artifacts/cinque_v3.engine \
-  --verify
+  --verify --frames 5
 ```
 
-**확인:** `artifacts/cinque_v3.engine` 생성 + verify 통과.
+**확인:** `artifacts/cinque_v3.engine` 생성 + 5-frame parity verify 통과
+(매 frame outputs + next_state 3종의 finite·max/mean abs err 출력.
+허용오차 기준은 미확정이므로 수치를 기록해 둘 것).
+`--patch auto`(기본값)가 v3 uint8 patch를 자동 적용하고,
+retype 기록이 `artifacts/cinque_v3.retypes.json`에 저장된다.
 
 ## 6단계: 정지 상태 테스트 (주행 금지)
 

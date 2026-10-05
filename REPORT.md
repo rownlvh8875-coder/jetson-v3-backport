@@ -8,8 +8,15 @@
 ## 결론
 
 **하드 블로커였던 `cinque_v3.json`을 실제 v3 ONNX에서 생성했다 (날조 없음).
-6개 패치 전부 적용·검증 완료. 남은 것은 Jetson 실기 작업뿐이다:
-TRT 10.3 엔진 빌드 → 정지 상태 passive 추론 테스트 → 주행 검증.**
+6개 패치 전부 적용·검증 완료. Stateful runtime safety는 소프트웨어 수준에서
+상당 부분 개선됐으나, TensorRT production integration은 아직 NO-GO이다.
+"완료"로 표시하지 않는다.**
+
+최종 완료 조건 (미충족):
+1. production TRT 10.3 build path에서 v3가 정상적으로 엔진화될 것 — 미충족
+   (v3 UINT8 patch 설계 완료·ORT parity bit-exact 확인, TRT 빌드는 Jetson 실측 필요)
+2. 기존 v2 queued 경로를 깨뜨리지 않을 것 — 소프트웨어 회귀 테스트 통과,
+   Jetson 실측은 미실시
 
 ## 배경 (검증된 사실)
 
@@ -235,38 +242,52 @@ TRT 10.3 엔진 빌드 → 정지 상태 passive 추론 테스트 → 주행 검
 | `artifacts/cinque_v3.json` | 재생성: `input_dtypes`/`output_dtypes` 포함 (항목 8) |
 | `tools/build_trt_v3.py` | TRT 10.x API, ONNX identity gate, parity gate 구조, `--frames` (항목 9, 10, 11) |
 | `tests/test_stateful_safety.py` | 신규: negative A~G + 항목 3 + 항목 12 multi-frame (항목 12, 13) |
+| `tools/patch_v3_uint8.py` | 신규: v3 uint8 image-queue → fp16 patch (항목 3) |
+| `tools/build_trt_v3.py` (추가 변경) | BuilderFlag 수정, per-frame TRT↔ORT parity, CUDA event latency, --patch, --frames 기본값 5 (항목 1, 11, 12, 13, 14) |
+| `patches/jetson-queues-stateful.patch` | atomicity 표현 정정 + item 5 보류 주석 (항목 5, 6) |
 
 ## 3. 테스트 결과
 
 `tests/test_backport.py`: **38 passed, 0 failed** (회귀 없음).
-`tests/test_stateful_safety.py` (신규): **25 passed, 0 failed**.
+`tests/test_stateful_safety.py`: **40 passed, 0 failed** (2차 리뷰 반영 후; onnx/onnxruntime가 있는 환경에서 전부 실행, 없으면 해당 항목만 SKIP).
 
 | 테스트 | 결과 | 근거 |
 |---|---|---|
 | A: next_state_feat_q NaN 주입 | PASS | `StateValidationError` 발생, 3종 state 불변 |
-| B: next_state_img_q Inf 주입 | PASS | `StateValidationError` 발생, 3종 state 불변 |
+| B: next_state_feat_q Inf 주입 (float) | PASS | `StateValidationError` 발생, 3종 state 불변 (항목 7 수정) |
 | C: (128,16384,1) transposed shape | PASS | `_check_shapes`가 `ValueError`로 engine load 거부 |
 | D: next_state_desire_q 누락 | PASS | `validate_next_states` + `_check_shapes` 모두 거부 |
-| E: 2번째 state만 invalid 시 원자성 | PASS | 3종 state 전부 이전 값 그대로 유지 |
+| E: validation failure leaves all states unchanged | PASS | 검증 실패 시 3종 state 전부 이전 값 유지 (항목 8 개명) |
 | F: reset 후 zero | PASS | 3종 state 전부 all-zero |
-| G: warm 직전 zero | PASS | reset→step_into 후 3종 state 전부 zero |
+| G: 실제 _warm() 회귀 테스트 | PASS | fake engine으로 `_warm()` 호출, warm 시점/종료 후 모두 zero (항목 9 강화) |
 | 3: orphan/shape/dtype mismatch pair | PASS | `validate_stateful()`이 3가지 경우 모두 거부, v3는 통과 |
 | 12: 5-frame recurrent (실제 ONNX) | PASS | 매 프레임 finite, state가 실제로 진화, commit된 state == 모델의 next_state |
 | C/D 추가: unexpected/dtype mismatch | PASS | `_check_shapes`가 거부 |
+| 3: patch parity (원본 vs 패치, 3-frame) | PASS | bit-exact, 전부 finite (항목 3) |
+| 4: v2 fresh-build dtype 회귀 (5종) | PASS | 미선언 거부/선언 통과/오선언 거부/legacy 호환 (항목 4) |
+| 10: ONNX identity gate (3종) | PASS | bad sha/size → SystemExit, build_engine 미호출 (항목 10) |
+| dtype: complex64 거부 | PASS | dedicated dtype gate 테스트 (항목 7 분리) |
 
 ## 4. 아직 실기 검증이 필요한 항목 (소프트웨어 테스트와 구분)
 
 **소프트웨어(VM)에서 검증 완료:**
-위 63개 테스트 전부. 특히 recurrent state의 원자적 유지, finite 게이트,
-exact shape 계약은 실제 766MB ONNX + onnxruntime(CPU)으로 검증됨.
+- `tests/test_backport.py` 38개 + `tests/test_stateful_safety.py` 40개.
+- recurrent state 검증, finite 게이트, exact shape 계약은 실제 766MB ONNX +
+  onnxruntime(CPU)으로 검증됨.
+- v3 uint8 patch의 수치 안전성은 원본 vs 패치 3-frame recurrent ORT parity
+  bit-exact로 검증됨 (Jetson TRT 빌드와는 별개).
+- v2 fresh-build dtype 회귀는 시뮬레이션으로 검증됨 (실제 TRT 빌드 아님).
 
 **Jetson 실기에서만 검증 가능:**
-1. TRT 10.3 엔진 빌드 (onnx 파서가 v3 opset을 받는지)
-2. `build_trt_v3.py`의 `execute_async_v3` 경로 (이 VM에 TRT 없음)
-3. TRT ↔ ONNX Runtime multi-frame parity 수치 (허용오차 기준 미확정)
-4. 정지 상태 passive inference (finite/latency/state continuity)
-5. `onnx_patch.py`의 v3 대응 필요 여부 (아래 5항 참조)
-6. 제한적 실주행 (위 1-4 전부 통과 후에만)
+1. 패치된 v3 ONNX의 TRT 10.3 파서 통과 여부
+2. TRT 10.3 엔진 빌드 (`BuilderFlag.FP16` 경로 포함, 이 VM에 TRT 없음)
+3. `execute_async_v3` + CUDA event latency 경로
+4. TRT ↔ ONNX Runtime 5-frame per-frame parity 수치 (허용오차 기준 미확정)
+5. 엔진의 실제 입출력 dtype 실측 → `validate_next_states` exact 강화 여부 결정 (항목 5)
+6. production backend의 `dtype_transforms()` 구현 (v2/v3 retype 선언)
+7. `patch_v3_uint8.py` 함수의 carrot-jetson `onnx_patch.py` 편입
+8. 정지 상태 passive inference (finite/latency/state continuity)
+9. 제한적 실주행 (위 1-8 전부 통과 후에만)
 
 ## 5. 확인 필요 (추측으로 수정하지 않음)
 
@@ -282,20 +303,42 @@ exact shape 계약은 실제 766MB ONNX + onnxruntime(CPU)으로 검증됨.
 - production `onnx_patch.py` 현황: `IMG_INPUTS = ('img', 'big_img')`만
   처리하고, head Cast를 찾아 retype하는 구조. v3 ONNX에는
   (a) `new_img`가 목록에 없고, (b) head Cast 자체가 없으며,
-  (c) `state_img_q`도 uint8 input이므로, **현재 patcher는 v3 ONNX에
-  그대로 적용 불가** (`ValueError` 발생 예상).
-- TRT 10.3 파서가 uint8 graph input을 직접 받는지, patcher에 v3 경로가
-  필요한지는 **Jetson 실측 없이는 확정 불가**. 추측으로 수정하지 않고
-  "확인 필요"로 남김.
+  (c) `state_img_q`도 uint8 input이므로, production `patch_file()`은
+  v3에 대해 **`needs_patch()`가 False를 반환하는 silent no-op**이다
+  (이전 보고서의 "`ValueError` 발생 예상"은 정정한다:
+  `patch_uint8_inputs()`는 호출조차 되지 않으므로 ValueError가 아니라
+  아무 patch 없이 uint8 graph가 그대로 TensorRT에 넘어간다).
+  `IMG_INPUTS`에 `'new_img'`를 추가하는 것만으로는 해결되지 않는다:
+  v3에는 head Cast가 없어 `_head_casts()`가 빈 리스트를 반환하고
+  "could not find the head Cast"로 실패하기 때문이다.
+- 대책: v3 전용 patch `tools/patch_v3_uint8.py`를 새로 설계 (항목 3 참조).
+  `new_img`/`state_img_q` input을 fp16으로 retype하고, queue ops
+  (Unsqueeze/Slice/Concat/Gather/Reshape, 순수 data movement)를 fp16으로
+  수행, `next_state_img_q` output 선언도 fp16으로 갱신. 0~255는 fp16에
+  정확히 표현되므로 vision trunk는 bit-identical한 값을 받는다 --
+  **실측 검증됨**: 원본 vs 패치 ONNX의 3-frame recurrent ORT parity가
+  bit-exact (테스트 "3: patched vs original bit-exact"). "범위상 맞는다"는
+  주장만으로 안전성을 선언하지 않았다.
+- TRT 10.3 파서가 uint8 graph input을 직접 받는지는 여전히 Jetson 실측
+  필요. 패치된 fp16-input graph의 parse/build는 Jetson에서만 확인 가능.
 
-**항목 15 — production build path 일치 검토:**
-`tools/build_trt_v3.py`는 독립 빌더. production 경로
-(`onnx_patch.py` → workspace 계산 → FP16 config → timing cache →
-production engine loader)는 v2 전용으로 짜여 있고, 위 항목 14의 이유로
-v3는 현재 production patcher를 통과하지 못함.
-결론: production builder를 v2/v3 공용으로 만드는 것은 Jetson 실측
-(특히 uint8 input 처리) 후에 설계해야 함. 당장은 별도 스크립트 유지,
-v2 동작에는 영향을 주지 않음. "검토 완료, 구현은 실측 후"로 기록.
+**항목 15 — production build path 일치 (부분 진행):**
+- `tools/build_trt_v3.py`에 `--patch {auto,v3-uint8,none}`(기본 auto)를
+  추가해 patch → parse → build 순서를 production과 일치시켰다.
+  retype record는 `<engine>.retypes.json`으로 저장되어 session의
+  `dtype_transforms` 계약에 바로 쓸 수 있다.
+- 완전한 통일 (jetlink backend가 같은 patch 함수를 호출)은
+  `patch_v3_uint8.py`의 `needs_patch_v3()`/`patch_v3_uint8_inputs()`가
+  carrot-jetson의 `onnx_patch.py`에 들어가야 하며, production 측 후속
+  작업으로 남긴다. 인터페이스는 production과 같은 모양으로 설계됨.
+- v2 동작에는 영향을 주지 않는다 (v2는 기존 `patch_file` 경로 그대로).
+
+**항목 5 — stateful runtime dtype exact화 (보류):**
+`validate_next_states()`의 `same_kind` 허용을 exact check로 강화하려면
+production TRT 엔진의 pinned state buffer 실제 dtype을 알아야 한다.
+이 VM에서 측정 불가 → 추측으로 변경하지 않고 코드에
+`NOTE (Jetson verification pending)` 주석만 남김. Jetson에서
+`engine.get_tensor_dtype()` 실측 후 결정한다.
 
 ## 6. fail-closed 최종 기준 체크리스트 (항목 16)
 
@@ -306,6 +349,131 @@ v2 동작에는 영향을 주지 않음. "검토 완료, 구현은 실측 후"�
 - [ ] Jetson 실측: 위 4항의 TRT 엔진 기준 재확인 (미실시)
 - [ ] 정지 상태 passive inference (미실시)
 - [ ] 제한적 실주행 (미실시 — 위 전부 통과 후에만)
+
+## 8. 2차 리뷰 반영 (2026-10-05, 기준 f75c5a2d)
+
+2차 리뷰에서 stateful runtime safety는 대부분 개선 판정을 받았으나,
+TensorRT production integration이 NO-GO로 판정됐다. 아래를 수정했다.
+
+### 8-A. [Critical, build blocker] `trt.Flag.FP16` → `trt.BuilderFlag.FP16`
+- 파일: `tools/build_trt_v3.py`
+- 기존: `config.set_flag(trt.Flag.FP16)`. `trt.Flag`는 TensorRT 10.x Python
+  API에 존재하지 않아 빌드 시 `AttributeError`로 죽는다.
+- 수정: `trt.BuilderFlag.FP16`으로 교체하고, production
+  `jetlink/server/backends/trt/build.py::configure_precision`과 같은
+  구조의 `configure_precision()` 헬퍼로 정리.
+- 검증: `py_compile` + `--help` 동작 확인. **TRT 자체는 이 VM에 없어서
+  Jetson 실기 검증 필요.**
+
+### 8-B. [Critical] v3 UINT8 recurrent image path — silent no-op 정정
+- 기존 보고서의 "`ValueError` 발생 예상"은 틀렸다. production
+  `onnx_patch.py::needs_patch()`는 `IMG_INPUTS=('img','big_img')` 기준이라
+  v3에 대해 `False`를 반환하고, `patch_file()`은 tinygrad-op 정리만 한 뒤
+  uint8 graph를 그대로 통과시키는 **silent no-op**이다.
+- `IMG_INPUTS`에 `'new_img'`를 추가하는 것만으로는 해결되지 않는다:
+  v3에는 head Cast가 없어 `_head_casts()`가 빈 리스트를 반환하고
+  "could not find the head Cast"로 실패한다.
+
+### 8-C. v3 전용 UINT8 patch 전략 — `tools/patch_v3_uint8.py` (신규)
+- 실측 그래프: `new_img`→Unsqueeze→Concat→`next_state_img_q`,
+  `state_img_q`→Slice→Concat, vision read는
+  `next_state_img_q`→Gather→Slice→Reshape→Concat→Cast(fp16)→trunk.
+- 설계: `new_img`/`state_img_q` input을 fp16으로 retype,
+  queue ops를 fp16으로 수행, `next_state_img_q` output 선언도 fp16으로.
+  `next_state_img_q` 뒤에 uint8로 되돌리는 Cast는 넣지 않는다
+  (서버가 next_state를 그대로 state로 피드백하므로 fp16 일관 유지).
+- fail-closed: retype 전 (1) 두 input이 uint8인지, (2) image 경로에
+  data-movement ops(Unsqueeze/Slice/Concat/Gather/Reshape) 외의 op가
+  없는지 검증. 어긋나면 `ValueError`로 중단.
+- 안전성 근거: "0~255는 fp16에 정확"이라는 주장만으로 선언하지 않았다.
+  **원본 vs 패치 ONNX의 3-frame recurrent ORT parity가 bit-exact**임을
+  실측했다 (테스트 "3: patched vs original bit-exact").
+- 인터페이스는 production `onnx_patch.py`와 같은 모양
+  (`needs_patch_v3()` / `patch_v3_uint8_inputs()` → retype record)으로
+  만들어 나중에 carrot-jetson으로 옮기기 쉽게 했다.
+
+### 8-D. [High] v2 fresh-build dtype 회귀 — semantic vs physical 분리
+- 문제: 새 `_check_shapes()`가 spec의 ONNX dtype(uint8)과 engine의
+  patch 후 dtype(fp16)을 직접 비교해서, production 방식으로 새로 빌드한
+  v2 엔진의 load가 실패할 수 있었다.
+- 수정: `_check_shapes(engine, spec, dtype_transforms=None)`.
+  `dtype_transforms`는 backend가 "의도적으로" 바꾼 dtype 선언
+  `{tensor_name: engine_dtype}`이며, 선언된 것만 spec dtype 대신
+  기대값으로 사용한다. 선언 없으면 spec과 exact 일치해야 하고,
+  잘못된 선언·미선언 retype은 여전히 실패한다 (검사 완화 없음).
+- `EngineHost._warm()`은 `self.backend.dtype_transforms()` (없으면 None)
+  를 전달한다. production TRT backend가 이 메서드를 구현하는 것은
+  production 측 후속 작업으로 REPORT에 기록한다.
+- 검증: v2 fresh-build 시뮬레이션 테스트 5개
+  (미선언 시 거부 / 선언 시 통과 / 오선언 거부 / 미선언 retype 거부 /
+  dtype 없는 legacy spec 호환).
+
+### 8-E. stateful runtime dtype exact화 — 보류 (추측 금지)
+- `validate_next_states()`의 `same_kind` 허용을 exact check로 강화하라는
+  지적에 대해: production TRT 엔진의 pinned state buffer 실제 dtype을
+  이 VM에서 확인할 방법이 없으므로 **추측으로 변경하지 않았다**.
+  코드에 `NOTE (Jetson verification pending)` 주석을 남겼고,
+  Jetson에서 engine 입출력 dtype을 실측한 뒤 결정한다.
+
+### 8-F. atomicity 표현 정정 (옵션 B)
+- `commit_next_states()`의 순차 copy에 transaction rollback이 없으므로
+  docstring의 "all-or-nothing / cannot fail partway" 표현을 정정했다:
+  "All state outputs are validated before any write; validation failure
+  cannot partially update state."
+- 테스트명도 "atomic commit" → "validation failure leaves all states
+  unchanged"로 변경. Double-buffer rollback(A안)은 프레임당 ~28MB
+  백업 비용 대비 효용이 없어 선택하지 않았고, 그 근거를 docstring에
+  기록했다.
+
+### 8-G. Test B 수정
+- 기존: uint8인 `next_state_img_q`에 float32로 Inf를 주입 → dtype gate에서
+  먼저 걸려 finite gate를 테스트하지 못했다.
+- 수정: float인 `next_state_feat_q`에 Inf 주입. dtype mismatch는 별도
+  dedicated 테스트(complex64 거부)로 분리.
+
+### 8-H. Test E 보정
+- 테스트명을 "validation failure leaves all states unchanged"로 변경.
+  실제 검증하는 것은 validation-level atomicity(검증 실패 시 commit 미개시)
+  임을 주석에 명시.
+
+### 8-I. Test G를 실제 `_warm()` 회귀 테스트로
+- fake engine으로 `EngineHost._warm()`을 직접 호출. fake의 `warm()` 내부에서
+  3종 state가 zero인지 assert하고, `_warm()` 종료 후에도 zero인지 확인.
+  `_warm()` 순서가 나중에 깨지면 테스트가 실패한다.
+
+### 8-J. ONNX identity gate negative 테스트
+- bad sha256 → `SystemExit` + `build_engine()` 미호출 (mock으로 호출 0 확인).
+- bad nbytes → `SystemExit` + `build_engine()` 미호출.
+- `main()` 전체 흐름 기준으로 검증.
+
+### 8-K. Multi-frame TRT↔ORT parity — per-frame lockstep으로 재구성
+- 기존: TRT N frame 실행 후 ORT는 첫 frame만 비교 (recurrent drift 불가시).
+- 수정: 매 frame마다 TRT와 ORT를 같은 입력으로 실행하고
+  outputs + next_state 3종을 per-frame 비교 (finite, max/mean abs err).
+  각자 자신의 next_state를 다음 frame state로 피드백 (divergence 검출).
+- threshold 근거가 없으면 "허용오차 기준 미확정"으로 표시 (임의 PASS 금지).
+
+### 8-L. `--frames` 기본값 1 → 5, 가이드에 `--verify --frames 5` 반영
+
+### 8-M. latency 측정 수정
+- `execute_async_v3`는 비동기 enqueue라 기존 dt는 enqueue 시간이었다.
+- CUDA event(`record`/`time_till`)로 `gpu_ms`, H2D→D2H→synchronize 포함
+  wall clock으로 `end_to_end_ms`를 각각 출력.
+
+### 8-N. production build path 통일 (부분)
+- `build_trt_v3.py`에 `--patch {auto,v3-uint8,none}` 추가 (기본 auto):
+  patch → parse → build 순서를 production과 일치시켰다.
+  패치 시 retype record를 `<engine>.retypes.json`으로 저장해 session의
+  `dtype_transforms` 계약에 바로 쓸 수 있게 했다.
+- 완전한 통일 (jetlink backend가 같은 patch 함수를 호출)은
+  `patch_v3_uint8.py`의 함수가 carrot-jetson의 `onnx_patch.py`에
+  들어가야 하므로 production 측 후속 작업으로 기록한다. v2 동작 영향 없음.
+
+### 유지 (되돌리지 않음, 2차 리뷰 PASS 항목)
+- `_infer` 검증 게이트, `_check_shapes` exact 검증, `_warm` 순서,
+  ONNX identity, `prev_feat` 분기, desire rising-edge pulse.
+
+---
 
 ## 7. GitHub 반영
 
