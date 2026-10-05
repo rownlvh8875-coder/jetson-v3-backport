@@ -1,0 +1,8 @@
+# v3 ONNX (766MB)는 절대 커밋하지 않는다. 로컬 artifacts 전용.
+artifacts/*.onnx
+artifacts/*.pkl
+artifacts/*.engine
+artifacts/*.trt
+__pycache__/
+*.pyc
+/tmp/
