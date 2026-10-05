@@ -310,4 +310,13 @@ v2 동작에는 영향을 주지 않음. "검토 완료, 구현은 실측 후"�
 ## 7. GitHub 반영
 
 - 저장소: `rownlvh8875-coder/jetson-v3-backport`, branch `main`
-- (푸시 후 SHA 기록)
+- 커밋 (5개):
+  - `ad555ef188` — fail-closed: strict state_pairs + atomic state commit (items 2,3,8)
+  - `dce4b6bd36` — session validation gate + TRT10 API + ONNX identity + dtypes in spec (items 1,4,5,8,9,10,11)
+  - `77167df294` — regenerate jetson patches with patch -p1 headers (1-F)
+  - `e04080444d` — regenerate session+comma patches with patch -p1 headers (1-F)
+  - `b2d8f95533` — 25 safety tests (A-G, multi-frame) + report update
+- 변경 파일: `jetlink/spec.py`, `jetlink/queues.py`, `patches/session.py.new`,
+  `patches/*.patch` 6개, `tools/gen_cinque_v3_json.py`, `tools/build_trt_v3.py`,
+  `artifacts/cinque_v3.json`, `tests/test_stateful_safety.py` (신규), `REPORT.md`
+- 766MB ONNX는 푸시하지 않음 (`.gitignore` 유지)
