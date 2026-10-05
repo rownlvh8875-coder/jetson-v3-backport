@@ -495,3 +495,55 @@ TensorRT production integration이 NO-GO로 판정됐다. 아래를 수정했다
   `patches/*.patch` 6개, `tools/gen_cinque_v3_json.py`, `tools/build_trt_v3.py`,
   `artifacts/cinque_v3.json`, `tests/test_stateful_safety.py` (신규), `REPORT.md`
 - 766MB ONNX는 푸시하지 않음 (`.gitignore` 유지)
+
+---
+
+## 9. 이 백포트의 위치: force-fit vs 최신 upstream (2026-10-05 정리)
+
+이 저장소를 보는 사람이 오해하지 않도록, 이 작업이 무엇인지 정확히 기록한다.
+
+### 이 백포트는 "끼워 맞추기"다
+
+이 백포트는 최신 upstream 기준으로 작성된 것이 **아니다**.
+사용자 차량(Carrot R2 이미지)에 현재 설치된 구 jetlink **0.3.0a1**
+(프로토콜 v2, queued 전용)에 Cinque v3(stateful)를 억지로 끼워 맞춘 것이다.
+
+### 최신 upstream 현황 (2026-10-05 조사)
+
+- `zoompilot/jetlink` 프로젝트가 **0.3.0**까지 릴리스되어 있다.
+  (2026-10-05 기준 5일 전에도 문서 업데이트 — 활발히 개발 중)
+- 프로토콜 v3 + Swift 서버 구조로 이미 갈아엎어진 상태다.
+- 766MB Cinque Terre(v3) 모델 벤치마크도 공개되어 있다.
+- 즉 "갈아엎기"는 미래의 일이 아니라 **이미 나와 있는 것**이다.
+- 남은 질문은 각 포크 maintainer(예: 당근마스터)가 언제 가져오느냐다.
+
+### 두 갈래 길
+
+**A. 이 백포트 (현 환경 유지)**
+- 지금 환경(carrot-wip + Carrot R2 + 구 jetlink) 그대로 v3를 돌린다.
+- 장점: 지금 당장 내 차에서 시도 가능. maintainer 승인 불필요.
+- 단점: 구 버전 기반이라 앞으로 계속 손봐야 한다.
+
+**B. 새 upstream으로 이사**
+- Jetson + comma 양쪽을 zoompilot 계열(0.3.0)로 통째로 갈아엎는다.
+- 장점: 제대로 된 구조. v3 네이티브 지원.
+- 단점: carrot-wip과 호환 여부 미지수. 작업량 큼. maintainer 영역.
+
+### 성능 관점
+
+- 두 길 모두 **같은 모델**(f78ed37d, 766MB)을 돌리므로,
+  모델 출력 → 주행 품질은 동일해야 한다.
+- 달라질 수 있는 것은 시스템 레이턴시(전송+서버 오버헤드)뿐이다.
+- 20Hz(50ms) 예산 안에 드는지는 **Jetson 실측 전에는 알 수 없다.**
+  추측으로 우열을 단정하지 않는다.
+
+### 배포 / maintainer 관련 판단 (2026-10-05)
+
+- 현재 판정 **NO-GO** 상태에서는 불특정 다수에게 "테스트해봐"라며
+  배포하지 않는다. 주행 직결 코드이기 때문이다.
+- 당근마스터(ajouatom)는 comma 본 repo를 closely 따르는 스타일이다
+  (eGPU PR #38932를 2026-09-19에 바로 통합).
+  comma가 공식으로 한 길(eGPU)이 아닌 Jetson v3에는
+  먼저 나서지 않을 가능성이 있다. (추측이므로 단정하지 않음)
+- 정식 PR 전에는 issue로 방향성만 묻는 것이 적절하다.
+  Jetson 실측 8단계 통과 후 정식 PR 검토.

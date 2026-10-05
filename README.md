@@ -37,6 +37,9 @@
 
 **전체 맥락**을 알고 싶으면 → [`REPORT.md`](REPORT.md)
 
+**이 백포트의 위치**(구 jetlink 끼워맞추기 vs 최신 upstream, A/B 선택지) →
+[`REPORT.md` 9장](REPORT.md#9-이-백포트의-위치-force-fit-vs-최신-upstream-2026-10-05-정리)
+
 ## 현재 상태 (2026-10-05)
 
 **된 것:**
