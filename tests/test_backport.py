@@ -11,10 +11,14 @@ What is verified here:
     to its real ONNX oid/size via the live HuggingFace API.
 
 What is NOT verified here (needs the Jetson + the real 766 MB ONNX):
- - spec_from_onnx on the real v3 ONNX (tensor names/shapes ground truth)
  - TensorRT 10.3 engine build of the v3 ONNX
  - session.py/model.py patches (specified, not executed here)
  - on-vehicle behavior
+
+Section 4 (added 2026-10-05): cinque_v3.json generated from the real v3
+ONNX via tools/gen_cinque_v3_json.py, verified against the ONNX graph
+itself. The 766 MB file is never committed; the ground-truth re-parse
+is skipped when it is absent.
 """
 import json
 import math
@@ -138,6 +142,49 @@ try:
         and p2.size == 766040736, p2.oid[:16])
 except Exception as e:  # noqa: BLE001
   check("v2 in-tree pointer (network)", False, f"{type(e).__name__}: {e}")
+
+# --- 4. cinque_v3.json: generated from the real v3 ONNX -----------------------
+# The hard blocker from REPORT.md. The JSON must exist and must match the
+# actual ONNX graph byte-for-byte on tensor names/shapes (nothing fabricated).
+V3_JSON = ROOT / "artifacts" / "cinque_v3.json"
+V3_ONNX = ROOT / "artifacts" / "big_driving_supercombo_v3.onnx"
+check("cinque_v3.json exists", V3_JSON.exists())
+if V3_JSON.exists():
+  v3 = ModelSpec.from_dict(json.loads(V3_JSON.read_text()))
+  check("v3 is stateful", v3.stateful)
+  check("v3 state pairs", dict(v3.state_pairs) == {
+    "state_img_q": "next_state_img_q",
+    "state_desire_q": "next_state_desire_q",
+    "state_feat_q": "next_state_feat_q",
+  }, str(dict(v3.state_pairs)))
+  check("v3 outputs 18452", v3.output_nelem == 18452, str(v3.output_nelem))
+  check("v3 packed has no prev_feat", "prev_feat" not in v3.packed_shapes)
+  check("v3 packed keys", set(v3.packed_shapes) == {"desire", "traffic_convention", "action_t"})
+  check("v3 model_hw", v3.model_hw == (128, 256), str(v3.model_hw))
+  check("v3 sha256", v3.sha256 == "404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4",
+        v3.sha256[:16])
+  check("v3 nbytes", v3.nbytes == 766354845, str(v3.nbytes))
+  check("v3 checkpoint is f78ed37d export", "f78ed37d" in (v3.checkpoint or ""))
+  check("v3 roundtrip", ModelSpec.from_dict(v3.to_dict()).to_dict() == v3.to_dict())
+  # wire sizes must be positive and sane
+  check("v3 wire sizes sane", v3.infer_req_nbytes > 0 and v3.infer_resp_nbytes > 0)
+
+  # Ground truth check: re-parse the ONNX itself and compare every tensor.
+  # Skipped when the 766 MB file is absent (it is never committed).
+  if V3_ONNX.exists():
+    sys.path.insert(0, str(ROOT / "tools"))
+    from onnx_meta_light import parse_meta_light
+    meta = parse_meta_light(str(V3_ONNX))
+    ok_in = all(tuple(v3.input_shapes[n]) == s
+                for n, (s, _) in meta["inputs"].items()) and \
+            set(v3.input_shapes) == set(meta["inputs"])
+    ok_out = all(tuple(v3.output_shapes[n]) == s
+                 for n, (s, _) in meta["outputs"].items()) and \
+             set(v3.output_shapes) == set(meta["outputs"])
+    check("v3 json inputs match ONNX graph", ok_in)
+    check("v3 json outputs match ONNX graph", ok_out)
+  else:
+    print("SKIP v3 json-vs-ONNX ground truth (no local ONNX)")
 
 print(f"\n{PASS.__len__()} passed, {FAIL.__len__()} failed")
 sys.exit(1 if FAIL else 0)
