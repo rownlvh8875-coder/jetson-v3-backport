@@ -29,7 +29,7 @@
 | `tools/onnx_meta_light.py` | 766MB ONNX를 메모리 적게 쓰고 읽는 파서 |
 | `patches/` | Jetson 4개 + comma 2개, 총 6개의 패치 파일 |
 | `jetlink/` | 백포트 핵심 구현 (spec/queues/registry) |
-| `tests/` | 테스트 코드 (38개, 전부 통과) |
+| `tests/` | 테스트 코드 (63개, 전부 통과: 기본 38 + 안전 25) |
 
 ## 어디서부터 시작하나요?
 
