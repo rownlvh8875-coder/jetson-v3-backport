@@ -123,5 +123,20 @@
       18450,
       18452
     ]
+  },
+  "input_dtypes": {
+    "new_img": "uint8",
+    "desire": "float32",
+    "traffic_convention": "float32",
+    "action_t": "float32",
+    "state_img_q": "uint8",
+    "state_desire_q": "float32",
+    "state_feat_q": "float32"
+  },
+  "output_dtypes": {
+    "outputs": "float32",
+    "next_state_img_q": "uint8",
+    "next_state_desire_q": "float32",
+    "next_state_feat_q": "float32"
   }
 }

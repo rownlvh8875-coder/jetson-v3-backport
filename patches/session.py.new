@@ -464,6 +464,13 @@ class EngineHost:
     queues = StatefulState(spec, host_inputs) if spec.stateful else PolicyQueues(spec)
     warped = np.zeros(spec.warped_shape, np.uint8)
     packed = np.zeros(spec.packed_nelem, np.float32)
+    if spec.stateful:
+      # StatefulState.step_into() deliberately leaves the state_* inputs
+      # alone, so without an explicit reset the warm run (and any CUDA
+      # graph capture inside it) would start from whatever the pinned
+      # buffers happened to hold. reset -> step_into -> warm -> reset
+      # guarantees a deterministic zero state at both ends.
+      queues.reset()
     queues.step_into(warped, packed, host_inputs)
     log.info("%s", engine.warm())
     queues.reset()
@@ -518,19 +525,41 @@ def _model_complete(model_path: Path, nbytes: int) -> bool:
 
 def _check_shapes(engine, spec: ModelSpec) -> None:
   """The engine is what will execute and the spec came from the file, so
-  disagreement means the artifact on disk is not this model's."""
-  for name, io in engine.inputs.items():
-    want = spec.input_shapes.get(name)
-    if want is None:
-      raise ValueError(f"engine input {name!r} is not in the model spec")
-    if int(np.prod(io.shape)) != int(np.prod(want)):
-      raise ValueError(f"input {name}: engine {tuple(io.shape)} vs spec {want}")
-  missing = set(spec.input_shapes) - set(engine.inputs)
-  if missing:
-    raise ValueError(f"engine has no input(s) {sorted(missing)} the model spec declares")
-  out = next(iter(engine.outputs.values())).shape
-  if int(np.prod(out)) != spec.output_nelem:
-    raise ValueError(f"output: engine {tuple(out)} vs spec {spec.output_nelem}")
+  disagreement means the artifact on disk is not this model's.
+
+  Exact contract: the same input names and the same output names, exact
+  shape tuples (a stateful tensor's dimension order is meaningful;
+  element-count equality is not enough), and dtypes where the spec
+  carries them. Anything missing, unexpected, or mismatched fails the
+  engine load — never silently tolerated.
+  """
+  eng_in, eng_out = set(engine.inputs), set(engine.outputs)
+  spec_in, spec_out = set(spec.input_shapes), set(spec.output_shapes)
+  if eng_in != spec_in:
+    raise ValueError(
+      f"engine/spec input names differ: "
+      f"engine-only {sorted(eng_in - spec_in)}, spec-only {sorted(spec_in - eng_in)}")
+  if eng_out != spec_out:
+    raise ValueError(
+      f"engine/spec output names differ: "
+      f"engine-only {sorted(eng_out - spec_out)}, spec-only {sorted(spec_out - eng_out)}")
+  for name in spec.input_shapes:
+    es, ss = tuple(engine.inputs[name].shape), tuple(spec.input_shapes[name])
+    if es != ss:
+      raise ValueError(f"input {name}: engine shape {es} != spec shape {ss}")
+  for name in spec.output_shapes:
+    es, ss = tuple(engine.outputs[name].shape), tuple(spec.output_shapes[name])
+    if es != ss:
+      raise ValueError(f"output {name}: engine shape {es} != spec shape {ss}")
+  # dtypes, where the spec carries them (specs generated from real ONNX do).
+  for name, want in spec.input_dtypes.items():
+    got = str(getattr(engine.inputs[name], 'dtype', ''))
+    if got and got != want:
+      raise ValueError(f"input {name}: engine dtype {got} != spec dtype {want}")
+  for name, want in spec.output_dtypes.items():
+    got = str(getattr(engine.outputs[name], 'dtype', ''))
+    if got and got != want:
+      raise ValueError(f"output {name}: engine dtype {got} != spec dtype {want}")
 
 
 class Session:
@@ -760,6 +789,11 @@ class Session:
     if spec.stateful:
       # A stateful engine also returns next_state_*; the driving output is
       # named, not positional.
+      if DRIVING_OUTPUT not in outputs:
+        log.error("stateful frame %d: engine returned no %r output", frame_id, DRIVING_OUTPUT)
+        self._send(P.Msg.INFER_RESP, msg.seq,
+                   (P.pack_infer_resp(frame_id, P.Status.INFER_FAILED, 0, queue_us, 0),))
+        return
       out = outputs[DRIVING_OUTPUT].reshape(-1)
     else:
       out = next(iter(outputs.values())).reshape(-1)
@@ -769,11 +803,26 @@ class Session:
     # openpilot drops to the small model on a non-finite output either way, so
     # checking here saves the comma rescanning 18452 floats to find out.
     out32 = np.asarray(out, dtype=np.float32)
-    status = P.Status.OK if np.all(np.isfinite(out32)) else P.Status.NOT_FINITE
-    if status == P.Status.OK and spec.stateful:
-      # Keep this frame's next states for the next one. Only on finite
-      # outputs: modeld fed back only what infer_end returned either way.
-      loaded.queues.after_run(outputs)
+    if not np.all(np.isfinite(out32)):
+      status = P.Status.NOT_FINITE
+    elif spec.stateful:
+      # The recurrent state is safety-critical: every next_state_* must
+      # exist, match its state_* input shape exactly, and be fully finite
+      # BEFORE any of it is committed. validate_next_states() changes
+      # nothing; only a fully-validated stage is committed, atomically.
+      # Any failure leaves the previous state untouched and the frame is
+      # reported failed so the comma takes its fallback path (fail-closed).
+      from jetlink.queues import StateValidationError
+      try:
+        staged = loaded.queues.validate_next_states(outputs)
+      except StateValidationError as e:
+        log.error("stateful frame %d: state validation failed: %s", frame_id, e)
+        status = P.Status.NOT_FINITE
+      else:
+        loaded.queues.commit_next_states(staged)
+        status = P.Status.OK
+    else:
+      status = P.Status.OK
 
     total_us = int((time.perf_counter() - t0) * 1e6)
     parts = [P.pack_infer_resp(frame_id, status, loaded.engine.last_gpu_us, queue_us, total_us),
