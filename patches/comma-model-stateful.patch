@@ -1,0 +1,35 @@
+--- patches/model.py.orig	2026-10-05 17:07:17.169122314 +0900
++++ patches/model.py.new	2026-10-05 17:07:27.631005416 +0900
+@@ -6,7 +6,7 @@
+ 
+ import numpy as np
+ 
+-from openpilot.selfdrive.modeld.jetlink.link import Client, SPEC, FAULT, state
++from openpilot.selfdrive.modeld.jetlink.link import Client, SPEC, FAULT, MODEL_LABEL, state
+ 
+ MODEL_STATUS = Path('/dev/shm/carrot-jetlink-model.json')
+ 
+@@ -102,7 +102,7 @@
+                                 {k: sm.valid[k] and sm.alive[k] for k in ('carState', 'selfdriveState', 'carControl')}, sm.recv_time)
+     if now >= self.next_status:
+       self.ready = state().get('state') == 'ready'
+-      record = dict(active=self.active, ready=self.ready, model='Cinque v2', error=self.error, updated=now)
++      record = dict(active=self.active, ready=self.ready, model=MODEL_LABEL, error=self.error, updated=now)
+       tmp = MODEL_STATUS.with_suffix('.tmp')
+       tmp.write_text(json.dumps(record))
+       os.replace(tmp, MODEL_STATUS)
+@@ -143,9 +143,12 @@
+         result = self.client.infer(images, self.packed, self.frame, self.reset, source_sof=self.source_sof)
+         replied = time.monotonic()
+         self.reset = False
+-        self.views['prev_feat'][:] = result[SPEC.output_slices['hidden_state']]
++        if 'prev_feat' in self.views:
++          # Queued graphs only: a stateful graph keeps its own history, so
++          # there is nothing for the comma to feed back.
++          self.views['prev_feat'][:] = result[SPEC.output_slices['hidden_state']]
+         if not self.active:
+-          cloudlog.warning('Jetlink active: Cinque v2 %s', SPEC.sha256)
++          cloudlog.warning('Jetlink active: %s %s', MODEL_LABEL, SPEC.sha256)
+           self.active = True
+           self.error = ''
+           self.next_status = 0
