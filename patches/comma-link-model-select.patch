@@ -1,5 +1,5 @@
---- patches/link.py.orig	2026-10-05 17:07:16.736122307 +0900
-+++ patches/link.py.new	2026-10-05 17:07:27.630306666 +0900
+--- a/openpilot/selfdrive/modeld/jetlink/link.py
++++ b/openpilot/selfdrive/modeld/jetlink/link.py
 @@ -1,5 +1,6 @@
  """Bounded local IPC; the USB owner never executes on modeld's realtime thread."""
  import json

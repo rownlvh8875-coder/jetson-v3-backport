@@ -1,5 +1,5 @@
---- patches/model.py.orig	2026-10-05 17:07:17.169122314 +0900
-+++ patches/model.py.new	2026-10-05 17:07:27.631005416 +0900
+--- a/openpilot/selfdrive/modeld/jetlink/model.py
++++ b/openpilot/selfdrive/modeld/jetlink/model.py
 @@ -6,7 +6,7 @@
  
  import numpy as np
