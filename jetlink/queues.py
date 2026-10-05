@@ -286,9 +286,15 @@ class StatefulState:
       if tuple(arr.shape) != tuple(buf.shape):
         raise StateValidationError(
           f'{state_out!r} shape {tuple(arr.shape)} != state input shape {tuple(buf.shape)}')
-      # dtype: must be assignable into the host buffer. 'same_kind' mirrors
-      # what buf[...] = arr itself would accept (e.g. float32 -> float16),
-      # but as an explicit pre-check so a bad dtype fails before any copy.
+      # dtype: must be assignable into the host buffer.
+      # NOTE (Jetson verification pending, review item 5): this currently
+      # allows 'same_kind' casts (e.g. float32 -> float16), mirroring what
+      # `buf[...] = arr` itself would accept. Strengthening to an exact
+      # `arr.dtype != buf.dtype` check requires knowing the production TRT
+      # engine's actual pinned state-buffer dtypes, which cannot be observed
+      # on a dev VM. Do NOT tighten (or loosen) this on a guess: measure the
+      # engine's input/output dtypes on the Jetson first, then decide.
+      # If they are identical per pair, replace with the exact check.
       if not (arr.dtype == buf.dtype or np.can_cast(arr.dtype, buf.dtype, casting='same_kind')):
         raise StateValidationError(
           f'{state_out!r} dtype {arr.dtype} not castable to state buffer {buf.dtype}')
@@ -299,11 +305,16 @@ class StatefulState:
     return staged
 
   def commit_next_states(self, staged: list[tuple[str, str, np.ndarray]]) -> None:
-    """Phase 2 of the state update: all-or-nothing copy.
+    """Phase 2 of the state update: copy the validated stage.
 
-    `staged` must come from validate_next_states(). Every state is copied;
-    there is no partial commit. Called only after validation succeeded, so
-    this cannot fail partway for data reasons.
+    `staged` must come from validate_next_states(). All state outputs are
+    validated before any write, so a validation failure cannot partially
+    update state. The copies below are sequential: this is NOT a
+    transactional commit with rollback. A non-data exception mid-copy
+    (e.g. the process dying) has no rollback, but validation has already
+    ruled out every data-driven failure mode, so the residual risk is
+    limited to catastrophic process failure, against which no in-process
+    rollback could help either.
     """
     if self.host_inputs is None:
       raise RuntimeError('StatefulState.commit_next_states needs host_inputs (pass at construction)')
@@ -312,12 +323,16 @@ class StatefulState:
       buf[...] = arr.reshape(buf.shape)
 
   def after_run(self, outputs: dict) -> None:
-    """Keep this frame's next states for the next one, atomically.
+    """Keep this frame's next states for the next one.
 
     Validates all next_state_* outputs first; only when every check passes
-    are the three states committed. On any failure a StateValidationError
-    propagates with the previous state untouched, and the caller must
-    report the frame as failed (fail-closed) rather than serve it.
+    are the states committed. "Atomic" here means: no partial update on
+    validation failure -- validation failing on any state leaves all
+    previous states untouched. It does NOT mean transactional rollback of
+    the copy phase itself (see commit_next_states). On any failure a
+    StateValidationError propagates with the previous state untouched, and
+    the caller must report the frame as failed (fail-closed) rather than
+    serve it.
     """
     staged = self.validate_next_states(outputs)
     self.commit_next_states(staged)
