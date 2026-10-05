@@ -1,0 +1,53 @@
+--- patches/session.py.orig	2026-10-05 17:07:13.764987723 +0900
++++ patches/session.py.new	2026-10-05 17:07:13.825229926 +0900
+@@ -34,6 +34,7 @@
+ from jetlink.spec import (
+   CHUNK,
+   DEFAULT_FRAME_SKIP,
++  DRIVING_OUTPUT,
+   ModelSpec,
+   sha256_file,
+   spec_from_onnx,
+@@ -452,12 +453,15 @@
+       entry.write_meta({**meta, 'spec': spec.to_dict()})
+ 
+   def _warm(self, engine, spec: ModelSpec) -> Loaded:
+-    from jetlink.queues import PolicyQueues
+-    queues = PolicyQueues(spec)
++    from jetlink.queues import PolicyQueues, StatefulState
+     _check_shapes(engine, spec)
+     # Warm runs on zeros, so the first real frame pays for nothing lazy: CUDA
+     # state and the graph capture for TensorRT, a first replay for the others.
+     host_inputs = {n: engine.host_input(n) for n in engine.inputs}
++    # A stateful graph keeps its own history (openpilot #38916): the state
++    # lives in the engine's pinned input buffers, fed from each frame's
++    # next_state_* outputs. A queued graph's history lives in PolicyQueues.
++    queues = StatefulState(spec, host_inputs) if spec.stateful else PolicyQueues(spec)
+     warped = np.zeros(spec.warped_shape, np.uint8)
+     packed = np.zeros(spec.packed_nelem, np.float32)
+     queues.step_into(warped, packed, host_inputs)
+@@ -753,7 +757,12 @@
+     queue_us = int((time.perf_counter() - t0) * 1e6)
+ 
+     outputs = loaded.engine.run()
+-    out = next(iter(outputs.values())).reshape(-1)
++    if spec.stateful:
++      # A stateful engine also returns next_state_*; the driving output is
++      # named, not positional.
++      out = outputs[DRIVING_OUTPUT].reshape(-1)
++    else:
++      out = next(iter(outputs.values())).reshape(-1)
+ 
+     # asarray, not astype: a no-op when the engine already outputs float32.
+     # isfinite is ~7x faster on float32 and the non-finites map across exactly.
+@@ -761,6 +770,10 @@
+     # checking here saves the comma rescanning 18452 floats to find out.
+     out32 = np.asarray(out, dtype=np.float32)
+     status = P.Status.OK if np.all(np.isfinite(out32)) else P.Status.NOT_FINITE
++    if status == P.Status.OK and spec.stateful:
++      # Keep this frame's next states for the next one. Only on finite
++      # outputs: modeld fed back only what infer_end returned either way.
++      loaded.queues.after_run(outputs)
+ 
+     total_us = int((time.perf_counter() - t0) * 1e6)
+     parts = [P.pack_infer_resp(frame_id, status, loaded.engine.last_gpu_us, queue_us, total_us),

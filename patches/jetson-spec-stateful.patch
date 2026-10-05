@@ -1,0 +1,120 @@
+--- /home/hatch/workspace/jetson-v3-backport/jetlink/spec.py.orig	2026-10-05 16:57:23.980615093 +0900
++++ /home/hatch/workspace/jetson-v3-backport/jetlink/spec.py	2026-10-05 16:57:29.867112759 +0900
+@@ -6,10 +6,21 @@
+ 
+ Every size on the wire, derived from the model's ONNX metadata.
+ 
+-Mirrors get_policy_npy_shapes / make_input_queues in openpilot master's
+-selfdrive/modeld/compile_modeld.py. feat_dim is prod(fb[2:]); older forks use
+-fb[2], which gives 32 rather than 16384 for the big model's (1,32,32,512)
+-features_buffer. tests/test_queues.py catches the drift.
++Two graph layouts are in the wild. The queued one takes its history as
++stacked inputs (img, features_buffer, desire_pulse) and the server keeps the
++queues; see queues.PolicyQueues. It mirrors get_policy_npy_shapes /
++make_input_queues in openpilot's selfdrive/modeld/compile_modeld.py up to
++openpilot #38916. feat_dim is prod(fb[2:]); older forks use fb[2], which gives
++32 rather than 16384 for the big model's (1,32,32,512) features_buffer.
++tests/test_queues.py catches the drift.
++
++The stateful one (openpilot #38916, 2026-09-15; Cinque Terre V3 onwards)
++carries its history in the graph: the newest warped frame goes in as new_img,
++each queue goes in as state_<q> and comes back advanced as next_state_<q>, and
++the hidden state never leaves the graph. See queues.StatefulState.
++
++Either way the wire carries the newest frame and the scalars, and the reply
++carries the driving outputs.
+ """
+ from __future__ import annotations
+ 
+@@ -27,6 +38,15 @@
+ 
+ CHUNK = 4 << 20  # model upload chunk
+ 
++# the driving output every layout has, 18452 floats in openpilot's layout
++DRIVING_OUTPUT = 'outputs'
++# the slice of it that stays on the server for a queued graph; 16384 of the 18452
++HIDDEN_STATE = 'hidden_state'
++# the input only a stateful graph has; see the module docstring
++STATEFUL_FRAME = 'new_img'
++# state_<q> input to the next_state_<q> output that feeds it next frame
++STATE_OUTPUT_PREFIX = 'next_'
++
+ 
+ @dataclass(frozen=True)
+ class ModelSpec:
+@@ -39,10 +59,30 @@
+   output_slices: dict[str, slice]
+   checkpoint: str | None
+ 
++  # --- layout ---
++  @property
++  def stateful(self) -> bool:
++    """The graph keeps its own history (openpilot #38916)."""
++    return STATEFUL_FRAME in self.input_shapes
++
++  @property
++  def state_pairs(self) -> list[tuple[str, str]]:
++    """state_<q> input to the next_state_<q> output that feeds it next frame.
++
++    Empty for a queued graph. Derived from the ONNX, so no model-specific
++    names are hardcoded here.
++    """
++    pairs = []
++    for name in self.input_shapes:
++      nxt = STATE_OUTPUT_PREFIX + name
++      if nxt in self.output_shapes:
++        pairs.append((name, nxt))
++    return pairs
++
+   # --- vision ---
+   @property
+   def img_shape(self) -> tuple[int, ...]:
+-    return self.input_shapes['img']  # (1, 12, H, W)
++    return self.input_shapes['img']  # (1, 12, H, W); queued graphs only
+ 
+   @property
+   def n_frames(self) -> int:
+@@ -50,7 +90,9 @@
+ 
+   @property
+   def model_hw(self) -> tuple[int, int]:
+-    return self.img_shape[2], self.img_shape[3]
++    # new_img is (2, 6, H, W) and img (1, 12, H, W): the last two either way
++    shape = self.input_shapes[STATEFUL_FRAME] if self.stateful else self.img_shape
++    return shape[-2], shape[-1]
+ 
+   @property
+   def img_buf_shape(self) -> tuple[int, int, int, int]:
+@@ -76,9 +118,22 @@
+ 
+   @property
+   def packed_shapes(self) -> dict[str, tuple[int, ...]]:
+-    dp = self.input_shapes['desire_pulse']
++    """The floats a frame sends after the image.
++
++    Queued: desire, traffic_convention, action_t, prev_feat (the hidden state
++    the comma feeds back). Stateful: desire, traffic_convention, action_t;
++    the graph keeps its own history, so there is nothing to feed back.
++    """
+     tc = self.input_shapes['traffic_convention']
+     at = self.input_shapes['action_t']
++    if self.stateful:
++      desire_dim = math.prod(self.input_shapes['desire'])
++      return {
++        'desire': (desire_dim,),
++        'traffic_convention': tuple(tc),
++        'action_t': tuple(at),
++      }
++    dp = self.input_shapes['desire_pulse']
+     fb = self.input_shapes['features_buffer']
+     return {
+       'desire': (dp[2],),
+@@ -112,7 +167,7 @@
+   # --- output ---
+   @property
+   def output_nelem(self) -> int:
+-    return math.prod(self.output_shapes['outputs'])
++    return math.prod(self.output_shapes[DRIVING_OUTPUT])
+ 
+   @property
+   def output_nbytes(self) -> int:

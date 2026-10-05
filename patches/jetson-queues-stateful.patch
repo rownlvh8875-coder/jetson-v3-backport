@@ -1,0 +1,95 @@
+--- /home/hatch/workspace/jetson-v3-backport/jetlink/queues.py.orig	2026-10-05 16:57:23.984080279 +0900
++++ /home/hatch/workspace/jetson-v3-backport/jetlink/queues.py	2026-10-05 17:07:02.291883510 +0900
+@@ -20,7 +20,7 @@
+ 
+ import numpy as np
+ 
+-from jetlink.spec import ModelSpec
++from jetlink.spec import STATEFUL_FRAME, ModelSpec
+ 
+ 
+ # numpy has no vectorised float16 store on aarch64: uint8 -> float16 costs
+@@ -186,3 +186,83 @@
+     dest['traffic_convention'][...] = traffic_convention.reshape(
+       dest['traffic_convention'].shape)
+     dest['action_t'][...] = action_t.reshape(dest['action_t'].shape)
++
++
++class StatefulState:
++  """Server-side state for one stateful model (openpilot #38916).
++
++  A stateful graph does the queueing itself: each frame feeds state_<q>
++  inputs from the previous frame's next_state_<q> outputs, and the hidden
++  state never leaves the graph. The state lives in the engine's pinned input
++  buffers, so keeping it is a copy from the output buffers, not an extra
++  allocation.
++
++  The state pairs come from the spec, derived from the ONNX: no
++  model-specific tensor names are hardcoded here.
++  """
++
++  def __init__(self, spec: ModelSpec, host_inputs: dict | None = None):
++    if not spec.stateful:
++      raise ValueError('StatefulState needs a stateful spec (no new_img input)')
++    self.spec = spec
++    self.pairs = spec.state_pairs
++    if not self.pairs:
++      raise ValueError('stateful spec names no next_state_<q> outputs')
++    self.frame_skip = spec.frame_skip
++    # The state lives in the engine's pinned input buffers: keeping it is a
++    # copy between buffers the engine owns, not an extra allocation. Held by
++    # reference so reset()/after_run() need no arguments, like PolicyQueues.
++    self.host_inputs = host_inputs
++
++    offset = 0
++    self._packed_layout = []
++    for size, shape in zip(spec.packed_sizes, spec.packed_shapes.values(), strict=True):
++      self._packed_layout.append((offset, offset + size, shape))
++      offset += size
++
++  def reset(self) -> None:
++    """RESET_QUEUES: empty history. Zeros the state input buffers in place."""
++    if self.host_inputs is None:
++      raise RuntimeError('StatefulState.reset needs host_inputs (pass at construction)')
++    for state_in, _ in self.pairs:
++      self.host_inputs[state_in][...] = 0
++
++  def _unpack(self, packed: np.ndarray):
++    # slice views, not np.split: the offsets never change and split allocates
++    return tuple(packed[a:b].reshape(shape) for a, b, shape in self._packed_layout)
++
++  def step_into(self, warped: np.ndarray, packed: np.ndarray,
++                dest: dict) -> None:
++    """Write one frame's inputs into caller-owned buffers.
++
++    warped: (2, 6, H, W) uint8 from openpilot's warp. packed: flat float32,
++    laid out per ModelSpec.packed_shapes (desire, traffic_convention,
++    action_t). The state_<q> inputs are left alone: they already hold last
++    frame's next_state_<q> (or zeros after reset).
++
++    `dest` maps input name to an array of the declared shape. In the server
++    those are TensorRT's pinned buffers.
++    """
++    spec = self.spec
++    if warped.shape != spec.warped_shape:
++      raise ValueError(f"warped {warped.shape} != {spec.warped_shape}")
++    if packed.size != spec.packed_nelem:
++      raise ValueError(f"packed {packed.size} != {spec.packed_nelem}")
++    desire, traffic_convention, action_t = self._unpack(packed)
++    # new_img is the newest warped frame pair, cast into the model dtype
++    dest[STATEFUL_FRAME][...] = warped.reshape(dest[STATEFUL_FRAME].shape)
++    dest['desire'][...] = desire.reshape(dest['desire'].shape)
++    dest['traffic_convention'][...] = traffic_convention.reshape(
++      dest['traffic_convention'].shape)
++    dest['action_t'][...] = action_t.reshape(dest['action_t'].shape)
++
++  def after_run(self, outputs: dict) -> None:
++    """Keep this frame's next states for the next one.
++
++    Only after a frame whose outputs are all finite, like the queued path.
++    """
++    if self.host_inputs is None:
++      raise RuntimeError('StatefulState.after_run needs host_inputs (pass at construction)')
++    for state_in, state_out in self.pairs:
++      self.host_inputs[state_in][...] = outputs[state_out].reshape(
++        self.host_inputs[state_in].shape)
