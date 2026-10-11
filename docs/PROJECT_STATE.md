@@ -1,5 +1,71 @@
 # Cinque V3 Jetson — 현재 진행 상태
 
+## 5B-1 읽기 전용 사전점검 체크포인트 (2026-10-11)
+
+**로컬 기준 확인 완료 / 실제 Jetson·comma 점검 BLOCKED — 지정 대상·기존 연결·안전 상태 확인 대기.**
+이번 승인은 지정 장치의 기존 연결을 통한 읽기 전용 inventory뿐이다.
+설치/적용/build/load/infer/선택/서비스 변경은 승인되지 않았고, 점검 이후 자동 진행하지 않는다.
+아래 소프트웨어 인계/ORT 기록은 개발 PC 결과이며 장치 검증으로 승격하지 않는다.
+
+- 실제 origin은 지정 저장소, branch는 `feature/cinque-v3-jetson`.
+  시작 로컬/실제 조회 원격 모두 `804daae48c4caeeed568879b5bccae903d6bbad5`, 미커밋 변경 없음.
+  제품 테스트 SHA `e1096e60664ff2fd92d364ff9c1af10ce01488d7`와 patch 기준은 유지했다.
+- AGENTS/현재 상태/계획/manifest/현재 적용·원복·현장 절차를 읽었다.
+  과거 JETSON_SETUP_GUIDE 설치 명령은 실행하지 않았다.
+- 기존 인계 기록에는 실제 장치 주소/계정/설치 경로/서비스/설치 SHA가 미확인이다.
+  로컬 OpenSSH 실행 파일은 있지만, 승인된 특정 대상과 인증 이용 가능 여부는 확인되지 않았다.
+  사용자에게 Jetson/comma 각각의 기존 SSH 별칭 또는 주소·계정·포트/기존 인증 방법과
+  운행 중이 아닌 안전한 점검 상태 확인을 요청했다. 비밀번호/개인키 내용은 요청하지 않았다.
+  다른 SSH 대상/네트워크/자격증명을 탐색하거나 접속하지 않았다.
+
+### 이번에 실제 확인한 로컬 자료
+
+`git remote get-url origin`, `git branch --show-current`, `git rev-parse HEAD`,
+`git status --porcelain=v1`, `git ls-remote origin refs/heads/feature/cinque-v3-jetson`을 실행했다.
+Python 표준 라이브러리 `hashlib/json/subprocess`로 manifest의 두 패치 SHA256,
+고정 참고 HEAD/clean status(`git --no-optional-locks`), 기준 Git blob hash 및
+최종 개발 사본의 19개 적용 후 파일 hash를 비교했다: **PASS / exit 0**.
+이는 로컬 자료 점검이며 장치 파일 비교가 아니다. ONNX/engine을 읽거나 실행하지 않았다.
+
+최초 참고 working-tree 바이트 비교는 C `contracts.py`에서 불일치로 **FAIL / exit 1**이었다.
+원인은 참고 C checkout의 CRLF였다. 고정 SHA의 Git blob으로 원인을 확인했고,
+C 8개 기존 파일은 CRLF만 다르며 baseline Git blob/최종 LF 적용본은 manifest와 일치했다.
+파일/설정을 고치지 않았다. 실제 장치의 hash 불일치를 이 사유로 자동 허용하지 않는다.
+
+| 실제 장치 항목 | Jetson | comma |
+|---|---|---|
+| 설치 코드 HEAD/branch/변경/실제 실행 소스 | 미확인 | 미확인 |
+| manifest 파일 전·후 일치/다름/없음 | 위치 미확인, 9개 모두 비교 미실행 | 위치 미확인, 10개 모두 비교 미실행 |
+| OS/L4T/JetPack/CUDA/TRT/서비스 Python | 미확인 | 해당 장치 OS/실행환경 미확인 |
+| 서비스/프로세스/작업 디렉터리 | 미확인 | jetlinkd/modeld 시작 방식 포함 미확인 |
+| 모델/cache/metadata 존재·크기·mount/overlay | 미확인 | 미확인 |
+| V3 선택/실제 active/fallback/정보 신선도 | 미확인 | 두 프로세스 opt-in과 상태 파일 미확인 |
+| V2 보존·원복 자료/격리 공간/권한 | 미확인 | 미확인 |
+| 적용 가능성 판정 | **정보 부족 — 적용 보류** | **정보 부족 — 적용 보류** |
+
+### 연결 정보 확인 후 이 승인 안에서 수행할 순서
+
+1. 안전 상태를 확인하고 기존 host-key 검증/인증을 그대로 사용한다. 미등록/변경된 host-key,
+   인증/권한 실패는 기록하고 우회하지 않는다. 장치에 점검 파일/로그를 쓰지 않는다.
+2. 프로세스/서비스의 실행 파일·소스·cwd부터 찾고 해당 설치본만 비교한다.
+   Git이 있으면 `GIT_OPTIONAL_LOCKS=0`으로 HEAD/branch/status를 읽는다.
+   Git이 없으면 설치 metadata와 manifest 대상 실제 파일 hash로 기록하며 SHA를 추정하지 않는다.
+3. 기존 OS/L4T/패키지 metadata·proc/sysfs/mount 정보를 읽는다.
+   CUDA/TRT/ONNX runtime을 import하거나 엔진을 deserialize하지 않는다.
+   service Python은 실제 프로세스 실행 파일/시작 정의로 확인한다. 전체 cmdline/env/고유번호는 공개하지 않는다.
+4. 모델/엔진은 알려진 실제 cache 경로에서 존재·크기·기존 JSON만 확인한다.
+   상태 파일은 설치 코드에서 경로·읽기 부작용부터 확인하고 선택/active/fallback/갱신 시각만 읽는다.
+   `/proc/<pid>/environ`을 읽을 수 있으면 `CARROT_JETLINK_V3` 키만 추출하며 전체 환경을 출력하지 않는다.
+   HELLO/ENGINE/status client 등 build/load를 유발할 수 있는 진입점은 실행하지 않는다.
+5. V2 복구 자료·격리 폴더 후보의 mount/공간/권한·기존 서비스 관리 방식·GPU/메모리 충돌 조건을
+   읽기 전용으로 확인한다. 설치 차이가 있으면 먼저 개발 PC에서 차이 검토/재검증을 계획한다.
+   실제 변경 파일/경로·원복·시험 실행·활성화는 별도 승인 목록으로만 남긴다.
+
+수치 합격 기준은 여전히 미확정이며 기존 ORT 측정 exit 3을 유지한다.
+마지막 완료는 로컬 기준/manifest 확인, 다음 첫 작업은 요청한 대상·인증 방법·안전 상태 확인이다.
+실제 장치 접속/명령/운영 코드·설정·서비스·Params·모델 선택 변경은 **없음**.
+제품 코드/패치/manifest/main/참고 저장소도 변경하지 않았다.
+
 ## 최종 소프트웨어 인계 — 4A/4B/4C/5A (2026-10-11)
 
 **4A 협상, 4B 선택/준비, 4C CPU·loopback 통합, 5A 적용/원복, 최종 검토·수정·재시험을 완료했다.**
