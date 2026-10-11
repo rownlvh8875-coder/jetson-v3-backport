@@ -25,9 +25,9 @@
 C stateful/cache/App/protocol3 관련 회귀를 유지한다. graph 가공 구현이 바뀌지 않으면
 3단계 ORT 측정 근거를 재사용하며 GPU 검증으로 승격하지 않는다.
 
-2026-10-11 1·2단계 결과를 보존하면서 승인된 **3단계 production 서버 소프트웨어 통합**을 구현했다.
+2026-10-11 1–3단계 결과를 보존하면서 승인된 **4A–5A 서버·콤마 소프트웨어 통합**을 구현했다.
 고정 소스의 개발 사본에서 가공/build/metadata/load/warm/infer/state를 연결했다.
-실제 TensorRT/Jetson과 comma 연결 검증은 남아 있으며 실제 장치 변경은 승인되지 않았다.
+실제 TensorRT/Jetson·USB 연결 검증(5B)은 현장 승인 대기다. 개발 사본의 연결 검사는 아래 4A–5A 절을 따른다.
 기준 SHA·원본 상태·실행 명령/결과는 [PROJECT_STATE.md](PROJECT_STATE.md), 제약은 [AGENTS.md](../AGENTS.md).
 
 목표 경로: V3 원본 확인 → 필요한 TensorRT 가공/빌드 → Jetson stateful 실행 →
@@ -171,7 +171,8 @@ verify_engine의 PyCUDA 버퍼/초기화 경로도 실제 GPU 검증 전 미확�
   C `third_party/jetlink/jetlink/spec.py::ModelSpec.from_dict/to_dict`의 optional dtype 보존;
   J `server/session.py::on_hello`의 좁은 capability 선언.
   V3 명세는 C의 기존 jetlink 디렉터리에 배치하는 계획이며 이번에는 배치하지 않았다.
-- 계획: V2를 기본으로 두고, 기존 `CARROT_JETLINK_MODEL_JSON` 방식의 opt-in을 **V2/V3 두 고정 파일**에 한해 사용한다.
+- 1단계 당시 대안: `CARROT_JETLINK_MODEL_JSON`으로 두 고정 파일을 선택하는 방식이었다.
+  현재 구현에서는 이 대안을 폐기하고 전용 `CARROT_JETLINK_V3=1`을 사용한다 (아래 4A–5A 절).
   arbitrary JSON/catalog 선택은 추가하지 않는다. V3 identity와 전체 입력/출력 계약을 검증한다.
   현재 C ModelSpec은 dtype 필드를 직렬화하지 않으므로 백포트의 optional dtype 보존만 재사용한다.
   C의 state_pairs는 dict, 백포트는 list이므로 모듈 전체 교체는 하지 않는다. V2의 기존 직렬화는 유지한다.
@@ -276,13 +277,92 @@ TRT compiler/runtime와 cudart만 CPU fake로 바꾸며 build/load/_warm/_infer 
 개별 3개는 통합 패치의 부분집합이며 통합 패치와 중복 적용하지 않는다.
 기존 LFS/comma 패치와 comma .orig/.new는 과거 기록으로 보존했으며 이번 적용 대상이 아니다.
 
-## 4단계가 소비할 계약과 첫 작업
+## 4A–5A 구현·적용·인계 계약
 
-고정 C `029ab60eb19e7b9d4d76bfee1ce99a7521934511`의
-`link.py/mac.py/client.py`에서 protocol2 stateful 거부와 V2 기본 선택을 먼저 재현한다.
-지정 V3 identity/semantic spec 및 위 wire 계약에 한해 기존 연결/선택을 좁게 연결하는 것이 첫 작업이다.
-이번에는 comma 파일과 protocol을 수정하지 않았고 `cinque_v3_stateful_v2` capability도 아직 선언하지 않았다.
-4단계에서 서버 capability와 client 검증을 함께 고정해야 하며 일반 stateful 차단을 삭제해서는 안 된다.
-원본 semantic dtype로 wire를 해석하고 physical FP16/state는 서버 내부 계약으로 유지한다.
-실제 설치 버전·TRT build/load/infer·성능/state·내부 모델 복귀/알림은 별도 장치 단계의 잔여 검증이다.
-사용자의 다음 단계 지시 전에는 시작하지 않는다.
+현재 적용물은 통합 패치 **두 개**다. 기존 부분/과거 comma 패치 위에 덧붙이지 않는다.
+`patches/experimental-v3-manifest.json`에 기준 SHA·19개 파일 전후 SHA256·패치 SHA256·MIT 라이선스를 기록했다.
+`jetlink/`는 서버 설치본이 아니며 서버와 콤마의 동명 패키지는 별도 프로세스에서 import한다.
+
+- 서버: `jetson-production-v3.patch` → 고정 J, 3단계 전체와 capability/generation 포함.
+- 콤마: `comma-integration-v3.patch` → 고정 C, vendored client/spec/compat 및
+  contracts/selection/link/mac/daemon/model, 고정 V3 JSON 포함.
+- 개별 server 패치는 통합 패치 부분집합이다. 과거 comma .orig/.new/부분 패치는 역사 기록이다.
+- **experimental**: 자동 설치·서비스 재시작·선택 활성화는 없다. GPU/USB/QCOM/차량은 미검증이다.
+
+### 선택·준비·추론
+
+기본 V2, opt-in **`CARROT_JETLINK_V3=1`**, absent/0은 V2, 다른 값은 오류다.
+jetlinkd와 modeld 양쪽 프로세스가 같은 환경에서 읽는다. 실제 환경 설정/재시작은 5B 별도 승인 대상이다.
+원복은 opt-in 제거/0과 원래 코드·설정 복구를 승인받아 수행하고 실제 내부 모델/V2 실행을 확인한다.
+환경 해제만으로 이미 실행 중인 프로세스가 즉시 전환된다고 주장하지 않는다.
+
+V3 Jetson은 USB/TRT protocol2·opt-in·현재 HELLO capability가 모두 필요하다.
+`cinque_v3_stateful_v2` object는 version=1, SHA256, nbytes, canonical JSON SHA256(`spec_sha256`)이다.
+HELLO마다 새 `session_id`, loaded engine마다 새 `generation`(각32자리 hex)을 쓴다.
+ENGINE_REQ는 capability/session_id를 명시하고 ready 응답의 전체 semantic spec/generation을 확인한다.
+unknown field·shape·dtype·slice·checkpoint·identity 변경을 거부한다.
+capability/checksum은 인증이나 수치/주행 합격 증명이 아니다. protocol은 2로 유지한다.
+일반 stateful+protocol2 차단과 protocol3 App/phone 동작을 보존한다.
+
+`mac.prepare → ensure_engine → Session.on_engine_req → EngineHost.request/build/load/warm →
+ENGINE ready → daemon._serve_local → link.Client → JoiningModel.run → infer_begin/end →
+Session.on_infer/_infer → state commit → driving-only response → parse_outputs`로 이어진다.
+V3는 서버 사전 준비 원본/엔진만 사용한다. 없음/미준비는 실패하며 V2 URL/upload로 대체하지 않는다.
+서버 cache에 원본이 있으면 기존 offroad worker가 build/load한다. 실제 원본 provision은 현장 승인에서 결정한다.
+프레임 스레드는 다운로드·빌드·대형 해시를 시작하지 않는다.
+최초 승인/미상주 준비는 ignition-off, 승인 기록은 별도 `jetson-v3/selected.json`이다.
+이전 승인+현재 preloaded onroad 재연결은 `ready_only=true`: 현재 valid/resident engine만 허용하고 worker는 시작하지 않는다.
+setup을 허용한 요청은 send/recv/진행 callback마다 연결·ignition을 확인한다.
+
+wire uint8 이미지+float32 12 scalars, 요청393272/응답73828 bytes(기존 telemetry 별도), V3 prev_feat 없음.
+state3종/physical FP16은 서버 내부다. camera warp·desire pulse·parser는 재사용한다.
+새 HELLO/선택/generation 변경은 이전 V3 승인·pending·telemetry를 폐기한다.
+실패 header는 outputs를 기다리지 않고 LinkError→daemon IPC 종료→내부 reset/복귀/FAULT로 간다.
+무효화된 state는 RESET/HELLO만으로 재개하지 않고 reload+새 승인을 요구한다.
+상태 기록의 selected_model/active_model/active_sha256/fallback을 구분한다.
+
+### 개발 사본 전용 재현
+
+LF checkout을 사용한다 (`core.autocrlf=false`, `core.eol=lf`를 **개발 사본에서만** 지정).
+기준 SHA/내용/dirty/이미 적용됨이 다르면 도구가 거부한다. `$J/$C`는 각 고정 SHA의 깨끗한 개발 사본,
+`$Py`는 격리 Python이다. 실제 장치 설치 경로에 실행하지 않는다.
+
+```powershell
+& $Py tools/experimental_patch.py preflight jetson $J
+& $Py tools/experimental_patch.py apply jetson $J
+& $Py tools/experimental_patch.py preflight comma $C
+& $Py tools/experimental_patch.py apply comma $C
+$env:CINQUE_PRODUCTION_ROOT = $J
+$env:CINQUE_COMMA_ROOT = $C
+& $Py -m pytest -s -q tests/test_production_v3.py tests/test_v3_build_verify.py tests/test_v3_negotiation.py tests/test_comma_selection_v3.py tests/test_experimental_patch.py
+# Linux/WSL에서 같은 환경 변수·격리 Python으로 tests/test_v3_loopback.py도 실행한다.
+& $Py tools/experimental_patch.py reverse comma $C
+& $Py tools/experimental_patch.py reverse jetson $J
+# status가 빈 출력인지 확인한 뒤 위 preflight/apply를 다시 실행한다.
+```
+
+검사 서버는 localhost만 listen한다. C/J __file__을 별도 subprocess에서 확인한다.
+CPU oracle·합성 plan·ordinary CPU buffer·camera/internal model/compiled runtime 경계만 fake다.
+TRT/CUDA graph/pinned allocation/USB/QCOM/차량 메시지 실행 검사가 아니다.
+실제 명령·seed·결과·로그 hash는 PROJECT_STATE에 남긴다.
+
+### 5B — 현장 승인 대기 (BLOCKED)
+
+첫 작업은 **읽기 전용 설치 SHA/런타임 inventory**와 기준 SHA/manifest 대조다.
+주소·설치 경로·서비스 이름·설치 SHA는 미확인이다. 장치 탐색/SSH를 수행하지 않았다.
+실제 적용에는 대상·변경 목록·원복·현장 안전 조건을 별도 승인받는다.
+세워 둔 차량이라는 사실만으로 차량 제어 경로에서 격리됐다고 판단하지 않는다.
+
+1. 정상 V2 코드/engine/설정 보존·원복 확인, 제어와 격리된 실험 실행 경로 확인.
+2. 원본/가공/plan/metadata hash와 실제 named I/O/physical dtype 확인.
+   build/load/cache 재시작/반복 infer/reset/warm/capture/invalid generation reload 검사.
+3. 원본↔가공 ONNX와 원본↔TRT를 분리하여 출력/state finite·오차 측정.
+   출력별 허용오차 근거가 없으면 합격 보류(exit3). 기존 각5frame 오차0은 ORT CPU 측정이며
+   same-state는 매 step zero state였다. recurrent는 각 backend의 state를 독립적으로 잇는다.
+4. GPU enqueue/완료, 전송 포함 추론, comma camera→parser 전체 경로 시간을 각각 측정.
+   sample 수, p50/p95/p99/max, dropped/failed/deadline frame, queue, 온도·메모리·throttle 기록.
+   기본20Hz/50ms 지속성과 기존 timeout을 구분하고 timeout을 늘려 합격시키지 않는다.
+5. 의도적 연결/출력/state 실패에서 실제 내부 모델 실행·reset·FAULT→commIssue·freshness/join 확인.
+   selected 표시만으로 V3 실행이라 판단하지 않고 active identity와 실제 요청·결과를 함께 확인.
+6. 실제 USB/QCOM/CUDA graph/성능/state/fallback 확인 전 차량 적용 준비 완료라고 선언하지 않는다.
+   주행과 조향·가감속 튜닝은 이번 승인 범위 밖이다.

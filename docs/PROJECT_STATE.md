@@ -1,5 +1,130 @@
 # Cinque V3 Jetson — 현재 진행 상태
 
+## 최종 소프트웨어 인계 — 4A/4B/4C/5A (2026-10-11)
+
+**4A 협상, 4B 선택/준비, 4C CPU·loopback 통합, 5A 적용/원복, 최종 검토·수정·재시험을 완료했다.**
+결과물은 실기 미검증 **experimental**이다. 5B 실제 Jetson/comma/TRT/USB/차량 검증은
+**BLOCKED / 별도 현장 승인 대기**이며 장치 탐색·접속·설치·활성화는 수행하지 않았다.
+아래 체크포인트와 1–3단계 절은 당시 기록이다. 현재 결과와 적용물은 이 절과
+[현재 계획](V3_JETSON_PLAN.md), manifest를 따른다.
+
+- 저장소/브랜치: `rownlvh8875-coder/jetson-v3-backport`, `feature/cinque-v3-jetson`.
+  시작 로컬/실제 원격 SHA `5fda3e8b6db8b6b7f4c1c50cdb732dc32aed93ce`, 미커밋 변경 없음.
+- 최종 제품·집중 테스트 SHA: **`e1096e60664ff2fd92d364ff9c1af10ce01488d7`**.
+  이후 변경은 인계 문서뿐이다. 최종 문서 포함/확인한 원격 SHA는 게시 후 응답에서 보고한다.
+- 깨끗한 고정 기준 J `d0dc96fa32410403dfb2fefff3e2909c11ec109b`,
+  C `029ab60eb19e7b9d4d76bfee1ce99a7521934511`는 변경하지 않았다.
+  최종 적용 검사 사본은 `../development/carrot-jetson-v3-final`,
+  `../development/openpilot-v3-clean`이며 실제 import `__file__`을 검사했다.
+- 최종 패치는 `patches/jetson-production-v3.patch`와 `patches/comma-integration-v3.patch`.
+  `patches/experimental-v3-manifest.json`의 기준/패치/19개 파일 전후 SHA256와 MIT 라이선스를
+  대조한다. 과거 부분 패치와 중복 적용하지 않는다. 원본 ONNX/엔진/개인 경로/원본 로그는 패키지에 없다.
+
+### 구현과 검토 결과
+
+실제 경로는 `mac.prepare → Client HELLO/approve_v3/ensure_engine → Session ENGINE →
+EngineHost worker/build/load/_warm → daemon Unix IPC → link.Client → JoiningModel.run →
+infer_begin/end → Session._infer/state commit → driving-only response → parse_outputs`다.
+서버 원본 가공/build/load/state 구현은 3단계 것을 재사용했다.
+
+- V2 기본값을 보존했다. `CARROT_JETLINK_V3=1`을 읽는 jetlinkd/modeld만 정확한 V3를 선택한다.
+  현재 HELLO의 capability v1·전체 semantic 명세·identity·session_id와 ENGINE ready/generation까지
+  일치해야 protocol2 V3를 허용한다. 일반 stateful protocol2 거부와 protocol3 App 경로는 유지한다.
+- V3는 서버에 사전 준비된 원본/엔진만 요청한다. V2 URL로 대체하지 않는다.
+  최초/미상주 준비는 ignition-off, 기존 승인+현재 resident 재연결만 `ready_only=true`로 허용한다.
+  ready-only는 worker를 시작하지 않는다. setup 요청 send/recv도 ignition/cancel을 다시 검사한다.
+- wire uint8/packed scalars와 engine FP16 state를 분리했다. V3 prev_feat와 next_state wire 전송은 없다.
+  실패 header는 payload를 기다리지 않는다. 새 HELLO/모델/generation에서 이전 승인/응답을 폐기한다.
+  commit 실패로 invalid된 state는 reload·새 승인 전 정상 재진입을 막는다.
+  selected/실제 active/fallback 표시를 분리하고 기존 parser/reset/FAULT/복귀 함수를 사용한다.
+- 별도 읽기 전용 reviewer가 찾은 새 V2 wire dtype 회귀와 ignition/준비 race를 실패 재현 후 수정했다.
+  자체 최종 리뷰/기존 회귀에서 찾은 legacy sequence/HELLO spec 회귀도 수정했다.
+  모의 검증기의 암묵적인 ORT 설치 의존성은 해당 mock 범위 안에서만 제거했다.
+  실제 ORT 부재 실패 검사는 유지했다. 최종 재시험에서 확인한 미해결 소프트웨어 결함은 없다.
+  실제 commIssue 메시지 전달·QCOM warp·하드웨어 fallback 추론은 검증하지 못했다.
+
+### 실제 실행·환경·결과
+
+Windows 격리 `$Py=../.venv-v3/Scripts/python.exe`: Python 3.12.14, NumPy 2.5.4,
+ONNX 1.23.2, ORT 1.31.0, pytest 9.1.1. WSL **Ubuntu-24.04**의 기존 `$WSL_VENV/bin/python`:
+Python 3.12.3, NumPy 2.5.4, ONNX 1.23.2, pytest 9.1.1, ORT 없음.
+양쪽 모두 실제 TensorRT/CUDA 검사는 수행하지 않았다. 시스템 환경은 변경하지 않았다.
+다음 명령은 작업 저장소에서 실행했다. `$J/$C`는 위 최종 적용 사본,
+Linux에서는 같은 사본의 WSL 경로다. 개인 절대경로를 대신한 변수는 실제 경로 확인 후 지정한다.
+
+```powershell
+$env:CINQUE_PRODUCTION_ROOT = $J
+$env:CINQUE_COMMA_ROOT = $C
+& $Py -m pytest -s -q tests/test_production_v3.py tests/test_v3_build_verify.py tests/test_v3_negotiation.py tests/test_comma_selection_v3.py tests/test_experimental_patch.py
+& $Py tests/test_stateful_safety.py
+& $Py tests/test_backport.py
+# WSL: env CINQUE_PRODUCTION_ROOT="$J" CINQUE_COMMA_ROOT="$C" "$WSL_VENV/bin/python" -m pytest -s -q <동일 5개 파일> tests/test_v3_loopback.py
+# 고정 C upstream: PYTHONPATH="$C" "$WSL_VENV/bin/python" -m pytest --noconftest -o addopts= -p no:cacheprovider -q <아래 8개 파일>
+```
+
+upstream 대상: `$C/openpilot/selfdrive/modeld/tests/test_{jetlink,jetlink_mac}.py`와
+`$C/tools/jetlink/test_{stateful_protocol,cache_persistence,app_models,protocol_compat,protocol_choice,v3}.py`.
+위 brace 표기는 파일 목록 설명이며 실제 호출은 8개 파일을 각각 인자로 지정했다.
+
+| 실행/근거 로그 | 실제 결과 / 종료 코드 | 대상과 한계 |
+|---|---|---|
+| `phase4-final-windows.log` | **PASS 169 / 0** | 최종 제품 SHA, 적용된 실제 C/J 모듈, CPU/mock/작은 ONNX |
+| `phase4-final-linux.log` | **PASS 198 / 0** | 최종 제품 SHA, 위 검사+localhost TCP/Unix IPC 29; seed 73, 변화 영상/nonzero state |
+| `phase4-final-upstream.log` | **PASS 199, SKIP 1 / 0** | 최종 적용 C의 기존 V2/App/protocol3/cache 회귀 |
+| `phase4-final-safety.log` | **PASS 46 / 0** | `f11185ad78d909c4384142b04b9903848c2034dd`; CPU+실제 V3 ONNX/ORT, 해당 코드 최종까지 동일 |
+| `phase4-final-backport.log` | **PASS 38 / 0** | 위 f11185 SHA; V2/원본 I/O/기존 pointer 검사, 해당 코드 최종까지 동일 |
+| `phase4-final-roundtrip.log` | **PASS / 0** | 최종 J/C 패치 reverse→원본 파일 hash·clean status→preflight→재적용 |
+| `phase4-post-reapply.log` | **PASS 47 / 0** | 재적용 후 negotiation/selection, 최종 제품 SHA |
+
+Windows/WSL의 중복 검사를 고유 테스트 개수로 합산하지 않는다.
+upstream SKIP은 선택적 `REFERENCE_ROOT`가 필요한 protocol3 reference session 한 검사다.
+별도 최신 참조 fork를 가져오지 않았다. 나머지 protocol3 golden vectors/App 검사는 실행했다.
+3개 warning은 선택적 pytest plugin config 누락이며 제품 검사를 성공으로 바꾼 것은 아니다.
+CI workflow가 없어 결과는 로컬 검사다. 초기 RED 및 수정 후 GREEN 로그는 Git 밖 evidence에 보존했다.
+최종 repo와 적용 C/J 모듈의 `python -m compileall -q` 및 `git diff --check`도 PASS(exit 0)다.
+게시 대상 변경 파일의 크기·개인 절대경로 검사를 통과했고 모델/엔진/원본 로그는 추적하지 않는다.
+
+실제 client/prepare/daemon/Session/worker/warm/infer/큐/parser/JoiningModel.run을 실행했다.
+fake 경계는 CPU engine·합성 plan/산술 state·일반 host buffer·camera/internal model/compiled runtime이다.
+CUDA graph/pinned allocation/USB/차량 메시지·주행 품질 검증을 뜻하지 않는다.
+잘못된 capability/spec/generation, 짧은 실패 header/잘린·초과 payload, NaN/Inf,
+다른 frame/지연/중복/이전 연결 응답, disconnect/cancel/invalid state/reload 및 실제 내부 복귀/FAULT를 검사했다.
+
+### 개인정보 없는 증거 식별
+
+원본 로그는 Git 밖 `../evidence/`에만 있다. 재현에는 위 명령·고정 SHA·manifest·seed를 사용한다.
+동적 token/시각/경로 때문에 재실행 로그 hash가 같을 필요는 없다. 아래는 이번 실행의 SHA256이다.
+
+| 로그 이름 | SHA256 |
+|---|---|
+| `phase4-final-windows.log` | `b4de6d7da7e77eb6a733c8ff9dfcdfe7978917611c3a8cb1bc483a90f7cf7fcd` |
+| `phase4-final-linux.log` | `4e33efe2bf9e2c019bcac1fff83a0678519add927816947e6a7096e23709b484` |
+| `phase4-final-upstream.log` | `5e4863813089335853d6f4c0d6bff3fe786af83b07caaa1905a191d7e40a28b8` |
+| `phase4-final-safety.log` | `0079dbe205ed591cd4661b86195e3fbcef06faba54b637a29e740f4fa336c5c8` |
+| `phase4-final-backport.log` | `a42cf10d8fc5f725768d7107b3084b09de0d0ca34e2643e4b5d2b99c9d525e67` |
+| `phase4-final-roundtrip.log` | `9e95f9737d9279ca3e6fff7e7b676b3c4b4ac9ee9c02e128710f13d87974eff4` |
+| `phase4-post-reapply.log` | `c9a8a948540d21574563dc4f4a24c7a65f1cb48bef6f898787016c8aafb833cc` |
+
+### 원본/실장치와 마지막 체크포인트
+
+- 원본 `artifacts/big_driving_supercombo_v3.onnx` 재사용, 전체 SHA256 재확인:
+  `404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4`, **766354845 bytes**.
+  semantic JSON/실제 I/O 대조는 2·3단계 확인을 보존했다. 원본과 dtype 명세를 변경하지 않았다.
+- `jetlink/cinque_v3.py` Git blob은 3단계 테스트 SHA와 현재 모두
+  `bc60a0ddd24b50f86c45cf9936dbac5dcf45e398`: production graph 가공 변경 없음.
+  따라서 대형 원본↔production patched ORT 비교는 재실행하지 않았다.
+  기존 recurrent/same-state 각5프레임 오차0은 측정 기록/허용오차 판정 보류 **exit 3**다.
+  same-state는 매 step zero state였으며 실제 TRT 합격이 아니다.
+- 5B는 **BLOCKED**: 실제 설치 SHA/런타임, TRT build/load/infer/state/CUDA graph,
+  USB/comma 전체 경로 성능·내부 복귀·commIssue·온도/메모리 미확인. 주행 검증은 범위 밖이다.
+- 마지막 완료: 최종 깨끗한 적용본 회귀→양쪽 원복/원본 hash 일치→재적용→47개 재검사.
+  진행 중 제품 변경 없음. 문서 인계 커밋·일반 push/원격 확인 후 종료한다.
+- 다음 첫 작업: **현장 승인 후 읽기 전용 장치 inventory로 실제 설치 SHA/런타임을 고정 기준과 비교**.
+  대상·변경 목록·V2 원복·제어 경로 격리 조건 승인 전에는 장치에 적용하지 않는다.
+
+아래 과거 기록의 개인 절대경로는 `$WORKSPACE/$WSL_VENV/$BUNDLED_PYTHON` 등으로 비식별화했다.
+당시 측정 수치/판정은 변경하지 않았다.
+
 ## 4C/5A·리뷰 체크포인트 (2026-10-11)
 
 - 마지막 완료: 별도 C/J 프로세스의 실제 client/Session/worker/warm/infer/TCP와
@@ -125,18 +250,18 @@ cache hit와 새 host/backend, **새 Python 프로세스**에서 원본/임시 p
 Windows `$Py=../.venv-v3/Scripts/python.exe` (실제 Python 3.12.14, NumPy 2.5.4,
 ONNX 1.23.2, ORT 1.31.0, pytest 9.1.1), TensorRT/PyCUDA 미설치.
 `$Prod=../development/carrot-jetson-v3-check`이며 `CINQUE_PRODUCTION_ROOT`를 절대경로로 지정했다.
-WSL Ubuntu-24.04 Python 3.12.3의 격리 venv는 `/home/cyberpilot/.venvs/cinque-v3-stage3`:
+WSL Ubuntu-24.04 Python 3.12.3의 격리 venv는 `$WSL_VENV`:
 NumPy 2.5.4/ONNX 1.23.2/pytest 9.1.1, 시스템 패키지 업그레이드 없음.
 
 | 실제 명령 (작업 디렉터리=이 저장소) | 결과 / exit | 분류 / 로그 |
 |---|---|---|
 | `git -C $Prod apply --check <patch>` / `apply <patch>` / `apply --reverse --check <patch>` / `apply --reverse <patch>` 후 재적용 | 모두 0, 원복 시 status 빈 출력, 8개 파일 bytes 일치 | PASS; 고정 깨끗한 사본. `phase3-clean-patch.log` |
 | `& $Py -m pytest -s -q tests/test_production_v3.py tests/test_v3_build_verify.py` | **115 passed / 0** (74+41) | PASS CPU/mock + 실제 작은 ONNX 가공. 원본 없는 safety subprocess도 포함. `phase3-final-windows.log` |
-| `wsl -d Ubuntu-24.04 -- env CINQUE_PRODUCTION_ROOT=<위 $Prod의 /mnt/c/... 경로> /home/cyberpilot/.venvs/cinque-v3-stage3/bin/python -m pytest -s -q tests/test_production_v3.py` | **74 passed / 0** | PASS Linux CPU/mock, 실제 적용 모듈 __file__ 기록. `phase3-final-linux.log` |
+| `wsl -d Ubuntu-24.04 -- env CINQUE_PRODUCTION_ROOT=<위 $Prod의 /mnt/c/... 경로> $WSL_VENV/bin/python -m pytest -s -q tests/test_production_v3.py` | **74 passed / 0** | PASS Linux CPU/mock, 실제 적용 모듈 __file__ 기록. `phase3-final-linux.log` |
 | `& $Py tests/test_stateful_safety.py` | **46 passed, 0 failed / 0** | PASS; 합성 안전성 + 실제 원본 ORT recurrent/가공 검사. TRT 아님. `phase3-final-safety.log` |
 | `& $Py tests/test_backport.py` | **38 passed, 0 failed / 0** | PASS; V2 queued/stateful 합성·실제 V3 I/O 및 기존 pointer 조회. `phase3-final-backport.log` |
 | `& $Py ../evidence/phase3_real_onnx.py` | 두 모드 각 5프레임 측정, 전 출력 max/mean 0 / **3** | 실제 production patch + ORT CPU; 합격 판정 SKIP/보류. `phase3-final-real-onnx.log` |
-| `wsl -d Ubuntu-24.04 -- /home/cyberpilot/.venvs/cinque-v3-stage3/bin/python -m pytest --noconftest -o addopts= -q ../references/openpilot/tools/jetlink/test_stateful_protocol.py ../references/openpilot/tools/jetlink/test_cache_persistence.py` | **13 passed / 0**, pytest config warning 3 | PASS; 고정 C의 Linux loopback 통신/캐시 fixture, 실제 comma 아님. `phase3-linux-reference.log` |
+| `wsl -d Ubuntu-24.04 -- $WSL_VENV/bin/python -m pytest --noconftest -o addopts= -q ../references/openpilot/tools/jetlink/test_stateful_protocol.py ../references/openpilot/tools/jetlink/test_cache_persistence.py` | **13 passed / 0**, pytest config warning 3 | PASS; 고정 C의 Linux loopback 통신/캐시 fixture, 실제 comma 아님. `phase3-linux-reference.log` |
 | `& $Py -m compileall -q jetlink tools tests ../development/carrot-jetson-v3-check/third_party/jetlink/jetlink` | 0 | PASS 문법만. `phase3-final-compile.log` |
 | 실제 TensorRT parser/compiler/CUDA/Jetson 추론 | 미실행 | **BLOCKED** — GPU fake 계약 검사를 실제 실행으로 승격하지 않음 |
 
@@ -188,7 +313,7 @@ comma protocol/모델 선택은 후속 단계다. 아래 1단계 기록은 당�
 
 ### 원본과 메타데이터
 
-저장소 실제 경로: `C:\Users\user\Documents\Codex\2026-10-11\cinque-v3-jetson-1-cinque-v3\jetson-v3-backport`.
+저장소 실제 경로: `$WORKSPACE\jetson-v3-backport`.
 origin: `https://github.com/rownlvh8875-coder/jetson-v3-backport`.
 
 - 원본: `artifacts/big_driving_supercombo_v3.onnx` (위 저장소 아래).
@@ -243,7 +368,7 @@ origin: `https://github.com/rownlvh8875-coder/jetson-v3-backport`.
 실행 파일 `$PY = '../.venv-v3/Scripts/python.exe'` (저장소 기준).
 Windows 개발용 venv: Python **3.12.14**, NumPy **2.5.4**, pytest **9.1.1**,
 onnx **1.23.2**, onnxruntime **1.31.0**, protobuf **7.36.2**.
-bundled Python `C:/Users/user/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe`로
+bundled Python `$BUNDLED_PYTHON`로
 `-m venv ../.venv-v3`, 해당 venv에서 `-m pip install numpy pytest onnx onnxruntime` 실행.
 시스템/운영 Python은 변경하지 않았다. Windows 실행 별칭은 사용하지 않았다.
 실제 ORT 등록 provider는 매 세션 **`['CPUExecutionProvider']`**. GPU 실행/전체 op GPU placement 주장은 없음.
@@ -298,7 +423,7 @@ README/REPORT/GPT_PROMPT/설치 가이드의 과거 성공 문구는 아래의 �
 
 | 항목 | 확인 결과 |
 |---|---|
-| 대화 시작 경로 | `C:\Users\user\Documents\Codex\2026-10-11\cinque-v3-jetson-1-cinque-v3` — 비어 있음, Git 저장소 아님 |
+| 대화 시작 경로 | `$WORKSPACE` — 비어 있음, Git 저장소 아님 |
 | 실제 개발 저장소 | 시작 경로 아래 `jetson-v3-backport`에 지정 원격을 새로 클론 |
 | origin | `https://github.com/rownlvh8875-coder/jetson-v3-backport` |
 | 최초 로컬 HEAD / 원격 main | `2519ad0bdbf6e796fa590063fc90d4d6461b6b8d` |
@@ -360,7 +485,7 @@ onnx/onnxruntime/tensorrt/cuda 모듈 없음. 패키지 업그레이드 없음.
 아래 명령의 `$PY`는 PowerShell에서 다음 실행 파일이다.
 
 ```powershell
-$PY = 'C:/Users/user/AppData/Local/Python/pythoncore-3.14-64/python.exe'
+$PY = '$SYSTEM_PYTHON_3_14'
 ```
 
 기본 작업 디렉터리는 개발 저장소. `WIP`는 위 carrot-wip SHA의 개발용 사본,

@@ -15,7 +15,8 @@
   양단 오프라인 통합·실패/복귀 검사와 적용/원복 결과물을 구현한다.
   완료 조건 충족 후 승인된 다음 작업으로 계속한다. 기준 사본은 읽기 전용이다.
   실제 장치 접속/변경·배포·활성화·차량 제어(5B)는 별도 현장 승인 전 금지한다.
-- 3단계 적용물은 `patches/jetson-production-v3.patch` 하나다. 대상 SHA와 적용·원복·검사
+- 적용물은 `patches/jetson-production-v3.patch`와 `patches/comma-integration-v3.patch`다.
+  고정 SHA·전후 hash·라이선스는 `patches/experimental-v3-manifest.json`에 있다. 대상 SHA와 적용·원복·검사
   방법은 기존 계획 문서를 따른다. 개별 spec/queues/session 패치는 같은 변경의 부분집합이므로
   통합 패치와 중복 적용하지 않는다. 이 저장소 `jetlink/`는 전체 서버 설치본이 아니다.
 - 이번 단계는 검증된 코드·테스트·진행 문서를 작은 커밋으로 남긴다. 개발 브랜치를 보존하여
