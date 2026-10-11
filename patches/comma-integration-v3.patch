@@ -1,0 +1,796 @@
+diff --git a/openpilot/selfdrive/modeld/jetlink/cinque_v3.json b/openpilot/selfdrive/modeld/jetlink/cinque_v3.json
+new file mode 100644
+index 0000000..598c954
+--- /dev/null
++++ b/openpilot/selfdrive/modeld/jetlink/cinque_v3.json
+@@ -0,0 +1,142 @@
++{
++  "sha256": "404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4",
++  "nbytes": 766354845,
++  "frame_skip": 4,
++  "checkpoint": "b9facbcc-4d47-410e-b3ce-dfcbad12ba92/56320/f78ed37d-afad-4dbc-8050-40ea885eedde/12864",
++  "input_shapes": {
++    "new_img": [
++      2,
++      6,
++      128,
++      256
++    ],
++    "desire": [
++      8
++    ],
++    "traffic_convention": [
++      1,
++      2
++    ],
++    "action_t": [
++      1,
++      2
++    ],
++    "state_img_q": [
++      2,
++      5,
++      6,
++      128,
++      256
++    ],
++    "state_desire_q": [
++      132,
++      1,
++      8
++    ],
++    "state_feat_q": [
++      128,
++      1,
++      16384
++    ]
++  },
++  "output_shapes": {
++    "outputs": [
++      1,
++      18452
++    ],
++    "next_state_img_q": [
++      2,
++      5,
++      6,
++      128,
++      256
++    ],
++    "next_state_desire_q": [
++      132,
++      1,
++      8
++    ],
++    "next_state_feat_q": [
++      128,
++      1,
++      16384
++    ]
++  },
++  "output_slices": {
++    "lane_lines": [
++      0,
++      528
++    ],
++    "lane_lines_prob": [
++      528,
++      536
++    ],
++    "road_edges": [
++      536,
++      800
++    ],
++    "meta": [
++      800,
++      855
++    ],
++    "desire_pred": [
++      855,
++      887
++    ],
++    "pose": [
++      887,
++      899
++    ],
++    "wide_from_device_euler": [
++      899,
++      905
++    ],
++    "road_transform": [
++      905,
++      917
++    ],
++    "plan": [
++      917,
++      1907
++    ],
++    "lead": [
++      1907,
++      2051
++    ],
++    "lead_prob": [
++      2051,
++      2054
++    ],
++    "desire_state": [
++      2054,
++      2062
++    ],
++    "action": [
++      2062,
++      2066
++    ],
++    "hidden_state": [
++      2066,
++      18450
++    ],
++    "pad": [
++      18450,
++      18452
++    ]
++  },
++  "input_dtypes": {
++    "new_img": "uint8",
++    "desire": "float32",
++    "traffic_convention": "float32",
++    "action_t": "float32",
++    "state_img_q": "uint8",
++    "state_desire_q": "float32",
++    "state_feat_q": "float32"
++  },
++  "output_dtypes": {
++    "outputs": "float32",
++    "next_state_img_q": "uint8",
++    "next_state_desire_q": "float32",
++    "next_state_feat_q": "float32"
++  }
++}
+diff --git a/openpilot/selfdrive/modeld/jetlink/contracts.py b/openpilot/selfdrive/modeld/jetlink/contracts.py
+index 42c3103..b5654bd 100644
+--- a/openpilot/selfdrive/modeld/jetlink/contracts.py
++++ b/openpilot/selfdrive/modeld/jetlink/contracts.py
+@@ -7,6 +7,7 @@ import re
+ from jetlink.spec import ModelSpec
+ 
+ DEFAULT_SPEC = ModelSpec.from_dict(json.loads(Path(__file__).with_name('cinque_v2.json').read_text()))
++V3_SPEC = ModelSpec.from_dict(json.loads(Path(__file__).with_name('cinque_v3.json').read_text()))
+ 
+ # Widths consumed by Carrot's parser, message publisher and action calculation.
+ OUTPUT_WIDTHS = {
+@@ -29,6 +30,9 @@ def slice_range(spec, at):
+ 
+ 
+ def validate_model_spec(spec):
++  if spec.sha256 == V3_SPEC.sha256:
++    from jetlink.v3_compat import validate_spec
++    validate_spec(spec.to_dict())
+   if not isinstance(spec.sha256, str) or re.fullmatch('[0-9a-f]{64}', spec.sha256) is None:
+     raise ValueError('Invalid Jetlink model SHA256')
+   if type(spec.nbytes) is not int or not 0 < spec.nbytes <= 4 << 30:
+@@ -81,6 +85,8 @@ def validate_model_spec(spec):
+ 
+ 
+ def model_name(spec):
++  if spec.sha256 == V3_SPEC.sha256:
++    return 'Cinque v3'
+   return 'Cinque v2' if spec.sha256 == DEFAULT_SPEC.sha256 else f'App model {spec.sha256[:12]}'
+ 
+ 
+diff --git a/openpilot/selfdrive/modeld/jetlink/daemon.py b/openpilot/selfdrive/modeld/jetlink/daemon.py
+index b41e433..b8bc5ba 100644
+--- a/openpilot/selfdrive/modeld/jetlink/daemon.py
++++ b/openpilot/selfdrive/modeld/jetlink/daemon.py
+@@ -234,7 +234,7 @@ def _serve_local(listener, client, peer, publisher, phase, wifi=None):
+           if result.to_dict() != spec.to_dict():
+             raise ModelChanged('Jetlink model contract changed before local inference')
+           requested = True
+-        send(connection, json.dumps({'spec': spec.to_dict(), 'peer': peer}).encode())
++        send(connection, json.dumps({'spec': spec.to_dict(), 'peer': peer, 'mode': session_mode()}).encode())
+         while host_attached():
+           loop_started, cpu_started = time.monotonic(), time.thread_time()
+           if time.monotonic() - last_status >= 1:
+diff --git a/openpilot/selfdrive/modeld/jetlink/link.py b/openpilot/selfdrive/modeld/jetlink/link.py
+index 25184c6..94e42b0 100644
+--- a/openpilot/selfdrive/modeld/jetlink/link.py
++++ b/openpilot/selfdrive/modeld/jetlink/link.py
+@@ -13,7 +13,8 @@ import numpy as np
+ from openpilot.selfdrive.modeld.jetlink import VENDOR  # noqa: F401
+ from openpilot.common.jetlink_status import badge  # noqa: F401
+ from jetlink.spec import ModelSpec
+-from openpilot.selfdrive.modeld.jetlink.contracts import DEFAULT_SPEC, validate_model_spec
++from openpilot.selfdrive.modeld.jetlink.contracts import DEFAULT_SPEC
++from openpilot.selfdrive.modeld.jetlink.selection import validate_selected_spec
+ 
+ SPEC = DEFAULT_SPEC
+ SOCKET = '/dev/shm/carrot-jetlink.sock'
+@@ -141,7 +142,7 @@ class Client:
+     try:
+       self.sock.connect(path)
+       hello = json.loads(receive(self.sock, time.monotonic() + timeout))
+-      self.spec = validate_model_spec(ModelSpec.from_dict(hello['spec']))
++      self.spec = validate_selected_spec(ModelSpec.from_dict(hello['spec']), hello.get('peer'), hello.get('mode', 'usb'))
+     except Exception:
+       self.sock.close()
+       raise
+diff --git a/openpilot/selfdrive/modeld/jetlink/mac.py b/openpilot/selfdrive/modeld/jetlink/mac.py
+index f357445..e5490cd 100644
+--- a/openpilot/selfdrive/modeld/jetlink/mac.py
++++ b/openpilot/selfdrive/modeld/jetlink/mac.py
+@@ -10,8 +10,8 @@ import urllib.request
+ 
+ from openpilot.common.jetlink_peer import may_provision
+ from openpilot.selfdrive.modeld.jetlink.link import SPEC, validate_spec
+-from openpilot.selfdrive.modeld.jetlink.contracts import validate_model_spec
+-from openpilot.selfdrive.modeld.jetlink.selection import ModelChanged, approved_spec, remember_spec
++from openpilot.selfdrive.modeld.jetlink.contracts import V3_SPEC, validate_model_spec
++from openpilot.selfdrive.modeld.jetlink.selection import ModelChanged, approved_spec, remember_spec, jetson_spec
+ from jetlink.client import EngineMissing
+ from jetlink.transport.base import LinkTimeout
+ 
+@@ -114,6 +114,8 @@ class PreparationTransport:
+ 
+ def prepare(client, peer, offroad, connected, progress, cache=CACHE, mode='usb'):
+   """Retain the legacy Jetson path; phones require their explicit cable mode."""
++  if jetson_spec(peer, mode) == V3_SPEC:
++    return prepare_jetson_v3(client, peer, offroad, connected, progress, Path(cache) / 'jetson-v3')
+   protocol = peer.get('protocol') if isinstance(peer, dict) else None
+   app_capable = protocol == 3 and may_provision(peer, mode)
+   legacy_v3 = protocol == 3 and isinstance(peer, dict) and 'loaded' in peer and not app_capable
+@@ -200,3 +202,47 @@ def prepare(client, peer, offroad, connected, progress, cache=CACHE, mode='usb')
+     client.t = original
+     client.progress_cb = None
+     client._should_stop = lambda: False
++
++
++def prepare_jetson_v3(client, peer, offroad, connected, progress, cache):
++  """Use a preprovisioned exact engine; never upload or download this model."""
++  approved = approved_spec(cache)
++  unchanged = approved is not None and approved.to_dict() == V3_SPEC.to_dict()
++  preloaded = peer.get('loaded') == V3_SPEC.sha256
++  if not unchanged or not preloaded:
++    require_setup(offroad, connected)
++
++  def check():
++    if not connected():
++      raise PreparationDeferred('Jetlink host disconnected; waiting for reconnection')
++    if not unchanged or not preloaded:
++      require_setup(offroad, connected)
++
++  def stopped():
++    require_setup(offroad, connected)
++    return False
++
++  def report(stage, fraction, message):
++    require_setup(offroad, connected)
++    progress(stage, fraction, message)
++
++  original = client.t
++  client.t = PreparationTransport(original, check)
++  try:
++    client.approve_v3(V3_SPEC)
++    try:
++      result = client.ensure_engine(V3_SPEC.sha256, V3_SPEC.nbytes, frame_skip=V3_SPEC.frame_skip,
++                                    build_timeout=900, should_stop=stopped, progress=report)
++    except EngineMissing:
++      raise PreparationDeferred('Cinque v3 engine/source is not provisioned on the Jetson; prepare it offroad') from None
++    validate_model_spec(result)
++    if result.to_dict() != V3_SPEC.to_dict():
++      raise ValueError('Cinque v3 engine returned a different model contract')
++    check()
++    if offroad():
++      remember_spec(cache, result)
++    return result
++  finally:
++    client.t = original
++    client.progress_cb = None
++    client._should_stop = lambda: False
+diff --git a/openpilot/selfdrive/modeld/jetlink/model.py b/openpilot/selfdrive/modeld/jetlink/model.py
+index 12c91c6..e19b646 100644
+--- a/openpilot/selfdrive/modeld/jetlink/model.py
++++ b/openpilot/selfdrive/modeld/jetlink/model.py
+@@ -145,13 +145,21 @@ class JoiningModel:
+                                 {k: sm.valid[k] and sm.alive[k] for k in ('carState', 'selfdriveState', 'carControl')}, sm.recv_time)
+     if now >= self.next_status:
+       self.ready = state().get('state') == 'ready'
+-      record = {'active': self.active, 'ready': self.ready, 'model': model_name(self.spec), 'sha256': self.spec.sha256,
+-                'error': self.error, 'updated': now}
++      record = self._status_record(now)
+       tmp = MODEL_STATUS.with_suffix('.tmp')
+       tmp.write_text(json.dumps(record))
+       os.replace(tmp, MODEL_STATUS)
+       self.next_status = now + 1
+ 
++  def _status_record(self, now):
++    selected = model_name(self.spec)
++    # A remembered remote spec is selection metadata. Only a successful
++    # inference makes it active; after recovery the internal model runs again.
++    return {'active': self.active, 'ready': self.ready, 'model': selected, 'sha256': self.spec.sha256,
++            'selected_model': selected, 'active_model': selected if self.active else ('Internal model' if self.small_runs else None),
++            'active_sha256': self.spec.sha256 if self.active else None,
++            'fallback': bool(self.error) and not self.active, 'error': self.error, 'updated': now}
++
+   def _reset_small(self):
+     if hasattr(self.small, 'reset'):
+       self.small.reset()
+diff --git a/openpilot/selfdrive/modeld/jetlink/selection.py b/openpilot/selfdrive/modeld/jetlink/selection.py
+index df622a1..03843ad 100644
+--- a/openpilot/selfdrive/modeld/jetlink/selection.py
++++ b/openpilot/selfdrive/modeld/jetlink/selection.py
+@@ -3,7 +3,8 @@ import json
+ import os
+ from pathlib import Path
+ 
+-from openpilot.selfdrive.modeld.jetlink.contracts import validate_model_spec
++from openpilot.common.jetlink_peer import may_provision
++from openpilot.selfdrive.modeld.jetlink.contracts import DEFAULT_SPEC, V3_SPEC, validate_model_spec
+ from jetlink.spec import ModelSpec
+ 
+ 
+@@ -11,6 +12,43 @@ class ModelChanged(RuntimeError):
+   pass
+ 
+ 
++def v3_enabled():
++  value = os.environ.get('CARROT_JETLINK_V3', '0')
++  if value not in ('0', '1'):
++    raise ValueError('CARROT_JETLINK_V3 must be 0 or 1')
++  return value == '1'
++
++
++def jetson_spec(peer, mode='usb'):
++  """Only the explicit USB/TRT selection may use the protocol2 exception."""
++  enabled = v3_enabled()
++  if not isinstance(peer, dict) or peer.get('backend') != 'trt' or mode != 'usb':
++    return None
++  if not enabled:
++    return DEFAULT_SPEC
++  from jetlink.v3_compat import CAPABILITY, validate_capability
++  if type(peer.get('protocol')) is not int or peer['protocol'] != 2:
++    raise ValueError('Cinque v3 requires the patched Jetson protocol2 capability')
++  validate_capability(peer.get(CAPABILITY))
++  return V3_SPEC
++
++
++def validate_selected_spec(spec, peer=None, mode='usb'):
++  validate_model_spec(spec)
++  # Older local App handshakes carry only a generic spec. Retain that wire
++  # compatibility, but never let it authorize the newly pinned V3 exception.
++  if peer is None and spec.sha256 != V3_SPEC.sha256:
++    return spec
++  # The daemon includes its selected transport in the local handshake. This
++  # keeps App selection scoped to the existing recognized protocol3 paths.
++  if isinstance(peer, dict) and peer.get('protocol') == 3 and may_provision(peer, mode):
++    return spec
++  expected = jetson_spec(peer, mode) or DEFAULT_SPEC
++  if spec.to_dict() != expected.to_dict():
++    raise ValueError('Jetlink selected model identity or input/output contract mismatch')
++  return spec
++
++
+ def approved_spec(cache):
+   path = Path(cache) / 'selected.json'
+   try:
+diff --git a/third_party/jetlink/jetlink/client.py b/third_party/jetlink/jetlink/client.py
+index b18f995..f96dc35 100644
+--- a/third_party/jetlink/jetlink/client.py
++++ b/third_party/jetlink/jetlink/client.py
+@@ -28,6 +28,7 @@ from pathlib import Path
+ import numpy as np
+ 
+ from jetlink import protocol as P
++from jetlink import v3_compat as V3
+ from jetlink.spec import CHUNK, DEFAULT_FRAME_SKIP, ModelSpec
+ from jetlink.transport.base import LinkError, LinkTimeout, Message, Transport
+ 
+@@ -89,7 +90,7 @@ class JetlinkClient:
+     # the link, are separable in a journal whose clock is wrong anyway.
+     self.name = name or _default_name()
+     self.nonce = secrets.token_hex(4)
+-    self.seq = 0
++    self.seq = secrets.randbelow(1 << 30) + 1
+     self.spec: ModelSpec | None = None
+     self.progress_cb: ProgressFn | None = None
+     self._engine_state: dict | None = None
+@@ -97,9 +98,13 @@ class JetlinkClient:
+     self.dead = False
+     self.last_timings = (0, 0, 0)  # gpu_us, queue_us, total_us, server-side
+     self.last_state: dict | None = None  # most recent piggybacked telemetry
++    self._infer_seq = None
+     self._infer_started = 0.0
+     self._infer_frame_id: int | None = None
+     self._infer_flags = 0
++    self._peer = {}
++    self._v3_selected = False
++    self._v3_generation = None
+ 
+   # -- construction ---------------------------------------------------------
+ 
+@@ -177,6 +182,16 @@ class JetlinkClient:
+         self.progress_cb(p.get('stage', ''), float(p.get('frac', 0.0)), p.get('msg', ''))
+     elif msg.msg_type == P.Msg.ENGINE_RESP:
+       state = json.loads(bytes(msg.payload))
++      if self._v3_selected:
++        if not isinstance(state, dict) or state.get('session_id') != self._peer.get('session_id'):
++          raise LinkError('V3 engine response belongs to a different HELLO')
++        if self._v3_generation is not None:
++          if (state.get('state') != 'ready' or state.get('generation') != self._v3_generation
++              or state.get('sha256') != V3.CANONICAL_SPEC['sha256']
++              or state.get('spec') != self.spec.to_dict()):
++            self._v3_generation = None
++            self.dead = True
++            raise LinkError('V3 engine generation changed; reconnect and reload')
+       # A build that finished for a model this client has moved off would
+       # otherwise read as ready, and every frame after it as NOT_READY.
+       wanted = (self._engine_state or {}).get('sha256')
+@@ -212,8 +227,22 @@ class JetlinkClient:
+     """Introduce this client. The server starts its session over on a hello,
+     so this is also how a new owner of the gadget takes over one the server
+     never saw end; see Session._greet."""
+-    seq = self._next_seq()
+     version = self._protocol_version()
++    # Protocol3 App owners intentionally retain their selected spec across HELLO;
++    # the new protocol2 exception never retains peer approval or pending frames.
++    if version == 2:
++      self.spec = None
++    self._peer = {}
++    self._v3_selected = False
++    self._v3_generation = None
++    self._engine_state = None
++    self.last_state = None
++    self.last_timings = (0, 0, 0)
++    self._infer_frame_id = None
++    self._infer_seq = None
++    self._infer_started = 0.0
++    self.seq += 1 << 20  # retire outstanding requests from the preceding HELLO
++    seq = self._next_seq()
+     client = {'nonce': self.nonce, 'name': self.name}
+     if version == 3:
+       link = self._link_info()
+@@ -232,8 +261,22 @@ class JetlinkClient:
+       raise LinkError(str(e)) from e
+     if selected != version:
+       raise LinkError(f"server selected protocol {selected!r}, transport speaks protocol {version}")
++    self._peer = response
+     return response
+ 
++  def approve_v3(self, spec: ModelSpec) -> None:
++    """Explicit caller opt-in, valid only for the current protocol2 HELLO."""
++    self._v3_selected = False
++    self._v3_generation = None
++    try:
++      V3.validate_spec(spec.to_dict())
++      V3.validate_capability(self._peer.get(V3.CAPABILITY))
++      if self._protocol_version() != 2 or self._peer.get('protocol') != 2 or not V3.valid_token(self._peer.get('session_id')):
++        raise ValueError('V3 requires a current protocol2 HELLO session')
++    except (TypeError, ValueError) as e:
++      raise LinkError(str(e)) from e
++    self._v3_selected = True
++
+   def state(self, timeout: float = 2.0) -> dict:
+     seq = self._next_seq()
+     self.t.send_json(P.Msg.STATE_REQ, seq, {})
+@@ -277,16 +320,28 @@ class JetlinkClient:
+       raise LinkError("nbytes must be a non-negative integer")
+     if type(frame_skip) is not int or frame_skip <= 0:
+       raise LinkError("frame_skip must be a positive integer")
++    if self._protocol_version() == 2 and sha256 == V3.CANONICAL_SPEC['sha256']:
++      if not self._v3_selected or nbytes != V3.CANONICAL_SPEC['nbytes'] or frame_skip != V3.CANONICAL_SPEC['frame_skip']:
++        raise LinkError('explicit V3 approval and exact requested identity required')
++    elif self._v3_selected:
++      self._v3_selected = False
++    self._v3_generation = None
++    self._infer_frame_id = None
+     self.progress_cb = progress
+     self._should_stop = should_stop or (lambda: False)
+     self.spec = None
+     self._engine_state = None
+ 
+     seq = self._next_seq()
+-    self.t.send_json(P.Msg.ENGINE_REQ, seq, {'sha256': sha256, 'nbytes': nbytes, 'frame_skip': frame_skip})
++    request = {'sha256': sha256, 'nbytes': nbytes, 'frame_skip': frame_skip}
++    if self._v3_selected:
++      request.update({V3.CAPABILITY: V3.capability(), 'session_id': self._peer['session_id']})
++    self.t.send_json(P.Msg.ENGINE_REQ, seq, request)
+     resp = json.loads(bytes(self._expect(P.Msg.ENGINE_RESP, seq, 60.0).payload))
+     if not isinstance(resp, dict):
+       raise LinkError("engine response is not an object")
++    if self._v3_selected and resp.get('session_id') != self._peer.get('session_id'):
++      raise LinkError('V3 ENGINE response belongs to another HELLO')
+     self._engine_state = resp
+     log.info("server engine state: %s (%s)", resp.get('state', 'unknown'), resp.get('detail', ''))
+ 
+@@ -300,11 +355,22 @@ class JetlinkClient:
+     self._await_ready(build_timeout)
+     spec = self._engine_spec(sha256, frame_skip, expected_nbytes=nbytes if nbytes else None)
+     self.spec = spec
++    if self._v3_selected:
++      self._v3_generation = self._engine_state['generation']
+     return spec
+ 
+   def _engine_spec(self, sha256: str, frame_skip: int,
+                    expected_nbytes: int | None = None) -> ModelSpec:
+     state = self._engine_state or {}
++    if self._v3_selected:
++      try:
++        V3.validate_spec(state.get('spec'))
++        if (state.get('state') != 'ready' or state.get('sha256') != sha256
++            or state.get('session_id') != self._peer.get('session_id')
++            or not V3.valid_token(state.get('generation'))):
++          raise ValueError('V3 ENGINE ready/identity/session/generation mismatch')
++      except (TypeError, ValueError) as e:
++        raise LinkError(str(e)) from e
+     raw_spec = state.get('spec')
+     if not isinstance(raw_spec, dict):
+       raise LinkError("server reported ready without a model spec")
+@@ -380,9 +446,18 @@ class JetlinkClient:
+       raise LinkError("link previously failed")
+     version = self._protocol_version()
+     if self.spec.stateful and version == 2:
+-      raise LinkError("stateful models require protocol 3")
++      if not self._v3_selected or not self._v3_generation:
++        raise LinkError('stateful models require protocol 3, except explicitly approved Cinque V3')
++      try:
++        V3.validate_spec(self.spec.to_dict())
++      except (TypeError, ValueError) as e:
++        raise LinkError(str(e)) from e
++    if self._infer_frame_id is not None:
++      raise LinkError('an inference response is already pending')
+     warped = _as_bytes(warped, self.spec.warped_nbytes, 'warped')
+     packed = _as_bytes(packed, self.spec.packed_nbytes, 'packed')
++    if not np.all(np.isfinite(np.frombuffer(packed, np.float32))):
++      raise LinkError('packed inputs contain non-finite values')
+     if version == 3:
+       packed = _protocol3_packed(self.spec, packed)
+     seq = self._next_seq()
+@@ -390,6 +465,7 @@ class JetlinkClient:
+     if version == 3:
+       flags |= P.Flag.WANT_HIDDEN
+     try:
++      self._infer_seq = seq
+       self._infer_started = time.monotonic()
+       self._infer_frame_id = frame_id
+       self._infer_flags = flags
+@@ -406,6 +482,8 @@ class JetlinkClient:
+     A long frame is a dropped camera frame, which modeld tolerates. Only a stall
+     past `deadline` is a failure, and then the link is done.
+     """
++    if self._infer_frame_id is None or self.dead or self.spec is None or seq != self._infer_seq:
++      raise LinkError('no live inference request is pending')
+     try:
+       budget = self.deadline if deadline is None else deadline
+       remaining = budget - (time.monotonic() - self._infer_started)
+@@ -457,6 +535,7 @@ class JetlinkClient:
+     if not np.all(np.isfinite(output)):
+       self.dead = True
+       raise LinkError('inference response contains non-finite model outputs')
++    self._infer_frame_id = None
+     return output
+ 
+   def infer(self, warped: np.ndarray, packed: np.ndarray, frame_id: int = 0,
+diff --git a/third_party/jetlink/jetlink/spec.py b/third_party/jetlink/jetlink/spec.py
+index 2746fa2..ec25b29 100644
+--- a/third_party/jetlink/jetlink/spec.py
++++ b/third_party/jetlink/jetlink/spec.py
+@@ -15,7 +15,7 @@ from __future__ import annotations
+ 
+ import hashlib
+ import math
+-from dataclasses import dataclass
++from dataclasses import dataclass, field
+ 
+ from jetlink.onnx_meta import OnnxMeta, parse_file
+ from jetlink.protocol import INFER_REQ_SIZE, INFER_RESP_SIZE
+@@ -39,6 +39,8 @@ class ModelSpec:
+   output_shapes: dict[str, tuple[int, ...]]
+   output_slices: dict[str, slice]
+   checkpoint: str | None
++  input_dtypes: dict[str, str] = field(default_factory=dict)
++  output_dtypes: dict[str, str] = field(default_factory=dict)
+ 
+   # --- vision ---
+   @property
+@@ -151,7 +153,7 @@ class ModelSpec:
+   # would drift the moment a field is added.
+ 
+   def to_dict(self) -> dict:
+-    return {
++    value = {
+       'sha256': self.sha256,
+       'nbytes': self.nbytes,
+       'frame_skip': self.frame_skip,
+@@ -161,6 +163,12 @@ class ModelSpec:
+       'output_slices': {k: [v.start, v.stop] for k, v in self.output_slices.items()},
+     }
+ 
++    if self.input_dtypes:
++      value['input_dtypes'] = self.input_dtypes.copy()
++    if self.output_dtypes:
++      value['output_dtypes'] = self.output_dtypes.copy()
++    return value
++
+   @classmethod
+   def from_dict(cls, d: dict) -> ModelSpec:
+     return cls(
+@@ -169,7 +177,8 @@ class ModelSpec:
+       input_shapes={k: tuple(v) for k, v in d['input_shapes'].items()},
+       output_shapes={k: tuple(v) for k, v in d['output_shapes'].items()},
+       output_slices={k: slice(*v) for k, v in d['output_slices'].items()},
+-      checkpoint=d.get('checkpoint'))
++      checkpoint=d.get('checkpoint'),
++      input_dtypes=dict(d.get('input_dtypes', {})), output_dtypes=dict(d.get('output_dtypes', {})))
+ 
+ 
+ def sha256_file(path: str, bufsize: int = 1 << 20) -> tuple[str, int]:
+diff --git a/third_party/jetlink/jetlink/v3_compat.py b/third_party/jetlink/jetlink/v3_compat.py
+new file mode 100644
+index 0000000..c73311a
+--- /dev/null
++++ b/third_party/jetlink/jetlink/v3_compat.py
+@@ -0,0 +1,166 @@
++"""Exact Cinque V3 protocol2 compatibility, not authentication or GPU validation."""
++import hashlib
++import json
++import re
++
++CAPABILITY = 'cinque_v3_stateful_v2'
++CANONICAL_SPEC = json.loads(r'''{
++  "sha256": "404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4",
++  "nbytes": 766354845,
++  "frame_skip": 4,
++  "checkpoint": "b9facbcc-4d47-410e-b3ce-dfcbad12ba92/56320/f78ed37d-afad-4dbc-8050-40ea885eedde/12864",
++  "input_shapes": {
++    "new_img": [
++      2,
++      6,
++      128,
++      256
++    ],
++    "desire": [
++      8
++    ],
++    "traffic_convention": [
++      1,
++      2
++    ],
++    "action_t": [
++      1,
++      2
++    ],
++    "state_img_q": [
++      2,
++      5,
++      6,
++      128,
++      256
++    ],
++    "state_desire_q": [
++      132,
++      1,
++      8
++    ],
++    "state_feat_q": [
++      128,
++      1,
++      16384
++    ]
++  },
++  "output_shapes": {
++    "outputs": [
++      1,
++      18452
++    ],
++    "next_state_img_q": [
++      2,
++      5,
++      6,
++      128,
++      256
++    ],
++    "next_state_desire_q": [
++      132,
++      1,
++      8
++    ],
++    "next_state_feat_q": [
++      128,
++      1,
++      16384
++    ]
++  },
++  "output_slices": {
++    "lane_lines": [
++      0,
++      528
++    ],
++    "lane_lines_prob": [
++      528,
++      536
++    ],
++    "road_edges": [
++      536,
++      800
++    ],
++    "meta": [
++      800,
++      855
++    ],
++    "desire_pred": [
++      855,
++      887
++    ],
++    "pose": [
++      887,
++      899
++    ],
++    "wide_from_device_euler": [
++      899,
++      905
++    ],
++    "road_transform": [
++      905,
++      917
++    ],
++    "plan": [
++      917,
++      1907
++    ],
++    "lead": [
++      1907,
++      2051
++    ],
++    "lead_prob": [
++      2051,
++      2054
++    ],
++    "desire_state": [
++      2054,
++      2062
++    ],
++    "action": [
++      2062,
++      2066
++    ],
++    "hidden_state": [
++      2066,
++      18450
++    ],
++    "pad": [
++      18450,
++      18452
++    ]
++  },
++  "input_dtypes": {
++    "new_img": "uint8",
++    "desire": "float32",
++    "traffic_convention": "float32",
++    "action_t": "float32",
++    "state_img_q": "uint8",
++    "state_desire_q": "float32",
++    "state_feat_q": "float32"
++  },
++  "output_dtypes": {
++    "outputs": "float32",
++    "next_state_img_q": "uint8",
++    "next_state_desire_q": "float32",
++    "next_state_feat_q": "float32"
++  }
++}''')
++
++def _json(value):
++    return json.dumps(value, sort_keys=True, separators=(',', ':'), allow_nan=False)
++
++def validate_spec(value):
++    if _json(value) != _json(CANONICAL_SPEC):
++        raise ValueError('V3 identity/semantic spec differs from pinned model')
++
++def capability():
++    return {'version': 1, 'sha256': CANONICAL_SPEC['sha256'], 'nbytes': CANONICAL_SPEC['nbytes'],
++            'spec_sha256': hashlib.sha256(_json(CANONICAL_SPEC).encode()).hexdigest()}
++
++def validate_capability(value):
++    if _json(value) != _json(capability()):
++        raise ValueError('unsupported or missing V3 capability')
++
++def valid_token(value):
++    return isinstance(value, str) and re.fullmatch('[0-9a-f]{32}', value) is not None

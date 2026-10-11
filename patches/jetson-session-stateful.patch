@@ -1,16 +1,36 @@
 diff --git a/third_party/jetlink/jetlink/server/session.py b/third_party/jetlink/jetlink/server/session.py
-index 1f2c1ba..629c8b3 100644
+index 1f2c1ba..edc8287 100644
 --- a/third_party/jetlink/jetlink/server/session.py
 +++ b/third_party/jetlink/jetlink/server/session.py
-@@ -57,6 +57,7 @@ class Loaded:
+@@ -19,15 +19,17 @@ from __future__ import annotations
+ 
+ import json
+ import logging
++import secrets
+ import threading
+ import time
+ from collections import deque
+-from dataclasses import dataclass
++from dataclasses import dataclass, field
+ from pathlib import Path
+ 
+ import numpy as np
+ 
+ from jetlink import protocol as P
++from jetlink import v3_compat as V3
+ from jetlink.server.backends.base import ArtifactInvalid
+ from jetlink.server.cache import CacheEntry, EngineCache
+ from jetlink.server.telemetry import CachedTelemetry, NoTelemetry
+@@ -57,6 +59,8 @@ class Loaded:
    engine: object
    queues: object
    host_inputs: dict
 +  valid: bool = True
++  generation: str = field(default_factory=lambda: secrets.token_hex(16))
  
  
  @dataclass
-@@ -186,6 +187,9 @@ class EngineHost:
+@@ -186,6 +190,9 @@ class EngineHost:
      with self.lock:
        loaded, job = self.loaded, self.job
        stage, frac, msg = self._last_stage
@@ -20,7 +40,7 @@ index 1f2c1ba..629c8b3 100644
        if loaded is not None:
          return {'state': 'ready', 'sha256': loaded.sha256, 'detail': '', 'stage': None,
                  'frac': 1.0, 'msg': msg, 'load_only': bool(job.load_only) if job is not None else False}
-@@ -216,7 +220,7 @@ class EngineHost:
+@@ -216,10 +223,10 @@ class EngineHost:
      loaded, job = self.loaded, self.job
      if sha256 is None:
        return {'state': 'none', 'detail': '', 'sha256': None, 'chunk': CHUNK}
@@ -28,8 +48,12 @@ index 1f2c1ba..629c8b3 100644
 +    if (loaded is not None and loaded.valid and loaded.sha256 == sha256
          and (frame_skip is None or loaded.spec.frame_skip == frame_skip)):
        return {'state': 'ready', 'detail': '', 'sha256': sha256, 'chunk': CHUNK,
-               'spec': loaded.spec.to_dict()}
-@@ -247,14 +251,24 @@ class EngineHost:
+-              'spec': loaded.spec.to_dict()}
++              'spec': loaded.spec.to_dict(), 'generation': loaded.generation}
+     if job is not None and job.sha256 == sha256 and job.state != 'ready':
+       return {'state': job.state, 'detail': job.detail, 'sha256': sha256, 'chunk': CHUNK}
+     if job is not None and job.state == 'building':
+@@ -247,14 +254,24 @@ class EngineHost:
  
    def request(self, req: Request, session: Session) -> dict:
      """Make `req` the model being served, starting whatever that takes."""
@@ -56,7 +80,16 @@ index 1f2c1ba..629c8b3 100644
        if self.job is not None and self.job.state == 'building':
          # Either this model's build, which the client attaches to, or another
          # build that owns the GPU right now.
-@@ -337,8 +351,11 @@ class EngineHost:
+@@ -277,7 +294,7 @@ class EngineHost:
+ 
+   def _ready(self, loaded: Loaded) -> dict:
+     return {'state': 'ready', 'detail': '', 'sha256': loaded.sha256, 'chunk': CHUNK,
+-            'spec': loaded.spec.to_dict()}
++            'spec': loaded.spec.to_dict(), 'generation': loaded.generation}
+ 
+   def _cached_spec(self, entry: CacheEntry) -> dict | None:
+     """The spec a cached artifact's sidecar carries, if it has one.
+@@ -337,8 +354,11 @@ class EngineHost:
      logs a traceback for what `need_upload` already says.
      """
      d = self._cached_spec(entry)
@@ -70,7 +103,7 @@ index 1f2c1ba..629c8b3 100644
      if _model_complete(model_path, req.nbytes):
        try:
          return self._derive_spec(model_path, req.frame_skip)
-@@ -402,7 +419,10 @@ class EngineHost:
+@@ -402,7 +422,10 @@ class EngineHost:
      except Exception as e:
        log.exception("engine preparation failed")
        if engine is not None:
@@ -82,7 +115,7 @@ index 1f2c1ba..629c8b3 100644
        with self.lock:
          job.state, job.detail = 'failed', f'{type(e).__name__}: {e}'
        self._progress('failed', 1.0, job.detail, force=True)
-@@ -442,6 +462,8 @@ class EngineHost:
+@@ -442,6 +465,8 @@ class EngineHost:
  
    @staticmethod
    def _write_spec(entry: CacheEntry, spec: ModelSpec) -> None:
@@ -91,7 +124,7 @@ index 1f2c1ba..629c8b3 100644
      try:
        meta = entry.meta()
      except (OSError, ValueError):
-@@ -452,17 +474,24 @@ class EngineHost:
+@@ -452,17 +477,24 @@ class EngineHost:
        entry.write_meta({**meta, 'spec': spec.to_dict()})
  
    def _warm(self, engine, spec: ModelSpec) -> Loaded:
@@ -123,7 +156,7 @@ index 1f2c1ba..629c8b3 100644
      return Loaded(spec.sha256, spec, engine, queues, host_inputs)
  
    def unload(self) -> None:
-@@ -487,7 +516,23 @@ class EngineHost:
+@@ -487,7 +519,23 @@ class EngineHost:
      return self.backend.load(artifact, report=self._progress)
  
    def _derive_spec(self, model_path: Path, frame_skip: int) -> ModelSpec:
@@ -148,7 +181,7 @@ index 1f2c1ba..629c8b3 100644
  
    def _build(self, model_path: Path, artifact: Path, meta_extra: dict) -> None:
      self.backend.build(model_path, artifact, report=self._progress, meta_extra=meta_extra)
-@@ -512,9 +557,29 @@ def _model_complete(model_path: Path, nbytes: int) -> bool:
+@@ -512,9 +560,29 @@ def _model_complete(model_path: Path, nbytes: int) -> bool:
    return model_path.is_file() and model_path.stat().st_size == nbytes
  
  
@@ -179,7 +212,7 @@ index 1f2c1ba..629c8b3 100644
    for name, io in engine.inputs.items():
      want = spec.input_shapes.get(name)
      if want is None:
-@@ -528,6 +593,18 @@ def _check_shapes(engine, spec: ModelSpec) -> None:
+@@ -528,6 +596,18 @@ def _check_shapes(engine, spec: ModelSpec) -> None:
    if int(np.prod(out)) != spec.output_nelem:
      raise ValueError(f"output: engine {tuple(out)} vs spec {spec.output_nelem}")
  
@@ -198,7 +231,17 @@ index 1f2c1ba..629c8b3 100644
  
  class Session:
    def __init__(self, transport: Transport, host: EngineHost):
-@@ -649,6 +726,13 @@ class Session:
+@@ -546,6 +626,9 @@ class Session:
+     self.last_seq = seq
+     self.request: Request | None = None
+     self.frames = 0
++    self.session_id = secrets.token_hex(16)
++    self._v3_generation = None
++    self._v3_requested = False
+ 
+   # -- plumbing -------------------------------------------------------------
+ 
+@@ -649,6 +732,13 @@ class Session:
      if self.client and who != self.client:
        log.info("session handed from %s to %s", self.client, who or 'an unnamed client')
      self.client = who
@@ -212,7 +255,50 @@ index 1f2c1ba..629c8b3 100644
      self._reset(msg.seq)
      log.info("hello from %s (seq %d)", who or 'an unnamed client', msg.seq)
  
-@@ -721,7 +805,7 @@ class Session:
+@@ -656,6 +746,8 @@ class Session:
+     info = self.host.backend.describe()
+     resp = {
+       'protocol': P.VERSION,
++      'session_id': self.session_id,
++      V3.CAPABILITY: V3.capability(),
+       **info,   # backend, runtime_version, device
+       'engine_state': self.host.status(*self._wanted())['state'],
+       'loaded': self.host.loaded_sha(),
+@@ -675,12 +767,31 @@ class Session:
+ 
+   def on_engine_req(self, msg: Message) -> None:
+     d = json.loads(bytes(msg.payload))
++    self._v3_generation = None
++    self._v3_requested = False
++    self.request = None
++    if d.get('sha256') == V3.CANONICAL_SPEC['sha256']:
++      V3.validate_capability(d.get(V3.CAPABILITY))
++      if d.get('session_id') != self.session_id:
++        raise ValueError('V3 ENGINE request belongs to another HELLO')
++      if type(d.get('nbytes')) is not int or d['nbytes'] != V3.CANONICAL_SPEC['nbytes'] or type(d.get('frame_skip')) is not int or d['frame_skip'] != V3.CANONICAL_SPEC['frame_skip']:
++        raise ValueError('V3 requested identity mismatch')
++      self._v3_requested = True
+     self.request = Request(str(d['sha256']), int(d['nbytes']),
+                            int(d.get('frame_skip', DEFAULT_FRAME_SKIP)))
+-    self._send_json(P.Msg.ENGINE_RESP, msg.seq, self.host.request(self.request, self))
++    self._send_engine(msg.seq, self.host.request(self.request, self))
++
++  def _send_engine(self, seq: int, state: dict) -> None:
++    state = dict(state, session_id=self.session_id)
++    if self._v3_requested and state.get('state') == 'ready':
++      V3.validate_spec(state.get('spec'))
++      if not V3.valid_token(state.get('generation')):
++        raise ValueError('V3 engine has no generation')
++      self._v3_generation = state['generation']
++    self._send_json(P.Msg.ENGINE_RESP, seq, state)
+ 
+   def _respond_engine(self, seq: int) -> None:
+-    self._send_json(P.Msg.ENGINE_RESP, seq, self.host.status(*self._wanted()))
++    self._send_engine(seq, self.host.status(*self._wanted()))
+ 
+   def on_upload_chunk(self, msg: Message) -> None:
+     req = self.request
+@@ -721,11 +832,16 @@ class Session:
      wanted_sha, wanted_skip = self._wanted()
      with host.lock:
        loaded = host.loaded
@@ -221,7 +307,16 @@ index 1f2c1ba..629c8b3 100644
            or loaded.spec.frame_skip != wanted_skip):
          self._send(P.Msg.INFER_RESP, msg.seq,
                     (P.pack_infer_resp(0, P.Status.NOT_READY, 0, 0, 0),))
-@@ -739,28 +823,51 @@ class Session:
+         return
++      if (loaded.sha256 == V3.CANONICAL_SPEC['sha256'] and
++          (not self._v3_requested or self._v3_generation != loaded.generation)):
++        self._send(P.Msg.INFER_RESP, msg.seq,
++                   (P.pack_infer_resp(0, P.Status.NOT_READY, 0, 0, 0),))
++        return
+       self._infer(loaded, msg)
+ 
+   def _infer(self, loaded: Loaded, msg: Message) -> None:
+@@ -739,28 +855,51 @@ class Session:
                   (P.pack_infer_resp(0, P.Status.BAD_SHAPE, 0, 0, 0),))
        return
      frame_id, flags = P.unpack_infer_req(msg.payload)

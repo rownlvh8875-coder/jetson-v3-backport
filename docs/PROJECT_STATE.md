@@ -1,5 +1,22 @@
 # Cinque V3 Jetson — 현재 진행 상태
 
+## 4A/4B 체크포인트 (2026-10-11)
+
+- 시작 로컬/실제 원격 HEAD `5fda3e8b6db8b6b7f4c1c50cdb732dc32aed93ce`, 지정 branch, 변경 없음.
+- 4A 구현: 정확한 semantic JSON/dtype 보존, HELLO capability/version/spec digest/session token,
+  ENGINE identity/ready/generation, 새 HELLO 승인·pending 폐기. 일반 stateful protocol2 차단 유지.
+- 4B 구현: `CARROT_JETLINK_V3=1` 선택, 기본 V2, 서버 사전 준비 모델만 요청,
+  offroad 승인/취소 및 IPC spec 검증, 기존 parser/prev_feat/fallback 재사용.
+- 실행: `python -m pytest -q tests/test_v3_negotiation.py tests/test_comma_selection_v3.py`
+  **39 PASS / exit 0**, 적용 C/J 모듈 CPU 계약 검사, 로그 `phase4-negotiation-selection.log` (Git 밖).
+  `test_v3_negotiation.py + test_production_v3.py`: **94 PASS / exit 0**.
+  새 기능 부재(import/API/서버 generation) 실패를 먼저 재현했다. 작은 fixture는 실제 모델 추론이 아니다.
+- 진행 중: 실제 C/J 별도 프로세스 Linux loopback·기존 회귀, 최종 패치 적용/원복과 인계.
+- 막힌 항목: GPU/USB/QCOM/실제 장치(5B). 기존 graph 가공은 변경하지 않았다.
+- 다음 첫 작업: loopback 장애·연속 state 및 기존 App/V2 회귀를 확인하고 5A로 계속한다.
+
+아래 1–3단계 결과는 당시 기록이다. 현재 작업은 승인된 4A→최종 인계까지 계속한다.
+
 ## 3단계 결과 (2026-10-11, 현재 기준)
 
 **production 서버 소프트웨어 경로를 고정 소스의 개발 사본에 연결했고 오프라인 검사를 마쳤다.**

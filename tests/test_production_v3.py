@@ -100,7 +100,9 @@ class CpuEngine:
 
 @pytest.fixture
 def live(prod, tmp_path):
-    spec = prod.spec.ModelSpec.from_dict(synthetic_spec(prod))
+    d = synthetic_spec(prod)
+    d['sha256'] = 'e' * 64  # synthetic server-state fixture, not the pinned V3 identity
+    spec = prod.spec.ModelSpec.from_dict(d)
     cpu_backend = NS(name='cpu-mock',suffix='.plan',tag=lambda:'cpu-mock')
     host = prod.session.EngineHost(prod.session.EngineCache(tmp_path,cpu_backend))
     engine = CpuEngine(spec, dict.fromkeys(('new_img','state_img_q','next_state_img_q'),'float16'))

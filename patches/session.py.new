@@ -19,15 +19,17 @@ from __future__ import annotations
 
 import json
 import logging
+import secrets
 import threading
 import time
 from collections import deque
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
 
 from jetlink import protocol as P
+from jetlink import v3_compat as V3
 from jetlink.server.backends.base import ArtifactInvalid
 from jetlink.server.cache import CacheEntry, EngineCache
 from jetlink.server.telemetry import CachedTelemetry, NoTelemetry
@@ -58,6 +60,7 @@ class Loaded:
   queues: object
   host_inputs: dict
   valid: bool = True
+  generation: str = field(default_factory=lambda: secrets.token_hex(16))
 
 
 @dataclass
@@ -223,7 +226,7 @@ class EngineHost:
     if (loaded is not None and loaded.valid and loaded.sha256 == sha256
         and (frame_skip is None or loaded.spec.frame_skip == frame_skip)):
       return {'state': 'ready', 'detail': '', 'sha256': sha256, 'chunk': CHUNK,
-              'spec': loaded.spec.to_dict()}
+              'spec': loaded.spec.to_dict(), 'generation': loaded.generation}
     if job is not None and job.sha256 == sha256 and job.state != 'ready':
       return {'state': job.state, 'detail': job.detail, 'sha256': sha256, 'chunk': CHUNK}
     if job is not None and job.state == 'building':
@@ -291,7 +294,7 @@ class EngineHost:
 
   def _ready(self, loaded: Loaded) -> dict:
     return {'state': 'ready', 'detail': '', 'sha256': loaded.sha256, 'chunk': CHUNK,
-            'spec': loaded.spec.to_dict()}
+            'spec': loaded.spec.to_dict(), 'generation': loaded.generation}
 
   def _cached_spec(self, entry: CacheEntry) -> dict | None:
     """The spec a cached artifact's sidecar carries, if it has one.
@@ -623,6 +626,9 @@ class Session:
     self.last_seq = seq
     self.request: Request | None = None
     self.frames = 0
+    self.session_id = secrets.token_hex(16)
+    self._v3_generation = None
+    self._v3_requested = False
 
   # -- plumbing -------------------------------------------------------------
 
@@ -740,6 +746,8 @@ class Session:
     info = self.host.backend.describe()
     resp = {
       'protocol': P.VERSION,
+      'session_id': self.session_id,
+      V3.CAPABILITY: V3.capability(),
       **info,   # backend, runtime_version, device
       'engine_state': self.host.status(*self._wanted())['state'],
       'loaded': self.host.loaded_sha(),
@@ -759,12 +767,31 @@ class Session:
 
   def on_engine_req(self, msg: Message) -> None:
     d = json.loads(bytes(msg.payload))
+    self._v3_generation = None
+    self._v3_requested = False
+    self.request = None
+    if d.get('sha256') == V3.CANONICAL_SPEC['sha256']:
+      V3.validate_capability(d.get(V3.CAPABILITY))
+      if d.get('session_id') != self.session_id:
+        raise ValueError('V3 ENGINE request belongs to another HELLO')
+      if type(d.get('nbytes')) is not int or d['nbytes'] != V3.CANONICAL_SPEC['nbytes'] or type(d.get('frame_skip')) is not int or d['frame_skip'] != V3.CANONICAL_SPEC['frame_skip']:
+        raise ValueError('V3 requested identity mismatch')
+      self._v3_requested = True
     self.request = Request(str(d['sha256']), int(d['nbytes']),
                            int(d.get('frame_skip', DEFAULT_FRAME_SKIP)))
-    self._send_json(P.Msg.ENGINE_RESP, msg.seq, self.host.request(self.request, self))
+    self._send_engine(msg.seq, self.host.request(self.request, self))
+
+  def _send_engine(self, seq: int, state: dict) -> None:
+    state = dict(state, session_id=self.session_id)
+    if self._v3_requested and state.get('state') == 'ready':
+      V3.validate_spec(state.get('spec'))
+      if not V3.valid_token(state.get('generation')):
+        raise ValueError('V3 engine has no generation')
+      self._v3_generation = state['generation']
+    self._send_json(P.Msg.ENGINE_RESP, seq, state)
 
   def _respond_engine(self, seq: int) -> None:
-    self._send_json(P.Msg.ENGINE_RESP, seq, self.host.status(*self._wanted()))
+    self._send_engine(seq, self.host.status(*self._wanted()))
 
   def on_upload_chunk(self, msg: Message) -> None:
     req = self.request
@@ -807,6 +834,11 @@ class Session:
       loaded = host.loaded
       if (loaded is None or not loaded.valid or loaded.sha256 != wanted_sha
           or loaded.spec.frame_skip != wanted_skip):
+        self._send(P.Msg.INFER_RESP, msg.seq,
+                   (P.pack_infer_resp(0, P.Status.NOT_READY, 0, 0, 0),))
+        return
+      if (loaded.sha256 == V3.CANONICAL_SPEC['sha256'] and
+          (not self._v3_requested or self._v3_generation != loaded.generation)):
         self._send(P.Msg.INFER_RESP, msg.seq,
                    (P.pack_infer_resp(0, P.Status.NOT_READY, 0, 0, 0),))
         return

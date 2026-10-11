@@ -10,10 +10,11 @@
 - 최종 목표는 Jetson Orin Nano Super의 반복 추론, 당근 기존 연결을 통한
   comma 카메라 입력·결과 반환·출력 해석, 처리속도와 state 연속성,
   실패 시 내부 모델 복귀와 오류 알림의 실제 확인이다. 엔진 생성만으로 완료하지 않는다.
-- 현재는 승인된 3단계다. 고정 carrot-jetson의 별도 개발 사본에서 V3 production
-  가공/build/metadata/cache/load 및 spec/queues/session warm/reset/infer를 통합하고,
-  재현 가능한 패치와 오프라인 검사를 남긴다. 기준 사본은 읽기 전용으로 보존한다.
-  comma protocol/모델 선택·전처리·parser 수정과 실제 장치 접속/변경은 이번 범위 밖이다.
+- 현재는 승인된 4A→4B→4C→5A→최종 검토·인계의 연속 소프트웨어 작업이다.
+  고정 소스의 별도 개발 사본에서 지정 V3 protocol2 capability, 명시적 선택,
+  양단 오프라인 통합·실패/복귀 검사와 적용/원복 결과물을 구현한다.
+  완료 조건 충족 후 승인된 다음 작업으로 계속한다. 기준 사본은 읽기 전용이다.
+  실제 장치 접속/변경·배포·활성화·차량 제어(5B)는 별도 현장 승인 전 금지한다.
 - 3단계 적용물은 `patches/jetson-production-v3.patch` 하나다. 대상 SHA와 적용·원복·검사
   방법은 기존 계획 문서를 따른다. 개별 spec/queues/session 패치는 같은 변경의 부분집합이므로
   통합 패치와 중복 적용하지 않는다. 이 저장소 `jetlink/`는 전체 서버 설치본이 아니다.

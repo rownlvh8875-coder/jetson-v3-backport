@@ -1,5 +1,30 @@
 # Cinque V3 Jetson 최소 변경계획
 
+## 승인된 연속 소프트웨어 작업 (4A–5A, 2026-10-11)
+
+- 4A: C vendored `client.py/spec.py/v3_compat.py`, J `server/session.py/v3_compat.py`.
+  기존 HELLO에 `cinque_v3_stateful_v2` object(version=1, sha256, nbytes,
+  canonical JSON SHA256 `spec_sha256`)와 hello별 `session_id`를 광고한다.
+  ENGINE_REQ가 capability와 session_id를 명시하고, ready 응답의 spec와 generation을
+  확인한 뒤에만 지정 V3 protocol2를 허용한다. 새 HELLO/선택/engine 변경은 승인을 지운다.
+  capability는 구현 호환성 표시이며 인증/수치 검증 증명이 아니다.
+- 4B: C `selection/link/mac/contracts/model/daemon.py`, 고정 `cinque_v3.json`.
+  `CARROT_JETLINK_V3=1` 전용 opt-in; 없거나 0이면 V2. 전역 SPEC는 V2로 유지한다.
+  V3는 서버에 사전 준비된 원본/엔진만 요청하며 V2 URL로 다운로드하지 않는다.
+  준비/IPC/모델 parser까지 동일 spec, uint8 wire와 FP16 engine 계약은 구분한다.
+- 4C: 실제 적용된 C/J를 별도 프로세스로 import하여 localhost/socketpair 통합 검사.
+  GPU/USB/QCOM 경계만 대체하고 실제 client/Session/warm/infer/가능한 daemon·JoiningModel을
+  실행한다. 부정 capability, stale/잘린 응답, deadline, state invalidation, 복귀를 검사한다.
+- 5A: 고정 소스용 통합 패치 2개·작은 manifest·검사 전용 apply/reverse 도구.
+  깨끗한 사본에서 preflight→apply→test→reverse→원본 일치→reapply, 잘못된 SHA/dirty/
+  이미 적용된 경우 거부. 모델·엔진·개인 경로/원본 로그는 패키지에서 제외한다.
+- 최종: 별도 읽기 전용 리뷰, 재현 결함 수정/재시험, 제품 SHA와 문서 SHA를 분리해
+  지정 feature 브랜치에 일반 push/원격 조회. 5B는 장치/현장 승인 대기 BLOCKED다.
+
+집중 테스트는 단계별 실패 재현 후 추가한다. 기존 production/build_verify/safety/backport,
+C stateful/cache/App/protocol3 관련 회귀를 유지한다. graph 가공 구현이 바뀌지 않으면
+3단계 ORT 측정 근거를 재사용하며 GPU 검증으로 승격하지 않는다.
+
 2026-10-11 1·2단계 결과를 보존하면서 승인된 **3단계 production 서버 소프트웨어 통합**을 구현했다.
 고정 소스의 개발 사본에서 가공/build/metadata/load/warm/infer/state를 연결했다.
 실제 TensorRT/Jetson과 comma 연결 검증은 남아 있으며 실제 장치 변경은 승인되지 않았다.
