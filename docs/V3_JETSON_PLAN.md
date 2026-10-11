@@ -1,7 +1,7 @@
 # Cinque V3 Jetson 최소 변경계획
 
-2026-10-11 1단계 산출물. **이 문서는 구현 허가나 장치 변경 지시가 아니다.**
-사용자가 계획을 확인하고 다음 단계를 지시한 뒤 작업한다.
+2026-10-11 1단계 계획을 보존하면서 사용자 승인에 따라 **2단계 범위만 구현**했다.
+원본 확보·CPU 검사·가공/빌더/검증기 수정이 대상이다. 실제 장치 변경은 승인되지 않았다.
 기준 SHA·원본 상태·실행 명령/결과는 [PROJECT_STATE.md](PROJECT_STATE.md), 제약은 [AGENTS.md](../AGENTS.md).
 
 목표 경로: V3 원본 확인 → 필요한 TensorRT 가공/빌드 → Jetson stateful 실행 →
@@ -28,7 +28,7 @@ parser 및 내부 모델 사전 warm/실패 시 reset을 이미 구현한다.
 `test_app_models.py::test_joining_model_uses_selected_buffers_parser_and_recurrence`도 이미 있다
 (이번 PC에서는 fcntl 때문에 본문 미실행). 현재 J는 PolicyQueues 전용이며 stateful이 없다.
 
-**현재 JSON에 기록된 계약** (원본에서 오늘 재측정한 값이 아님):
+**원본 ONNX에서 전체 대조한 계약** (2단계, 해시·크기 일치 파일):
 
 | 텐서 | shape | 원본 dtype 기록 |
 |---|---|---|
@@ -46,7 +46,12 @@ V2 queued는 기존 prev_feat/history 처리를 유지한다.
 V3 uint8 가공을 채택할 경우 `new_img`, `state_img_q`, `next_state_img_q`만 float16으로 바뀌는
 physical engine 계약을 원본 semantic spec과 분리해 선언/검사한다. JSON의 원본 dtype을 덮어쓰지 않는다.
 
-## 현재 문제와 과거 리뷰의 구분
+## 1단계 문제 재현과 2단계 처리
+
+아래 표의 빌더 입력 열거·반환/sidecar·검증기 dtype/finite/pinned/context·identity 테스트
+문제는 2단계에서 집중 회귀 검사로 고정하고 수정했다. 표의 재현 근거는 1단계 당시 기록이다.
+sidecar의 **production 소비**, state narrowing, protocol/모델 선택은 여전히 후속 작업이다.
+현재 결과·코드 SHA는 PROJECT_STATE의 2단계 기록을 우선한다.
 
 | 항목 | 현재 근거/판정 | 후속 대상 |
 |---|---|---|
@@ -68,9 +73,27 @@ TensorRT/ONNX parser 지원, 실제 dtype/메모리/속도와 원본 대비 오�
 verify_engine의 PyCUDA 버퍼/초기화 경로도 실제 GPU 검증 전 미확인이다.
 기존 production pinned/cudart engine을 활용하여 검증 경로가 실제 서버와 갈라지지 않게 한다.
 
-## 후속 작업 (이번 단계 미실행)
+## 2단계 구현과 후속 작업
 
-### 1. 같은 V3 원본 확인과 원본 없는 CPU 검사 독립화
+2단계 결과:
+
+- 작업 1 완료: 임시 바이트의 identity 검사와 main build 차단. 모델 없는 격리 사본에서 40 PASS.
+- 작업 2의 로컬 도구 완료: `num_inputs/get_input`, 반환 경로, 원본/가공/engine/patcher 해시와
+  원본 I/O·명시적 dtype 3개·TRT 버전을 기록. engine은 staging 후 마지막에 원자적으로 게시한다.
+  `<engine.name>.<engine SHA256>.retypes.json`을 검증기가 읽으며 원본/가공 해시도 다시 검사한다.
+  정상 이전 engine은 실패 시 보존한다. 실패한 시도의 사용되지 않는 sidecar/가공본은 남을 수 있지만
+  현재 engine 해시가 다르면 소비되지 않는다. 원본 dtype JSON은 변경하지 않았다.
+- `verify_engine`은 ORT metadata와 실제 engine I/O를 별도로 검사하고 pinned host buffer를 사용한다.
+  CUDA primary context를 push한 뒤 deserialize/context 생성, 완료 sync 후 자원 해제/pop/detach한다.
+  고정 J `engine.py/cudart.py`의 pinned/named 실행을 참고했다. 별도 운영 backend를 만들지 않았다.
+  PyCUDA의 [비동기 복사/pinned 조건과 primary context API](https://documen.tician.de/pycuda/driver.html)를 대조했다.
+- `verify_onnx_pair`는 ORT CPU 세션을 하나씩 실행하고 reference 출력만 임시 디스크에 둔다.
+  원본↔patched ONNX의 recurrent/same-state 각 5프레임, 출력 4종 매번 유한·max/mean abs error 0.
+  기준이 없는 임의 허용오차는 지정하지 않았다. 측정 완료·합격 보류(exit 3), TRT 합격 근거가 아니다.
+- 작업 2의 **J production patch/build/backend 연결**, 작업 3~5는 미실행이다.
+  고정 참고 사본/원격에 변경·push하지 않았다. V2 기존 patch/build는 그대로다.
+
+### 1. 같은 V3 원본 확인과 원본 없는 CPU 검사 독립화 — 2단계 완료
 
 - 파일/함수: `tests/test_stateful_safety.py` identity negative 구간,
   `tools/build_trt_v3.py::check_onnx_identity` 재사용,
@@ -83,7 +106,7 @@ verify_engine의 PyCUDA 버퍼/초기화 경로도 실제 GPU 검증 전 미확�
 - 완료: 원본 없는 CPU suite가 완료되고 real-model 구간만 SKIP. 원본 확보 상태는 별도로 표시한다.
   원본 확보가 지연돼도 나머지 CPU 검토/구현은 계속 가능하다.
 
-### 2. V3 한 모델의 가공·빌드·수치 검증 경로 보완
+### 2. V3 한 모델의 가공·빌드·수치 검증 경로 보완 — 로컬 도구 완료, production/장치 대기
 
 - 파일/함수: `tools/build_trt_v3.py::build_engine/verify_engine`, `tools/patch_v3_uint8.py::patch_file_v3`;
   J `third_party/jetlink/jetlink/onnx_patch.py::patch_file`, `server/backends/trt/build.py::build_engine`,
@@ -160,5 +183,6 @@ verify_engine의 PyCUDA 버퍼/초기화 경로도 실제 GPU 검증 전 미확�
   원본 미확보/허용오차 미정/실제 장치 미검증이면 해당 항목을 미완료로 남긴다.
   주행 검증은 이 계획 범위 밖이며 다음 작업으로 자동 시작하지 않는다.
 
-2단계 첫 작업: 위 작업 1의 **원본 없이 중단되는 identity negative 테스트를 합성 fixture로 독립화**하고,
-동시에 동일 V3 원본 확보·전체 해시·I/O 확인을 진행한다. 실제 Jetson/차량 설치는 첫 작업이 아니다.
+3단계 첫 작업: 고정 J의 `onnx_patch.py`, TRT `build.py/TrtBackend`에 V3 가공과 engine별
+dtype 기록의 소비를 격리 개발 사본에서 연결하고, 기존 stateful session 분기를 필요한 hunk로 통합한다.
+V2 build/cache와 V3 load/warm dtype 계약부터 검사한다. 사용자 지시 전 시작하지 않는다.

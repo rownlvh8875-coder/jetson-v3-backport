@@ -1,4 +1,126 @@
-# Cinque V3 Jetson — 1단계 조사 기준
+# Cinque V3 Jetson — 현재 진행 상태
+
+## 2단계 결과 (2026-10-11)
+
+사용자가 1단계 계획을 확인하고 로컬 원본 확보·CPU 검사·빌더/검증기 수정을 승인했다.
+실제 comma/Jetson 접속·설치·서비스·Params 변경은 하지 않았다. 서버 stateful 운영 통합과
+comma protocol/모델 선택은 후속 단계다. 아래 1단계 기록은 당시의 이력이며 이 절의 상태가 우선한다.
+
+| 항목 | 결과 |
+|---|---|
+| 시작 브랜치/HEAD | `feature/cinque-v3-jetson` / `09c2ddda4de0111c245b4d45d48023e569ace966`; 로컬/원격 일치, 변경 없음 |
+| 기존 제품 기준 | `2519ad0bdbf6e796fa590063fc90d4d6461b6b8d`, 이력 보존, main 변경 없음 |
+| 테스트 대상 코드 SHA | `e65ed6a46befba4c9211d9707e9bee63f7f29507` (이후 문서만 수정) |
+| A. 코드 수정·CPU 회귀 | **PASS** — 집중 41, 원본 없는 격리 사본의 기존 safety 40 PASS 포함 |
+| B. 원본 다운로드·전체 해시·I/O | **PASS** — 지정 파일 본문·7 inputs·4 outputs·slice/checkpoint 전체 일치 |
+| C. 원본↔patched ONNX | **측정 완료·합격 판정 보류** — ORT CPU, recurrent/same-state 각 5프레임, 4종 출력 max/mean 오차 0, exit 3 |
+| D. 실제 TRT/Jetson 빌드·수치 비교 | **BLOCKED** — 개발 venv에 TensorRT/PyCUDA 없음, 실제 장치 접속·검사 미실시 |
+| 실제 comma 연결·속도·state·복귀/알림 | **BLOCKED / 후속 단계** — 현재 연결/선택 코드는 변경하지 않음 |
+| 주행 검증 | 범위 밖, 미실시 |
+
+### 원본과 메타데이터
+
+저장소 실제 경로: `C:\Users\user\Documents\Codex\2026-10-11\cinque-v3-jetson-1-cinque-v3\jetson-v3-backport`.
+origin: `https://github.com/rownlvh8875-coder/jetson-v3-backport`.
+
+- 원본: `artifacts/big_driving_supercombo_v3.onnx` (위 저장소 아래).
+  SHA256 `404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4`, **766354845 bytes**.
+- 기존 [HF 다운로드 주소](https://huggingface.co/commaai/openpilot_driving_models/resolve/main/f78ed37d-afad-4dbc-8050-40ea885eedde/12864/big_driving_supercombo.onnx)에서
+  TLS 검증을 유지해 본문을 `.onnx.part`에 저장했다. 시작 시 C: 여유 약 90.6 GiB.
+  전체 해시·크기가 일치한 뒤에만 최종 경로로 rename했다. 마지막 검사에서도 전체 해시/크기 불변.
+- 가공본: `artifacts/v3_phase2_patched.onnx`, **766352746 bytes**,
+  SHA256 `38c479b144d1342ce25e6ce7894d9d0bc64c02159b9128ba6cf62282082bf268`.
+  원본을 수정하지 않았다. ONNX/가공본/엔진/다운로드 임시 파일은 Git에서 제외한다.
+- 원본 protobuf I/O의 이름 집합·정확 shape·dtype 모두 기존 `artifacts/cinque_v3.json`과 일치.
+  자세한 계약은 계획 문서의 표와 그대로 같다. JSON은 변경하지 않았다.
+- 원본 `metadata_props.output_slices` 15개와 `model_checkpoint`가 JSON과 일치했다.
+  output_slices는 `pickletools` opcode를 제한적으로 해석하며 callable/pickle을 실행하지 않는다.
+  원본 metadata에는 frame_skip 필드가 없으므로 기존 `frame_skip=4`를 새 실측값이라고 표시하지 않는다.
+
+### 수정 범위와 남은 소비 지점
+
+- `tests/test_stateful_safety.py`: 실제 ONNX에 의존하던 identity negative 검사를 임시 바이트 파일의
+  실제 해시/크기로 변경. 올바른 identity, 잘못된 hash/size, 부재, 각각 main의 build 미호출 검사.
+  mock/sys.argv는 context manager로 복원. 바이트 fixture는 모델 구조/추론 검증이 아니다.
+- `tools/build_trt_v3.py::build_engine`: 입력은 `num_inputs/get_input`으로 열거.
+  retype 기록의 실제 경로 반환. 원본 I/O/dtype와 intentional physical dtype 3개를 분리.
+  원본·가공본·engine·patcher 해시, 가공 모드, TRT 버전, workspace/FP16을 연결해 기록한다.
+  staging 후 engine을 마지막에 원자적으로 게시. 빌드/게시 실패 시 기존 engine/기록 유지 검사.
+  사용되지 않는 실패 시도 sidecar/가공 파일이 남더라도 현재 engine 해시로는 읽히지 않는다.
+- `load_build_record`: `<engine.name>.<engine SHA256>.retypes.json`만 읽고 source/engine/patched identity를 대조.
+  반환 경로와 실제 기록 일치·다른 engine 차단 검사. 원본 JSON dtype 덮어쓰기 없음.
+- `verify_engine/trt_runner`: 실제 named I/O name/mode/shape/dtype를 할당 전에 대조.
+  PyCUDA primary context 활성화 후 TRT deserialize/context 생성; pinned host→device→enqueue→host→sync.
+  실패 시에도 sync, buffer/context 자원 해제, pop/detach. deserialize/context/address/execute 실패 검사.
+  enqueue 시간·CUDA event 시간·완료된 복사/추론 시간을 구분한다. 실제 통신 경로 성능 측정이 아니다.
+- 수치 검증: ORT metadata로 원본 uint8 feed 구성, 명시한 이미지 retype만 float16으로 공급.
+  이름/shape/dtype·NaN/Inf·비정상 error·threshold 초과를 실패 처리. reshape/cast로 오류를 숨기지 않음.
+  frames<=0, 음수/NaN/Inf threshold 거부; threshold 0은 유효한 exact gate.
+  ORT 부재/비교 미수행은 INCOMPLETE. gate 요청을 build-only로 무시하지 않는다.
+- `verify_onnx_pair`: ORT CPU 세션 하나씩 실행, 첫 backend 출력은 임시 디스크에 보관.
+  seed 73, frame 0 zero smoke, 이후 변화하는 영상·0/255 픽셀·desire 전환·동일 scalar 입력.
+  recurrent는 각자 next_state를 이어가며, same-state는 매 step 동일한 zero state를 공급.
+  outputs와 next_state 3종을 매번 검사하며 실패 state를 다음 frame에 전달하지 않는다.
+- `tools/patch_v3_uint8.py`: 원본 경로 덮어쓰기 거부, FP16 이외 Cast 경계 거부, 별도 파일에 원자적 저장.
+  `tools/onnx_meta_light.py`: 원본 I/O·slice/checkpoint 대조 추가. JSON 재생성/PKL 실행 없음.
+- V2: 기존 5개 fresh-build dtype/legacy 계약 검사 유지. V3 auto 판별이 V2에 새 retype을 적용하지 않음.
+  고정 J의 V2 head-Cast 가공/build/backend는 변경하지 않았다. 실제 V2 TRT build는 검증하지 않았다.
+- **미연결:** 고정 J production `onnx_patch.py::patch_file`, TRT `build.py::build_engine`,
+  `__init__.py::TrtBackend`는 이 V3 sidecar를 읽지 않는다. 별도 패치를 만든 것으로도 보고하지 않는다.
+  후속 단계에서 기존 cache/runtime tag 및 session load/warm에 이 기록을 전달해야 한다.
+  session/queues state narrowing, protocol2 거부/모델 선택 문제도 이번 수정 범위 밖이다.
+
+### 실제 환경·명령·결과
+
+실행 파일 `$PY = '../.venv-v3/Scripts/python.exe'` (저장소 기준).
+Windows 개발용 venv: Python **3.12.14**, NumPy **2.5.4**, pytest **9.1.1**,
+onnx **1.23.2**, onnxruntime **1.31.0**, protobuf **7.36.2**.
+bundled Python `C:/Users/user/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe`로
+`-m venv ../.venv-v3`, 해당 venv에서 `-m pip install numpy pytest onnx onnxruntime` 실행.
+시스템/운영 Python은 변경하지 않았다. Windows 실행 별칭은 사용하지 않았다.
+실제 ORT 등록 provider는 매 세션 **`['CPUExecutionProvider']`**. GPU 실행/전체 op GPU placement 주장은 없음.
+
+아래 최종 실행은 모두 `e65ed6a46befba4c9211d9707e9bee63f7f29507`의 동일 제품 코드다.
+로컬 로그는 `../evidence/phase2-final-*.log`, 명령/exit/SHA는 `phase2-final-results.json`에 보존한다.
+
+| 실제 실행 명령 (`& $PY`) | 결과 / exit | 구분 |
+|---|---|---|
+| `-m pytest tests/test_v3_build_verify.py -q` | **41 PASS**, exit 0 | CPU fixture, 작은 실제 ONNX 구조, TRT/CUDA/ORT mock; 모델 없는 격리 safety 40 PASS 포함 |
+| `tests/test_stateful_safety.py` | **46 PASS**, exit 0 | CPU/모의 session 40 + 실제 원본 ORT recurrence·patched parity 6 assertions |
+| `tests/test_backport.py` | **38 PASS**, exit 0 | 기존 V2/state/spec, 실제 네트워크 조회, 실제 ONNX I/O shape 검사 |
+| `tools/onnx_meta_light.py artifacts/big_driving_supercombo_v3.onnx artifacts/cinque_v3.json` | **PASS**, exit 0 | 실제 원본 I/O dtype까지 포함, slice/checkpoint 대조 |
+| 아래 공통 비교 명령 + `--comparison-mode recurrent` | **측정 완료**, exit 3 | 실제 ONNX/ORT CPU, 독립 state 5프레임×4 tensors, max/mean abs 0; 합격 보류 |
+| 아래 공통 비교 명령 + `--comparison-mode same-state` | **측정 완료**, exit 3 | 같은 zero state의 단일 step 5회×4 tensors, max/mean abs 0; 합격 보류 |
+| 실제 TensorRT parse/build/run, 원본↔TRT | **BLOCKED**, 미실행 | TensorRT/PyCUDA와 장치 환경 없음; mock 통과와 구분 |
+| Linux 통신/운영 tests 전체 | **SKIP**, 재실행 안 함 | 1단계 Windows sendmsg/fcntl 제약 기록 유지, 이번 범위 밖 |
+
+공통 비교 명령:
+```powershell
+& $PY -u tools/build_trt_v3.py --onnx artifacts/big_driving_supercombo_v3.onnx --spec artifacts/cinque_v3.json --out artifacts/v3_phase2_patched.onnx --onnx-only --frames 5
+```
+`--require-max-abs-err`는 지정하지 않았다. 허용오차 근거가 없으므로 0 오차 관측을
+TRT/장치/차량 적용의 합격 기준으로 확대하지 않는다. exit **0**은 요청 gate 통과 또는 build-only 완료,
+**1**은 실패, **2**는 잘못된 CLI 인수, **3**은 비교 미완료/측정 후 합격 보류다.
+
+수정 전: 기존 safety는 30 PASS 뒤 실제 파일 부재로 exit 1 (`phase2-safety-before.log`).
+fixture 추가 후에도 missing-file 메시지 계약이 없어 실패함을 확인하고 identity 함수를 최소 수정했다.
+집중 검사 첫 실행은 17 FAIL (`phase2-focused-red.log`), 이후 기능 수정으로 통과.
+gate를 build-only에서 무시하는 문제와 cleanup 실패 시 pop 누락도 2 FAIL로 재현 후 수정했다
+(`phase2-final-gates-red.log`). 기존 assertion을 완화/삭제하거나 전체 suite를 skip하지 않았다.
+
+### 고정 참고와 다음 단계
+
+carrot-jetson `d0dc96fa32410403dfb2fefff3e2909c11ec109b`,
+carrot-wip `029ab60eb19e7b9d4d76bfee1ce99a7521934511` 재대조, 사본 둘 다 clean.
+최신화·원격 push 없음. 실제 설치 버전은 여전히 미확인이다.
+미수행 범용 변환기/MDM 작업은 현재 목표에서 제외한 상태를 유지한다.
+
+3단계 첫 작업: 고정 J의 V3 patch/build/backend 소비 지점을 격리 개발 사본에서 연결하고
+기존 stateful session을 최소 hunk로 재사용하여 V2/V3 build/cache/load/warm 계약을 검사한다.
+별도 사용자 지시 전 시작하지 않는다. V3 정상가동/차량 적용 준비 완료로 보고하지 않는다.
+
+## 1단계 조사 기록 (아래는 당시 상태)
+
 
 조사일: 2026-10-11 (Asia/Seoul). 제품 코드 수정·장치 접속/변경·주행 없음.
 현재 목표/제약은 [AGENTS.md](../AGENTS.md), 후속 작업은 [최소 변경계획](V3_JETSON_PLAN.md)을 따른다.
