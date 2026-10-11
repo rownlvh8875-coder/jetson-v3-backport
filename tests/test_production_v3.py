@@ -711,3 +711,22 @@ def test_failed_cuda_capture_ends_capture_and_drains_before_reset(gpu,source,tmp
         assert events==['begin','end','destroy','sync']
         assert engine.idle
     finally: engine.close()
+
+
+def test_v2_fresh_derivation_preserves_legacy_wire_contract(gpu,tmp_path):
+    v2=queued_source(gpu.prod,tmp_path)
+    model=onnx.load(v2.path)
+    H.set_model_props(model, {'model_checkpoint':'queued-fixture', 'output_slices':base64.b64encode(
+        pickle.dumps({n:slice(*at) for n,at in v2.spec['output_slices'].items()})).decode()})
+    onnx.save(model,v2.path)
+    host=gpu.prod.session.EngineHost(gpu.prod.session.EngineCache(tmp_path/'cache',gpu.backend.TrtBackend()))
+    try:
+        derived=host._derive_spec(v2.path,4)
+        assert 'input_dtypes' not in derived.to_dict() and 'output_dtypes' not in derived.to_dict()
+        assert derived.input_shapes==gpu.prod.spec.ModelSpec.from_dict(v2.spec).input_shapes
+        plan=tmp_path/(derived.sha256[:16]+'.plan')
+        host.backend.build(v2.path,plan,meta_extra={'spec':derived.to_dict()})
+        engine=host.backend.load(plan)
+        host.loaded=host._warm(engine,derived)
+        assert not host.loaded.spec.stateful and 'prev_feat' in host.loaded.spec.packed_shapes
+    finally:host.close()

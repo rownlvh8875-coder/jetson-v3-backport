@@ -534,8 +534,7 @@ class EngineHost:
     return ModelSpec(sha256=identity['sha256'], nbytes=identity['nbytes'], frame_skip=frame_skip,
                      input_shapes=dict(meta.inputs), output_shapes=dict(meta.outputs),
                      output_slices={n: slice(*s) for n, s in decode_output_slices(meta.props['output_slices']).items()},
-                     checkpoint=meta.model_checkpoint, input_dtypes=dict(meta.input_types),
-                     output_dtypes=dict(meta.output_types))
+                     checkpoint=meta.model_checkpoint)  # preserve the legacy queued wire spec
 
   def _build(self, model_path: Path, artifact: Path, meta_extra: dict) -> None:
     self.backend.build(model_path, artifact, report=self._progress, meta_extra=meta_extra)
@@ -779,6 +778,17 @@ class Session:
       self._v3_requested = True
     self.request = Request(str(d['sha256']), int(d['nbytes']),
                            int(d.get('frame_skip', DEFAULT_FRAME_SKIP)))
+    if self._v3_requested and d.get('ready_only', False):
+      if type(d['ready_only']) is not bool:
+        raise ValueError('V3 ready_only must be boolean')
+      state = self.host.status(*self._wanted())
+      if state.get('state') != 'ready':
+        state = {'state': 'failed', 'sha256': self.request.sha256,
+                 'detail': 'V3 not resident/valid; preparation requires ignition off'}
+      self._send_engine(msg.seq, state)
+      return
+    if self._v3_requested and type(d.get('ready_only', False)) is not bool:
+      raise ValueError('V3 ready_only must be boolean')
     self._send_engine(msg.seq, self.host.request(self.request, self))
 
   def _send_engine(self, seq: int, state: dict) -> None:

@@ -1,5 +1,25 @@
 # Cinque V3 Jetson — 현재 진행 상태
 
+## 4C/5A·리뷰 체크포인트 (2026-10-11)
+
+- 마지막 완료: 별도 C/J 프로세스의 실제 client/Session/worker/warm/infer/TCP와
+  mac.prepare→daemon._serve_local→Unix IPC Client→parser/JoiningModel.run 복귀 검사.
+  Linux loopback **29 PASS**. GPU/CUDA/USB/QCOM warp/내부 추론 연산만 합성 경계다.
+- 실제 읽기 전용 별도 리뷰에서 V2 새 명세의 dtype 필드 회귀와 stale-preloaded/ignition
+  준비 race를 발견했다. V2 queued wire는 기존 필드를 보존하고, V3 onroad 요청은
+  `ready_only=true`로 현재 resident/valid engine만 받는다. offroad 요청도 send마다
+  ignition/cancel을 확인한다. 각각 RED→GREEN 테스트로 고정했다.
+- 실행: production+negotiation **97 PASS**, selection **22 PASS**;
+  기존 C Linux 회귀/App **122 PASS**. 최종 깨끗한 패치 적용본에서 재검사 중이다.
+- 5A: `patches/experimental-v3-manifest.json`에 기준 SHA·19개 파일 전후 hash·패치 hash·
+  설정/라이선스를 기록했다. `tools/experimental_patch.py`는 개발 사본만 검사/적용/원복하며
+  잘못된 SHA/dirty/내용 변조/이미 적용됨을 거부한다. fixture **6 PASS**,
+  실제 두 고정 사본 preflight/apply/reverse/재적용 확인 중이다.
+- 막힌 항목: 5B 현장 승인/장치, 실제 TRT/USB/QCOM/차량 메시지·commIssue 실측.
+  실제 ONNX 가공 구현은 변경하지 않았고 기존 ORT 측정(exit 3) 한계를 유지한다.
+- 다음 첫 작업: 최종 제품 커밋 기준으로 깨끗한 적용본 검사·원복·재적용을 마치고,
+  개인정보 없는 증거 요약·현장 절차를 갱신해 지정 feature 브랜치에 게시한다.
+
 ## 4A/4B 체크포인트 (2026-10-11)
 
 - 시작 로컬/실제 원격 HEAD `5fda3e8b6db8b6b7f4c1c50cdb732dc32aed93ce`, 지정 branch, 변경 없음.

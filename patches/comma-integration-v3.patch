@@ -214,7 +214,7 @@ index 25184c6..94e42b0 100644
        self.sock.close()
        raise
 diff --git a/openpilot/selfdrive/modeld/jetlink/mac.py b/openpilot/selfdrive/modeld/jetlink/mac.py
-index f357445..e5490cd 100644
+index f357445..07b40d4 100644
 --- a/openpilot/selfdrive/modeld/jetlink/mac.py
 +++ b/openpilot/selfdrive/modeld/jetlink/mac.py
 @@ -10,8 +10,8 @@ import urllib.request
@@ -237,7 +237,7 @@ index f357445..e5490cd 100644
    protocol = peer.get('protocol') if isinstance(peer, dict) else None
    app_capable = protocol == 3 and may_provision(peer, mode)
    legacy_v3 = protocol == 3 and isinstance(peer, dict) and 'loaded' in peer and not app_capable
-@@ -200,3 +202,47 @@ def prepare(client, peer, offroad, connected, progress, cache=CACHE, mode='usb')
+@@ -200,3 +202,48 @@ def prepare(client, peer, offroad, connected, progress, cache=CACHE, mode='usb')
      client.t = original
      client.progress_cb = None
      client._should_stop = lambda: False
@@ -250,11 +250,12 @@ index f357445..e5490cd 100644
 +  preloaded = peer.get('loaded') == V3_SPEC.sha256
 +  if not unchanged or not preloaded:
 +    require_setup(offroad, connected)
++  ready_only = not offroad()
 +
 +  def check():
 +    if not connected():
 +      raise PreparationDeferred('Jetlink host disconnected; waiting for reconnection')
-+    if not unchanged or not preloaded:
++    if not ready_only or not unchanged or not preloaded:
 +      require_setup(offroad, connected)
 +
 +  def stopped():
@@ -271,7 +272,7 @@ index f357445..e5490cd 100644
 +    client.approve_v3(V3_SPEC)
 +    try:
 +      result = client.ensure_engine(V3_SPEC.sha256, V3_SPEC.nbytes, frame_skip=V3_SPEC.frame_skip,
-+                                    build_timeout=900, should_stop=stopped, progress=report)
++                                    build_timeout=900, should_stop=stopped, progress=report, ready_only=ready_only)
 +    except EngineMissing:
 +      raise PreparationDeferred('Cinque v3 engine/source is not provisioned on the Jetson; prepare it offroad') from None
 +    validate_model_spec(result)
@@ -372,7 +373,7 @@ index df622a1..03843ad 100644
    path = Path(cache) / 'selected.json'
    try:
 diff --git a/third_party/jetlink/jetlink/client.py b/third_party/jetlink/jetlink/client.py
-index b18f995..f96dc35 100644
+index b18f995..9c18747 100644
 --- a/third_party/jetlink/jetlink/client.py
 +++ b/third_party/jetlink/jetlink/client.py
 @@ -28,6 +28,7 @@ from pathlib import Path
@@ -470,7 +471,16 @@ index b18f995..f96dc35 100644
    def state(self, timeout: float = 2.0) -> dict:
      seq = self._next_seq()
      self.t.send_json(P.Msg.STATE_REQ, seq, {})
-@@ -277,16 +320,28 @@ class JetlinkClient:
+@@ -260,7 +303,7 @@ class JetlinkClient:
+                     frame_skip: int = DEFAULT_FRAME_SKIP,
+                     progress: ProgressFn | None = None,
+                     build_timeout: float = 900.0,
+-                    should_stop: StopFn | None = None) -> ModelSpec:
++                    should_stop: StopFn | None = None, ready_only: bool = False) -> ModelSpec:
+     """Make the server ready to run this model, uploading and building if needed.
+ 
+     Blocks until ready or the build fails, and returns the spec the server
+@@ -277,16 +320,30 @@ class JetlinkClient:
        raise LinkError("nbytes must be a non-negative integer")
      if type(frame_skip) is not int or frame_skip <= 0:
        raise LinkError("frame_skip must be a positive integer")
@@ -490,7 +500,9 @@ index b18f995..f96dc35 100644
 -    self.t.send_json(P.Msg.ENGINE_REQ, seq, {'sha256': sha256, 'nbytes': nbytes, 'frame_skip': frame_skip})
 +    request = {'sha256': sha256, 'nbytes': nbytes, 'frame_skip': frame_skip}
 +    if self._v3_selected:
-+      request.update({V3.CAPABILITY: V3.capability(), 'session_id': self._peer['session_id']})
++      if type(ready_only) is not bool:
++        raise LinkError('V3 ready_only must be boolean')
++      request.update({V3.CAPABILITY: V3.capability(), 'session_id': self._peer['session_id'], 'ready_only': ready_only})
 +    self.t.send_json(P.Msg.ENGINE_REQ, seq, request)
      resp = json.loads(bytes(self._expect(P.Msg.ENGINE_RESP, seq, 60.0).payload))
      if not isinstance(resp, dict):
@@ -500,7 +512,7 @@ index b18f995..f96dc35 100644
      self._engine_state = resp
      log.info("server engine state: %s (%s)", resp.get('state', 'unknown'), resp.get('detail', ''))
  
-@@ -300,11 +355,22 @@ class JetlinkClient:
+@@ -300,11 +357,22 @@ class JetlinkClient:
      self._await_ready(build_timeout)
      spec = self._engine_spec(sha256, frame_skip, expected_nbytes=nbytes if nbytes else None)
      self.spec = spec
@@ -523,7 +535,7 @@ index b18f995..f96dc35 100644
      raw_spec = state.get('spec')
      if not isinstance(raw_spec, dict):
        raise LinkError("server reported ready without a model spec")
-@@ -380,9 +446,18 @@ class JetlinkClient:
+@@ -380,9 +448,18 @@ class JetlinkClient:
        raise LinkError("link previously failed")
      version = self._protocol_version()
      if self.spec.stateful and version == 2:
@@ -543,7 +555,7 @@ index b18f995..f96dc35 100644
      if version == 3:
        packed = _protocol3_packed(self.spec, packed)
      seq = self._next_seq()
-@@ -390,6 +465,7 @@ class JetlinkClient:
+@@ -390,6 +467,7 @@ class JetlinkClient:
      if version == 3:
        flags |= P.Flag.WANT_HIDDEN
      try:
@@ -551,7 +563,7 @@ index b18f995..f96dc35 100644
        self._infer_started = time.monotonic()
        self._infer_frame_id = frame_id
        self._infer_flags = flags
-@@ -406,6 +482,8 @@ class JetlinkClient:
+@@ -406,6 +484,8 @@ class JetlinkClient:
      A long frame is a dropped camera frame, which modeld tolerates. Only a stall
      past `deadline` is a failure, and then the link is done.
      """
@@ -560,7 +572,7 @@ index b18f995..f96dc35 100644
      try:
        budget = self.deadline if deadline is None else deadline
        remaining = budget - (time.monotonic() - self._infer_started)
-@@ -457,6 +535,7 @@ class JetlinkClient:
+@@ -457,6 +537,7 @@ class JetlinkClient:
      if not np.all(np.isfinite(output)):
        self.dead = True
        raise LinkError('inference response contains non-finite model outputs')
@@ -569,7 +581,7 @@ index b18f995..f96dc35 100644
  
    def infer(self, warped: np.ndarray, packed: np.ndarray, frame_id: int = 0,
 diff --git a/third_party/jetlink/jetlink/spec.py b/third_party/jetlink/jetlink/spec.py
-index 2746fa2..ec25b29 100644
+index 2746fa2..659659b 100644
 --- a/third_party/jetlink/jetlink/spec.py
 +++ b/third_party/jetlink/jetlink/spec.py
 @@ -15,7 +15,7 @@ from __future__ import annotations
@@ -599,7 +611,7 @@ index 2746fa2..ec25b29 100644
        'sha256': self.sha256,
        'nbytes': self.nbytes,
        'frame_skip': self.frame_skip,
-@@ -161,6 +163,12 @@ class ModelSpec:
+@@ -161,15 +163,25 @@ class ModelSpec:
        'output_slices': {k: [v.start, v.stop] for k, v in self.output_slices.items()},
      }
  
@@ -611,8 +623,12 @@ index 2746fa2..ec25b29 100644
 +
    @classmethod
    def from_dict(cls, d: dict) -> ModelSpec:
++    from jetlink import v3_compat as V3
++    if d.get('sha256') == V3.CANONICAL_SPEC['sha256']:
++      V3.validate_spec(d)
      return cls(
-@@ -169,7 +177,8 @@ class ModelSpec:
+       sha256=d['sha256'], nbytes=d['nbytes'],
+       frame_skip=d.get('frame_skip', DEFAULT_FRAME_SKIP),
        input_shapes={k: tuple(v) for k, v in d['input_shapes'].items()},
        output_shapes={k: tuple(v) for k, v in d['output_shapes'].items()},
        output_slices={k: slice(*v) for k, v in d['output_slices'].items()},

@@ -131,3 +131,34 @@ def test_server_requires_current_capability_before_v3_infer(live,monkeypatch):
     assert session._v3_generation==live.loaded.generation
     session._reset(4)
     assert session._v3_generation is None and session.request is None
+
+
+def test_server_ready_only_never_starts_a_worker_for_stale_preloaded_hello(live,monkeypatch):
+    from jetlink import v3_compat as v
+    monkeypatch.setattr(v,'CANONICAL_SPEC',live.loaded.spec.to_dict())
+    request={'sha256':live.loaded.sha256,'nbytes':live.loaded.spec.nbytes,'frame_skip':4,
+             v.CAPABILITY:v.capability(),'session_id':live.session.session_id,'ready_only':True}
+    def forbidden(*a): raise AssertionError('ready-only must not start preparation')
+    monkeypatch.setattr(live.host,'request',forbidden)
+    live.session.on_engine_req(NS(seq=2,payload=memoryview(json.dumps(request).encode())))
+    assert json.loads(live.sent[-1][2])['state']=='ready'
+    live.loaded.valid=False
+    live.session.on_engine_req(NS(seq=3,payload=memoryview(json.dumps(request).encode())))
+    assert json.loads(live.sent[-1][2])['state']=='failed'
+    assert live.session._v3_generation is None
+
+def test_prior_hello_engine_update_cannot_authorize_new_selection(comma):
+    c,t,s=ready(comma)
+    old=dict(t.ready)
+    c.hello(); t.hello['session_id']='d'*32
+    c._peer['session_id']='d'*32
+    c.approve_v3(s)
+    from jetlink import protocol as P
+    with pytest.raises(comma.client.LinkError):
+        c._dispatch(NS(msg_type=P.Msg.ENGINE_RESP,seq=0,payload=memoryview(json.dumps(old).encode())))
+    assert c._v3_generation is None
+
+
+def test_pinned_v3_decoder_does_not_discard_unknown_contract_fields(comma):
+    d=copy.deepcopy(comma.v.CANONICAL_SPEC);d['unexpected_contract']='changed'
+    with pytest.raises(ValueError):comma.spec.ModelSpec.from_dict(d)

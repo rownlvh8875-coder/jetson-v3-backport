@@ -106,6 +106,7 @@ def test_v3_prepare_requests_only_pinned_preprovisioned_engine_and_remembers_app
     assert request[0]=='ensure' and request[1]==(result.sha256,result.nbytes)
     assert request[2]['frame_skip']==4 and 'onnx_path' not in request[2]
     assert request[2]['build_timeout']==900
+    assert request[2]['ready_only'] is False
     assert comma.selection.approved_spec(tmp_path/'jetson-v3') == result
 
 
@@ -135,7 +136,7 @@ def test_v3_preparation_pending_callbacks_recheck_ignition_and_restore_transport
             kw['should_stop']()
         raise comma.mac.PreparationDeferred('ignition changed')
     client.ensure_engine=pending
-    calls=iter([True,False])
+    calls=iter([True,False,False])
     with pytest.raises(comma.mac.PreparationDeferred):
         comma.mac.prepare(client,peer(comma),lambda:next(calls),lambda:True,lambda *a:None,tmp_path)
     assert client.t is original
@@ -182,6 +183,7 @@ def test_approved_preloaded_v3_can_resume_onroad_but_pending_work_cannot(comma, 
     client=ReadyClient(spec)
     assert comma.mac.prepare(client,p,lambda:False,lambda:True,lambda *a:None,tmp_path)==spec
     assert client.calls[0][0]=='approve'
+    assert client.calls[1][2]['ready_only'] is True
     with pytest.raises(comma.mac.PreparationDeferred):
         client.calls[1][2]['should_stop']()
     from jetlink.v3_compat import CAPABILITY
@@ -202,13 +204,58 @@ def test_real_vendored_client_preparation_uses_current_hello_ready_and_cache(com
     request=t.sent[-1][2]
     assert request[v3_compat.CAPABILITY]==v3_compat.capability()
     assert request['session_id']==t.hello['session_id']
+    assert request['ready_only'] is False
     assert c._v3_generation==t.ready['generation']
     t.hello['loaded']=comma.contracts.V3_SPEC.sha256
     p=c.hello()
     assert c._v3_generation is None
     assert comma.mac.prepare(c,p,lambda:False,lambda:True,lambda *a:None,tmp_path)==comma.contracts.V3_SPEC
     assert t.sent[-1][0]==P.Msg.ENGINE_REQ
+    assert t.sent[-1][2]['ready_only'] is True
     assert c._v3_generation==t.ready['generation']
+
+
+def test_stale_preloaded_hello_onroad_requests_ready_only_and_never_starts_setup(comma, monkeypatch, tmp_path):
+    from test_v3_negotiation import Peer
+    from jetlink import client, spec, v3_compat
+    from jetlink import protocol as P
+    monkeypatch.setenv('CARROT_JETLINK_V3','1')
+    wanted=comma.contracts.V3_SPEC
+    comma.selection.remember_spec(tmp_path/'jetson-v3',wanted)
+    t=Peer(NS(client=client,spec=spec,v=v3_compat))
+    t.hello.update(backend='trt',loaded=wanted.sha256)
+    # HELLO described a resident engine, but it became unavailable before
+    # ENGINE_REQ. The ready-only server path rejects without starting work.
+    t.ready={'state':'failed','detail':'ready-only engine no longer loaded','session_id':t.hello['session_id']}
+    c=client.JetlinkClient(t); p=c.hello(); original=c.t
+    monkeypatch.setattr(comma.mac,'model_file',lambda *a,**kw:pytest.fail('no fallback download'))
+    with pytest.raises(client.LinkError):
+        comma.mac.prepare(c,p,lambda:False,lambda:True,lambda *a:pytest.fail('no setup progress'),tmp_path)
+    assert t.sent[-1][0]==P.Msg.ENGINE_REQ
+    assert t.sent[-1][2]['ready_only'] is True
+    assert c.spec is None and c._v3_generation is None and c.t is original
+
+
+def test_ignition_change_after_ready_only_decision_blocks_engine_send(comma, monkeypatch, tmp_path):
+    monkeypatch.setenv('CARROT_JETLINK_V3','1')
+    wanted=comma.contracts.V3_SPEC
+    comma.selection.remember_spec(tmp_path/'jetson-v3',wanted)
+    p=dict(peer(comma),loaded=wanted.sha256)
+    c=ReadyClient(wanted)
+    sent=[]
+    original=NS(send_json=lambda *a,**kw:sent.append((a,kw)))
+    c.t=original
+    def request(*args,**kwargs):
+        assert kwargs['ready_only'] is False
+        c.t.send_json('ENGINE_REQ',1,{})
+        return wanted
+    c.ensure_engine=request
+    # Previously approved/preloaded skips the initial setup check. The first
+    # ignition read allows work; the next read happens at the wrapped send.
+    ignition=iter([True,False])
+    with pytest.raises(comma.mac.PreparationDeferred):
+        comma.mac.prepare(c,p,lambda:next(ignition),lambda:True,lambda *a:None,tmp_path)
+    assert sent==[] and c.t is original and c.spec is None
 
 
 def test_local_client_applies_peer_and_transport_selection_before_accepting_spec(comma, monkeypatch):
