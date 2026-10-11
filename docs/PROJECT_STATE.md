@@ -1,5 +1,136 @@
 # Cinque V3 Jetson — 현재 진행 상태
 
+## 3단계 결과 (2026-10-11, 현재 기준)
+
+**production 서버 소프트웨어 경로를 고정 소스의 개발 사본에 연결했고 오프라인 검사를 마쳤다.**
+실제 TensorRT/Jetson build/load/infer와 comma 연결 성공을 뜻하지 않는다.
+comma protocol/모델 선택·운영 설치·서비스·Params는 수정하지 않았다.
+아래 1·2단계 절은 당시 기록이며 이 절이 현재 상태다.
+
+| 항목 | 결과 |
+|---|---|
+| 시작 origin/branch | `https://github.com/rownlvh8875-coder/jetson-v3-backport`, `feature/cinque-v3-jetson` |
+| 시작 로컬/원격 HEAD | `a1db7e3ab5270d9834af7171eef10a61bf6daaac`, 일치, 미커밋 변경 없음 |
+| 고정 carrot-jetson | `d0dc96fa32410403dfb2fefff3e2909c11ec109b`; 기준 사본 변경 없음 |
+| 고정 carrot-wip | `029ab60eb19e7b9d4d76bfee1ce99a7521934511`; 기준 사본 변경 없음 |
+| 제품 코드·테스트 SHA | **`a96a792bc042cd893dcdb3eeb5d56336cf98ce52`** (이후 문서/AGENTS/README만 수정) |
+| 공통 가공 코드 커밋 | `c653eef0fed8e59816834a7373a64203c7d562fe` |
+| production 소프트웨어 연결 | **PASS (소스/오프라인)** — patch/build/metadata/cache/load/warm/infer/state 연결 |
+| CPU/mock 통합·회귀 | **PASS** — Windows production 74 + build_verify 41, safety 46, backport 38; WSL production 74 |
+| 실제 원본·가공본 ONNX | **PASS (무결성/구조)** — 기존 원본 재사용, 전체 hash/size/I/O/slices/checkpoint 재대조 |
+| 실제 원본↔가공본 ORT CPU | **측정 완료·합격 판정 보류** — recurrent/same-state 각 5프레임, 모든 4종 출력 max/mean 0, exit 3 |
+| 실제 TensorRT/Jetson build/load/infer | **BLOCKED** — 해당 런타임/장치 환경 미실시; mock으로 대체한 경계임 |
+| 실제 comma 연결·성능·state·복귀/알림 | **BLOCKED / 후속 단계** — protocol2 stateful 차단 및 모델 선택 수정도 아직 안 함 |
+| 실제 장치 설치 SHA | 미확인; 고정 참고 SHA와 같다고 가정하지 않음 |
+| 주행 검증 | 범위 밖, 미실시 |
+
+### 적용물과 실제 호출 경로
+
+현재 작업 저장소 경로는 아래 2단계 절과 같다. 기준 사본 `../references/carrot-jetson`는 읽기 전용으로 보존했고,
+개발 사본 `../development/carrot-jetson-v3` 및 최종 재적용 사본 `../development/carrot-jetson-v3-check`를 사용했다.
+두 개발 사본 HEAD는 고정 J이며 수정 파일은 이 저장소 패치에 보존했다. 참고 원격에 push하지 않는다.
+
+최종 적용물: [`patches/jetson-production-v3.patch`](../patches/jetson-production-v3.patch),
+SHA256 `d59c72bb5e616aceee7797b7b8539a20de0ca44b79b9011dacb91e130e595fe9`.
+별도 깨끗한 고정 소스에 **이 파일 하나만** 적용한다. 적용/원복 명령은 [계획](V3_JETSON_PLAN.md#3단계-구현과-개발-사본의-재현-방법)에 있다.
+
+실제 수정 대상은 J `third_party/jetlink/jetlink/` 아래 8개 파일이다:
+`cinque_v3.py`(추가), `spec.py`, `queues.py`, `onnx_patch.py`, `server/session.py`,
+`server/backends/trt/build.py`, `server/backends/trt/__init__.py`, `server/backends/trt/engine.py`.
+
+호출 흐름은 `EngineHost.request/_run/_build_job → TrtBackend.build → build_engine → patch_file →
+parser/build → plan/JSON 게시 → TrtBackend.load → TrtEngine → EngineHost._warm → Session._infer → state commit`이다.
+통합 검사에서는 이 함수들을 실제로 실행하고 TensorRT parser/compiler/runtime 및 cudart 경계만 fake로 대체했다.
+cache hit와 새 host/backend, **새 Python 프로세스**에서 원본/임시 patched 파일 없이 load하는 검사도 수행했다.
+
+- V3는 고정 SHA/크기·전체 semantic spec·graph 계약 일치 시만 선택한다. 다른 new_img 모델은 거부한다.
+- 공통 graph 가공 함수는 개발 도구와 production이 공유하며 내용 일치를 검사한다.
+  `jetlink/spec.py/queues.py`, `patches/session.py.new`도 실제 적용 모듈과 동기화했다.
+  `session.py.orig`는 고정 J 원본과 일치한다. 개별 spec/queues/session patch도 같은 고정 원본에서 다시 생성했다.
+  이 3개는 통합 패치 부분집합이므로 중복 적용하지 않는다. 과거 comma/LFS 패치는 이번에 적용하지 않았다.
+- 기존 원본 dtype는 보존한다. `new_img/state_img_q/next_state_img_q`만 FP16 physical 계약으로 선언한다.
+  source/patched/engine hash·size, patch ID, semantic spec, 허용 dtype, 기존 TRT/GPU/cache 정보가 영속 JSON에 연결된다.
+  기록 checksum은 우발적 손상 탐지이며 서명/인증은 아니다. loader는 임시 절대경로에 의존하지 않는다.
+- staging 완료 후 plan/JSON을 게시하고 복구 가능한 두 번째 rename 실패는 기존 plan을 복원한다.
+  두 파일의 crash-atomic transaction을 주장하지 않는다. 중단 시 엔진 hash 불일치를 load에서 차단한다.
+  metadata 손상과 device/메모리 오류를 구분하고, 후자로 정상 캐시를 삭제하지 않는다.
+- 실제 엔진 이름/mode/정확 shape/dtype를 할당 전에 대조한다. pinned buffers/named tensor/CUDA graph,
+  memory budget/progress/timing cache를 유지하며 production에 PyCUDA 실행기를 이식하지 않았다.
+- `_warm`은 reset→입력→warm/capture→reset, 같은 host buffer 주소를 유지한다.
+  capture/실행 실패에서도 stream drain을 시도하고, drain 실패 시 live 메모리를 해제/reset하지 않는다.
+- `_infer`는 length/scalar finite 및 원래 outputs/next_state 3종의 이름·shape·dtype·finite 검사 후 commit한다.
+  state dtype는 쌍별 동일하며 same_kind 축소를 제거했다. finite float32 70000→FP16 state도 실패 처리한다.
+  검증 실패 시 committed state 보존, 명시적 RESET은 별도다. read-only/두 번째·세 번째 copy 실패는
+  부분 commit 가능성을 인정하고 generation을 invalid 처리한다. RESET/HELLO만으로 복구하지 않으며 reload 전 정상 응답 금지다.
+  기존 실패 Status의 header만 반환한다. 정상 wire에는 driving outputs만 담고 state 3종은 내부에 남긴다.
+
+### 원본과 ORT 실측
+
+- 원본 `artifacts/big_driving_supercombo_v3.onnx`: **766354845 bytes**,
+  SHA256 `404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4`.
+  정상 기존 파일을 재사용했고 다운로드/전체 PC 재탐색을 하지 않았다. 검사 뒤에도 전체 identity 불변.
+- production 가공본 `artifacts/v3_phase3_patched.onnx`: **766352746 bytes**,
+  SHA256 `38c479b144d1342ce25e6ce7894d9d0bc64c02159b9128ba6cf62282082bf268`.
+  이번 production 함수로 새로 생성하여 실제 비교했다. 2단계 결과 문구를 복사한 것이 아니다.
+- 원본 7 inputs/4 outputs의 이름·정확 shape/dtype, output_slices 15개, checkpoint가 기존 JSON과 모두 일치.
+  slice metadata는 제한된 pickletools 문법으로 해석하며 pickle callable을 실행하지 않는다.
+- 실제 import: `../development/carrot-jetson-v3-check/third_party/jetlink/jetlink/onnx_patch.py`.
+  원본↔patched ORT CPU는 세션을 순차 실행했다. 등록 provider는 매 세션 `['CPUExecutionProvider']`.
+  seed 73, frame 0 zero smoke, 이후 변화 영상·0/255 경계 픽셀·desire 전환.
+  recurrent는 각 backend의 next_state를 독립적으로 이어가고, same-state는 **매 step zero state**다.
+  두 모드 각 5프레임에서 outputs와 next_state 3종의 max/mean abs error 모두 0.
+  허용오차 근거가 없으므로 합격 판정은 **SKIP/보류(exit 3)**다. 도로 품질/TRT 수치·성능 측정이 아니다.
+  원본/가공본/engine은 Git에 포함하지 않는다.
+
+### 실제 실행 명령·환경·로그
+
+제품 코드 기준은 위 전체 SHA이며 참고 검사만 고정 C SHA다. 로그는 저장소 밖 `../evidence/`에 보존한다.
+Windows `$Py=../.venv-v3/Scripts/python.exe` (실제 Python 3.12.14, NumPy 2.5.4,
+ONNX 1.23.2, ORT 1.31.0, pytest 9.1.1), TensorRT/PyCUDA 미설치.
+`$Prod=../development/carrot-jetson-v3-check`이며 `CINQUE_PRODUCTION_ROOT`를 절대경로로 지정했다.
+WSL Ubuntu-24.04 Python 3.12.3의 격리 venv는 `/home/cyberpilot/.venvs/cinque-v3-stage3`:
+NumPy 2.5.4/ONNX 1.23.2/pytest 9.1.1, 시스템 패키지 업그레이드 없음.
+
+| 실제 명령 (작업 디렉터리=이 저장소) | 결과 / exit | 분류 / 로그 |
+|---|---|---|
+| `git -C $Prod apply --check <patch>` / `apply <patch>` / `apply --reverse --check <patch>` / `apply --reverse <patch>` 후 재적용 | 모두 0, 원복 시 status 빈 출력, 8개 파일 bytes 일치 | PASS; 고정 깨끗한 사본. `phase3-clean-patch.log` |
+| `& $Py -m pytest -s -q tests/test_production_v3.py tests/test_v3_build_verify.py` | **115 passed / 0** (74+41) | PASS CPU/mock + 실제 작은 ONNX 가공. 원본 없는 safety subprocess도 포함. `phase3-final-windows.log` |
+| `wsl -d Ubuntu-24.04 -- env CINQUE_PRODUCTION_ROOT=<위 $Prod의 /mnt/c/... 경로> /home/cyberpilot/.venvs/cinque-v3-stage3/bin/python -m pytest -s -q tests/test_production_v3.py` | **74 passed / 0** | PASS Linux CPU/mock, 실제 적용 모듈 __file__ 기록. `phase3-final-linux.log` |
+| `& $Py tests/test_stateful_safety.py` | **46 passed, 0 failed / 0** | PASS; 합성 안전성 + 실제 원본 ORT recurrent/가공 검사. TRT 아님. `phase3-final-safety.log` |
+| `& $Py tests/test_backport.py` | **38 passed, 0 failed / 0** | PASS; V2 queued/stateful 합성·실제 V3 I/O 및 기존 pointer 조회. `phase3-final-backport.log` |
+| `& $Py ../evidence/phase3_real_onnx.py` | 두 모드 각 5프레임 측정, 전 출력 max/mean 0 / **3** | 실제 production patch + ORT CPU; 합격 판정 SKIP/보류. `phase3-final-real-onnx.log` |
+| `wsl -d Ubuntu-24.04 -- /home/cyberpilot/.venvs/cinque-v3-stage3/bin/python -m pytest --noconftest -o addopts= -q ../references/openpilot/tools/jetlink/test_stateful_protocol.py ../references/openpilot/tools/jetlink/test_cache_persistence.py` | **13 passed / 0**, pytest config warning 3 | PASS; 고정 C의 Linux loopback 통신/캐시 fixture, 실제 comma 아님. `phase3-linux-reference.log` |
+| `& $Py -m compileall -q jetlink tools tests ../development/carrot-jetson-v3-check/third_party/jetlink/jetlink` | 0 | PASS 문법만. `phase3-final-compile.log` |
+| 실제 TensorRT parser/compiler/CUDA/Jetson 추론 | 미실행 | **BLOCKED** — GPU fake 계약 검사를 실제 실행으로 승격하지 않음 |
+
+실제 모델 비교의 로컬 helper는 적용본 `patch_file(spec=...)`와 기존
+`tools/build_trt_v3.py::verify_onnx_pair(...,frames=5,mode=...,seed=73)`를 순서대로 호출한다.
+공유 가공 함수를 이용한 재현 CLI는 다음과 같다 (명령마다 exit 3은 허용오차 판정 보류다):
+
+```powershell
+& $Py tools/build_trt_v3.py --onnx artifacts/big_driving_supercombo_v3.onnx --spec artifacts/cinque_v3.json --out artifacts/v3_phase3_patched.onnx --onnx-only --frames 5 --comparison-mode recurrent
+& $Py tools/build_trt_v3.py --onnx artifacts/big_driving_supercombo_v3.onnx --spec artifacts/cinque_v3.json --out artifacts/v3_phase3_patched.onnx --onnx-only --frames 5 --comparison-mode same-state
+```
+
+초기 고정 소스 검사 `phase3-server-red.log`는 1 FAIL/27 ERROR(stateful/dtype 필드 부재)를 재현했다.
+후속 red 로그는 metadata 미연결, 잘못된 ready/캐시 처리, 이름 변경 우회와 capture cleanup 누락을 재현하고 수정 뒤 통과했다.
+WSL 최초 1건은 테스트 fixture가 런타임 auto 선택에 의존한 문제였으며 명시적 CPU fake backend로 독립화했다.
+`/tmp` venv가 후속 WSL 호출에서 없어져 exit 127이 발생한 시도는 사용자 홈의 격리 venv로 재생성 후 위 결과로 재검사했다.
+sendmsg/fcntl 삭제나 성공 대체는 하지 않았다. 기존 검사 전체를 pytest 방식으로 재작성하지 않았다.
+
+### 게시와 남은 작업
+
+제품 커밋 2개와 이 절을 포함한 문서 커밋만 `feature/cinque-v3-jetson`에 일반 push한다.
+최종 문서 SHA는 `git log -1 --format=%H -- docs/PROJECT_STATE.md`,
+게시 상태는 실제 `git ls-remote origin refs/heads/feature/cinque-v3-jetson` 조회로 최종 보고한다.
+main 직접 수정/병합, force push, 참고 원격 push는 하지 않는다.
+
+남은 소프트웨어 연결은 [4단계 계획](V3_JETSON_PLAN.md#4단계가-소비할-계약과-첫-작업)의
+comma protocol2 stateful 거부·V2 기본 선택 및 server capability 연결이다.
+서버는 아직 새 capability를 광고하지 않는다. 이 차단을 이번 단계에서 삭제하지 않았다.
+실제 TRT/GPU I/O·pinned/CUDA graph·cache·state 반복/성능 및 전체 comma 경로·복귀/알림은 장치 검증 전까지 미완료다.
+다음 단계 지시 전에는 더 진행하지 않는다.
+
 ## 2단계 결과 (2026-10-11)
 
 사용자가 1단계 계획을 확인하고 로컬 원본 확보·CPU 검사·빌더/검증기 수정을 승인했다.

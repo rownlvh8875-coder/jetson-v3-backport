@@ -1,7 +1,8 @@
 # Cinque V3 Jetson 최소 변경계획
 
-2026-10-11 1단계 계획을 보존하면서 사용자 승인에 따라 **2단계 범위만 구현**했다.
-원본 확보·CPU 검사·가공/빌더/검증기 수정이 대상이다. 실제 장치 변경은 승인되지 않았다.
+2026-10-11 1·2단계 결과를 보존하면서 승인된 **3단계 production 서버 소프트웨어 통합**을 구현했다.
+고정 소스의 개발 사본에서 가공/build/metadata/load/warm/infer/state를 연결했다.
+실제 TensorRT/Jetson과 comma 연결 검증은 남아 있으며 실제 장치 변경은 승인되지 않았다.
 기준 SHA·원본 상태·실행 명령/결과는 [PROJECT_STATE.md](PROJECT_STATE.md), 제약은 [AGENTS.md](../AGENTS.md).
 
 목표 경로: V3 원본 확인 → 필요한 TensorRT 가공/빌드 → Jetson stateful 실행 →
@@ -183,6 +184,80 @@ verify_engine의 PyCUDA 버퍼/초기화 경로도 실제 GPU 검증 전 미확�
   원본 미확보/허용오차 미정/실제 장치 미검증이면 해당 항목을 미완료로 남긴다.
   주행 검증은 이 계획 범위 밖이며 다음 작업으로 자동 시작하지 않는다.
 
-3단계 첫 작업: 고정 J의 `onnx_patch.py`, TRT `build.py/TrtBackend`에 V3 가공과 engine별
-dtype 기록의 소비를 격리 개발 사본에서 연결하고, 기존 stateful session 분기를 필요한 hunk로 통합한다.
-V2 build/cache와 V3 load/warm dtype 계약부터 검사한다. 사용자 지시 전 시작하지 않는다.
+## 3단계 구현과 개발 사본의 재현 방법
+
+제품 코드/테스트 기준: `a96a792bc042cd893dcdb3eeb5d56336cf98ce52`.
+고정 J `d0dc96fa32410403dfb2fefff3e2909c11ec109b`에
+[`jetson-production-v3.patch`](../patches/jetson-production-v3.patch) **하나만** 적용한다.
+실제 설치/운영 서비스에 자동 적용하는 스크립트는 만들지 않았다.
+
+- 추가되는 `jetlink/cinque_v3.py`에는 지정 V3 identity·전체 semantic 명세·안전한 slice 해석,
+  2단계와 같은 graph 가공 함수·허용 dtype 3개·build/load 검증만 둔다.
+  개발 도구 `tools/patch_v3_uint8.py`도 이 공통 가공 함수를 호출한다.
+  upstream에 적용되는 공통 파일과 이 저장소 사본의 내용 일치를 테스트한다.
+- `TrtBackend.build → build_engine → onnx_patch.patch_file(spec=...)`에서 V3를 선택한다.
+  지정 SHA/크기/전체 명세와 graph I/O/slices/checkpoint가 일치해야 한다.
+  이름만 new_img인 다른 모델은 거부한다. V2 head Cast 제거/FP16 옵션·workspace·progress·timing cache는 유지한다.
+- build sidecar의 `cinque_v3`는 source/patched/engine 전체 해시·크기, patch ID,
+  semantic spec, 허용 physical dtype를 기록한다. `cinque_v3_digest`는 우발적 기록 손상 검사이며 서명이 아니다.
+  meta_extra로 보호 필드 덮어쓰기 불가. 원본 JSON은 그대로 둔다.
+- plan과 JSON을 staging한 뒤 게시한다. 두 번째 rename의 복구 가능한 실패는 이전 plan으로 복원한다.
+  두 파일의 게시가 crash-atomic transaction인 것은 아니다. 중간 중단 시 V3 plan/metadata 해시 불일치로 load를 거부한다.
+  loader는 임시 patched.onnx 경로를 읽지 않고 영속 기록·실제 plan·고정 명세를 검사한다.
+  큰 해시는 build/load 경계에서만 계산한다.
+- `TrtBackend.load → TrtEngine`이 실제 named I/O mode/이름/정확 shape/dtype를 버퍼 할당 전에 검증한다.
+  dtype 변경 기록은 엔진별 사본이다. V2는 고정 img/big_img FP16 선언과 기존 dtype-less 캐시를 유지한다.
+  메타데이터 없는 V3를 이름 변경으로 V2로 로드하는 것도 거부한다.
+  deserialize/context/address/execute/stream 오류는 장치 실패로 남기며 정상 캐시를 무조건 삭제하지 않는다.
+- 기존 cudart pinned host buffer/named tensor/CUDA graph 경로를 유지한다. PyCUDA 검증기는 이식하지 않았다.
+  enqueue 실패도 stream을 drain하고, 실패한 capture를 종료/정리한다.
+  stream drain 실패 시 live 메모리를 해제하거나 warm state를 reset하지 않는다. 장치 복구 검증은 미실시다.
+- `EngineHost._warm`은 contract 확인 → reset → 입력 준비 → warm/capture → reset을 수행한다.
+  state buffer를 교체하지 않는다. 새 HELLO/세션에서도 lock 안에서 reset한다.
+- `_infer`는 길이/scalar finite 및 원래 출력 배열의 이름/shape/dtype/finite를 검사한 뒤
+  state를 `np.copyto(casting='no')`로 갱신한다. runtime state 축소 cast는 허용하지 않는다.
+  검증 실패는 committed state를 보존한다. 명시적 RESET은 scalar 검사 전에 처리하므로 별도다.
+  commit 도중 read-only/중간 복사 예외는 일부 state를 변경할 수 있다. rollback을 주장하지 않는다.
+  실패 Status의 header만 반환하고 해당 generation을 invalid로 표시하여 reload 전 정상 추론을 막는다.
+  RESET/HELLO만으로 invalid generation을 다시 ready로 만들지 않는다. lock 안에서 unload를 재호출하지 않는다.
+- 정상 wire에는 기존 driving outputs만 싣는다. next_state 3종은 서버 내부에 유지한다.
+  V3 요청/응답 크기와 frame ID, RESET/WANT_STATE 기존 계약은 바꾸지 않았다.
+
+PowerShell에서 경로 변수는 실제 개발 사본 위치에 맞게 지정한다. 아래 작업은 개발 사본 전용이다.
+
+```powershell
+$Repo = (Resolve-Path .).Path
+$Prod = (Resolve-Path ../development/carrot-jetson-v3-check).Path
+$Py = (Resolve-Path ../.venv-v3/Scripts/python.exe).Path
+git -C $Prod rev-parse HEAD
+# HEAD가 d0dc96fa32410403dfb2fefff3e2909c11ec109b이고 변경이 없는 별도 사본에서:
+git -C $Prod apply --check "$Repo/patches/jetson-production-v3.patch"
+git -C $Prod apply "$Repo/patches/jetson-production-v3.patch"
+$env:CINQUE_PRODUCTION_ROOT = $Prod
+& $Py -m pytest -s -q tests/test_production_v3.py tests/test_v3_build_verify.py
+# 원복 검사도 개발 사본에서만 수행:
+git -C $Prod apply --reverse --check "$Repo/patches/jetson-production-v3.patch"
+git -C $Prod apply --reverse "$Repo/patches/jetson-production-v3.patch"
+git -C $Prod status --short
+```
+
+패치 원복 후 소스가 깨끗함을 확인하고 재적용한 실제 모듈을 Windows/WSL에서 검사했다.
+`tests/test_production_v3.py`는 import된 session.__file__을 출력·검사한다.
+환경 변수를 지정하지 않으면 이 적용본 검사만 SKIP하며, 다른 CPU 검사는 계속 실행된다.
+TRT compiler/runtime와 cudart만 CPU fake로 바꾸며 build/load/_warm/_infer 전체 함수를 mock하지 않는다.
+일반 ctypes 메모리는 실제 CUDA pinned 메모리 검증이 아니다. 실제 수치 비교는 ORT CPU로 별도 실행한다.
+
+개별 `jetson-{spec,queues,session}-stateful.patch`와 `session.py.orig/.new`는 동일한 고정 기준/적용 결과로 갱신했다.
+개별 3개는 통합 패치의 부분집합이며 통합 패치와 중복 적용하지 않는다.
+기존 LFS/comma 패치와 comma .orig/.new는 과거 기록으로 보존했으며 이번 적용 대상이 아니다.
+
+## 4단계가 소비할 계약과 첫 작업
+
+고정 C `029ab60eb19e7b9d4d76bfee1ce99a7521934511`의
+`link.py/mac.py/client.py`에서 protocol2 stateful 거부와 V2 기본 선택을 먼저 재현한다.
+지정 V3 identity/semantic spec 및 위 wire 계약에 한해 기존 연결/선택을 좁게 연결하는 것이 첫 작업이다.
+이번에는 comma 파일과 protocol을 수정하지 않았고 `cinque_v3_stateful_v2` capability도 아직 선언하지 않았다.
+4단계에서 서버 capability와 client 검증을 함께 고정해야 하며 일반 stateful 차단을 삭제해서는 안 된다.
+원본 semantic dtype로 wire를 해석하고 physical FP16/state는 서버 내부 계약으로 유지한다.
+실제 설치 버전·TRT build/load/infer·성능/state·내부 모델 복귀/알림은 별도 장치 단계의 잔여 검증이다.
+사용자의 다음 단계 지시 전에는 시작하지 않는다.

@@ -1,11 +1,12 @@
 # jetson-v3-backport
 
 > **2026-10-11 현재 기준:** 이번 작업은 Cinque V3 한 모델의 Jetson 구동을 위한
-> 승인된 2단계 원본 확보·빌더/수치 검증기 수정까지 진행했습니다. [현재 상태](docs/PROJECT_STATE.md)와
+> 승인된 3단계 production 서버 소프트웨어 통합과 오프라인 검사까지 진행했습니다. [현재 상태](docs/PROJECT_STATE.md)와
 > [최소 변경계획](docs/V3_JETSON_PLAN.md)을 먼저 확인하세요.
 > 대상 ONNX의 전체 해시·크기·I/O가 일치했습니다. ORT CPU 수치 측정과 실제 TRT/Jetson 검증을 구분합니다.
 > 아래 2026-10-05 기록의 다운로드·테스트 성공·6개 패치 적용 문구는 과거 기록입니다.
-> Jetson 서버 통합·comma 연결 수정은 후속 단계이며 실제 장치는 변경하지 않았습니다.
+> 적용 대상은 고정 carrot-jetson의 별도 개발 사본이며 `patches/jetson-production-v3.patch` 하나를 적용합니다.
+> 실제 TensorRT/Jetson 검증과 comma protocol/모델 선택 연결은 남아 있으며 실제 장치는 변경하지 않았습니다.
 
 > Cinque v3 주행 모델을 Jetson Orin Nano에서 돌리기 위한 백포트 작업 저장소
 
