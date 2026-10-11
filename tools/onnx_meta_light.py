@@ -165,7 +165,68 @@ def parse_meta_light(path: str) -> dict:
   }
 
 
+def decode_output_slices(encoded: str) -> dict:
+  """Interpret only the observed dict[str, slice] pickle grammar; execute nothing."""
+  import base64
+  import pickletools
+  stack, memo, mark = [], {}, object()
+  for op, arg, _ in pickletools.genops(base64.b64decode(encoded)):
+    name = op.name
+    if name in ('PROTO', 'FRAME'): continue
+    if name == 'EMPTY_DICT': stack.append({})
+    elif name == 'MARK': stack.append(mark)
+    elif name in ('SHORT_BINUNICODE', 'BINUNICODE', 'BININT', 'BININT1', 'BININT2'): stack.append(arg)
+    elif name == 'NONE': stack.append(None)
+    elif name == 'MEMOIZE': memo[len(memo)] = stack[-1]
+    elif name in ('BINGET', 'LONG_BINGET'): stack.append(memo[arg])
+    elif name == 'STACK_GLOBAL':
+      symbol, module = stack.pop(), stack.pop()
+      if (module, symbol) != ('builtins', 'slice'): raise ValueError('forbidden slice metadata global')
+      stack.append(('slice-constructor',))
+    elif name == 'TUPLE3':
+      args = tuple(stack[-3:]); del stack[-3:]; stack.append(args)
+    elif name == 'REDUCE':
+      args, constructor = stack.pop(), stack.pop()
+      if constructor != ('slice-constructor',) or len(args) != 3 or args[2] is not None:
+        raise ValueError('forbidden slice metadata constructor')
+      if any(type(v) is not int or v < 0 for v in args[:2]) or args[0] > args[1]:
+        raise ValueError('invalid output slice bounds')
+      stack.append(list(args[:2]))
+    elif name in ('SETITEMS', 'SETITEM'):
+      if name == 'SETITEM':
+        value, key = stack.pop(), stack.pop(); stack[-1][key] = value
+      else:
+        boundary = next(i for i in range(len(stack)-1, -1, -1) if stack[i] is mark)
+        values = stack[boundary+1:]; del stack[boundary:]
+        if len(values) % 2: raise ValueError('invalid slice metadata dictionary')
+        stack[-1].update(zip(values[::2], values[1::2]))
+    elif name == 'STOP': break
+    else: raise ValueError(f'forbidden slice metadata opcode: {name}')
+  if len(stack) != 1 or type(stack[0]) is not dict or not all(
+      type(k) is str and type(v) is list and len(v) == 2 for k, v in stack[0].items()):
+    raise ValueError('invalid output slice metadata')
+  return stack[0]
+
+
+def check_meta_against_spec(path, spec):
+  meta = parse_meta_light(str(path))
+  for kind, prefix in (('inputs', 'input'), ('outputs', 'output')):
+    actual = {n: (list(shape), dtype) for n, (shape, dtype) in meta[kind].items()}
+    expected = {n: (shape, spec[prefix+'_dtypes'][n]) for n, shape in spec[prefix+'_shapes'].items()}
+    if actual != expected: raise ValueError(f'{kind} mismatch: {actual} != {expected}')
+  slices = decode_output_slices(meta['props']['output_slices'])
+  if slices != spec['output_slices']: raise ValueError('output_slices mismatch')
+  if meta['props']['model_checkpoint'] != spec['checkpoint']: raise ValueError('checkpoint mismatch')
+  return dict(inputs=meta['inputs'], outputs=meta['outputs'], output_slices=slices,
+              checkpoint=meta['props']['model_checkpoint'])
+
+
 def main() -> None:
+  if len(sys.argv) == 3:
+    import json
+    from pathlib import Path
+    print(json.dumps(check_meta_against_spec(sys.argv[1], json.loads(Path(sys.argv[2]).read_text())), indent=2))
+    return
   meta = parse_meta_light(sys.argv[1])
   print("inputs:")
   for n, (s, t) in meta["inputs"].items():

@@ -1,48 +1,20 @@
 #!/usr/bin/env python3
-"""Build a TensorRT engine from the Cinque v3 ONNX on the Jetson.
+"""Build and compare the identified Cinque V3 model.
 
-================================================================
-JETSON ONLY. Run this ON the Jetson Orin Nano Super (L4T 36.4.7,
-TensorRT 10.3.0) as the `jetlink` user. It was written and reviewed
-on a dev VM but NEVER executed there: there is no GPU or TensorRT
-in this environment, so any claim of a VM test run would be false.
-================================================================
+TRT build/verification requires compatible local CUDA/TRT hardware; never tested
+on a real Jetson here. CPU ONNX comparison: --onnx-only --out patched.onnx.
+Both comparison modes check all four outputs and exact backend I/O contracts.
+Frame 0 is zero smoke; frames 1+ vary seeded images and desire with 0/255 pixels.
+--comparison-mode recurrent follows independent backend states; same-state uses
+identical zero states for each step. ORT is explicitly CPU and runs sequential
+sessions for ONNX parity to limit memory. No default tolerance is established.
 
-Usage (on the Jetson):
-  python3 tools/build_trt_v3.py \
-    --onnx artifacts/big_driving_supercombo_v3.onnx \
-    --spec artifacts/cinque_v3.json \
-    --out  artifacts/cinque_v3_fp16.engine
-
-  # with output verification against ONNX Runtime (needs onnxruntime):
-  python3 tools/build_trt_v3.py --onnx ... --spec ... --out ... --verify
-
-What it does:
-  0. Refuses to build unless the ONNX sha256/size match the spec (identity gate).
-  1. Patches like production (patch -> parse -> build): --patch auto applies
-     tools/patch_v3_uint8.py when the model needs it (v3 uint8 image-queue
-     inputs -> fp16); the retype record is saved next to the engine for the
-     session's dtype_transforms contract.
-  2. Parses the (possibly patched) ONNX with TensorRT's OnnxParser (opset
-     must parse under TRT 10.3; if parsing fails the log names the
-     unsupported op).
-  3. Builds an FP16 engine (trt.BuilderFlag.FP16, mirroring production).
-     Workspace is capped for the Orin Nano Super's 8 GB unified memory
-     (default 1536 MiB; tune with --workspace).
-  4. Saves the serialized engine.
-  5. --verify: runs --frames (default 5) through the TRT engine via the TRT
-     10.x named-tensor API (set_tensor_address + execute_async_v3 on an
-     explicit CUDA stream; H2D -> execute -> D2H -> synchronize) with
-     onnxruntime in lockstep per frame; every output is compared per frame
-     (finite, max/mean abs err). Latency reports both gpu_ms (CUDA events)
-     and end_to_end_ms (wall clock incl. transfers+synchronize).
-     --require-max-abs-err turns the report into a pass/fail gate (no
-     verified default threshold exists, so without it the gate is reported
-     UNDETERMINED).
-
-Expected cost (from the v2 experience): ~160 s build, ~1.7 GB engine
-resident. Keep v2 as the default model (fail-closed); this engine is
-only loaded when CARROT_JETLINK_MODEL_JSON=cinque_v3.json is set.
+Exit codes: 0 requested gate passed (or build-only completed), 1 failed,
+2 invalid CLI arguments, 3 comparison incomplete or measured without a tolerance.
+A build alone is not numerical validation. The engine-hash-bound retype record
+is consumed by this verifier; production server integration remains stage 3.
+Timing distinguishes enqueue, CUDA events, and completed transfer/inference;
+none is the comma-to-Jetson path latency. See docs/PROJECT_STATE.md for evidence.
 """
 from __future__ import annotations
 
@@ -54,16 +26,211 @@ from pathlib import Path
 
 import numpy as np
 
+V3_RETYPES = dict.fromkeys(('new_img', 'state_img_q', 'next_state_img_q'), 'float16')
+
+
+class VerificationIncomplete(RuntimeError):
+  """Measurements or comparison are incomplete; never a parity PASS."""
+
+
+def file_identity(path: Path) -> dict:
+  import hashlib
+  h, size = hashlib.sha256(), 0
+  with Path(path).open('rb') as f:
+    while chunk := f.read(1 << 20):
+      h.update(chunk)
+      size += len(chunk)
+  return dict(sha256=h.hexdigest(), nbytes=size)
+
+
+def build_record_path(engine_path, digest):
+  return engine_path.with_name(engine_path.name + '.' + digest + '.retypes.json')
+
+
+def load_build_record(engine_path, source):
+  identity = file_identity(engine_path)
+  record = json.loads(build_record_path(engine_path, identity['sha256']).read_text())
+  if record['engine'] != identity or record['source'] != source:
+    raise ValueError('engine/source identity does not match build record')
+  if file_identity(Path(record['patched_path'])) != record['patched']:
+    raise ValueError('parsed ONNX identity does not match build record')
+  transforms = record['dtype_transforms']
+  if transforms not in ({}, V3_RETYPES):
+    raise ValueError('undeclared dtype transforms in build record')
+  return record
+
+
+def onnx_contract(model):
+  import onnx
+  result = {}
+  for kind, values in (('inputs', model.graph.input), ('outputs', model.graph.output)):
+    result[kind] = {}
+    for vi in values:
+      tensor = vi.type.tensor_type
+      if any(not d.HasField('dim_value') or d.dim_value <= 0 for d in tensor.shape.dim):
+        raise ValueError(f'dynamic/invalid ONNX shape: {vi.name}')
+      result[kind][vi.name] = dict(shape=[d.dim_value for d in tensor.shape.dim],
+          dtype=str(np.dtype(onnx.helper.tensor_dtype_to_np_dtype(tensor.elem_type))))
+  return result
+
+
+def spec_contract(spec, transforms=None):
+  transforms = transforms or {}
+  return {kind: {n: dict(shape=list(shape), dtype=transforms.get(n, spec[prefix+'_dtypes'][n]))
+                 for n, shape in spec[prefix+'_shapes'].items()}
+          for kind, prefix in (('inputs', 'input'), ('outputs', 'output'))}
+
+
+def validate_contract(actual, expected):
+  if actual != expected:
+    raise ValueError(f'I/O contract mismatch: actual={actual}, expected={expected}')
+
+
+def ort_contract(session):
+  types = {'tensor(uint8)': 'uint8', 'tensor(float)': 'float32', 'tensor(float16)': 'float16'}
+  return {kind: {v.name: dict(shape=list(v.shape), dtype=types[v.type]) for v in values}
+          for kind, values in (('inputs', session.get_inputs()), ('outputs', session.get_outputs()))}
+
+
+def validate_arguments(frames, threshold, mode='recurrent'):
+  if not isinstance(frames, int) or frames <= 0:
+    raise ValueError('frames must be a positive integer')
+  if threshold is not None and (not np.isfinite(threshold) or threshold < 0):
+    raise ValueError('threshold must be finite and nonnegative (0 means exact)')
+  if mode not in ('recurrent', 'same-state'):
+    raise ValueError('unknown comparison mode')
+
+
+def frame_inputs(inputs, frame, seed):
+  """Frame 0 is zero smoke; subsequent frames vary pixels/desire, with 0/255 edges."""
+  rng = np.random.default_rng(seed + frame)
+  feeds = {n: np.zeros(v['shape'], v['dtype']) for n, v in inputs.items()}
+  if frame:
+    image = rng.integers(0, 256, size=inputs['new_img']['shape'], dtype=np.uint8)
+    image.flat[0], image.flat[-1] = 0, 255
+    # Only the intentional V3 image retype crosses backend dtypes.
+    if feeds['new_img'].dtype not in (np.dtype('uint8'), np.dtype('float16')):
+      raise ValueError('unexpected image dtype')
+    np.copyto(feeds['new_img'], image, casting='safe')
+    feeds['desire'].flat[frame % feeds['desire'].size] = 1
+    feeds['traffic_convention'].flat[0] = 1
+    feeds['action_t'].fill(frame / 20)
+  return feeds
+
+
+def validate_outputs(outputs, contract):
+  if set(outputs) != set(contract):
+    raise ValueError('output names mismatch')
+  for n, v in contract.items():
+    x = outputs[n]
+    if not isinstance(x, np.ndarray) or x.shape != tuple(v['shape']) or x.dtype != np.dtype(v['dtype']):
+      raise ValueError(f'output shape/dtype mismatch: {n}')
+    if not np.all(np.isfinite(x)):
+      raise ValueError(f'non-finite output: {n}')
+
+
+def compare_outputs(left, right, threshold):
+  if set(left) != set(right):
+    raise ValueError('comparison output names mismatch')
+  stats = {}
+  for n in left:
+    if left[n].shape != right[n].shape:
+      raise ValueError(f'comparison shape mismatch: {n}')
+    # Explicit float64 error arithmetic avoids uint8 wrap and fp16 overflow.
+    with np.errstate(over='ignore', invalid='ignore'):
+      err = np.abs(left[n].astype(np.float64) - right[n].astype(np.float64))
+      maximum, mean = float(err.max()), float(err.mean())
+    if not np.isfinite(maximum) or not np.isfinite(mean):
+      raise ValueError(f'non-finite comparison error: {n}')
+    stats[n] = dict(max_abs=maximum, mean_abs=mean)
+    if threshold is not None and maximum > threshold:
+      raise ValueError(f'threshold exceeded: {n} max_abs={maximum} > {threshold}')
+  return stats
+
+
+def advance_state(feeds, outputs):
+  pending = {}
+  for n, target in feeds.items():
+    if n.startswith('state_'):
+      value = outputs['next_' + n]
+      if value.shape != target.shape or value.dtype != target.dtype or not np.all(np.isfinite(value)):
+        raise ValueError(f'invalid state feedback: {n}')
+      pending[n] = value
+  for n, value in pending.items():
+    np.copyto(feeds[n], value, casting='no')
+
+
+def require_ort(compare_onnx):
+  if compare_onnx is None:
+    raise VerificationIncomplete('comparison not requested; parity not performed')
+  try:
+    import onnxruntime as ort
+  except ImportError as e:
+    raise VerificationIncomplete('onnxruntime unavailable; parity not performed') from e
+  return ort
+
+
+def ort_session(ort, path):
+  options = ort.SessionOptions()
+  options.intra_op_num_threads = 2
+  options.inter_op_num_threads = 1
+  options.enable_cpu_mem_arena = False
+  options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_DISABLE_ALL
+  # CPU is explicit for reproducibility and to avoid a second CUDA allocator/context.
+  session = ort.InferenceSession(str(path), sess_options=options, providers=['CPUExecutionProvider'])
+  print('ORT registered providers:', session.get_providers(), '(CPU requested; per-op GPU placement not asserted)', flush=True)
+  return session
+
+
+def finish_verification(threshold):
+  if threshold is None:
+    raise VerificationIncomplete('MEASURED: tolerance basis absent; acceptance UNDETERMINED')
+  print('parity PASS for the requested threshold; synthetic inputs only')
+
+
+def verify_onnx_pair(original, patched, spec, frames=5, require_max_abs_err=None,
+                     mode='recurrent', seed=73):
+  """Sequential ORT sessions and on-disk reference outputs keep memory bounded."""
+  import gc
+  import tempfile
+  validate_arguments(frames, require_max_abs_err, mode)
+  ort = require_ort(original)
+  check_onnx_identity(Path(original), spec)
+  with tempfile.TemporaryDirectory(prefix='v3-parity-') as td:
+    for index, (path, transforms) in enumerate(((original, {}), (patched, V3_RETYPES))):
+      session = ort_session(ort, path)
+      contract = ort_contract(session)
+      validate_contract(contract, spec_contract(spec, transforms))
+      state = None
+      names = list(contract['outputs'])
+      for frame in range(frames):
+        feeds = frame_inputs(contract['inputs'], frame, seed)
+        if mode == 'recurrent' and state is not None:
+          for n, value in state.items(): np.copyto(feeds[n], value, casting='no')
+        outputs = dict(zip(names, session.run(names, feeds)))
+        validate_outputs(outputs, contract['outputs'])
+        if index == 0:
+          for n, value in outputs.items(): np.save(Path(td)/f'{frame}-{n}.npy', value)
+        else:
+          reference = {n: np.load(Path(td)/f'{frame}-{n}.npy', mmap_mode='r') for n in names}
+          stats = compare_outputs(reference, outputs, require_max_abs_err)
+          print(json.dumps(dict(comparison='original-patched-onnx', mode=mode, frame=frame, tensors=stats)), flush=True)
+          del reference
+        advance_state(feeds, outputs)
+        state = {n: value.copy() for n, value in feeds.items() if n.startswith('state_')}
+      del session, outputs, feeds, state
+      gc.collect()
+  finish_verification(require_max_abs_err)
+
 
 def build_engine(onnx_path: Path, engine_path: Path, workspace_mib: int,
                  fp16: bool = True, patch: str = "auto") -> Path | None:
   """Patch (like production), parse and build. Returns the retype record
   path when a patch was applied, else None.
 
-  Production path (jetlink/server/backends/trt/build.py::build_engine) is
-  patch -> parse -> build; this tool follows the same order so the engine
-  it verifies is the engine the backend would make. patch="auto" applies
-  tools/patch_v3_uint8.py when the model needs it.
+  Follows production's patch -> parse -> build ordering. The pinned production
+  builder does not yet invoke this V3 patch or consume this build record.
+  patch="auto" leaves non-V3 graphs on their existing raw parse path.
   """
   import tensorrt as trt
 
@@ -86,48 +253,64 @@ def build_engine(onnx_path: Path, engine_path: Path, workspace_mib: int,
       return 'fp16 enabled'
     return 'fp32'
 
-  # --- patch step (production parity) ---
-  # Not at module scope: pulls in onnx, like production's lazy import.
-  parse_path = onnx_path
-  retypes_path = None
-  if patch != "none":
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from patch_v3_uint8 import needs_patch_v3, patch_file_v3
-    import onnx as _onnx
-    model = _onnx.load(str(onnx_path))
-    if patch == "v3-uint8" or needs_patch_v3(model):
-      parse_path = engine_path.parent / (engine_path.stem + ".patched.onnx")
-      retypes = patch_file_v3(str(onnx_path), str(parse_path))
-      retypes_path = parse_path.with_suffix(".retypes.json")
-      retypes_path.write_text(json.dumps(retypes, indent=2))
-      print(f"patched {onnx_path.name} -> {parse_path.name}; retypes: {retypes}")
-    else:
-      print("no patch needed; parsing raw ONNX")
-
-  network = builder.create_network(
-    1 << int(trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH))
-  parser = trt.OnnxParser(network, logger)
-  ok = parser.parse_from_file(str(parse_path))
-  if not ok:
-    for i in range(parser.num_errors):
-      print(f"parser error {i}: {parser.get_error(i)}", file=sys.stderr)
-    raise RuntimeError(f"ONNX parsing failed for {onnx_path}")
-
-  config = builder.create_builder_config()
-  config.set_memory_pool_limit(trt.MemoryPoolType.WORKSPACE, workspace_mib << 20)
-  precision = configure_precision(config, fp16)
-  print(f"precision: {precision}", flush=True)
-
-  # The v3 graph is stateful: every input shape is static, no profiles needed.
-  print(f"inputs : {[(i.name, tuple(i.shape), str(i.dtype)) for i in network]}",
-        flush=True)
-  t0 = time.monotonic()
-  serialized = builder.build_serialized_network(network, config)
-  dt = time.monotonic() - t0
-  if serialized is None:
-    raise RuntimeError("TensorRT engine build returned None")
-  engine_path.write_bytes(bytes(serialized))
-  print(f"built {engine_path} ({len(serialized)/2**20:.0f} MiB) in {dt:.0f}s")
+  import os
+  import tempfile
+  import onnx
+  from patch_v3_uint8 import needs_patch_v3, patch_file_v3
+  if onnx_path.resolve() == engine_path.resolve():
+    raise ValueError('engine output would overwrite original ONNX')
+  source = file_identity(onnx_path)
+  model = onnx.load(str(onnx_path))
+  original_io = onnx_contract(model)
+  needs_patch = patch == 'v3-uint8' or (patch == 'auto' and needs_patch_v3(model))
+  del model
+  engine_path.parent.mkdir(parents=True, exist_ok=True)
+  with tempfile.TemporaryDirectory(prefix=engine_path.name + '.build-', dir=engine_path.parent) as td:
+    stage = Path(td)
+    parse_path, retypes = onnx_path, {}
+    if needs_patch:
+      parse_path = stage / 'patched.onnx'
+      retypes = patch_file_v3(onnx_path, parse_path)
+    network = builder.create_network(1 << int(trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH))
+    parser = trt.OnnxParser(network, logger)
+    if not parser.parse_from_file(str(parse_path)):
+      for i in range(parser.num_errors):
+        print(f'parser error {i}: {parser.get_error(i)}', file=sys.stderr)
+      raise RuntimeError(f'ONNX parsing failed for {parse_path}')
+    config = builder.create_builder_config()
+    config.set_memory_pool_limit(trt.MemoryPoolType.WORKSPACE, workspace_mib << 20)
+    print(f'precision: {configure_precision(config, fp16)}', flush=True)
+    inputs = [network.get_input(i) for i in range(network.num_inputs)]
+    print(f'inputs : {[(i.name, tuple(i.shape), str(i.dtype)) for i in inputs]}', flush=True)
+    t0 = time.monotonic()
+    serialized = builder.build_serialized_network(network, config)
+    if serialized is None:
+      raise RuntimeError('TensorRT engine build returned None')
+    staged_engine = stage / 'engine.plan'
+    staged_engine.write_bytes(bytes(serialized))
+    engine_id = file_identity(staged_engine)
+    record_path = build_record_path(engine_path, engine_id['sha256'])
+    patched_id = file_identity(parse_path)
+    saved_patch = engine_path.with_name(engine_path.name + '.' + engine_id['sha256'] + '.patched.onnx')
+    record = dict(schema=1, source=source, original_io=original_io,
+                  patched=patched_id, patched_path=str(saved_patch.resolve()) if retypes else str(onnx_path.resolve()),
+                  engine=engine_id, dtype_transforms=retypes,
+                  patch='v3-uint8' if retypes else 'none', fp16=fp16, workspace_mib=workspace_mib,
+                  tensorrt_version=getattr(trt, '__version__', 'unknown'),
+                  patcher=file_identity(Path(__file__).with_name('patch_v3_uint8.py')) if retypes else None)
+    if record_path.exists() and json.loads(record_path.read_text()) != record:
+      raise ValueError('engine metadata collision; preserve previous build')
+    if retypes:
+      if saved_patch.exists() and file_identity(saved_patch) != patched_id:
+        raise ValueError('patched artifact collision')
+      if not saved_patch.exists(): os.replace(parse_path, saved_patch)
+    staged_record = stage / 'record.json'
+    staged_record.write_text(json.dumps(record, indent=2, sort_keys=True), encoding='utf-8')
+    if not record_path.exists(): os.replace(staged_record, record_path)
+    # Engine publication is the commit point. Failed staging preserves the old engine.
+    os.replace(staged_engine, engine_path)
+    print(f'built {engine_path} in {time.monotonic()-t0:.2f}s; build record: {record_path}')
+    return record_path if retypes else None
 
 
 def check_onnx_identity(onnx_path: Path, spec: dict) -> None:
@@ -161,191 +344,174 @@ def _trt_dtype(trt, dtype) -> np.dtype:
   }[dtype]
 
 
-def verify_engine(engine_path: Path, spec: dict,
-                  compare_onnx: Path | None, frames: int = 5,
-                  require_max_abs_err: float | None = None) -> None:
-  """Run the built engine and gate on numerical behavior.
+def engine_contract(engine, trt):
+  actual = {'inputs': {}, 'outputs': {}}
+  seen = set()
+  for i in range(engine.num_io_tensors):
+    name = engine.get_tensor_name(i)
+    mode = engine.get_tensor_mode(name)
+    if name in seen or mode not in (trt.TensorIOMode.INPUT, trt.TensorIOMode.OUTPUT):
+      raise ValueError('invalid engine tensor name/mode')
+    seen.add(name)
+    kind = 'inputs' if mode == trt.TensorIOMode.INPUT else 'outputs'
+    shape = list(engine.get_tensor_shape(name))
+    if any(d <= 0 for d in shape): raise ValueError(f'invalid engine shape: {name}')
+    actual[kind][name] = dict(shape=shape, dtype=str(np.dtype(_trt_dtype(trt, engine.get_tensor_dtype(name)))))
+  return actual
 
-  Multi-frame recurrent parity (review item 11): for each frame BOTH the
-  TRT engine and onnxruntime run with the same inputs, and every output
-  (driving outputs + all next_state_*) is compared per frame:
-    - finite (both sides)
-    - max abs err, mean abs err per tensor per frame
-  Each side feeds its OWN next_state_* back as the next frame's state_*
-  (TRT state -> TRT, ORT state -> ORT): divergence between the two
-  recurrences is exactly what this catches. A frame-0-only comparison
-  cannot see recurrent drift, so it is not sufficient.
 
-  require_max_abs_err turns the report into a pass/fail gate; without it
-  the measurements are reported and the gate is marked UNDETERMINED --
-  no arbitrary threshold is declared a verified acceptance criterion.
+from contextlib import contextmanager
 
-  Latency (review item 13): execute_async_v3 is an async enqueue, so the
-  wall around it measures enqueue time, not inference. Both are reported:
-    - gpu_ms: CUDA events around the enqueue (device-side inference time)
-    - end_to_end_ms: wall clock H2D -> execute -> D2H -> synchronize
-  """
+
+@contextmanager
+def trt_runner(engine_path, expected):
+  """Private verifier only. Primary context and pinned arrays live through sync."""
   import tensorrt as trt
+  import pycuda.driver as cuda
+  cuda.init()
+  primary = cuda.Device(0).retain_primary_context()
+  primary.push()
+  runtime = engine = context = stream = start = end = None
+  buffers = {}
+  try:
+    logger = trt.Logger(trt.Logger.WARNING)
+    runtime = trt.Runtime(logger)
+    engine = runtime.deserialize_cuda_engine(engine_path.read_bytes())
+    if engine is None: raise RuntimeError('engine deserialize failed')
+    actual = engine_contract(engine, trt)
+    validate_contract(actual, expected)  # Before ANY buffer allocation or execution.
+    context = engine.create_execution_context()
+    if context is None: raise RuntimeError('execution context creation failed')
+    stream, start, end = cuda.Stream(), cuda.Event(), cuda.Event()
+    for kind in ('inputs', 'outputs'):
+      for name, info in actual[kind].items():
+        host = cuda.pagelocked_empty(tuple(info['shape']), np.dtype(info['dtype']))
+        buffers[name] = [host, None]
+        dev = cuda.mem_alloc(host.nbytes)
+        buffers[name][1] = dev
+        if not context.set_tensor_address(name, int(dev)):
+          raise RuntimeError(f'set_tensor_address failed: {name}')
 
-  logger = trt.Logger(trt.Logger.WARNING)
-  runtime = trt.Runtime(logger)
-  engine = runtime.deserialize_cuda_engine(bytes(engine_path.read_bytes()))
-  context = engine.create_execution_context()
-
-  import pycuda.driver as cuda  # noqa: E402
-  import pycuda.autoinit  # noqa: E402,F401
-
-  stream = cuda.Stream()
-  ev_start, ev_end = cuda.Event(), cuda.Event()
-  host_bufs, dev_bufs = {}, {}
-  for name in spec["input_shapes"]:
-    dtype = _trt_dtype(trt, engine.get_tensor_dtype(name))
-    shape = tuple(spec["input_shapes"][name])
-    host = np.zeros(shape, dtype)
-    dev = cuda.mem_alloc(host.nbytes)
-    host_bufs[name], dev_bufs[name] = host, dev
-    # TRT 10.x named-tensor API: no positional bindings list.
-    context.set_tensor_address(name, int(dev))
-  out_bufs = {}
-  for name in spec["output_shapes"]:
-    dtype = _trt_dtype(trt, engine.get_tensor_dtype(name))
-    shape = tuple(spec["output_shapes"][name])
-    host = np.empty(shape, dtype)
-    dev = cuda.mem_alloc(host.nbytes)
-    out_bufs[name] = (host, dev)
-    context.set_tensor_address(name, int(dev))
-
-  state_ins = [n for n in spec["input_shapes"] if n.startswith("state_")]
-  state_outs = {"next_" + n: n for n in state_ins}
-  tensor_names = list(spec["output_shapes"])
-
-  def run_trt_frame() -> tuple[dict[str, np.ndarray], float, float]:
-    t0 = time.monotonic()
-    for name, dev in dev_bufs.items():  # H2D
-      cuda.memcpy_htod_async(dev, host_bufs[name], stream)
-    ev_start.record(stream)
-    ok = context.execute_async_v3(stream.handle)
-    ev_end.record(stream)
-    if not ok:
-      raise RuntimeError("execute_async_v3 failed")
-    for _host, dev in out_bufs.values():  # D2H
-      cuda.memcpy_dtoh_async(_host, dev, stream)
-    stream.synchronize()
-    e2e_ms = (time.monotonic() - t0) * 1e3
-    gpu_ms = float(ev_start.time_till(ev_end))
-    return ({n: host.copy() for n, (host, _dev) in out_bufs.items()},
-            gpu_ms, e2e_ms)
-
-  # --- onnxruntime side, kept in lockstep per frame ---
-  ort_sess = None
-  if compare_onnx is not None:
+    def run(feeds):
+      validate_outputs(feeds, actual['inputs'])
+      t0 = time.monotonic()
+      for name in actual['inputs']:
+        host, dev = buffers[name]
+        np.copyto(host, feeds[name], casting='no')
+        cuda.memcpy_htod_async(dev, host, stream)
+      start.record(stream)
+      enqueue_start = time.monotonic()
+      ok = context.execute_async_v3(stream.handle)
+      enqueue_ms = (time.monotonic()-enqueue_start)*1e3
+      end.record(stream)
+      if not ok: raise RuntimeError('execute_async_v3 failed')
+      for name in actual['outputs']:
+        host, dev = buffers[name]
+        cuda.memcpy_dtoh_async(host, dev, stream)
+      stream.synchronize()
+      print(f'TRT enqueue_ms={enqueue_ms:.3f} gpu_ms={start.time_till(end):.3f} '
+            f'completed_h2d_execute_d2h_ms={(time.monotonic()-t0)*1e3:.3f}', flush=True)
+      return {n: buffers[n][0].copy() for n in actual['outputs']}
+    yield run
+  finally:
+    # Also synchronize on a failed enqueue/address path before releasing pages.
     try:
-      import onnxruntime as ort
-    except ImportError:
-      print("onnxruntime not installed; TRT runs without ORT comparison")
-      compare_onnx = None
-  if compare_onnx is not None:
-    try:
-      ort_sess = ort.InferenceSession(
-        str(compare_onnx), providers=["CUDAExecutionProvider"])
-      print("ORT: CUDAExecutionProvider")
-    except Exception as e:
-      print(f"ORT CUDA EP unavailable ({e}); falling back to CPU")
-      import onnxruntime as ort
-      ort_sess = ort.InferenceSession(
-        str(compare_onnx), providers=["CPUExecutionProvider"])
-    ort_out_names = [o.name for o in ort_sess.get_outputs()]
-  ort_feeds = {n: host_bufs[n].copy() for n in spec["input_shapes"]}
-
-  def run_ort_frame() -> dict[str, np.ndarray]:
-    return dict(zip(ort_out_names, ort_sess.run(None, ort_feeds)))
-
-  gate_failed = False
-  for f in range(frames):
-    trt_outs, gpu_ms, e2e_ms = run_trt_frame()
-    bad = [n for n, o in trt_outs.items()
-           if not bool(np.all(np.isfinite(o.astype(np.float32))))]
-    if bad:
-      raise RuntimeError(f"frame {f}: non-finite TRT outputs: {bad}")
-    print(f"TRT frame {f}: gpu {gpu_ms:.2f} ms, end-to-end {e2e_ms:.2f} ms, "
-          f"all {len(trt_outs)} outputs finite")
-
-    if ort_sess is not None:
-      ort_outs = run_ort_frame()
-      for name in tensor_names:
-        t = trt_outs[name].astype(np.float32)
-        r = np.asarray(ort_outs[name], dtype=np.float32)
-        if t.shape != r.shape:
-          raise RuntimeError(
-            f"frame {f}: shape mismatch on {name}: TRT {t.shape} vs ORT {r.shape}")
-        max_err = float(np.max(np.abs(t - r)))
-        mean_err = float(np.mean(np.abs(t - r)))
-        finite = bool(np.all(np.isfinite(t))) and bool(np.all(np.isfinite(r)))
-        print(f"  parity f{f} {name:<22} max|err|={max_err:.3e} "
-              f"mean|err|={mean_err:.3e} finite={finite}")
-        if require_max_abs_err is not None and max_err > require_max_abs_err:
-          print(f"  GATE FAIL: f{f} {name} max err {max_err:.3e} > "
-                f"{require_max_abs_err:.3e}")
-          gate_failed = True
-      # each side follows its own recurrence from here
-      for out_n, in_n in state_outs.items():
-        np.copyto(ort_feeds[in_n],
-                  np.asarray(ort_outs[out_n]).reshape(
-                    ort_feeds[in_n].shape).astype(ort_feeds[in_n].dtype))
-
-    # TRT recurrent feedback for the next frame
-    for out_n, in_n in state_outs.items():
-      np.copyto(host_bufs[in_n],
-                trt_outs[out_n].reshape(host_bufs[in_n].shape).astype(host_bufs[in_n].dtype))
-
-  if ort_sess is not None and require_max_abs_err is None:
-    print("  허용오차 기준 미확정: parity gate not enforced "
-          "(pass --require-max-abs-err with a documented basis to enforce)")
-  if gate_failed:
-    raise SystemExit("parity gate FAILED")
+      if stream is not None: stream.synchronize()
+    finally:
+      context = None
+      cleanup_error = None
+      for host, dev in buffers.values():
+        for allocation in (dev, host.base):
+          try:
+            if allocation is not None: allocation.free()
+          except Exception as e:
+            cleanup_error = cleanup_error or e
+      buffers.clear()
+      engine = runtime = start = end = stream = None
+      try:
+        primary.pop()
+      finally:
+        primary.detach()
+      if cleanup_error is not None: raise cleanup_error
 
 
-def main() -> None:
-  ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-  ap.add_argument("--onnx", required=True, type=Path)
-  ap.add_argument("--spec", required=True, type=Path,
-                  help="cinque_v3.json (from spec_from_onnx)")
-  ap.add_argument("--out", required=True, type=Path)
-  ap.add_argument("--workspace", type=int, default=1536,
-                  help="TRT workspace MiB (default 1536)")
-  ap.add_argument("--no-fp16", action="store_true")
-  ap.add_argument("--verify", action="store_true",
-                  help="TRT run + optional ORT comparison")
-  ap.add_argument("--frames", type=int, default=5,
-                  help="recurrent frames for --verify (default 5; "
-                       "next_state_* is fed back as state_* each frame, and "
-                       "ORT runs in lockstep per frame)")
-  ap.add_argument("--patch", choices=["auto", "v3-uint8", "none"], default="auto",
-                  help="ONNX patch before parsing (default auto): v3-uint8 "
-                       "retypes new_img/state_img_q to fp16 via "
-                       "tools/patch_v3_uint8.py, mirroring production's "
-                       "patch -> parse -> build path; none parses the raw file")
-  ap.add_argument("--compare-onnx", type=Path, default=None,
-                  help="with --verify, also run this ONNX in onnxruntime")
-  ap.add_argument("--require-max-abs-err", type=float, default=None,
-                  help="enforce the parity report as a pass/fail gate at this "
-                       "max abs err; only pass a value with a documented basis "
-                       "(no verified default exists: without it the gate is "
-                       "reported as UNDETERMINED)")
+def verify_engine(engine_path, spec, compare_onnx, frames=5,
+                  require_max_abs_err=None, mode='recurrent', seed=73):
+  validate_arguments(frames, require_max_abs_err, mode)
+  ort = require_ort(compare_onnx)
+  check_onnx_identity(Path(compare_onnx), spec)
+  record = load_build_record(engine_path, {k: spec[k] for k in ('sha256', 'nbytes')})
+  validate_contract(record['original_io'], spec_contract(spec))
+  session = ort_session(ort, compare_onnx)
+  raw = ort_contract(session)
+  validate_contract(raw, spec_contract(spec))
+  patched = spec_contract(spec, record['dtype_transforms'])
+  state_left = state_right = None
+  with trt_runner(engine_path, patched) as run:
+    for frame in range(frames):
+      left = frame_inputs(raw['inputs'], frame, seed)
+      right = frame_inputs(patched['inputs'], frame, seed)
+      if mode == 'recurrent' and state_left is not None:
+        for n in state_left:
+          np.copyto(left[n], state_left[n], casting='no')
+          np.copyto(right[n], state_right[n], casting='no')
+      left_out = dict(zip(raw['outputs'], session.run(list(raw['outputs']), left)))
+      right_out = run(right)
+      validate_outputs(left_out, raw['outputs'])
+      validate_outputs(right_out, patched['outputs'])
+      stats = compare_outputs(left_out, right_out, require_max_abs_err)
+      print(json.dumps(dict(comparison='original-TRT', mode=mode, frame=frame, tensors=stats)), flush=True)
+      advance_state(left, left_out)
+      advance_state(right, right_out)
+      state_left = {n: v.copy() for n, v in left.items() if n.startswith('state_')}
+      state_right = {n: v.copy() for n, v in right.items() if n.startswith('state_')}
+  finish_verification(require_max_abs_err)
+
+
+def main():
+  ap = argparse.ArgumentParser(description='Build/compare the identified Cinque V3 model')
+  ap.add_argument('--onnx', required=True, type=Path)
+  ap.add_argument('--spec', required=True, type=Path)
+  ap.add_argument('--out', required=True, type=Path)
+  ap.add_argument('--workspace', type=int, default=1536)
+  ap.add_argument('--no-fp16', action='store_true')
+  ap.add_argument('--patch', choices=['auto', 'v3-uint8', 'none'], default='auto')
+  ap.add_argument('--verify', action='store_true')
+  ap.add_argument('--onnx-only', action='store_true', help='patch to --out and compare sequential ORT CPU sessions; no TRT')
+  ap.add_argument('--compare-onnx', type=Path)
+  ap.add_argument('--frames', type=int, default=5)
+  ap.add_argument('--require-max-abs-err', type=float)
+  ap.add_argument('--comparison-mode', choices=['recurrent', 'same-state'], default='recurrent')
   a = ap.parse_args()
-
+  try:
+    validate_arguments(a.frames, a.require_max_abs_err, a.comparison_mode)
+    if a.workspace <= 0: raise ValueError('workspace must be positive')
+    if not (a.verify or a.onnx_only) and (a.require_max_abs_err is not None or a.compare_onnx is not None):
+      raise ValueError('comparison/gate requires --verify or --onnx-only')
+  except ValueError as e:
+    ap.error(str(e))
   spec = json.loads(a.spec.read_text())
-  if "new_img" not in spec["input_shapes"]:
-    raise SystemExit("spec is not stateful (no new_img); refusing to build v3 engine")
+  if 'new_img' not in spec['input_shapes']:
+    raise SystemExit('spec is not V3 stateful; refusing to build')
   check_onnx_identity(a.onnx, spec)
-  retypes_path = build_engine(a.onnx, a.out, a.workspace,
-                             fp16=not a.no_fp16, patch=a.patch)
-  if retypes_path is not None:
-    print(f"retype record for the session's dtype_transforms: {retypes_path}")
-  if a.verify:
-    verify_engine(a.out, spec, a.compare_onnx or a.onnx,
-                  frames=a.frames, require_max_abs_err=a.require_max_abs_err)
+  try:
+    if a.onnx_only:
+      from patch_v3_uint8 import patch_file_v3
+      patch_file_v3(a.onnx, a.out)
+      verify_onnx_pair(a.onnx, a.out, spec, a.frames, a.require_max_abs_err, a.comparison_mode)
+    else:
+      record = build_engine(a.onnx, a.out, a.workspace, not a.no_fp16, a.patch)
+      if record: print('verifier dtype record (production consumer NOT integrated):', record)
+      if a.verify:
+        verify_engine(a.out, spec, a.compare_onnx or a.onnx, a.frames,
+                      a.require_max_abs_err, a.comparison_mode)
+  except VerificationIncomplete as e:
+    print(f'INCOMPLETE: {e}', file=sys.stderr)
+    raise SystemExit(3)
+  except (ValueError, RuntimeError, ImportError, OSError) as e:
+    print(f'FAIL: {e}', file=sys.stderr)
+    raise SystemExit(1)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
   main()

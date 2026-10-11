@@ -111,6 +111,8 @@ def patch_v3_uint8_inputs(model) -> dict[str, str]:
         t = queue.pop()
         for n in cons.get(t, []):
             if n.op_type == 'Cast':
+                if not any(a.name == 'to' and a.i == TensorProto.FLOAT16 for a in n.attribute):
+                    raise ValueError(f"v3 patch: unexpected Cast target ({n.name})")
                 # the vision read-path Cast: stop here, it becomes a no-op
                 continue
             if n.op_type not in _QUEUE_OPS:
@@ -149,7 +151,13 @@ def patch_file_v3(src: str | Path, dst: str | Path,
                   retypes_out: str | Path | None = None) -> dict[str, str]:
     """Load, patch, check, save. Returns the retype record."""
     import json
+    import os
+    import tempfile
     import onnx
+    src, dst = Path(src), Path(dst)
+    if src.resolve() == dst.resolve() or (retypes_out is not None and
+            Path(retypes_out).resolve() in (src.resolve(), dst.resolve())):
+        raise ValueError("v3 patch: output must not overwrite source/model")
     model = onnx.load(str(src))
     # tinygrad layout-hint ops: same treatment as production patch_file
     for n in [n for n in model.graph.node if n.domain == 'org.tinygrad']:
@@ -168,7 +176,11 @@ def patch_file_v3(src: str | Path, dst: str | Path,
         raise ValueError("v3 patch: model does not need it (not uint8 v3?)")
     retypes = patch_v3_uint8_inputs(model)
     onnx.checker.check_model(model, full_check=False)
-    onnx.save(model, str(dst))
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix=dst.name + '.build-', dir=dst.parent) as td:
+        staged = Path(td) / 'patched.onnx'
+        onnx.save(model, str(staged))
+        os.replace(staged, dst)
     if retypes_out is not None:
         Path(retypes_out).write_text(json.dumps(retypes, indent=2))
     return retypes
