@@ -1,174 +1,297 @@
---- a/third_party/jetlink/jetlink/server/session.py	2026-10-05 08:07:13.764987723 +0000
-+++ b/third_party/jetlink/jetlink/server/session.py	2026-10-05 12:48:49.219643276 +0000
-@@ -34,6 +34,7 @@
- from jetlink.spec import (
-   CHUNK,
-   DEFAULT_FRAME_SKIP,
-+  DRIVING_OUTPUT,
-   ModelSpec,
-   sha256_file,
-   spec_from_onnx,
-@@ -451,15 +452,38 @@
-     if 'spec' not in meta:
+diff --git a/third_party/jetlink/jetlink/server/session.py b/third_party/jetlink/jetlink/server/session.py
+index 1f2c1ba..629c8b3 100644
+--- a/third_party/jetlink/jetlink/server/session.py
++++ b/third_party/jetlink/jetlink/server/session.py
+@@ -57,6 +57,7 @@ class Loaded:
+   engine: object
+   queues: object
+   host_inputs: dict
++  valid: bool = True
+ 
+ 
+ @dataclass
+@@ -186,6 +187,9 @@ class EngineHost:
+     with self.lock:
+       loaded, job = self.loaded, self.job
+       stage, frac, msg = self._last_stage
++      if loaded is not None and not loaded.valid:
++        return {'state': 'failed', 'sha256': loaded.sha256, 'detail': 'inference invalidated; reload required',
++                'stage': 'failed', 'frac': 0.0, 'msg': 'reload required', 'load_only': False}
+       if loaded is not None:
+         return {'state': 'ready', 'sha256': loaded.sha256, 'detail': '', 'stage': None,
+                 'frac': 1.0, 'msg': msg, 'load_only': bool(job.load_only) if job is not None else False}
+@@ -216,7 +220,7 @@ class EngineHost:
+     loaded, job = self.loaded, self.job
+     if sha256 is None:
+       return {'state': 'none', 'detail': '', 'sha256': None, 'chunk': CHUNK}
+-    if (loaded is not None and loaded.sha256 == sha256
++    if (loaded is not None and loaded.valid and loaded.sha256 == sha256
+         and (frame_skip is None or loaded.spec.frame_skip == frame_skip)):
+       return {'state': 'ready', 'detail': '', 'sha256': sha256, 'chunk': CHUNK,
+               'spec': loaded.spec.to_dict()}
+@@ -247,14 +251,24 @@ class EngineHost:
+ 
+   def request(self, req: Request, session: Session) -> dict:
+     """Make `req` the model being served, starting whatever that takes."""
++    from jetlink.cinque_v3 import CANONICAL_SPEC
++    if req.sha256 == CANONICAL_SPEC['sha256'] and (req.frame_skip != CANONICAL_SPEC['frame_skip'] or req.nbytes not in (0, CANONICAL_SPEC['nbytes'])):
++      return {'state': 'failed', 'detail': 'V3 size/frame_skip differs from fixed contract', 'sha256': req.sha256, 'chunk': CHUNK}
+     with self.lock:
++      previous_session = self.session
+       if session is not None:
+         # A control-channel prepare passes none, and must not detach the
+         # comma's session from the progress it is waiting on.
+         self.session = session
+-      if (self.loaded is not None and self.loaded.sha256 == req.sha256
++      if (self.loaded is not None and self.loaded.valid and self.loaded.sha256 == req.sha256
+           and self.loaded.spec.frame_skip == req.frame_skip):
+-        return self._ready(self.loaded)
++        if self.loaded.spec.stateful and session is not None and previous_session is not session:
++          try:
++            self.loaded.queues.reset()
++          except Exception:
++            self.loaded.valid = False
++        if self.loaded.valid:
++          return self._ready(self.loaded)
+       if self.job is not None and self.job.state == 'building':
+         # Either this model's build, which the client attaches to, or another
+         # build that owns the GPU right now.
+@@ -337,8 +351,11 @@ class EngineHost:
+     logs a traceback for what `need_upload` already says.
+     """
+     d = self._cached_spec(entry)
+-    if d is not None:
+-      return ModelSpec.from_dict({**d, 'frame_skip': req.frame_skip})
++    if isinstance(d, dict) and d.get('sha256') == req.sha256 and (req.nbytes == 0 or d.get('nbytes') == req.nbytes):
++      try:
++        return ModelSpec.from_dict({**d, 'frame_skip': req.frame_skip})
++      except (ValueError, KeyError, TypeError):
++        log.warning('invalid cached spec for %s', entry.path.name)
+     if _model_complete(model_path, req.nbytes):
+       try:
+         return self._derive_spec(model_path, req.frame_skip)
+@@ -402,7 +419,10 @@ class EngineHost:
+     except Exception as e:
+       log.exception("engine preparation failed")
+       if engine is not None:
+-        engine.close()
++        try:
++          engine.close()
++        except Exception:
++          log.exception('failed to drain/close engine; not a cache corruption')
+       with self.lock:
+         job.state, job.detail = 'failed', f'{type(e).__name__}: {e}'
+       self._progress('failed', 1.0, job.detail, force=True)
+@@ -442,6 +462,8 @@ class EngineHost:
+ 
+   @staticmethod
+   def _write_spec(entry: CacheEntry, spec: ModelSpec) -> None:
++    if spec.stateful:
++      return  # V3 metadata must come from a verified build; never repair it here.
+     try:
+       meta = entry.meta()
+     except (OSError, ValueError):
+@@ -452,17 +474,24 @@ class EngineHost:
        entry.write_meta({**meta, 'spec': spec.to_dict()})
  
-+  def _backend_dtype_transforms(self) -> dict | None:
-+    """Engine I/O dtypes the backend intentionally changed at build time.
-+
-+    Production TRT backend retypes v2's img/big_img uint8->fp16
-+    (onnx_patch.py) and, once the v3 patch lands there, v3's
-+    new_img/state_img_q uint8->fp16 (tools/patch_v3_uint8.py). Declared
-+    here so _check_shapes enforces the declared transform instead of
-+    rejecting a legitimately rebuilt engine. Backends that retype
-+    nothing return None: strict ONNX-dtype comparison.
-+    """
-+    get = getattr(self.backend, 'dtype_transforms', None)
-+    return get() if callable(get) else None
-+
    def _warm(self, engine, spec: ModelSpec) -> Loaded:
 -    from jetlink.queues import PolicyQueues
 -    queues = PolicyQueues(spec)
 -    _check_shapes(engine, spec)
+-    # Warm runs on zeros, so the first real frame pays for nothing lazy: CUDA
+-    # state and the graph capture for TensorRT, a first replay for the others.
 +    from jetlink.queues import PolicyQueues, StatefulState
-+    _check_shapes(engine, spec, dtype_transforms=self._backend_dtype_transforms())
-     # Warm runs on zeros, so the first real frame pays for nothing lazy: CUDA
-     # state and the graph capture for TensorRT, a first replay for the others.
++    _check_shapes(engine, spec, dtype_transforms=getattr(engine, 'dtype_transforms', {}))
      host_inputs = {n: engine.host_input(n) for n in engine.inputs}
-+    # A stateful graph keeps its own history (openpilot #38916): the state
-+    # lives in the engine's pinned input buffers, fed from each frame's
-+    # next_state_* outputs. A queued graph's history lives in PolicyQueues.
++    for n, buf in host_inputs.items():
++      if tuple(buf.shape) != tuple(engine.inputs[n].shape) or buf.dtype != np.dtype(engine.inputs[n].dtype):
++        raise ValueError(f'host input {n} does not match the physical engine contract')
 +    queues = StatefulState(spec, host_inputs) if spec.stateful else PolicyQueues(spec)
      warped = np.zeros(spec.warped_shape, np.uint8)
      packed = np.zeros(spec.packed_nelem, np.float32)
-+    if spec.stateful:
-+      # StatefulState.step_into() deliberately leaves the state_* inputs
-+      # alone, so without an explicit reset the warm run (and any CUDA
-+      # graph capture inside it) would start from whatever the pinned
-+      # buffers happened to hold. reset -> step_into -> warm -> reset
-+      # guarantees a deterministic zero state at both ends.
-+      queues.reset()
-     queues.step_into(warped, packed, host_inputs)
-     log.info("%s", engine.warm())
+-    queues.step_into(warped, packed, host_inputs)
+-    log.info("%s", engine.warm())
      queues.reset()
-@@ -512,21 +536,59 @@
++    try:
++      queues.step_into(warped, packed, host_inputs)
++      log.info('%s', engine.warm())
++    finally:
++      # Same arrays and addresses as the CUDA graph captured. The warm frame
++      # is never committed as real history, including on warm failure.
++      if getattr(engine, 'idle', True):
++        queues.reset()
+     return Loaded(spec.sha256, spec, engine, queues, host_inputs)
+ 
+   def unload(self) -> None:
+@@ -487,7 +516,23 @@ class EngineHost:
+     return self.backend.load(artifact, report=self._progress)
+ 
+   def _derive_spec(self, model_path: Path, frame_skip: int) -> ModelSpec:
+-    return spec_from_onnx(str(model_path), frame_skip=frame_skip)
++    from jetlink.cinque_v3 import CANONICAL_SPEC, file_identity, validate_source
++    identity = file_identity(model_path)
++    if identity['sha256'] == CANONICAL_SPEC['sha256']:
++      validate_source(model_path, CANONICAL_SPEC)
++      if frame_skip != CANONICAL_SPEC['frame_skip']:
++        raise ValueError('V3 frame_skip differs from the fixed contract')
++      return ModelSpec.from_dict(CANONICAL_SPEC)
++    from jetlink.onnx_meta import parse_file
++    from jetlink.cinque_v3 import decode_output_slices
++    meta = parse_file(str(model_path))
++    if 'new_img' in meta.inputs:
++      raise ValueError('unsupported stateful model identity')
++    return ModelSpec(sha256=identity['sha256'], nbytes=identity['nbytes'], frame_skip=frame_skip,
++                     input_shapes=dict(meta.inputs), output_shapes=dict(meta.outputs),
++                     output_slices={n: slice(*s) for n, s in decode_output_slices(meta.props['output_slices']).items()},
++                     checkpoint=meta.model_checkpoint, input_dtypes=dict(meta.input_types),
++                     output_dtypes=dict(meta.output_types))
+ 
+   def _build(self, model_path: Path, artifact: Path, meta_extra: dict) -> None:
+     self.backend.build(model_path, artifact, report=self._progress, meta_extra=meta_extra)
+@@ -512,9 +557,29 @@ def _model_complete(model_path: Path, nbytes: int) -> bool:
    return model_path.is_file() and model_path.stat().st_size == nbytes
  
  
 -def _check_shapes(engine, spec: ModelSpec) -> None:
 +def _check_shapes(engine, spec: ModelSpec, dtype_transforms=None) -> None:
    """The engine is what will execute and the spec came from the file, so
--  disagreement means the artifact on disk is not this model's."""
--  for name, io in engine.inputs.items():
--    want = spec.input_shapes.get(name)
--    if want is None:
--      raise ValueError(f"engine input {name!r} is not in the model spec")
--    if int(np.prod(io.shape)) != int(np.prod(want)):
--      raise ValueError(f"input {name}: engine {tuple(io.shape)} vs spec {want}")
--  missing = set(spec.input_shapes) - set(engine.inputs)
--  if missing:
--    raise ValueError(f"engine has no input(s) {sorted(missing)} the model spec declares")
--  out = next(iter(engine.outputs.values())).shape
--  if int(np.prod(out)) != spec.output_nelem:
--    raise ValueError(f"output: engine {tuple(out)} vs spec {spec.output_nelem}")
-+  disagreement means the artifact on disk is not this model's.
-+
-+  Exact contract: the same input names and the same output names, exact
-+  shape tuples (a stateful tensor's dimension order is meaningful;
-+  element-count equality is not enough), and dtypes where the spec
-+  carries them. Anything missing, unexpected, or mismatched fails the
-+  engine load — never silently tolerated.
-+
-+  dtype_transforms: ONNX semantic dtype vs engine physical I/O dtype are
-+  NOT the same concept. A backend may intentionally retype inputs at
-+  build time (production onnx_patch.py: v2 img/big_img uint8 -> fp16;
-+  v3 patch: new_img/state_img_q uint8 -> fp16, next_state_img_q -> fp16).
-+  Pass the backend's declared transforms {tensor_name: engine_dtype} and
-+  the engine must match THOSE exactly. Without a declared transform the
-+  engine must match the spec's ONNX dtype exactly. An undeclared or
-+  wrongly-declared retype still fails: this narrows nothing.
-+  """
-+  eng_in, eng_out = set(engine.inputs), set(engine.outputs)
-+  spec_in, spec_out = set(spec.input_shapes), set(spec.output_shapes)
-+  if eng_in != spec_in:
-+    raise ValueError(
-+      f"engine/spec input names differ: "
-+      f"engine-only {sorted(eng_in - spec_in)}, spec-only {sorted(spec_in - eng_in)}")
-+  if eng_out != spec_out:
-+    raise ValueError(
-+      f"engine/spec output names differ: "
-+      f"engine-only {sorted(eng_out - spec_out)}, spec-only {sorted(spec_out - eng_out)}")
-+  for name in spec.input_shapes:
-+    es, ss = tuple(engine.inputs[name].shape), tuple(spec.input_shapes[name])
-+    if es != ss:
-+      raise ValueError(f"input {name}: engine shape {es} != spec shape {ss}")
-+  for name in spec.output_shapes:
-+    es, ss = tuple(engine.outputs[name].shape), tuple(spec.output_shapes[name])
-+    if es != ss:
-+      raise ValueError(f"output {name}: engine shape {es} != spec shape {ss}")
-+  # dtypes, where the spec carries them (specs generated from real ONNX do).
-+  # A backend-declared transform replaces the ONNX dtype as the expectation;
-+  # anything else must match the spec exactly.
-+  transforms = dtype_transforms or {}
-+  for name, want_onnx in spec.input_dtypes.items():
-+    want = transforms.get(name, want_onnx)
-+    got = str(getattr(engine.inputs[name], 'dtype', ''))
-+    if got and got != want:
-+      raise ValueError(f"input {name}: engine dtype {got} != expected {want}"
-+                       + (" (backend-declared transform)" if name in transforms else " (spec ONNX dtype)"))
-+  for name, want_onnx in spec.output_dtypes.items():
-+    want = transforms.get(name, want_onnx)
-+    got = str(getattr(engine.outputs[name], 'dtype', ''))
-+    if got and got != want:
-+      raise ValueError(f"output {name}: engine dtype {got} != expected {want}"
-+                       + (" (backend-declared transform)" if name in transforms else " (spec ONNX dtype)"))
+   disagreement means the artifact on disk is not this model's."""
++  if spec.stateful:
++    from jetlink.cinque_v3 import DTYPE_TRANSFORMS
++    spec.validate_stateful()
++    transforms = getattr(engine, 'dtype_transforms', None)
++    if transforms != DTYPE_TRANSFORMS:
++      raise ValueError('missing or invalid engine-specific V3 dtype contract')
++    for kind in ('inputs', 'outputs'):
++      actual = getattr(engine, kind)
++      shapes = getattr(spec, kind[:-1] + '_shapes')
++      dtypes = getattr(spec, kind[:-1] + '_dtypes')
++      if set(actual) != set(shapes):
++        raise ValueError(f'{kind} names differ from V3 spec')
++      for n, shape in shapes.items():
++        io = actual[n]
++        if tuple(io.shape) != tuple(shape) or np.dtype(io.dtype) != np.dtype(transforms.get(n, dtypes[n])):
++          raise ValueError(f'{kind} {n} shape/dtype differs from V3 physical contract')
++    for a, b in spec.state_pairs:
++      if np.dtype(engine.inputs[a].dtype) != np.dtype(engine.outputs[b].dtype):
++        raise ValueError(f'physical state dtype mismatch: {a}, {b}')
++    return
+   for name, io in engine.inputs.items():
+     want = spec.input_shapes.get(name)
+     if want is None:
+@@ -528,6 +593,18 @@ def _check_shapes(engine, spec: ModelSpec) -> None:
+   if int(np.prod(out)) != spec.output_nelem:
+     raise ValueError(f"output: engine {tuple(out)} vs spec {spec.output_nelem}")
  
++  # Legacy queued shape behavior is retained. Where semantic dtypes exist,
++  # compare them to the engine-specific, fixed V2 image retype declaration.
++  transforms = dtype_transforms or {}
++  if transforms and transforms != {'img': 'float16', 'big_img': 'float16'}:
++    raise ValueError('invalid V2 image dtype transform declaration')
++  for kind in ('inputs', 'outputs'):
++    for name, semantic in getattr(spec, kind[:-1] + '_dtypes').items():
++      want = transforms.get(name, semantic)
++      got = getattr(getattr(engine, kind)[name], 'dtype', None)
++      if got is None or np.dtype(got) != np.dtype(want):
++        raise ValueError(f'{name} physical dtype differs from queued contract')
++
  
  class Session:
-@@ -753,14 +815,45 @@
-     queue_us = int((time.perf_counter() - t0) * 1e6)
+   def __init__(self, transport: Transport, host: EngineHost):
+@@ -649,6 +726,13 @@ class Session:
+     if self.client and who != self.client:
+       log.info("session handed from %s to %s", self.client, who or 'an unnamed client')
+     self.client = who
++    with self.host.lock:
++      loaded = self.host.loaded
++      if loaded is not None and loaded.spec.stateful and loaded.valid:
++        try:
++          loaded.queues.reset()
++        except Exception:
++          loaded.valid = False
+     self._reset(msg.seq)
+     log.info("hello from %s (seq %d)", who or 'an unnamed client', msg.seq)
  
-     outputs = loaded.engine.run()
+@@ -721,7 +805,7 @@ class Session:
+     wanted_sha, wanted_skip = self._wanted()
+     with host.lock:
+       loaded = host.loaded
+-      if (loaded is None or loaded.sha256 != wanted_sha
++      if (loaded is None or not loaded.valid or loaded.sha256 != wanted_sha
+           or loaded.spec.frame_skip != wanted_skip):
+         self._send(P.Msg.INFER_RESP, msg.seq,
+                    (P.pack_infer_resp(0, P.Status.NOT_READY, 0, 0, 0),))
+@@ -739,28 +823,51 @@ class Session:
+                  (P.pack_infer_resp(0, P.Status.BAD_SHAPE, 0, 0, 0),))
+       return
+     frame_id, flags = P.unpack_infer_req(msg.payload)
+-    if flags & P.Flag.RESET_QUEUES:
+-      loaded.queues.reset()
+-
+-    off = P.INFER_REQ_SIZE
+-    warped = np.frombuffer(msg.payload, np.uint8, spec.warped_nbytes, off).reshape(spec.warped_shape)
+-    off += spec.warped_nbytes
+-    packed = np.frombuffer(msg.payload, np.float32, spec.packed_nelem, off)
+-
+-    # Gathers land straight in TensorRT's pinned input buffers: between the
+-    # wire and the GPU there is exactly one copy.
+-    loaded.queues.step_into(warped, packed, loaded.host_inputs)
+-    queue_us = int((time.perf_counter() - t0) * 1e6)
+-
+-    outputs = loaded.engine.run()
 -    out = next(iter(outputs.values())).reshape(-1)
-+    if spec.stateful:
-+      # A stateful engine also returns next_state_*; the driving output is
-+      # named, not positional.
-+      if DRIVING_OUTPUT not in outputs:
-+        log.error("stateful frame %d: engine returned no %r output", frame_id, DRIVING_OUTPUT)
-+        self._send(P.Msg.INFER_RESP, msg.seq,
-+                   (P.pack_infer_resp(frame_id, P.Status.INFER_FAILED, 0, queue_us, 0),))
-+        return
-+      out = outputs[DRIVING_OUTPUT].reshape(-1)
-+    else:
-+      out = next(iter(outputs.values())).reshape(-1)
- 
-     # asarray, not astype: a no-op when the engine already outputs float32.
-     # isfinite is ~7x faster on float32 and the non-finites map across exactly.
-     # openpilot drops to the small model on a non-finite output either way, so
-     # checking here saves the comma rescanning 18452 floats to find out.
-     out32 = np.asarray(out, dtype=np.float32)
+-
+-    # asarray, not astype: a no-op when the engine already outputs float32.
+-    # isfinite is ~7x faster on float32 and the non-finites map across exactly.
+-    # openpilot drops to the small model on a non-finite output either way, so
+-    # checking here saves the comma rescanning 18452 floats to find out.
+-    out32 = np.asarray(out, dtype=np.float32)
 -    status = P.Status.OK if np.all(np.isfinite(out32)) else P.Status.NOT_FINITE
-+    if not np.all(np.isfinite(out32)):
-+      status = P.Status.NOT_FINITE
-+    elif spec.stateful:
-+      # The recurrent state is safety-critical: every next_state_* must
-+      # exist, match its state_* input shape exactly, and be fully finite
-+      # BEFORE any of it is committed. validate_next_states() changes
-+      # nothing; only a fully-validated stage is committed. "Atomic" here
-+      # means no partial update on validation failure (see
-+      # commit_next_states for the exact guarantee). Any failure leaves
-+      # the previous state untouched and the frame is reported failed so
-+      # the comma takes its fallback path (fail-closed).
-+      from jetlink.queues import StateValidationError
-+      try:
++    status = P.Status.INFER_FAILED
++    try:
++      if flags & P.Flag.RESET_QUEUES:
++        # Explicit RESET precedes scalar validation by protocol design. A bad
++        # ordinary frame, without RESET, cannot mutate committed history.
++        loaded.queues.reset()
++      off = P.INFER_REQ_SIZE
++      warped = np.frombuffer(msg.payload, np.uint8, spec.warped_nbytes, off).reshape(spec.warped_shape)
++      packed = np.frombuffer(msg.payload, np.float32, spec.packed_nelem, off + spec.warped_nbytes)
++      if not np.all(np.isfinite(packed)):
++        self._send(P.Msg.INFER_RESP, msg.seq,
++                   (P.pack_infer_resp(frame_id, P.Status.NOT_FINITE, 0, 0, 0),))
++        return
++      loaded.queues.step_into(warped, packed, loaded.host_inputs)
++      queue_us = int((time.perf_counter() - t0) * 1e6)
++      outputs = loaded.engine.run()
++      if spec.stateful:
++        if set(outputs) != set(spec.output_shapes):
++          raise ValueError('missing or extra V3 engine output')
++        for name, shape in spec.output_shapes.items():
++          arr = outputs[name]
++          if not isinstance(arr, np.ndarray) or tuple(arr.shape) != tuple(shape) or arr.dtype != np.dtype(loaded.engine.outputs[name].dtype):
++            raise ValueError(f'invalid output shape/dtype: {name}')
++          if not np.all(np.isfinite(arr)):
++            status = P.Status.NOT_FINITE
++            raise ValueError(f'non-finite output: {name}')
 +        staged = loaded.queues.validate_next_states(outputs)
-+      except StateValidationError as e:
-+        log.error("stateful frame %d: state validation failed: %s", frame_id, e)
-+        status = P.Status.NOT_FINITE
-+      else:
++        # No cast/flatten until all original output arrays pass validation.
++        out32 = outputs['outputs'].reshape(-1)
 +        loaded.queues.commit_next_states(staged)
-+        status = P.Status.OK
-+    else:
++      else:
++        out32 = np.asarray(next(iter(outputs.values())).reshape(-1), dtype=np.float32)
++        if not np.all(np.isfinite(out32)):
++          status = P.Status.NOT_FINITE
++          raise ValueError('non-finite driving output')
 +      status = P.Status.OK
++    except Exception:
++      # No unload here: on_infer already holds host.lock. Copy failure may
++      # have partially committed state; reload is required, RESET cannot cure
++      # this generation. No stale driving output is sent on failure.
++      loaded.valid = False
++      log.exception('inference generation invalidated')
++      self._send(P.Msg.INFER_RESP, msg.seq,
++                 (P.pack_infer_resp(frame_id, status, 0, 0, 0),))
++      return
  
      total_us = int((time.perf_counter() - t0) * 1e6)
      parts = [P.pack_infer_resp(frame_id, status, loaded.engine.last_gpu_us, queue_us, total_us),

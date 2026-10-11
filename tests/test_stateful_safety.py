@@ -94,15 +94,19 @@ _sess = SourceFileLoader("sessnew", str(ROOT / "patches" / "session.py.new")).lo
 _check_shapes = _sess._check_shapes
 
 
+V3_RETYPES = dict.fromkeys(('new_img', 'state_img_q', 'next_state_img_q'), 'float16')
+
+
 def fake_engine(spec, overrides=None):
   from collections import namedtuple
   IO = namedtuple("IO", ["shape", "dtype"])
   ov = overrides or {}
+  dt = V3_RETYPES if spec.stateful else {}
   return types.SimpleNamespace(
-    inputs={n: IO(ov.get(("in", n), s), np.dtype(spec.input_dtypes.get(n, "float32")))
+    inputs={n: IO(ov.get(("in", n), s), np.dtype(dt.get(n, spec.input_dtypes.get(n, "float32"))))
             for n, s in spec.input_shapes.items()},
-    outputs={n: IO(ov.get(("out", n), s), np.dtype(spec.output_dtypes.get(n, "float32")))
-             for n, s in spec.output_shapes.items()})
+    outputs={n: IO(ov.get(("out", n), s), np.dtype(dt.get(n, spec.output_dtypes.get(n, "float32"))))
+             for n, s in spec.output_shapes.items()}, dtype_transforms=dt.copy())
 
 
 def expect_raise(label, fn):
@@ -139,7 +143,7 @@ check("F: reset zeroes state_feat_q", not bufs["state_feat_q"].any())
 # so a future warm-order regression is caught. The fake's warm() asserts
 # the three states are zero AT WARM TIME; after _warm returns they must be
 # zero again (post-warm reset).
-bufs = make_state(spec)
+bufs = make_state(spec, V3_RETYPES)
 for n, _ in spec.state_pairs:
   bufs[n][...] = 13  # simulate garbage left in pinned buffers
 
@@ -150,9 +154,10 @@ _WarmIO = _nt2("WarmIO", ["shape", "dtype"])
 class _FakeWarmEngine:
   def __init__(self, spec, bufs):
     self._bufs = bufs
-    self.inputs = {n: _WarmIO(s, np.dtype(spec.input_dtypes.get(n, "float32")))
+    self.dtype_transforms = V3_RETYPES.copy()
+    self.inputs = {n: _WarmIO(s, np.dtype(V3_RETYPES.get(n, spec.input_dtypes.get(n, "float32"))))
                    for n, s in spec.input_shapes.items()}
-    self.outputs = {n: _WarmIO(s, np.dtype(spec.output_dtypes.get(n, "float32")))
+    self.outputs = {n: _WarmIO(s, np.dtype(V3_RETYPES.get(n, spec.output_dtypes.get(n, "float32"))))
                     for n, s in spec.output_shapes.items()}
     self.warm_saw_zero = None
 
@@ -211,9 +216,7 @@ except StateValidationError:
 check("B: state untouched on Inf", states_equal(before, snapshot(bufs, spec), spec))
 
 # --- dtype mismatch is a SEPARATE gate (dedicated test, not Test B) ---------
-# Documents the current same_kind boundary: a genuinely incompatible dtype
-# (complex) is refused; same-kind narrowing (float64->float32) is allowed
-# pending the Jetson engine-dtype measurement (review item 5).
+# Physical state feedback requires exact dtype equality, including float narrowing.
 bufs = make_state(spec)
 st = StatefulState(spec, bufs)
 outs = good_outputs(spec, rng)
@@ -290,10 +293,11 @@ expect_raise("unexpected input refused", lambda: _check_shapes(eng, spec))
 def _dtype_mismatch_case():
   from collections import namedtuple as _nt
   IO = _nt("IO", ["shape", "dtype"])
+  dt = V3_RETYPES
   eng = types.SimpleNamespace(
     inputs={n: IO(s, np.dtype("int32")) for n, s in spec.input_shapes.items()},
-    outputs={n: IO(s, np.dtype(spec.output_dtypes.get(n, "float32")))
-             for n, s in spec.output_shapes.items()})
+    outputs={n: IO(s, np.dtype(dt.get(n, spec.output_dtypes.get(n, "float32"))))
+             for n, s in spec.output_shapes.items()}, dtype_transforms=dt.copy())
   _check_shapes(eng, spec)
 
 

@@ -84,11 +84,14 @@ check("roundtrip to_dict/from_dict", ModelSpec.from_dict(ts.to_dict()).to_dict()
 check("queued packed layout", set(tq.packed_shapes) == {"desire", "traffic_convention", "action_t", "prev_feat"})
 
 # --- 2. queues.py StatefulState ----------------------------------------------
-spec = ts
+# Explicit synthetic float32 state contract, not the real ONNX dtype.
+from dataclasses import replace
+spec = replace(ts, input_dtypes=dict.fromkeys(ts.input_shapes, 'float32'),
+               output_dtypes=dict.fromkeys(ts.output_shapes, 'float32'))
 rng = np.random.default_rng(0)
 
 # fake pinned buffers like the TRT engine's host_input()
-dest = {n: np.zeros(s, np.float16) for n, s in spec.input_shapes.items()}
+dest = {n: np.zeros(s, np.float32) for n, s in spec.input_shapes.items()}
 st = StatefulState(spec, dest)
 st.reset()
 check("reset zeros states", all(not dest[i].any() for i, _ in spec.state_pairs))
@@ -103,13 +106,12 @@ check("desire written", dest["desire"].shape == spec.input_shapes["desire"])
 check("states preserved across step", all(not dest[i].any() for i, _ in spec.state_pairs))
 
 # fake engine outputs; after_run must feed next_* back into state_*
-# (tolerant: the pinned state buffers are float16, outputs float32)
+# Physical state input/output dtypes must be identical; no narrowing.
 outputs = {n: rng.standard_normal(s).astype(np.float32) for n, s in spec.output_shapes.items()}
 st.after_run(outputs)
 ok = True
 for state_in, state_out in spec.state_pairs:
-  if not np.allclose(dest[state_in].astype(np.float32), outputs[state_out].reshape(dest[state_in].shape),
-                     rtol=1e-2, atol=1e-2):
+  if not np.array_equal(dest[state_in], outputs[state_out]):
     ok = False
 check("after_run feeds states back", ok)
 

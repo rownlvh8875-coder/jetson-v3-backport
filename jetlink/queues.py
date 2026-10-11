@@ -257,7 +257,7 @@ class StatefulState:
       raise ValueError(f"packed {packed.size} != {spec.packed_nelem}")
     desire, traffic_convention, action_t = self._unpack(packed)
     # new_img is the newest warped frame pair, cast into the model dtype
-    dest[STATEFUL_FRAME][...] = warped.reshape(dest[STATEFUL_FRAME].shape)
+    np.copyto(dest[STATEFUL_FRAME], warped, casting='safe')
     dest['desire'][...] = desire.reshape(dest['desire'].shape)
     dest['traffic_convention'][...] = traffic_convention.reshape(
       dest['traffic_convention'].shape)
@@ -286,20 +286,9 @@ class StatefulState:
       if tuple(arr.shape) != tuple(buf.shape):
         raise StateValidationError(
           f'{state_out!r} shape {tuple(arr.shape)} != state input shape {tuple(buf.shape)}')
-      # dtype: must be assignable into the host buffer.
-      # NOTE (Jetson verification pending, review item 5): this currently
-      # allows 'same_kind' casts (e.g. float32 -> float16), mirroring what
-      # `buf[...] = arr` itself would accept. Strengthening to an exact
-      # `arr.dtype != buf.dtype` check requires knowing the production TRT
-      # engine's actual pinned state-buffer dtypes, which cannot be observed
-      # on a dev VM. Do NOT tighten (or loosen) this on a guess: measure the
-      # engine's input/output dtypes on the Jetson first, then decide.
-      # If they are identical per pair, replace with the exact check.
-      if not (arr.dtype == buf.dtype or np.can_cast(arr.dtype, buf.dtype, casting='same_kind')):
-        raise StateValidationError(
-          f'{state_out!r} dtype {arr.dtype} not castable to state buffer {buf.dtype}')
-      # isfinite on float32: exact for float16/float32, trivially true for ints.
-      if not np.all(np.isfinite(arr.astype(np.float32, copy=False))):
+      if arr.dtype != buf.dtype:
+        raise StateValidationError(f'{state_out!r} dtype {arr.dtype} != state buffer {buf.dtype}')
+      if not np.all(np.isfinite(arr)):
         raise StateValidationError(f'non-finite values in {state_out!r}')
       staged.append((state_in, state_out, arr))
     return staged
@@ -307,32 +296,21 @@ class StatefulState:
   def commit_next_states(self, staged: list[tuple[str, str, np.ndarray]]) -> None:
     """Phase 2 of the state update: copy the validated stage.
 
-    `staged` must come from validate_next_states(). All state outputs are
-    validated before any write, so a validation failure cannot partially
-    update state. The copies below are sequential: this is NOT a
-    transactional commit with rollback. A non-data exception mid-copy
-    (e.g. the process dying) has no rollback, but validation has already
-    ruled out every data-driven failure mode, so the residual risk is
-    limited to catastrophic process failure, against which no in-process
-    rollback could help either.
+    Validation cannot modify committed state. Copy exceptions (including a
+    read-only buffer) may leave a partial commit: the caller must invalidate
+    this loaded generation and require reload. There is no rollback.
     """
     if self.host_inputs is None:
       raise RuntimeError('StatefulState.commit_next_states needs host_inputs (pass at construction)')
     for state_in, _state_out, arr in staged:
       buf = self.host_inputs[state_in]
-      buf[...] = arr.reshape(buf.shape)
+      np.copyto(buf, arr, casting='no')
 
   def after_run(self, outputs: dict) -> None:
     """Keep this frame's next states for the next one.
 
-    Validates all next_state_* outputs first; only when every check passes
-    are the states committed. "Atomic" here means: no partial update on
-    validation failure -- validation failing on any state leaves all
-    previous states untouched. It does NOT mean transactional rollback of
-    the copy phase itself (see commit_next_states). On any failure a
-    StateValidationError propagates with the previous state untouched, and
-    the caller must report the frame as failed (fail-closed) rather than
-    serve it.
+    Validation failures leave state intact. Commit exceptions may partially
+    copy state; the server invalidates the generation and requires reload.
     """
     staged = self.validate_next_states(outputs)
     self.commit_next_states(staged)

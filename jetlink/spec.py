@@ -105,6 +105,8 @@ class ModelSpec:
     """
     if not self.stateful:
       raise ValueError('validate_stateful on a non-stateful spec')
+    if set(self.input_dtypes) != set(self.input_shapes) or set(self.output_dtypes) != set(self.output_shapes):
+      raise ValueError('stateful spec requires complete dtype declarations')
     pairs = self.state_pairs
     if not pairs:
       raise ValueError('stateful spec admits no state pairs')

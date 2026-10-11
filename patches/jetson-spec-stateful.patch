@@ -1,6 +1,8 @@
+diff --git a/third_party/jetlink/jetlink/spec.py b/third_party/jetlink/jetlink/spec.py
+index 97e6f48..3950704 100644
 --- a/third_party/jetlink/jetlink/spec.py
 +++ b/third_party/jetlink/jetlink/spec.py
-@@ -6,16 +6,27 @@
+@@ -6,16 +6,27 @@ See the LICENSE file in the root directory for more details.
  
  Every size on the wire, derived from the model's ONNX metadata.
  
@@ -33,7 +35,7 @@
  
  from jetlink.onnx_meta import OnnxMeta, parse_file
  from jetlink.protocol import INFER_REQ_SIZE, INFER_RESP_SIZE
-@@ -27,6 +38,15 @@
+@@ -27,6 +38,15 @@ DEFAULT_FRAME_SKIP = MODEL_RUN_FREQ // MODEL_CONTEXT_FREQ  # 4
  
  CHUNK = 4 << 20  # model upload chunk
  
@@ -49,7 +51,7 @@
  
  @dataclass(frozen=True)
  class ModelSpec:
-@@ -38,11 +58,72 @@
+@@ -38,11 +58,74 @@ class ModelSpec:
    output_shapes: dict[str, tuple[int, ...]]
    output_slices: dict[str, slice]
    checkpoint: str | None
@@ -100,6 +102,8 @@
 +    """
 +    if not self.stateful:
 +      raise ValueError('validate_stateful on a non-stateful spec')
++    if set(self.input_dtypes) != set(self.input_shapes) or set(self.output_dtypes) != set(self.output_shapes):
++      raise ValueError('stateful spec requires complete dtype declarations')
 +    pairs = self.state_pairs
 +    if not pairs:
 +      raise ValueError('stateful spec admits no state pairs')
@@ -123,7 +127,7 @@
  
    @property
    def n_frames(self) -> int:
-@@ -50,7 +131,9 @@
+@@ -50,7 +133,9 @@ class ModelSpec:
  
    @property
    def model_hw(self) -> tuple[int, int]:
@@ -134,7 +138,7 @@
  
    @property
    def img_buf_shape(self) -> tuple[int, int, int, int]:
-@@ -76,9 +159,22 @@
+@@ -76,9 +161,22 @@ class ModelSpec:
  
    @property
    def packed_shapes(self) -> dict[str, tuple[int, ...]]:
@@ -158,7 +162,7 @@
      fb = self.input_shapes['features_buffer']
      return {
        'desire': (dp[2],),
-@@ -112,7 +208,7 @@
+@@ -112,7 +210,7 @@ class ModelSpec:
    # --- output ---
    @property
    def output_nelem(self) -> int:
@@ -167,7 +171,7 @@
  
    @property
    def output_nbytes(self) -> int:
-@@ -132,7 +228,7 @@
+@@ -132,7 +230,7 @@ class ModelSpec:
    # would drift the moment a field is added.
  
    def to_dict(self) -> dict:
@@ -176,7 +180,7 @@
        'sha256': self.sha256,
        'nbytes': self.nbytes,
        'frame_skip': self.frame_skip,
-@@ -141,16 +237,24 @@
+@@ -141,16 +239,24 @@ class ModelSpec:
        'output_shapes': {k: list(v) for k, v in self.output_shapes.items()},
        'output_slices': {k: [v.start, v.stop] for k, v in self.output_slices.items()},
      }
@@ -203,7 +207,7 @@
  
  
  def sha256_file(path: str, bufsize: int = 1 << 20) -> tuple[str, int]:
-@@ -181,4 +285,6 @@
+@@ -181,4 +287,6 @@ def spec_from_meta(meta: OnnxMeta, sha256: str, nbytes: int,
      output_shapes=dict(meta.outputs),
      output_slices=meta.output_slices,
      checkpoint=meta.model_checkpoint,
