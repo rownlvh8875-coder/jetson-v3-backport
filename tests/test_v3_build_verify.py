@@ -285,6 +285,10 @@ def test_wrong_engine_io_allocates_nothing(tmp_path, monkeypatch, spec):
 def test_verifier_separates_feeds_and_recurrence(tmp_path, monkeypatch, spec, mode, want_left, want_right,
                                                bad_backend, bad_value):
     from contextlib import contextmanager
+    # This test substitutes both backend sessions. It must not require a real
+    # ORT installation before reaching the actual verifier contract checks.
+    # The separate missing-ORT negative test continues to exercise ImportError.
+    monkeypatch.setitem(sys.modules, 'onnxruntime', NS())
     raw_path, engine_path = tmp_path/'raw.bytes', tmp_path/'engine'
     raw_path.write_bytes(b'identity fixture, no graph')
     spec.update(b.file_identity(raw_path))
