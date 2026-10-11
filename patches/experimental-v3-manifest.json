@@ -1,0 +1,113 @@
+{
+  "status": "experimental; real devices/GPU/USB unverified",
+  "model_identity": {
+    "sha256": "404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4",
+    "nbytes": 766354845
+  },
+  "setting": {
+    "name": "CARROT_JETLINK_V3",
+    "enable": "1",
+    "default": "unset or 0",
+    "scope": "jetlinkd and modeld process environments; separate field approval required"
+  },
+  "targets": {
+    "jetson": {
+      "base_sha": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+      "patch": "patches/jetson-production-v3.patch",
+      "patch_sha256": "afaba70b502a11d20bbe92ae8487ce8b39cf5f28b5be8264a121e4415d99cefc",
+      "files": {
+        "third_party/jetlink/jetlink/cinque_v3.py": {
+          "before_sha256": null,
+          "after_sha256": "730abb47a564ecbe366037cfe97a6f3ab18e24b0a88fa3b74d04d1b7e2ee0809"
+        },
+        "third_party/jetlink/jetlink/onnx_patch.py": {
+          "before_sha256": "2551902a7dd4fb0a50d046696f17bdb073c02ba3c4dddba6e63cf8b89aedc503",
+          "after_sha256": "126a60c64f2eb7b2b2e5ddd634a8e8f99967e897037782d86aa27e2838c73241"
+        },
+        "third_party/jetlink/jetlink/queues.py": {
+          "before_sha256": "36412b1aec7e261578f3b08aad82344f7c5607e248cefcf8ad5661869c94daeb",
+          "after_sha256": "d364ed83b29b31d678293b22714954124ca15dacd7087b4986ddf382e769c1e7"
+        },
+        "third_party/jetlink/jetlink/server/backends/trt/__init__.py": {
+          "before_sha256": "dd604510a62aa8b8d2ee7b44b5bd91ab9386666805b5eef9b656e3af6ba2d009",
+          "after_sha256": "5c8246934bcfd13a24ca127dc5f7b06193442429bb28160ba6ed7e25007c5ff1"
+        },
+        "third_party/jetlink/jetlink/server/backends/trt/build.py": {
+          "before_sha256": "35e9a5f57b1a875ce5d8acac2a3e774051351a38fcd3738f99663628a3c6bba8",
+          "after_sha256": "c482ff0743f0cab46b10b7a5cf8da3168be67d826549810c015404ba2465719e"
+        },
+        "third_party/jetlink/jetlink/server/backends/trt/engine.py": {
+          "before_sha256": "3bda5e88432cceda3af13fb4a83873befceb006b6dd76ce308c64e660e2f9648",
+          "after_sha256": "35d5842d55ebe2e70b7000043e4d1da2c6919f0acf2c76220c1f7e41c2a02265"
+        },
+        "third_party/jetlink/jetlink/server/session.py": {
+          "before_sha256": "8f05ea76763f34fb025aa3e467e75f466349fa699cbe19956df893e7a181af40",
+          "after_sha256": "2a47fab8d8912560b3ae5792ab5879fd258fc9d1f29084d2a609b8a3e8a7ba33"
+        },
+        "third_party/jetlink/jetlink/spec.py": {
+          "before_sha256": "f4905a278984d476a09ee6ec63d36bb6e1a8ef1e0789b1cddae6cfdb4724e665",
+          "after_sha256": "4f7d166958b60742dd4a1de2afb9c6fcc1daad2338ecf795d5bd6cfcc3e1ba0e"
+        },
+        "third_party/jetlink/jetlink/v3_compat.py": {
+          "before_sha256": null,
+          "after_sha256": "706559da4b5ddc59d9e2f10aa76cac12ac3b958b30aff38ad829d8fbd8fd3b4b"
+        }
+      },
+      "licenses": [
+        "patches/licenses/openpilot-MIT.txt",
+        "patches/licenses/jetlink-MIT.txt"
+      ]
+    },
+    "comma": {
+      "base_sha": "029ab60eb19e7b9d4d76bfee1ce99a7521934511",
+      "patch": "patches/comma-integration-v3.patch",
+      "patch_sha256": "7f57827d5cfd021307f52426694934c379478ead7afeb4ae9ee81d704d44e1e1",
+      "files": {
+        "openpilot/selfdrive/modeld/jetlink/cinque_v3.json": {
+          "before_sha256": null,
+          "after_sha256": "2f016f577a651670c34c7f8df27b22469145a67046dce266f0443ac3a0e0f157"
+        },
+        "openpilot/selfdrive/modeld/jetlink/contracts.py": {
+          "before_sha256": "b99e0ec4a9b3e7344a5ae4b005daa8f1e744de50429baa8dcf81f1af189aa012",
+          "after_sha256": "dc81868a636eb53b64bf3a6e45da0c49fb623de6762ec7367c7f8215b39d208e"
+        },
+        "openpilot/selfdrive/modeld/jetlink/daemon.py": {
+          "before_sha256": "c5bcc535b75e91bc3f24562e23baf494087db40f4f0ec634a168f212608d75bb",
+          "after_sha256": "a4ba7ea8c1d73d5f8066a9958790692aa958e5e4d1d2d9c3eb7b66d8c0b44b35"
+        },
+        "openpilot/selfdrive/modeld/jetlink/link.py": {
+          "before_sha256": "3b5f452d93f1c5e477207f2bd8f59d5668e5477006dc30eae238a57902617d18",
+          "after_sha256": "0c5cc52f2d0575e14ff6e17d86e98ee0fcd9a7f5f14a5f9ad253e3e84473e3c8"
+        },
+        "openpilot/selfdrive/modeld/jetlink/mac.py": {
+          "before_sha256": "58b636dcdf6bca60b7504cfbe65c5e3a477a3284eef5764afd0c0c587a918189",
+          "after_sha256": "55a339c3ed0b639fe9dd1234840dde4d9523c5bfdb76880ec654162f18ba82a1"
+        },
+        "openpilot/selfdrive/modeld/jetlink/model.py": {
+          "before_sha256": "3be4d2f5eca6541c1be0b9537fae6e127de67fa1e3ff5c0e01e5ca4976d44493",
+          "after_sha256": "1c475a8d423c42b2acb2465303c2d4b381186baffbe8b1bd228e89e89bdc3434"
+        },
+        "openpilot/selfdrive/modeld/jetlink/selection.py": {
+          "before_sha256": "83dd22cf7036593db8ad8432b7735672a9fe4f38fd69a173067ae0fd3fb95966",
+          "after_sha256": "58fef636903f491aeacc866069ab8720a1de66c7026f01a2fad295d6f3ce2d0d"
+        },
+        "third_party/jetlink/jetlink/client.py": {
+          "before_sha256": "74142420235ed7468492e0ce0627db4bdfde98de0114942abed062b61d95b999",
+          "after_sha256": "d73878148a0b68f7f2441b6912b161346bc2c20ba40a6bc6c71d37e1b94ed166"
+        },
+        "third_party/jetlink/jetlink/spec.py": {
+          "before_sha256": "65ea2deb8c139a5f08e6e512ba354b1eb1f0ed4ca334a37417017fde1d1e073f",
+          "after_sha256": "f9ae2f3e8803af04c720b555a2a454d0e331392f30e5a7b7f2089d80364c96c5"
+        },
+        "third_party/jetlink/jetlink/v3_compat.py": {
+          "before_sha256": null,
+          "after_sha256": "706559da4b5ddc59d9e2f10aa76cac12ac3b958b30aff38ad829d8fbd8fd3b4b"
+        }
+      },
+      "licenses": [
+        "patches/licenses/openpilot-MIT.txt",
+        "patches/licenses/jetlink-MIT.txt"
+      ]
+    }
+  }
+}
