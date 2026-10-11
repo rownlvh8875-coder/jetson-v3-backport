@@ -134,6 +134,8 @@ def check_onnx_identity(onnx_path: Path, spec: dict) -> None:
   """Refuse to build unless the ONNX file is exactly the one the spec
   describes. A wrong ONNX + right JSON combination must never build."""
   import hashlib
+  if not onnx_path.is_file():
+    raise SystemExit(f"ONNX file missing: {onnx_path}; refusing to build")
   h = hashlib.sha256()
   n = 0
   with open(onnx_path, "rb") as f:

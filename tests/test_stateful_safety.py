@@ -514,46 +514,41 @@ except ValueError as e:
 _build_mod = SourceFileLoader("build_trt_v3",
                               str(ROOT / "tools" / "build_trt_v3.py")).load_module()
 
-_identity_spec = {
-  "sha256": "0" * 64,
-  "nbytes": 12345,
-  "input_shapes": {"new_img": [2, 6, 128, 256]},
-}
-_dummy_onnx = ROOT / "artifacts" / "big_driving_supercombo_v3.onnx"
-
-try:
-  _build_mod.check_onnx_identity(_dummy_onnx, _identity_spec)
-  check("10: bad sha256 refused", False, "no SystemExit")
-except SystemExit as e:
-  check("10: bad sha256 refused", "mismatch" in str(e), str(e)[:80])
-
-_bad_size_spec = dict(json.loads((ROOT / "artifacts" / "cinque_v3.json").read_text()))
-_bad_size_spec["nbytes"] = 1  # sha matches, size does not
-try:
-  _build_mod.check_onnx_identity(_dummy_onnx, _bad_size_spec)
-  check("10: bad nbytes refused", False, "no SystemExit")
-except SystemExit as e:
-  check("10: bad nbytes refused", "size" in str(e), str(e)[:80])
-
-# main() flow: a bad identity must exit BEFORE build_engine is reached.
+# This is a byte-integrity fixture, deliberately NOT an ONNX graph.
+import hashlib as _hashlib
 import tempfile as _tf
-_calls = []
-_build_mod.build_engine = lambda *a, **k: _calls.append((a, k))
+from unittest.mock import patch as _mock_patch
 with _tf.TemporaryDirectory() as _td:
-  _spec_path = Path(_td) / "spec.json"
-  _spec_path.write_text(json.dumps(_identity_spec))
-  _argv = ["build_trt_v3.py", "--onnx", str(_dummy_onnx),
-           "--spec", str(_spec_path), "--out", str(Path(_td) / "o.engine")]
-  _old_argv = sys.argv
-  sys.argv = _argv
-  try:
-    _build_mod.main()
-    check("10: main() exits on bad identity", False, "no SystemExit")
-  except SystemExit:
-    check("10: main() exits on bad identity", True)
-  finally:
-    sys.argv = _old_argv
-check("10: build_engine never reached on bad identity", _calls == [])
+    _dummy_onnx = Path(_td) / "identity.bytes"
+    _payload = b"integrity fixture, not a model"
+    _dummy_onnx.write_bytes(_payload)
+    _identity_spec = {
+        "sha256": _hashlib.sha256(_payload).hexdigest(),
+        "nbytes": len(_payload), "input_shapes": {"new_img": [1]},
+    }
+    _build_mod.check_onnx_identity(_dummy_onnx, _identity_spec)
+    check("10: correct byte identity accepted (not model validation)", True)
+    for _label, _path, _s, _message in (
+        ("bad sha256", _dummy_onnx, dict(_identity_spec, sha256="0" * 64), "sha256"),
+        ("bad nbytes", _dummy_onnx, dict(_identity_spec, nbytes=1), "size"),
+        ("missing file", Path(_td) / "absent.onnx", _identity_spec, "missing"),
+    ):
+        try:
+            _build_mod.check_onnx_identity(_path, _s)
+            check("10: " + _label + " refused", False, "no SystemExit")
+        except SystemExit as e:
+            check("10: " + _label + " refused", _message in str(e), str(e)[:80])
+        _spec_path = Path(_td) / "spec.json"
+        _spec_path.write_text(json.dumps(_s))
+        with _mock_patch.object(_build_mod, "build_engine") as _build_spy, \
+             _mock_patch.object(sys, "argv", ["build_trt_v3.py", "--onnx", str(_path),
+                 "--spec", str(_spec_path), "--out", str(Path(_td) / "o.engine")]):
+            try:
+                _build_mod.main()
+                check("10: main exits on " + _label, False)
+            except SystemExit:
+                check("10: main exits on " + _label, True)
+            check("10: build never reached on " + _label, not _build_spy.called)
 
 
 print(f"\n{len(PASS)} passed, {len(FAIL)} failed")
