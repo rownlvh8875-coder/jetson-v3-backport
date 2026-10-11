@@ -162,3 +162,12 @@ def test_prior_hello_engine_update_cannot_authorize_new_selection(comma):
 def test_pinned_v3_decoder_does_not_discard_unknown_contract_fields(comma):
     d=copy.deepcopy(comma.v.CANONICAL_SPEC);d['unexpected_contract']='changed'
     with pytest.raises(ValueError):comma.spec.ModelSpec.from_dict(d)
+
+
+def test_non_v3_sequence_vectors_are_unchanged(comma):
+    t=Peer(comma);c=comma.client.JetlinkClient(t)
+    c.hello()
+    assert t.sent[0][1]==1
+    s=comma.spec.ModelSpec.from_dict(json.loads((Path(os.environ['CINQUE_COMMA_ROOT'])/'openpilot/selfdrive/modeld/jetlink/cinque_v2.json').read_text()))
+    c.spec=s
+    assert c.infer_begin(np.zeros(s.warped_shape,np.uint8),np.zeros(s.packed_nelem,np.float32),1)==2

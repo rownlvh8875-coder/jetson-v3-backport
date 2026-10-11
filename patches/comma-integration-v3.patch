@@ -373,7 +373,7 @@ index df622a1..03843ad 100644
    path = Path(cache) / 'selected.json'
    try:
 diff --git a/third_party/jetlink/jetlink/client.py b/third_party/jetlink/jetlink/client.py
-index b18f995..9c18747 100644
+index b18f995..fb21038 100644
 --- a/third_party/jetlink/jetlink/client.py
 +++ b/third_party/jetlink/jetlink/client.py
 @@ -28,6 +28,7 @@ from pathlib import Path
@@ -384,15 +384,6 @@ index b18f995..9c18747 100644
  from jetlink.spec import CHUNK, DEFAULT_FRAME_SKIP, ModelSpec
  from jetlink.transport.base import LinkError, LinkTimeout, Message, Transport
  
-@@ -89,7 +90,7 @@ class JetlinkClient:
-     # the link, are separable in a journal whose clock is wrong anyway.
-     self.name = name or _default_name()
-     self.nonce = secrets.token_hex(4)
--    self.seq = 0
-+    self.seq = secrets.randbelow(1 << 30) + 1
-     self.spec: ModelSpec | None = None
-     self.progress_cb: ProgressFn | None = None
-     self._engine_state: dict | None = None
 @@ -97,9 +98,13 @@ class JetlinkClient:
      self.dead = False
      self.last_timings = (0, 0, 0)  # gpu_us, queue_us, total_us, server-side
@@ -424,12 +415,13 @@ index b18f995..9c18747 100644
        # A build that finished for a model this client has moved off would
        # otherwise read as ready, and every frame after it as NOT_READY.
        wanted = (self._engine_state or {}).get('sha256')
-@@ -212,8 +227,22 @@ class JetlinkClient:
+@@ -212,8 +227,24 @@ class JetlinkClient:
      """Introduce this client. The server starts its session over on a hello,
      so this is also how a new owner of the gadget takes over one the server
      never saw end; see Session._greet."""
 -    seq = self._next_seq()
      version = self._protocol_version()
++    was_v3 = self._v3_selected
 +    # Protocol3 App owners intentionally retain their selected spec across HELLO;
 +    # the new protocol2 exception never retains peer approval or pending frames.
 +    if version == 2:
@@ -443,12 +435,13 @@ index b18f995..9c18747 100644
 +    self._infer_frame_id = None
 +    self._infer_seq = None
 +    self._infer_started = 0.0
-+    self.seq += 1 << 20  # retire outstanding requests from the preceding HELLO
++    if was_v3:
++      self.seq = secrets.randbelow(1 << 29) + 1  # retire the preceding V3 session only
 +    seq = self._next_seq()
      client = {'nonce': self.nonce, 'name': self.name}
      if version == 3:
        link = self._link_info()
-@@ -232,8 +261,22 @@ class JetlinkClient:
+@@ -232,8 +263,24 @@ class JetlinkClient:
        raise LinkError(str(e)) from e
      if selected != version:
        raise LinkError(f"server selected protocol {selected!r}, transport speaks protocol {version}")
@@ -457,7 +450,8 @@ index b18f995..9c18747 100644
  
 +  def approve_v3(self, spec: ModelSpec) -> None:
 +    """Explicit caller opt-in, valid only for the current protocol2 HELLO."""
-+    self._v3_selected = False
++    if self._v3_selected:
++      raise LinkError('V3 selection already approved; start a new HELLO before changing it')
 +    self._v3_generation = None
 +    try:
 +      V3.validate_spec(spec.to_dict())
@@ -467,11 +461,12 @@ index b18f995..9c18747 100644
 +    except (TypeError, ValueError) as e:
 +      raise LinkError(str(e)) from e
 +    self._v3_selected = True
++    self.seq += secrets.randbelow(1 << 30) + 1  # isolate V3 response sequences; V2/protocol3 retain their vectors
 +
    def state(self, timeout: float = 2.0) -> dict:
      seq = self._next_seq()
      self.t.send_json(P.Msg.STATE_REQ, seq, {})
-@@ -260,7 +303,7 @@ class JetlinkClient:
+@@ -260,7 +307,7 @@ class JetlinkClient:
                      frame_skip: int = DEFAULT_FRAME_SKIP,
                      progress: ProgressFn | None = None,
                      build_timeout: float = 900.0,
@@ -480,7 +475,7 @@ index b18f995..9c18747 100644
      """Make the server ready to run this model, uploading and building if needed.
  
      Blocks until ready or the build fails, and returns the spec the server
-@@ -277,16 +320,30 @@ class JetlinkClient:
+@@ -277,16 +324,30 @@ class JetlinkClient:
        raise LinkError("nbytes must be a non-negative integer")
      if type(frame_skip) is not int or frame_skip <= 0:
        raise LinkError("frame_skip must be a positive integer")
@@ -512,7 +507,7 @@ index b18f995..9c18747 100644
      self._engine_state = resp
      log.info("server engine state: %s (%s)", resp.get('state', 'unknown'), resp.get('detail', ''))
  
-@@ -300,11 +357,22 @@ class JetlinkClient:
+@@ -300,11 +361,22 @@ class JetlinkClient:
      self._await_ready(build_timeout)
      spec = self._engine_spec(sha256, frame_skip, expected_nbytes=nbytes if nbytes else None)
      self.spec = spec
@@ -535,7 +530,7 @@ index b18f995..9c18747 100644
      raw_spec = state.get('spec')
      if not isinstance(raw_spec, dict):
        raise LinkError("server reported ready without a model spec")
-@@ -380,9 +448,18 @@ class JetlinkClient:
+@@ -380,9 +452,18 @@ class JetlinkClient:
        raise LinkError("link previously failed")
      version = self._protocol_version()
      if self.spec.stateful and version == 2:
@@ -555,7 +550,7 @@ index b18f995..9c18747 100644
      if version == 3:
        packed = _protocol3_packed(self.spec, packed)
      seq = self._next_seq()
-@@ -390,6 +467,7 @@ class JetlinkClient:
+@@ -390,6 +471,7 @@ class JetlinkClient:
      if version == 3:
        flags |= P.Flag.WANT_HIDDEN
      try:
@@ -563,7 +558,7 @@ index b18f995..9c18747 100644
        self._infer_started = time.monotonic()
        self._infer_frame_id = frame_id
        self._infer_flags = flags
-@@ -406,6 +484,8 @@ class JetlinkClient:
+@@ -406,6 +488,8 @@ class JetlinkClient:
      A long frame is a dropped camera frame, which modeld tolerates. Only a stall
      past `deadline` is a failure, and then the link is done.
      """
@@ -572,7 +567,7 @@ index b18f995..9c18747 100644
      try:
        budget = self.deadline if deadline is None else deadline
        remaining = budget - (time.monotonic() - self._infer_started)
-@@ -457,6 +537,7 @@ class JetlinkClient:
+@@ -457,6 +541,7 @@ class JetlinkClient:
      if not np.all(np.isfinite(output)):
        self.dead = True
        raise LinkError('inference response contains non-finite model outputs')
