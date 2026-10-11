@@ -171,3 +171,10 @@ def test_non_v3_sequence_vectors_are_unchanged(comma):
     s=comma.spec.ModelSpec.from_dict(json.loads((Path(os.environ['CINQUE_COMMA_ROOT'])/'openpilot/selfdrive/modeld/jetlink/cinque_v2.json').read_text()))
     c.spec=s
     assert c.infer_begin(np.zeros(s.warped_shape,np.uint8),np.zeros(s.packed_nelem,np.float32),1)==2
+
+
+def test_legacy_v2_spec_survives_hello_without_v3_authorization(comma):
+    t=Peer(comma);c=comma.client.JetlinkClient(t)
+    s=comma.spec.ModelSpec.from_dict(json.loads((Path(os.environ['CINQUE_COMMA_ROOT'])/'openpilot/selfdrive/modeld/jetlink/cinque_v2.json').read_text()))
+    c.spec=s;c.hello()
+    assert c.spec is s and not c._v3_selected and c._v3_generation is None

@@ -61,7 +61,7 @@
     "comma": {
       "base_sha": "029ab60eb19e7b9d4d76bfee1ce99a7521934511",
       "patch": "patches/comma-integration-v3.patch",
-      "patch_sha256": "ceefe6cace583ca6ea4719e0b3cf76f226cf0907a390317fe7757f4795437ae8",
+      "patch_sha256": "8bd6b9b4ca09fac1a8937de830cf8ef4282c0de9e318f404b027f618c78285f8",
       "files": {
         "openpilot/selfdrive/modeld/jetlink/cinque_v3.json": {
           "before_sha256": null,
@@ -93,7 +93,7 @@
         },
         "third_party/jetlink/jetlink/client.py": {
           "before_sha256": "74142420235ed7468492e0ce0627db4bdfde98de0114942abed062b61d95b999",
-          "after_sha256": "e76a455ed6f88f9bd088570d6c5bb575162ebe4297f2b58bd5177ce5274b5aa7"
+          "after_sha256": "6883d81bb764379d8ddf1b019b5a0535edf0a950d0c019918ebbc68dff0eb9d3"
         },
         "third_party/jetlink/jetlink/spec.py": {
           "before_sha256": "65ea2deb8c139a5f08e6e512ba354b1eb1f0ed4ca334a37417017fde1d1e073f",

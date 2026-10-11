@@ -373,7 +373,7 @@ index df622a1..03843ad 100644
    path = Path(cache) / 'selected.json'
    try:
 diff --git a/third_party/jetlink/jetlink/client.py b/third_party/jetlink/jetlink/client.py
-index b18f995..fb21038 100644
+index b18f995..de8618b 100644
 --- a/third_party/jetlink/jetlink/client.py
 +++ b/third_party/jetlink/jetlink/client.py
 @@ -28,6 +28,7 @@ from pathlib import Path
@@ -424,7 +424,7 @@ index b18f995..fb21038 100644
 +    was_v3 = self._v3_selected
 +    # Protocol3 App owners intentionally retain their selected spec across HELLO;
 +    # the new protocol2 exception never retains peer approval or pending frames.
-+    if version == 2:
++    if version == 2 and (was_v3 or (self.spec is not None and self.spec.sha256 == V3.CANONICAL_SPEC['sha256'])):
 +      self.spec = None
 +    self._peer = {}
 +    self._v3_selected = False
