@@ -154,6 +154,11 @@ GitHub requires default-branch registration for both workflow_dispatch and
 schedule; main was not changed. Those two triggers remain BLOCKED pending that
 repository administration decision. Feature push execution is verified separately
 when GitHub exposes a run, and is never inferred from local tests.
+The feature push at `4c07d018e468ccf2ba94a0c675aef8d5f372fd65` produced
+[successful run 39208594966](https://github.com/rownlvh8875-coder/jetson-v3-backport/actions/runs/39208594966).
+GitHub documents default-branch restrictions for
+[manual dispatch](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow)
+and [scheduled events](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule).
 
 The stale-connection test rejects different sequence/frame tuples on the actual
 current client. Existing protocol 3 has no authenticated connection epoch for an
