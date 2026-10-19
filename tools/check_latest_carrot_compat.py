@@ -148,7 +148,7 @@ def required_suites(repo, candidate):
     return groups
 
 
-def execute_pytest_suite(name, tests, candidate, repo, output):
+def execute_pytest_suite(name, tests, candidate, repo, output, reference=None):
     """Use JUnit evidence: pytest success alone also permits skips and xfails."""
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
@@ -161,6 +161,10 @@ def execute_pytest_suite(name, tests, candidate, repo, output):
                "--confcutdir", str(common), "--junitxml", str(junit), *test_paths]
     env = os.environ.copy()
     env["CARROT_CANDIDATE_ROOT"] = str(Path(candidate).resolve())
+    if reference is not None:
+        env["CARROT_REFERENCE_ROOT"] = str(Path(reference).resolve())
+    else:
+        env.pop("CARROT_REFERENCE_ROOT", None)
     # Local tests import this repository's legacy helpers; current-source tests
     # explicitly isolate vendor modules. Upstream tests must prefer candidate.
     first = candidate if name.startswith("upstream-") else repo
@@ -229,11 +233,19 @@ def local_source_hashes(repo=ROOT):
     repo = Path(repo)
     names = ("tools/check_latest_carrot_compat.py", "jetlink/cinque_v3.py", "jetlink/queues.py",
              "jetlink/spec.py", "jetlink/onnx_meta.py", "jetlink/multimodel_policy.py",
-             "tools/build_trt_v3.py", "tools/patch_v3_uint8.py", "artifacts/cinque_v3.json")
+             "tools/build_trt_v3.py", "tools/patch_v3_uint8.py", "artifacts/cinque_v3.json",
+             "tests/test_latest_carrot_compat.py", "tests/test_multimodel_policy.py",
+             "tests/test_v3_build_verify.py", "tests/test_production_v3.py",
+             ".github/workflows/carrot-wip-compat.yml")
     paths = [*(repo / name for name in names), *repo.glob("adapters/**/*.py"),
-             *repo.glob("tests/test_current_carrot_*.py"), *repo.glob("tests/current_carrot_*_peer.py")]
+             *repo.glob("tests/test_current_carrot_*.py"), *repo.glob("tests/current_carrot_*.py")]
     return {path.relative_to(repo).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in sorted(set(paths)) if path.is_file()}
+
+
+def assert_source_unchanged(expected, repo=ROOT):
+    if local_source_hashes(repo) != expected:
+        raise CheckError("implementation changed during verification; rerun the complete candidate checks")
 
 
 def verify(args, report, workspace, artifacts):
@@ -281,11 +293,12 @@ def verify(args, report, workspace, artifacts):
             raise CheckError(f"candidate builder did not produce required review artifact: {source}")
         shutil.copyfile(source, artifacts / filename)
     for name, tests in required_suites(ROOT, candidate):
-        result = execute_pytest_suite(name, tests, candidate, ROOT, artifacts / name)
+        result = execute_pytest_suite(name, tests, candidate, ROOT, artifacts / name, reference=reference)
         report["checks"].append(result)
         print(f"{result['status']}: {name}: {result['passed']}/{result['tests']} passed, "
               f"{result['skipped']} skipped ({result['log']})", flush=True)
     assert_clean_reference(reference)
+    assert_source_unchanged(report["implementation_source_sha256"])
     if any(check["status"] != "PASS" for check in report["checks"] if check["required"]):
         report["status"] = "FAIL"
         return

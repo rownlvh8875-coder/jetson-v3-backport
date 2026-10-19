@@ -109,18 +109,23 @@ def test_required_pytest_group_rejects_zero_collected_tests(tmp_path):
     assert result["tests"] == 0
 
 
-def test_required_pytest_process_receives_candidate_and_isolates_parent_pythonpath(tmp_path, monkeypatch):
+def test_required_pytest_process_receives_candidate_reference_and_isolates_parent_pythonpath(tmp_path, monkeypatch):
     c = checker()
     candidate = tmp_path / "candidate"
     candidate.mkdir()
     (candidate / "current_module.py").write_text("VALUE = 'candidate source'\n")
+    reference = tmp_path / "clean-reference"
+    reference.mkdir()
+    (reference / "identity").write_text("clean source\n")
     monkeypatch.setenv("PYTHONPATH", "/invalid/stale/development")
+    monkeypatch.setenv("CARROT_REFERENCE_ROOT", "/invalid/stale/reference")
     case = tmp_path / "test_import.py"
     case.write_text("import os\nfrom pathlib import Path\nimport current_module\n"
                     "def test_behavior():\n"
                     "    assert current_module.VALUE == 'candidate source'\n"
-                    "    assert Path(current_module.__file__).parent == Path(os.environ['CARROT_CANDIDATE_ROOT'])\n")
-    result = c.execute_pytest_suite("import", [case], candidate, tmp_path, tmp_path / "result")
+                    "    assert Path(current_module.__file__).parent == Path(os.environ['CARROT_CANDIDATE_ROOT'])\n"
+                    "    assert (Path(os.environ['CARROT_REFERENCE_ROOT']) / 'identity').read_text() == 'clean source\\n'\n")
+    result = c.execute_pytest_suite("import", [case], candidate, tmp_path, tmp_path / "result", reference=reference)
     assert result["status"] == "PASS", Path(result["log"]).read_text()
 
 
@@ -181,7 +186,8 @@ def test_source_provenance_includes_recurrent_helpers_and_behavioral_peer(tmp_pa
     paths = ["tools/check_latest_carrot_compat.py", "jetlink/queues.py", "jetlink/spec.py",
              "jetlink/cinque_v3.py", "jetlink/onnx_meta.py", "jetlink/multimodel_policy.py",
              "tools/build_trt_v3.py", "tools/patch_v3_uint8.py", "artifacts/cinque_v3.json",
-             "tests/current_carrot_loopback_peer.py"]
+             "tests/current_carrot_loopback_peer.py", "tests/current_carrot_server_trt.py",
+             "tests/test_production_v3.py"]
     for name in paths:
         path = tmp_path / name
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -190,6 +196,8 @@ def test_source_provenance_includes_recurrent_helpers_and_behavioral_peer(tmp_pa
     assert set(paths) <= before.keys()
     (tmp_path / "jetlink/queues.py").write_text("changed recurrent validation\n")
     assert c.local_source_hashes(tmp_path)["jetlink/queues.py"] != before["jetlink/queues.py"]
+    with pytest.raises(c.CheckError, match="implementation changed"):
+        c.assert_source_unchanged(before, tmp_path)
 
 
 def test_cli_writes_blocked_report_and_nonzero_exit_for_missing_reference(tmp_path):

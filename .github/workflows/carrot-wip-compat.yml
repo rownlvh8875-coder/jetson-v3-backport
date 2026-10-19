@@ -16,8 +16,9 @@ on:
       - 'artifacts/*.json'
       - '.github/workflows/carrot-wip-compat.yml'
 
-# GitHub only schedules workflows present on the repository default branch.
-# Until this file is there, use workflow_dispatch; neither event changes main.
+# GitHub requires this workflow on the default branch for schedule/dispatch.
+# Feature-branch push checks work immediately; registration is a separate task.
+# Both registered events still check out only the feature branch below.
 permissions:
   contents: read
 
