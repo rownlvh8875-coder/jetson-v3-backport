@@ -57,6 +57,8 @@ class ManagedJetsonPolicyTest(unittest.TestCase):
         self.assertFalse(is_managed_jetson_peer(peer(device="")))
 
     def test_capability_is_versioned_and_exact(self):
+        self.assertFalse(is_managed_jetson_peer(
+            peer(**{CAPABILITY: {"version": True, "selection": "host"}})))
         self.assertFalse(is_managed_jetson_peer(peer(**{CAPABILITY: True})))
         self.assertFalse(is_managed_jetson_peer(
             peer(**{CAPABILITY: {"version": 2, "selection": "host"}})))

@@ -30,7 +30,7 @@ def _capability(peer: dict[str, Any]) -> dict[str, Any] | None:
     value = peer.get(CAPABILITY)
     if not isinstance(value, dict):
         return None
-    if value.get("version") != CAPABILITY_VERSION:
+    if type(value.get("version")) is not int or value["version"] != CAPABILITY_VERSION:
         return None
     # Fail closed on unknown capability semantics. A later version can define
     # new fields rather than letting an old comma silently reinterpret them.

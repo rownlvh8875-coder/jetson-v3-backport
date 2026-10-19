@@ -9,3 +9,6 @@ artifacts/*.trt
 __pycache__/
 *.pyc
 /tmp/
+/.reference/
+/.candidate/
+/.reports/
