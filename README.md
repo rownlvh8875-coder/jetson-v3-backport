@@ -73,7 +73,10 @@ stateful V3를 직접 백포트해야 했다.
 | 폴더/파일 | 내용 |
 |---|---|
 | `docs/JETLINK_MULTIMODEL_PLAN_20261019.md` | **현재 개발 기준**. protocol 3 + 멀티모델 로드맵 |
+| `docs/CURRENT_CARROT_HOST_GAPS_20261019.md` | current carrot-wip server에서 실제로 남은 V3 gap을 파일 단위로 정리 |
 | `tools/jetson_runtime_inventory.py` | 첫 SSH 접속 때 쓰는 read-only runtime 조사 도구 |
+| `jetlink/multimodel_policy.py` | managed protocol-3 Jetson 선택 계약 proposal |
+| `artifacts/multimodel_seed.json` | V2/V3 초기 로컬 seed identity |
 | `docs/PROJECT_STATE.md` | 2026-10-11까지의 세부 구현/검증 기록 |
 | `docs/V3_JETSON_PLAN.md` | 과거 단일 V3 force-fit 계획. 신규 주 경로 아님 |
 | `artifacts/cinque_v3.json` | 실제 V3 ONNX에서 생성한 모델 계약 |
