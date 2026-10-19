@@ -1,72 +1,136 @@
 # jetson-v3-backport
 
-> **2026-10-11 현재 기준:** 이번 작업은 Cinque V3 한 모델의 Jetson 구동을 위한
-> 승인된 4A–5A 서버·콤마 연결 소프트웨어와 오프라인 검사까지 진행했습니다. [현재 상태](docs/PROJECT_STATE.md)와
-> [최소 변경계획](docs/V3_JETSON_PLAN.md)을 먼저 확인하세요.
-> 대상 ONNX의 전체 해시·크기·I/O가 일치했습니다. ORT CPU 수치 측정과 실제 TRT/Jetson 검증을 구분합니다.
-> 아래 2026-10-05 기록의 다운로드·테스트 성공·6개 패치 적용 문구는 과거 기록입니다.
-> 적용물은 고정 소스용 `jetson-production-v3.patch` / `comma-integration-v3.patch`와 experimental manifest입니다.
-> V2가 기본이며 `CARROT_JETLINK_V3=1`은 지정 V3만 선택하는 실험 기능입니다.
-> 실제 TensorRT/Jetson·USB 검증과 활성화(5B)는 별도 현장 승인 대기이며 장치를 변경하지 않았습니다.
+> **2026-10-19 현재 기준:** 개발 주 경로를 **protocol 3 + Jetson 멀티모델**로 전환했다.
+> 현재 `carrot-wip`는 이미 protocol 3, dynamic `ModelSpec`, stateful 모델 parsing/fallback 기반을 갖고 있다.
+> 따라서 과거 protocol-2 Cinque V3 force-fit은 역사/비상 fallback 자료로 보존하고,
+> 신규 작업은 [Carrot × Jetson 멀티모델 개발계획](docs/JETLINK_MULTIMODEL_PLAN_20261019.md)을 따른다.
+> 실제 Jetson 적용 전에는 [read-only runtime inventory](tools/jetson_runtime_inventory.py)로
+> SSD에 설치된 R2 runtime/service/TensorRT 경로를 먼저 확인한다.
 
-> Cinque v3 주행 모델을 Jetson Orin Nano에서 돌리기 위한 백포트 작업 저장소
+> Jetson Orin Nano Super에서 Cinque V3 및 호환 Big Model을
+> Carrot/comma4와 안전하게 연결하기 위한 연구·백포트 저장소
 
-## 이게 뭔가요?
+## 현재 목표
 
-내 차(comma 4 + Jetson Orin Nano Super)에서는 지금까지 **Cinque v2** 모델이 돌아가고 있어요.
-한편 USB eGPU 쪽에는 이미 **Cinque v3**가 올라가서 실주행 중이고요.
+1차 목표는 **기존 V2를 보존한 채 Cinque Terre V3를 protocol 3으로 추가**하고,
+정차/offroad에서 V2↔V3를 선택할 수 있게 만드는 것이다.
 
-이 저장소는 **v3를 Jetson에서도 돌릴 수 있게** 만드는 작업물을 모아둔 곳이에요.
-쉽게 말하면 "eGPU에서 되던 새 모델을 Jetson용으로 이식하는 공사"의 기록입니다.
+그 다음 같은 프레임워크로 BMRLNAP v6 등 호환 모델을 하나씩 검증한다.
+Lebowski나 최신 Mountain Dew 계열은 모델 목록에 있다는 이유만으로 자동 허용하지 않는다.
 
-## 왜 필요한가요?
+목표 구조:
 
-- v2와 v3는 모델이 기억을 다루는 방식이 다릅니다 (v2: queued / v3: stateful)
-- Jetson 쪽 추론 서버(jetlink)는 v2 방식만 알던 상태라, v3를 이해하도록 코드를 손봐야 합니다
-- 그 손본 내용 + v3 모델 정보 파일이 이 저장소에 들어있습니다
+```text
+comma4 / carrot-wip
+  ├─ local small model fallback
+  ├─ Jetlink protocol 3
+  ├─ dynamic queued/stateful ModelSpec
+  └─ offroad model approval
+             │ USB 3
+             ▼
+Carrot Jetson R2 / Orin Nano Super
+  ├─ existing V2 engine
+  ├─ protocol 3 host
+  ├─ TensorRT 10.3 engine cache
+  └─ V3 → 이후 검증된 추가 모델
+```
+
+## 왜 방향이 바뀌었나요?
+
+이 저장소를 처음 만들 때는 Carrot의 Jetson 경로가 사실상 protocol 2 + Cinque V2 고정이어서
+stateful V3를 직접 백포트해야 했다.
+
+하지만 2026-10-19 현재 `ajouatom/openpilot:carrot-wip`에는 다음 기반이 이미 들어가 있다.
+
+- strict protocol 2/3 wire
+- queued/stateful `ModelSpec`
+- dynamic packed input/output parser
+- protocol 3 App-selected 모델 검증
+- offroad-only approval
+- external model failure → internal small model fallback
+
+그래서 지금의 핵심 공사는 **comma 쪽 V3를 다시 만드는 것**이 아니라
+**Carrot Jetson R2 host/server를 protocol 3 + multi-engine 구조로 올리는 것**이다.
+
+## 소스 기준
+
+2026-10-19 조사 기준:
+
+| 구성 | 기준 |
+|---|---|
+| 이 저장소 기존 V3 branch | `feature/cinque-v3-jetson @ 26c9c06a...` |
+| 현재 개발 branch | `feature/jetlink-multimodel-carrot` |
+| carrot-wip | `5032afca77a96e31a077a5e9ac738d9ac08a99df` |
+| carrot-jetson | `d0dc96fa32410403dfb2fefff3e2909c11ec109b` |
+| zoompilot/jetlink 참고 | `d24328d849b0e5154b55f149dc18c5dfe8bd79cc` |
+| Carrot R2 metadata | L4T 36.4.7 / TensorRT 10.3.0 / aarch64 |
+
+최신 zoompilot Jetlink의 Jetson benchmark는 JetPack 7.2.1 / TensorRT 10.16 계열이므로
+그 바이너리/성능 수치를 현재 R2에 그대로 적용하지 않는다.
 
 ## 폴더 설명
 
 | 폴더/파일 | 내용 |
 |---|---|
-| `docs/V3_JETSON_PLAN.md` | 현재 패치 적용/원복·검사 및 별도 승인이 필요한 현장 절차 |
-| `JETSON_SETUP_GUIDE.md` | 과거 설치 기록; 현재 적용 입력으로 사용하지 않음 |
-| `REPORT.md` | 작업 전체 보고서 (배경, 한 일, 검증 결과, 남은 일) |
-| `GPT_PROMPT.md` | 다른 AI에게 작업을 인계할 때 쓰는 프롬프트 |
-| `artifacts/cinque_v3.json` | v3 모델의 입출력 정보 파일 (실제 ONNX에서 추출, 날조 없음) |
-| `tools/build_trt_v3.py` | Jetson에서 TensorRT 엔진을 만드는 스크립트 |
-| `tools/gen_cinque_v3_json.py` | cinque_v3.json을 생성한 스크립트 |
-| `tools/onnx_meta_light.py` | 766MB ONNX를 메모리 적게 쓰고 읽는 파서 |
-| `patches/` | 통합 패치 2개, hash manifest와 라이선스; 부분 패치 중복 적용 금지 |
-| `jetlink/` | 백포트 핵심 구현 (spec/queues/registry) |
-| `tests/` | CPU 계약·실제 적용본·Linux loopback·기존 회귀 (최신 결과는 PROJECT_STATE) |
+| `docs/JETLINK_MULTIMODEL_PLAN_20261019.md` | **현재 개발 기준**. protocol 3 + 멀티모델 로드맵 |
+| `tools/jetson_runtime_inventory.py` | 첫 SSH 접속 때 쓰는 read-only runtime 조사 도구 |
+| `docs/PROJECT_STATE.md` | 2026-10-11까지의 세부 구현/검증 기록 |
+| `docs/V3_JETSON_PLAN.md` | 과거 단일 V3 force-fit 계획. 신규 주 경로 아님 |
+| `artifacts/cinque_v3.json` | 실제 V3 ONNX에서 생성한 모델 계약 |
+| `tools/build_trt_v3.py` | TensorRT 10.3 V3 engine build/verify 도구 |
+| `jetlink/` | stateful spec/state/registry 백포트 자산 |
+| `tests/` | recurrent/finite/identity/loopback 등 회귀검사 |
+| `patches/` | 과거 고정 SHA용 실험 패치. 현재 carrot-wip에 무조건 적용 금지 |
+| `REPORT.md` | 2026-10-05까지의 초기 백포트 보고서 |
+
+## 이미 확보된 자산
+
+- Cinque V3 ONNX identity:
+  - SHA256 `404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4`
+  - size `766354845` bytes
+- 실제 ONNX 기반 `cinque_v3.json`
+- TensorRT 10.3 builder
+- stateful recurrent state 관리
+- finite/shape/identity gate
+- V2 회귀검사
+- recurrent multi-frame parity 도구
+- fail-closed 설계 자료
+
+## 아직 실기에서 확인해야 하는 것
+
+- SSD에 설치된 실제 Carrot R2 runtime/release 경로
+- 실제 service ExecStart와 host 코드 위치
+- 실제 TensorRT/CUDA Python API
+- V3 engine build
+- protocol-3 USB host/server
+- comma camera → Jetson → parser end-to-end
+- 20 Hz latency
+- 열/전력/throttle
+- link/model failure 시 실제 local model fallback
+- V2↔V3 전환
+- 정지→재출발 거동
 
 ## 어디서부터 시작하나요?
 
-**개발 사본의 실험 재현과 현장 승인 준비** → [`V3_JETSON_PLAN.md`](docs/V3_JETSON_PLAN.md)
+**현재 작업** → [JETLINK_MULTIMODEL_PLAN_20261019.md](docs/JETLINK_MULTIMODEL_PLAN_20261019.md)
 
-**전체 맥락**을 알고 싶으면 → [`REPORT.md`](REPORT.md)
+Jetson SSH가 준비되면 첫 단계:
 
-**이 백포트의 위치**(구 jetlink 끼워맞추기 vs 최신 upstream, A/B 선택지) →
-[`REPORT.md` 9장](REPORT.md#9-이-백포트의-위치-force-fit-vs-최신-upstream-2026-10-05-정리)
+```bash
+python3 tools/jetson_runtime_inventory.py --pretty
+```
 
-## 현재 상태 (2026-10-05)
+이 명령은 설치·서비스 재시작·모델 build를 하지 않고 현재 runtime을 읽기만 한다.
 
-**된 것:**
-- v3 ONNX 다운로드 + 무결성 확인 (sha256 일치)
-- `cinque_v3.json` 생성 (실측값, 테스트 38개 통과)
-- 패치 6개 작성 + 적용 검증 (클론 저장소 기준)
-- TensorRT 빌드 스크립트 작성
-- GitHub 푸시 완료
+과거 구현 맥락 → [PROJECT_STATE.md](docs/PROJECT_STATE.md)
 
-**안 된 것 (Jetson 실기 필요):**
-- TensorRT 엔진 실제 빌드
-- 정지 상태 추론 테스트
-- 주행 검증
+초기 백포트 전체 보고 → [REPORT.md](REPORT.md)
 
 ## 주의
 
-- 이 코드는 주행에 직결되는 추론 서버 코드입니다
-- v3가 정지·재출발 흔들림을 개선한다는 증거는 아직 없습니다
-- 주행 테스트 전에는 반드시 정지 상태 테스트를 먼저 통과해야 합니다
-- 현재 실험 opt-in은 `CARROT_JETLINK_V3`입니다. 해제/원복은 현재 계획의 절차와 현장 승인을 따릅니다
+- 기존 정상 V2 환경을 먼저 보존한다.
+- 과거 `jetson-production-v3.patch` / `comma-integration-v3.patch`를 현재 HEAD에 그대로 적용하지 않는다.
+- 최신 upstream Jetson binary를 Carrot R2에 바로 복사하지 않는다.
+- 모델 build/download/선택은 offroad에서만 한다.
+- 실제 USB·latency·fallback 검증 전에는 V3 주행 사용을 완료로 선언하지 않는다.
+- v3가 정지·재출발 흔들림을 개선한다는 것은 아직 실증되지 않았다.
