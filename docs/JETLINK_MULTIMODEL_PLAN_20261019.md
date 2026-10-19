@@ -394,9 +394,9 @@ BMRLNAP v6부터 하나씩 같은 gate를 통과시킨다.
 
 - [x] 최신 개발방향 문서
 - [x] read-only runtime inventory 도구
-- [ ] current carrot-wip protocol-3 Jetson peer 정책 fixture
+- [x] current carrot-wip protocol-3 Jetson peer 정책 fixture (`jetlink/multimodel_policy.py` + stdlib tests)
 - [ ] protocol-3 Jetson host loopback fixture를 최신 wire contract로 갱신
-- [ ] V2/V3 local model catalog fixture
+- [x] V2/V3 local model catalog fixture (`artifacts/multimodel_seed.json`)
 - [ ] V3 builder와 server engine cache adapter 분리
 
 ### Jetson inventory 후 작성
