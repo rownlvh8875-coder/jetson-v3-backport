@@ -114,11 +114,12 @@ def service_state(unit: str) -> dict[str, Any]:
     ])
 
 
-def python_module_version(module: str) -> dict[str, Any]:
+def python_distribution_version(distribution: str) -> dict[str, Any]:
+    # Query installed package metadata without importing TensorRT/CUDA modules
+    # or creating a CUDA context.
     code = (
-        "import importlib; "
-        f"m=importlib.import_module({module!r}); "
-        "print(getattr(m, '__version__', 'unknown'))"
+        "import importlib.metadata as m; "
+        f"print(m.version({distribution!r}))"
     )
     return run(["python3", "-c", code])
 
@@ -164,8 +165,8 @@ def main() -> int:
     for name, argv in commands.items():
         report["commands"][name] = run(argv)
 
-    report["commands"]["python_tensorrt"] = python_module_version("tensorrt")
-    report["commands"]["python_cuda"] = python_module_version("cuda")
+    report["commands"]["python_tensorrt"] = python_distribution_version("tensorrt")
+    report["commands"]["python_cuda"] = python_distribution_version("cuda-python")
 
     for item in KNOWN_PATHS:
         report["paths"].append(small_file_info(Path(item)))
