@@ -25,23 +25,26 @@ JoiningModel remain the test path; only hardware boundaries use CPU substitutes.
 
 ## Tasks / verification
 
-1. [ ] Rolling checker and Actions: fetch fresh heads, compare relevant Git blobs,
+1. [x] Rolling checker and Actions: fetch fresh heads, compare relevant Git blobs,
    create read-only reference and separate candidate, execute checks, never report
    compatible on skipped/failed required checks. Test changed source and failure exits.
-2. [ ] Current server adapter: reuse StatefulState and Cinque V3 patch validation;
+2. [x] Current server adapter: reuse StatefulState and Cinque V3 patch validation;
    preserve current TRT builder and V2. Test real EngineHost/Session over sockets,
    recurrent/reset/invalid outputs/commit/reload and protocol 2/3 metadata.
-3. [ ] Managed comma adapter: peer_policy + mac.prepare minimal changes only;
+3. [x] Managed comma adapter: peer_policy + mac.prepare minimal changes only;
    reuse validation/approval/fallback. Test first approval, reconnect, onroad
    adoption/spec mutation, missing engine, V2/V3 selection and rollback preparation.
-4. [ ] Software end-to-end: separate import namespaces, current daemon IPC/parser/
+4. [x] Software end-to-end: separate import namespaces, current daemon IPC/parser/
    JoiningModel, deterministic CPU engine; test failures/stale/disconnect/timeout.
-5. [ ] Candidate patch/manifest and rollback: base and file SHA256, touched paths,
+5. [x] Candidate patch/manifest and rollback: base and file SHA256, touched paths,
    patch SHA256; apply/reverse in disposable copy and confirm source restoration.
-6. [ ] Run complete applicable suites, fresh HEAD lookup, record PASS/FAIL/SKIP/
+6. [x] Run complete applicable suites, fresh HEAD lookup, record PASS/FAIL/SKIP/
    BLOCKED and exact commands in CODEX_CONTINUATION.md; small commits and push
    only the authorized feature branch. Device-only work stays blocked at M0.
 
 Execution is already authorized in the user request. No additional design approval
 or installed-runtime action is inferred. Agents have disjoint file ownership;
 the primary agent reviews and runs the combined integration suite before completion.
+
+Completed software scope at code 0a474c31172a0da33d55acdec40b8b0a84867c40.
+See CODEX_CONTINUATION.md for verified evidence and explicit blocked gates.

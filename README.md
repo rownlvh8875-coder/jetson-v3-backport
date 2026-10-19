@@ -7,6 +7,13 @@
 > 실제 Jetson 적용 전에는 [read-only runtime inventory](tools/jetson_runtime_inventory.py)로
 > SSD에 설치된 R2 runtime/service/TensorRT 경로를 먼저 확인한다.
 
+**최신 작업 인계:** [CODEX_CONTINUATION.md](docs/CODEX_CONTINUATION.md).
+현재 source adapter, 검증 결과와 원복 절차는
+[current candidate 검증 안내](docs/CURRENT_CARROT_VALIDATION_20261019.md)에 있다.
+최신 upstream 확인과 분리된 CPU 검증은
+`python tools/check_latest_carrot_compat.py --update-baseline`으로 실행한다.
+실제 Jetson/TRT/USB 검증과 설치는 아직 완료되지 않았다.
+
 > Jetson Orin Nano Super에서 Cinque V3 및 호환 Big Model을
 > Carrot/comma4와 안전하게 연결하기 위한 연구·백포트 저장소
 

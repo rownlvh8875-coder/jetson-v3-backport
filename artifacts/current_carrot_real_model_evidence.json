@@ -1,0 +1,42 @@
+{
+  "evidence": "ORT_REAL_MODEL",
+  "source": {
+    "sha256": "404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4",
+    "nbytes": 766354845
+  },
+  "patched": {
+    "sha256": "38f8664e65da3c8140674df0b56c8fc444be86ff41a1e54c13d9d9cc96273037",
+    "nbytes": 766352690
+  },
+  "frames_per_mode": 5,
+  "seed": 73,
+  "modes": {
+    "recurrent": {
+      "measurement": "COMPLETE",
+      "acceptance": "UNDETERMINED",
+      "reason": "MEASURED: tolerance basis absent; acceptance UNDETERMINED"
+    },
+    "same-state": {
+      "measurement": "COMPLETE",
+      "acceptance": "UNDETERMINED",
+      "reason": "MEASURED: tolerance basis absent; acceptance UNDETERMINED"
+    }
+  },
+  "acceptance": "SKIP: tolerance basis not established",
+  "source_unchanged": true,
+  "code_head": "0a474c31172a0da33d55acdec40b8b0a84867c40",
+  "ort_version": "1.31.0",
+  "providers": [
+    "CPUExecutionProvider"
+  ],
+  "output_tensors": [
+    "outputs",
+    "next_state_img_q",
+    "next_state_desire_q",
+    "next_state_feat_q"
+  ],
+  "all_outputs_finite": true,
+  "all_max_abs_error": 0.0,
+  "all_mean_abs_error": 0.0,
+  "onnx_patch_module_sha256": "a8f0b9165e67d8bcbd2d4b72099ef5ed240d51b42310fa122831a7ca954952f6"
+}

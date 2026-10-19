@@ -1,0 +1,153 @@
+{
+  "base_sha": "5032afca77a96e31a077a5e9ac738d9ac08a99df",
+  "branch": "carrot-wip",
+  "evidence": [
+    "CPU_FAKE",
+    "FIXTURE"
+  ],
+  "patch_sha256": "04c7b08fd1fbcd21efddb103bdb0b336fe0ef92bffe0837b7fe2eb7344bffcf3",
+  "repository": "https://github.com/ajouatom/openpilot",
+  "rollback": "Verify after hashes, git apply --reverse --check candidate.patch, then reverse in development copy only; verify before hashes. Never delete V2 engines.",
+  "schema": 1,
+  "status": "SOFTWARE_CANDIDATE_CHECKED",
+  "touched_files": [
+    {
+      "after_sha256": "f0fb82583e3a91814efcff73ea93514aebd6c5dda063f796bf74f503be85216b",
+      "before_sha256": null,
+      "path": "openpilot/common/jetlink_managed.py"
+    },
+    {
+      "after_sha256": "6d1164105799dd777506875d73b93c1587fac90223f6780a2e766d1059788a4b",
+      "before_sha256": "208439bc1fb2f50cb348743ef9e89586604d5f53407794630f24963fc2395d18",
+      "path": "openpilot/common/jetlink_peer.py"
+    },
+    {
+      "after_sha256": "2f016f577a651670c34c7f8df27b22469145a67046dce266f0443ac3a0e0f157",
+      "before_sha256": null,
+      "path": "openpilot/selfdrive/modeld/jetlink/cinque_v3.json"
+    },
+    {
+      "after_sha256": "837bfa77daa10751d6238ae00855764ee3182beac6cbc9ee2b01c925a5af8ec7",
+      "before_sha256": "58b636dcdf6bca60b7504cfbe65c5e3a477a3284eef5764afd0c0c587a918189",
+      "path": "openpilot/selfdrive/modeld/jetlink/mac.py"
+    },
+    {
+      "after_sha256": "5a3374bd886febcc8f236b704a9a14ce7192ca344476d8418c7de0a4eebca819",
+      "before_sha256": null,
+      "path": "openpilot/selfdrive/modeld/jetlink/managed.py"
+    },
+    {
+      "after_sha256": "730abb47a564ecbe366037cfe97a6f3ab18e24b0a88fa3b74d04d1b7e2ee0809",
+      "before_sha256": null,
+      "path": "third_party/jetlink/jetlink/cinque_v3.py"
+    },
+    {
+      "after_sha256": "ca713a55727afaf96a4780d0322e3cc27e7eaef420949987682b76e1fc2d5c7d",
+      "before_sha256": "17eabd7f663020c857f6c426c78aa021e7853fd9b761f3cb1f3d481ea584db94",
+      "path": "third_party/jetlink/jetlink/onnx_meta.py"
+    },
+    {
+      "after_sha256": "a8f0b9165e67d8bcbd2d4b72099ef5ed240d51b42310fa122831a7ca954952f6",
+      "before_sha256": "2551902a7dd4fb0a50d046696f17bdb073c02ba3c4dddba6e63cf8b89aedc503",
+      "path": "third_party/jetlink/jetlink/onnx_patch.py"
+    },
+    {
+      "after_sha256": "18002bbdc994f74f7bee08c433211777e90917a517e8f29a7d09a9c5cb986e40",
+      "before_sha256": "36412b1aec7e261578f3b08aad82344f7c5607e248cefcf8ad5661869c94daeb",
+      "path": "third_party/jetlink/jetlink/queues.py"
+    },
+    {
+      "after_sha256": "d6b38b17e5a95366b3ffb5953634b0cfca4e0e38468df23ceb3bfa675d15a4d6",
+      "before_sha256": "dd604510a62aa8b8d2ee7b44b5bd91ab9386666805b5eef9b656e3af6ba2d009",
+      "path": "third_party/jetlink/jetlink/server/backends/trt/__init__.py"
+    },
+    {
+      "after_sha256": "a503b037706f39ef6f171cb8f0617c4ae0285e133cb6f2dc807fae98ba7d781b",
+      "before_sha256": "35e9a5f57b1a875ce5d8acac2a3e774051351a38fcd3738f99663628a3c6bba8",
+      "path": "third_party/jetlink/jetlink/server/backends/trt/build.py"
+    },
+    {
+      "after_sha256": "0571d68dd322eeb8a4c6910a5a2ef8c106b76c7da7774cf241c4b3bdeba996f0",
+      "before_sha256": "3bda5e88432cceda3af13fb4a83873befceb006b6dd76ce308c64e660e2f9648",
+      "path": "third_party/jetlink/jetlink/server/backends/trt/engine.py"
+    },
+    {
+      "after_sha256": "8492415f55542f682c10bfc9c27a71ccd88fb34ad85f30fffc5f8590728d4a9d",
+      "before_sha256": "f69345e416faf74e11ddee7bd89e69f570504b1ffa730f6c416db01ed28918f4",
+      "path": "third_party/jetlink/jetlink/server/control.py"
+    },
+    {
+      "after_sha256": "a69940f7de798c6c21360df5eec6d44a53a4ac5232fc1eb6c170195fc6ece662",
+      "before_sha256": "db09427220eae1eb5346ea4ebb9b5dc286dea491dd34e3baac7ac3e2f31f5813",
+      "path": "third_party/jetlink/jetlink/server/main.py"
+    },
+    {
+      "after_sha256": "4acee13c84e264199b8daa8da8864df15e721372f8323beb5136dcdb4c16a23f",
+      "before_sha256": "8f05ea76763f34fb025aa3e467e75f466349fa699cbe19956df893e7a181af40",
+      "path": "third_party/jetlink/jetlink/server/session.py"
+    },
+    {
+      "after_sha256": "556a8a3b8f7cbe7faf90e36032e3e969e97f2f57ce0f756f13837c933bdb57a4",
+      "before_sha256": "65ea2deb8c139a5f08e6e512ba354b1eb1f0ed4ca334a37417017fde1d1e073f",
+      "path": "third_party/jetlink/jetlink/spec.py"
+    }
+  ],
+  "development_code_head": "0a474c31172a0da33d55acdec40b8b0a84867c40",
+  "upstream_heads": {
+    "carrot-jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "carrot-wip": "5032afca77a96e31a077a5e9ac738d9ac08a99df",
+    "zoompilot/jetlink": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc"
+  },
+  "required_tests": {
+    "pass": 189,
+    "fail": 0,
+    "skip": 0
+  },
+  "test_groups": [
+    {
+      "name": "current-carrot-integration",
+      "status": "PASS",
+      "passed": 38,
+      "tests": 38,
+      "skipped": 0
+    },
+    {
+      "name": "multimodel-policy",
+      "status": "PASS",
+      "passed": 9,
+      "tests": 9,
+      "skipped": 0
+    },
+    {
+      "name": "trt-builder-cpu-contracts",
+      "status": "PASS",
+      "passed": 41,
+      "tests": 41,
+      "skipped": 0
+    },
+    {
+      "name": "upstream-phase-linux-sockets",
+      "status": "PASS",
+      "passed": 6,
+      "tests": 6,
+      "skipped": 0
+    },
+    {
+      "name": "upstream-wire-model-cache",
+      "status": "PASS",
+      "passed": 65,
+      "tests": 65,
+      "skipped": 0
+    },
+    {
+      "name": "upstream-modeld-ipc-warp",
+      "status": "PASS",
+      "passed": 30,
+      "tests": 30,
+      "skipped": 0
+    }
+  ],
+  "ort_real_model_evidence": "artifacts/current_carrot_real_model_evidence.json",
+  "hardware_status": "BLOCKED: JETSON_REAL REQUIRED",
+  "installed_runtime_modified": false
+}
