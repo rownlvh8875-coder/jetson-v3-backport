@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "purpose": "Initial local seed only; not an online/automatic model catalog",
+  "models": [
+    {
+      "id": "cinque-v2",
+      "display_name": "Cinque v2",
+      "kind": "queued",
+      "sha256": "09d080f36965bb2a0790500452bd328aa03c484d0222aa79d1ad9f021a522aec",
+      "nbytes": 766040736,
+      "frame_skip": 4,
+      "status": "existing-baseline",
+      "source": "ajouatom/openpilot carrot-wip @ 5032afca77a96e31a077a5e9ac738d9ac08a99df / openpilot/selfdrive/modeld/jetlink/cinque_v2.json"
+    },
+    {
+      "id": "cinque-v3",
+      "display_name": "Cinque Terre V3",
+      "kind": "stateful",
+      "sha256": "404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4",
+      "nbytes": 766354845,
+      "frame_skip": 4,
+      "status": "candidate-needs-jetson-validation",
+      "source": "artifacts/cinque_v3.json"
+    }
+  ]
+}
