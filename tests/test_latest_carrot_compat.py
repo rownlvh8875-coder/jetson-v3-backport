@@ -82,6 +82,17 @@ def test_exact_reference_fetch_is_separate_and_does_not_modify_remote(tmp_path):
     assert git(remote, "status", "--porcelain") == ""
 
 
+def test_fetched_reference_uses_git_blob_line_endings_despite_global_crlf(tmp_path, monkeypatch):
+    c = checker()
+    remote = repository(tmp_path/'remote')
+    config = tmp_path/'global.gitconfig'
+    config.write_text('[core]\n  autocrlf = true\n')
+    monkeypatch.setenv('GIT_CONFIG_GLOBAL', str(config))
+    destination = tmp_path/'reference'
+    c.fetch_reference(str(remote), git(remote, 'rev-parse', 'HEAD'), destination, ['watched'])
+    assert (destination/'watched/client.py').read_bytes() == b'VALUE = 1\n'
+
+
 @pytest.mark.parametrize(("body", "expected", "passed", "skipped"), [
     ("assert True", "PASS", 1, 0),
     ("assert False", "FAIL", 0, 0),
@@ -252,3 +263,64 @@ def test_required_suite_discovery_refuses_missing_current_integration(tmp_path):
     c = checker()
     with pytest.raises(c.CheckError, match="required"):
         c.required_suites(tmp_path, tmp_path)
+
+
+def test_optional_native_source_and_tests_are_part_of_verification_freeze(tmp_path):
+    c = checker()
+    names = ['experimental/jetson_optimizations/input_cast.c',
+             'experimental/jetson_optimizations/device_state.py',
+             'experimental/jetson_optimizations/LICENSE',
+             'experimental/jetson_optimizations/UPSTREAM.md',
+             'tests/test_jetson_optimization_integration.py',
+             'tests/jetson_device_state_peer.py']
+    for name in names:
+        path = tmp_path/name
+        path.parent.mkdir(parents=True,exist_ok=True)
+        path.write_text('reviewed source\n')
+    before = c.local_source_hashes(tmp_path)
+    assert set(names) <= before.keys()
+    (tmp_path/names[0]).write_text('native source changed during verification\n')
+    with pytest.raises(c.CheckError,match='implementation changed'):
+        c.assert_source_unchanged(before,tmp_path)
+
+
+def test_optional_candidate_environment_overrides_inherited_stale_path(tmp_path,monkeypatch):
+    c = checker()
+    root = tmp_path/'experiment'
+    root.mkdir()
+    (root/'identity').write_text('reviewed opt-in candidate')
+    monkeypatch.setenv('CARROT_OPTIMIZATION_ROOT','/stale/optimization')
+    case = tmp_path/'test_env.py'
+    case.write_text("import os\nfrom pathlib import Path\ndef test_environment():\n"
+                    "    assert (Path(os.environ['CARROT_OPTIMIZATION_ROOT'])/'identity').read_text() == 'reviewed opt-in candidate'\n")
+    result = c.execute_pytest_suite('optional-env',[case],tmp_path,tmp_path,tmp_path/'out',optimization_candidate=root)
+    assert result['status'] == 'PASS',Path(result['log']).read_text()
+
+
+def test_optional_adapter_drift_is_failed_compatibility(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    import adapters.carrot.integration as integration
+    c = checker()
+    reference = repository(tmp_path/'reference')
+    artifacts = tmp_path/'artifacts'
+    artifacts.mkdir()
+    calls = []
+
+    def build(_reference, destination, *, experimental_optimizations=False):
+        calls.append(experimental_optimizations)
+        if experimental_optimizations:
+            raise ValueError('device-state source seam changed')
+        output = destination/'.jetlink-candidate'
+        output.mkdir(parents=True)
+        (output/'candidate.patch').write_text('reviewable baseline')
+        (output/'manifest.json').write_text('{}')
+        return {}
+
+    monkeypatch.setattr(integration, 'build_candidate', build)
+    report = {'mode': 'OFFLINE_REFERENCE', 'checks': [], 'latest_compatible': False}
+    c.verify(SimpleNamespace(reference=reference, baseline=tmp_path/'absent', update_baseline=False),
+             report, tmp_path/'workspace', artifacts)
+    assert calls == [False, True]
+    assert report['status'] == 'FAIL'
+    assert report['checks'] == [{'name': 'optimization-adapter', 'required': True,
+        'status': 'FAIL', 'error': 'ValueError: device-state source seam changed'}]

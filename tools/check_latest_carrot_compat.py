@@ -100,6 +100,10 @@ def fetch_reference(remote, sha, destination, paths=SPARSE_PATHS):
     destination = Path(destination)
     destination.mkdir(parents=True, exist_ok=False)
     git(destination, "init", "-q")
+    # New references must preserve canonical blob bytes, including on Windows.
+    # A global autocrlf setting otherwise changes patch contexts/before hashes.
+    git(destination, 'config', 'core.autocrlf', 'false')
+    git(destination, 'config', 'core.eol', 'lf')
     git(destination, "remote", "add", "origin", remote)
     git(destination, "sparse-checkout", "init", "--cone")
     git(destination, "sparse-checkout", "set", *paths)
@@ -141,6 +145,9 @@ def required_suites(repo, candidate):
         ("upstream-wire-model-cache", [candidate / "tools/jetlink" / name for name in (
             "test_stateful_protocol.py", "test_app_models.py", "test_cache_persistence.py")]),
         ("upstream-modeld-ipc-warp", [candidate / "openpilot/selfdrive/modeld/tests/test_jetlink.py"]),
+        ("optional-optimization-contracts", [repo / 'tests' / name for name in (
+            'test_jetson_device_state.py', 'test_jetson_input_fastpath.py',
+            'test_jetson_aio_candidate.py', 'test_jetson_optimization_integration.py')]),
     ]
     missing = [str(path) for _, paths in groups for path in paths if not path.is_file()]
     if missing:
@@ -148,7 +155,7 @@ def required_suites(repo, candidate):
     return groups
 
 
-def execute_pytest_suite(name, tests, candidate, repo, output, reference=None):
+def execute_pytest_suite(name, tests, candidate, repo, output, reference=None, optimization_candidate=None):
     """Use JUnit evidence: pytest success alone also permits skips and xfails."""
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
@@ -165,6 +172,10 @@ def execute_pytest_suite(name, tests, candidate, repo, output, reference=None):
         env["CARROT_REFERENCE_ROOT"] = str(Path(reference).resolve())
     else:
         env.pop("CARROT_REFERENCE_ROOT", None)
+    if optimization_candidate is not None:
+        env['CARROT_OPTIMIZATION_ROOT'] = str(Path(optimization_candidate).resolve())
+    else:
+        env.pop('CARROT_OPTIMIZATION_ROOT', None)
     # Local tests import this repository's legacy helpers; current-source tests
     # explicitly isolate vendor modules. Upstream tests must prefer candidate.
     first = candidate if name.startswith("upstream-") else repo
@@ -191,7 +202,7 @@ def execute_pytest_suite(name, tests, candidate, repo, output, reference=None):
     errors = sum(case.find("error") is not None for case in cases)
     passed = len(cases) - skipped - failures - errors
     status = "PASS" if returncode == 0 and cases and not (skipped or failures or errors or parse_error) else "FAIL"
-    return {"name": name, "required": True, "status": status, "evidence": "SOFTWARE_CPU",
+    return {"name": name, "required": True, "status": status, "evidence": "CPU_FAKE / FIXTURE",
             "command": command, "returncode": returncode, "tests": len(cases), "passed": passed,
             "skipped": skipped, "failures": failures, "errors": errors, "parse_error": parse_error,
             "log": str(log.resolve()), "junit": str(junit.resolve())}
@@ -216,6 +227,7 @@ def update_baseline(path, report):
         "schema_version", "mode", "status", "latest_compatible", "finished_utc",
         "upstreams", "relevant_paths", "relevant_blobs", "candidate_manifest",
         "implementation_sha", "implementation_source_sha256",
+        "optimization_candidate_manifest",
     ) if key in report}
     check_fields = ("name", "required", "status", "evidence", "tests", "passed", "skipped", "failures", "errors")
     portable["checks"] = [{key: check[key] for key in check_fields if key in check} for check in checks]
@@ -238,7 +250,10 @@ def local_source_hashes(repo=ROOT):
              "tests/test_v3_build_verify.py", "tests/test_production_v3.py",
              ".github/workflows/carrot-wip-compat.yml")
     paths = [*(repo / name for name in names), *repo.glob("adapters/**/*.py"),
-             *repo.glob("tests/test_current_carrot_*.py"), *repo.glob("tests/current_carrot_*.py")]
+             *repo.glob("tests/test_current_carrot_*.py"), *repo.glob("tests/current_carrot_*.py"),
+             *repo.glob('experimental/**/*.py'), *repo.glob('experimental/**/*.c'),
+             *repo.glob('experimental/**/LICENSE'), *repo.glob('experimental/**/UPSTREAM.md'),
+             *repo.glob('tests/test_jetson_*.py'), *repo.glob('tests/jetson_*.py')]
     return {path.relative_to(repo).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in sorted(set(paths)) if path.is_file()}
 
@@ -292,8 +307,19 @@ def verify(args, report, workspace, artifacts):
         if not source.is_file():
             raise CheckError(f"candidate builder did not produce required review artifact: {source}")
         shutil.copyfile(source, artifacts / filename)
+    optimization = workspace / 'optimization-candidate'
+    try:
+        report['optimization_candidate_manifest'] = build_candidate(reference, optimization, experimental_optimizations=True)
+    except Exception as exc:
+        report['checks'].append({'name': 'optimization-adapter', 'required': True, 'status': 'FAIL',
+                                 'error': f'{type(exc).__name__}: {exc}'})
+        report['status'] = 'FAIL'
+        return
+    for filename in ('candidate.patch', 'manifest.json'):
+        shutil.copyfile(optimization / '.jetlink-candidate' / filename, artifacts / ('experimental-' + filename))
     for name, tests in required_suites(ROOT, candidate):
-        result = execute_pytest_suite(name, tests, candidate, ROOT, artifacts / name, reference=reference)
+        result = execute_pytest_suite(name, tests, candidate, ROOT, artifacts / name,
+                                      reference=reference, optimization_candidate=optimization)
         report["checks"].append(result)
         print(f"{result['status']}: {name}: {result['passed']}/{result['tests']} passed, "
               f"{result['skipped']} skipped ({result['log']})", flush=True)
