@@ -1,0 +1,126 @@
+{
+  "schema": 1,
+  "date": "2026-10-20",
+  "development_code_head": "fcecd9c31f2e29c741f2e5bf161a6e318d63ed88",
+  "external_review_head": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722",
+  "upstream_heads": {
+    "carrot-jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "carrot-wip": "ba186915179816a9b0476cec52bf321e73d2d4b0",
+    "zoompilot/jetlink": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc"
+  },
+  "evidence": [
+    "CPU_FAKE",
+    "FIXTURE"
+  ],
+  "online_latest_before_after_equal": true,
+  "relevant_changes": {
+    "added": [],
+    "modified": [],
+    "removed": []
+  },
+  "existing_regression": {
+    "pass": 366,
+    "fail": 0,
+    "pytest_skip": 0
+  },
+  "new_optimization_and_checker": {
+    "pass": 103,
+    "fail": 0,
+    "skip": 0,
+    "breakdown": {
+      "device_state_scenarios": 8,
+      "input_fastpath": 58,
+      "aio": 30,
+      "composition": 3,
+      "additional_checker": 4
+    }
+  },
+  "unique_pytest_total": {
+    "pass": 469,
+    "fail": 0,
+    "skip": 0
+  },
+  "all_repository_pytest": {
+    "pass": 368,
+    "subtests_pass": 6,
+    "fail": 0,
+    "skip": 0
+  },
+  "additional_upstream_pytest": 101,
+  "online_required_groups": [
+    {
+      "name": "current-carrot-integration",
+      "status": "PASS",
+      "passed": 38,
+      "tests": 38,
+      "skipped": 0
+    },
+    {
+      "name": "multimodel-policy",
+      "status": "PASS",
+      "passed": 9,
+      "tests": 9,
+      "skipped": 0
+    },
+    {
+      "name": "trt-builder-cpu-contracts",
+      "status": "PASS",
+      "passed": 41,
+      "tests": 41,
+      "skipped": 0
+    },
+    {
+      "name": "upstream-phase-linux-sockets",
+      "status": "PASS",
+      "passed": 6,
+      "tests": 6,
+      "skipped": 0
+    },
+    {
+      "name": "upstream-wire-model-cache",
+      "status": "PASS",
+      "passed": 65,
+      "tests": 65,
+      "skipped": 0
+    },
+    {
+      "name": "upstream-modeld-ipc-warp",
+      "status": "PASS",
+      "passed": 30,
+      "tests": 30,
+      "skipped": 0
+    },
+    {
+      "name": "optional-optimization-contracts",
+      "status": "PASS",
+      "passed": 99,
+      "tests": 99,
+      "skipped": 0
+    }
+  ],
+  "default_off_server_regression_repeat": 9,
+  "standalone_assertions": {
+    "pass": 76,
+    "fail": 0,
+    "optional_onnx_sections_skip": 3
+  },
+  "historical_ort_acceptance_gates_not_rerun": 2,
+  "optimization_hardware_gates_blocked": 7,
+  "prior_open_gates_retained": 15,
+  "classifications": {
+    "DeviceState": "READY_FOR_JETSON_AB",
+    "InputFastpath": "READY_FOR_JETSON_AB",
+    "AIO": "DEFER_UNTIL_LATENCY_PROBLEM",
+    "Direct Wi-Fi": "OUT_OF_SCOPE"
+  },
+  "ready_for_jetson_m0": true,
+  "first_device_command": "python3 tools/jetson_runtime_inventory.py --pretty",
+  "ab_order": [
+    "BASE",
+    "DeviceState",
+    "DeviceState + InputFastpath",
+    "AIO only after latency evidence"
+  ],
+  "hardware_executed": false,
+  "external_performance_claimed": false
+}

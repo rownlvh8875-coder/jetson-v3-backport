@@ -1,0 +1,162 @@
+{
+  "schema": 1,
+  "review_date": "2026-10-20",
+  "external_repository": "https://github.com/tjdgus200/openpilot",
+  "external_branch": "codex/jetson-review",
+  "external_head": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722",
+  "external_parent": "de75c056712fbe19943892919f19960f3e6d565b",
+  "external_base": "74955c98560435895df28a8ae6f9af4d3d414d5f",
+  "project_start_head": "8bf5e1e3379a37575a3420ef074bd74e96f06ff0",
+  "latest_carrot_wip": "ba186915179816a9b0476cec52bf321e73d2d4b0",
+  "prior_validated_carrot_wip": "5032afca77a96e31a077a5e9ac738d9ac08a99df",
+  "latest_relevant_blob_changes": {
+    "added": [],
+    "modified": [],
+    "removed": []
+  },
+  "external_commit_diff": [
+    {
+      "path": "docs/jetson_inference_review.md",
+      "added_lines": 83,
+      "deleted_lines": 0,
+      "before_blob": null,
+      "after_blob": "0115c1f32f81ba59128ab3489d5f1936627ece1b",
+      "before_sha256": null,
+      "after_sha256": "6fee94e6dc33cec3b8430bf235b3821d2d25850e3d65d7b37655f58db2137e58"
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/jetlink/daemon.py",
+      "added_lines": 6,
+      "deleted_lines": 3,
+      "before_blob": "1b9f9c23ec6352893770614837269b8b9fe6d156",
+      "after_blob": "699a19c86038751de995ba9bbcfcfaa11362a6ca",
+      "before_sha256": "b020ece24850f38789f6005c9e7ebbb3fd73d2c6e25061d6279450e429528e81",
+      "after_sha256": "98e62747468453a96004dda218fcf27d61beb22f93a78202d520681dabfcfdf0"
+    },
+    {
+      "path": "third_party/jetlink/UPSTREAM.md",
+      "added_lines": 10,
+      "deleted_lines": 0,
+      "before_blob": "d5d7eb0104d101346683590495cda5d22dae9c13",
+      "after_blob": "dcc718a7ec2340c08e4e09eb55c173d639cdc100",
+      "before_sha256": "ddb51aa40fefa4f3dfab35a4faaa27710acbfbf61821cb88d3d4b28fd42b23d3",
+      "after_sha256": "8729d05c8806a3098a67fb24d8bf343778523af455fbb1ff1ba3130e1fe207d8"
+    },
+    {
+      "path": "third_party/jetlink/jetlink/direct_inputs.py",
+      "added_lines": 68,
+      "deleted_lines": 0,
+      "before_blob": null,
+      "after_blob": "0a4fb0e2b84c75c951490e7016aa339db6ddb489",
+      "before_sha256": null,
+      "after_sha256": "fabac8c330af269f06320ac7ba04db13fd3c000ad8b4c4aab9ae4d78bea6ca0c"
+    },
+    {
+      "path": "third_party/jetlink/jetlink/input_cast.c",
+      "added_lines": 8,
+      "deleted_lines": 0,
+      "before_blob": null,
+      "after_blob": "57a6386c281091df8ec4c2cb7220bef0eb472688",
+      "before_sha256": null,
+      "after_sha256": "6e8c1b4bdda9b5eb5bfb57155059cdee44135342951f40c0937c1347aa873e22"
+    },
+    {
+      "path": "third_party/jetlink/jetlink/input_cast.py",
+      "added_lines": 48,
+      "deleted_lines": 0,
+      "before_blob": null,
+      "after_blob": "9bce5ec9766e62d8a9cb7e3ff5350d6d7ab6d95c",
+      "before_sha256": null,
+      "after_sha256": "73dbcfce652971dd494c013a3fc0caad511f6a7b49214c08b49cc826a1313ca2"
+    },
+    {
+      "path": "third_party/jetlink/jetlink/queues.py",
+      "added_lines": 65,
+      "deleted_lines": 3,
+      "before_blob": "e513a87fe4a1d13e256abc40b1c45fd6cfc4a3f4",
+      "after_blob": "1fa4e35cb49150360235176cc98e831486e3ef42",
+      "before_sha256": "efbba74eb08a3831b70b64c35e98d39a48abaeec77ac20e89e1d7ef36e7d4bd5",
+      "after_sha256": "ba65362ff804263ba8a8b3a055c7865dc7dfffa1e76537674960f452d082906f"
+    },
+    {
+      "path": "third_party/jetlink/jetlink/server/backends/trt/cudart.py",
+      "added_lines": 29,
+      "deleted_lines": 2,
+      "before_blob": "e415fd4167a4caa5e3b94d1154cc4b9509f91840",
+      "after_blob": "a65152a7448e4d2d0ef4fc401e887a915e70efc8",
+      "before_sha256": "e125ce6092d4945270e2abb4beb9eb697885db18f613627c76badd813ee6f4c7",
+      "after_sha256": "d4079ec3bebb889b4b2b7dce3bd5629f64e357733d75d35e2cf3fa7eb5836db1"
+    },
+    {
+      "path": "third_party/jetlink/jetlink/server/backends/trt/device_state.py",
+      "added_lines": 140,
+      "deleted_lines": 0,
+      "before_blob": null,
+      "after_blob": "dd45d25ac762ee96dfa7ca64e1ea9a7794f3ae8e",
+      "before_sha256": null,
+      "after_sha256": "91154d1c67e3bd0f4bf0a557253891e7aa51fb99c73847002822e3a9b60c93ee"
+    },
+    {
+      "path": "third_party/jetlink/jetlink/server/backends/trt/engine.py",
+      "added_lines": 62,
+      "deleted_lines": 11,
+      "before_blob": "4e713a2e3fe28edbaa783524f00e05b77bded098",
+      "after_blob": "324f425d16fc125d3ce66701349ae5f4b0b7a022",
+      "before_sha256": "3cfc55592689e6ed8577b6091fb1e44c85f025f83686db5a2fbb9e8fdaf41ebf",
+      "after_sha256": "741013f256a8c2d2cac209952ca1985285e39c1c30f0a2d89cb354a62c78a69e"
+    },
+    {
+      "path": "third_party/jetlink/jetlink/server/session.py",
+      "added_lines": 10,
+      "deleted_lines": 5,
+      "before_blob": "f0bbfde7ae38c3650b80e21f7ff31da130b96b62",
+      "after_blob": "23d4593b4b1b13939a8467c5f3439a32bd484335",
+      "before_sha256": "fe4d5f0c8e23bf91880df348425462e47890a0d23ff33a0cd500de23ed05b5c0",
+      "after_sha256": "46a2f5111abb57459505014c300352f05610fcf8c877edca3ca5cfc2df1fb80b"
+    },
+    {
+      "path": "third_party/jetlink/jetlink/transport/aio_writer_native.py",
+      "added_lines": 233,
+      "deleted_lines": 0,
+      "before_blob": null,
+      "after_blob": "45c328eed06b9e9a6dd0c1afe6edb0d7dfd0846d",
+      "before_sha256": null,
+      "after_sha256": "7965d6b9cedf1fe527ff1eed4b618128cfa6dc262fdbdb06a52b95b32167eec3"
+    },
+    {
+      "path": "third_party/jetlink/jetlink/transport/ffs_aio.py",
+      "added_lines": 179,
+      "deleted_lines": 0,
+      "before_blob": null,
+      "after_blob": "a1088960a7f5f01975870fbc7b27ae3dae511b7f",
+      "before_sha256": null,
+      "after_sha256": "1bc224200d1d52a05979ab8a042e146b45c0ffc036b55832431301eb674b88ba"
+    },
+    {
+      "path": "tools/jetlink/bench_input_staging.py",
+      "added_lines": 159,
+      "deleted_lines": 0,
+      "before_blob": null,
+      "after_blob": "38815db8bdb9ff7749899fb8e757e591cdd4ecfb",
+      "before_sha256": null,
+      "after_sha256": "0af15dc2fa4a7f7a081b0266f6c38fabd45149390d8d7805d20c94f6cb90a00f"
+    },
+    {
+      "path": "tools/jetlink/simulate_pipeline.py",
+      "added_lines": 99,
+      "deleted_lines": 0,
+      "before_blob": null,
+      "after_blob": "561a62b06d5cd03abac0dd9be0867f7f28d04d9a",
+      "before_sha256": null,
+      "after_sha256": "a16877506c5992227288f47a71b46cc8935fa3f4a14ba6f6170a710ae3fee47b"
+    }
+  ],
+  "evidence": "Source comparison only; CPU_FAKE / FIXTURE tests documented separately. No CUDA/TRT/Jetson/USB performance claim.",
+  "excluded": [
+    "de75 Wi-Fi/HUD",
+    "navigation compact-map protocol",
+    "daemon scheduling changes",
+    "benchmark service assumptions",
+    "production AIO transport hookup"
+  ]
+}

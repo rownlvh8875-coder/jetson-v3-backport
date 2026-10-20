@@ -1,0 +1,2369 @@
+--- /dev/null
++++ b/openpilot/common/jetlink_managed.py
+@@ -0,0 +1,79 @@
++"""Design-only policy helpers for a protocol-3 Carrot Jetson model peer.
++
++This module is intentionally independent from openpilot so its trust boundary
++can be reviewed before touching carrot-wip. It does not open USB, select a real
++model, write Params, or change the Jetson.
++
++The eventual carrot-wip integration should preserve these properties:
++- only the explicit USB/TRT/Jetson capability opts into host model selection;
++- legacy Jetsons without the capability keep the fixed V2 behavior;
++- a loaded model identity is either None or an exact lowercase SHA256;
++- this HELLO metadata is descriptive, not authentication; the full ModelSpec
++  still needs the existing offroad approval and validation gates.
++"""
++from __future__ import annotations
++
++import re
++from typing import Any
++
++
++CAPABILITY = "carrot_model_selection_v1"
++CAPABILITY_VERSION = 1
++_SHA256 = re.compile(r"[0-9a-f]{64}")
++
++
++class PeerPolicyError(ValueError):
++    pass
++
++
++def _capability(peer: dict[str, Any]) -> dict[str, Any] | None:
++    value = peer.get(CAPABILITY)
++    if not isinstance(value, dict):
++        return None
++    if type(value.get("version")) is not int or value["version"] != CAPABILITY_VERSION:
++        return None
++    # Fail closed on unknown capability semantics. A later version can define
++    # new fields rather than letting an old comma silently reinterpret them.
++    if set(value) != {"version", "selection"} or value.get("selection") != "host":
++        return None
++    return value
++
++
++def is_managed_jetson_peer(peer: Any, mode: str = "usb") -> bool:
++    """Return True only for the explicit protocol-3 Jetson selector contract."""
++    return (
++        mode == "usb"
++        and isinstance(peer, dict)
++        and type(peer.get("protocol")) is int
++        and peer["protocol"] == 3
++        and peer.get("carrot_host") == "jetson"
++        and peer.get("backend") == "trt"
++        and isinstance(peer.get("device"), str)
++        and bool(peer["device"])
++        and _capability(peer) is not None
++    )
++
++
++def loaded_sha(peer: Any, mode: str = "usb") -> str | None:
++    """Return the host-selected SHA, or None while no model is selected.
++
++    Invalid identity on an otherwise managed Jetson is an error instead of a
++    fallback to another big model. The caller may then use the internal model.
++    """
++    if not is_managed_jetson_peer(peer, mode):
++        raise PeerPolicyError("peer is not an approved managed Jetson contract")
++    value = peer.get("loaded")
++    if value is None:
++        return None
++    if not isinstance(value, str) or _SHA256.fullmatch(value) is None:
++        raise PeerPolicyError("invalid Jetson loaded model SHA256")
++    return value
++
++
++def selection_kind(peer: Any, mode: str = "usb") -> str:
++    """Classify only the distinction needed by the future carrot-wip patch."""
++    if is_managed_jetson_peer(peer, mode):
++        return "managed-jetson"
++    if isinstance(peer, dict) and peer.get("carrot_host") == "jetson":
++        return "legacy-jetson"
++    return "other"
+--- a/openpilot/common/jetlink_peer.py
++++ b/openpilot/common/jetlink_peer.py
+@@ -1,5 +1,6 @@
+ """Conservative peer classification; HELLO is descriptive, not authentication."""
+ import re
++from openpilot.common.jetlink_managed import is_managed_jetson_peer
+ 
+ MAC_DEVICE = re.compile(r'(?:coreml|ane(?:-whole)?)-Apple[ _-]M[1-9][0-9]*(?:[ _-](?:Pro|Max|Ultra))?', re.I)
+ IOS_DEVICE = re.compile(r'(?:coreml|ane(?:-whole)?)-Apple[ _-][AM][1-9][0-9]*(?:[ _-](?:Pro|Max|Ultra))?', re.I)
+--- /dev/null
++++ b/openpilot/selfdrive/modeld/jetlink/cinque_v3.json
+@@ -0,0 +1,142 @@
++{
++  "sha256": "404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4",
++  "nbytes": 766354845,
++  "frame_skip": 4,
++  "checkpoint": "b9facbcc-4d47-410e-b3ce-dfcbad12ba92/56320/f78ed37d-afad-4dbc-8050-40ea885eedde/12864",
++  "input_shapes": {
++    "new_img": [
++      2,
++      6,
++      128,
++      256
++    ],
++    "desire": [
++      8
++    ],
++    "traffic_convention": [
++      1,
++      2
++    ],
++    "action_t": [
++      1,
++      2
++    ],
++    "state_img_q": [
++      2,
++      5,
++      6,
++      128,
++      256
++    ],
++    "state_desire_q": [
++      132,
++      1,
++      8
++    ],
++    "state_feat_q": [
++      128,
++      1,
++      16384
++    ]
++  },
++  "output_shapes": {
++    "outputs": [
++      1,
++      18452
++    ],
++    "next_state_img_q": [
++      2,
++      5,
++      6,
++      128,
++      256
++    ],
++    "next_state_desire_q": [
++      132,
++      1,
++      8
++    ],
++    "next_state_feat_q": [
++      128,
++      1,
++      16384
++    ]
++  },
++  "output_slices": {
++    "lane_lines": [
++      0,
++      528
++    ],
++    "lane_lines_prob": [
++      528,
++      536
++    ],
++    "road_edges": [
++      536,
++      800
++    ],
++    "meta": [
++      800,
++      855
++    ],
++    "desire_pred": [
++      855,
++      887
++    ],
++    "pose": [
++      887,
++      899
++    ],
++    "wide_from_device_euler": [
++      899,
++      905
++    ],
++    "road_transform": [
++      905,
++      917
++    ],
++    "plan": [
++      917,
++      1907
++    ],
++    "lead": [
++      1907,
++      2051
++    ],
++    "lead_prob": [
++      2051,
++      2054
++    ],
++    "desire_state": [
++      2054,
++      2062
++    ],
++    "action": [
++      2062,
++      2066
++    ],
++    "hidden_state": [
++      2066,
++      18450
++    ],
++    "pad": [
++      18450,
++      18452
++    ]
++  },
++  "input_dtypes": {
++    "new_img": "uint8",
++    "desire": "float32",
++    "traffic_convention": "float32",
++    "action_t": "float32",
++    "state_img_q": "uint8",
++    "state_desire_q": "float32",
++    "state_feat_q": "float32"
++  },
++  "output_dtypes": {
++    "outputs": "float32",
++    "next_state_img_q": "uint8",
++    "next_state_desire_q": "float32",
++    "next_state_feat_q": "float32"
++  }
++}
+--- a/openpilot/selfdrive/modeld/jetlink/mac.py
++++ b/openpilot/selfdrive/modeld/jetlink/mac.py
+@@ -113,6 +113,9 @@
+ 
+ 
+ def prepare(client, peer, offroad, connected, progress, cache=CACHE, mode='usb'):
++  if isinstance(peer, dict) and 'carrot_model_selection_v1' in peer:
++    from openpilot.selfdrive.modeld.jetlink.managed import prepare_managed
++    return prepare_managed(client, peer, offroad, connected, progress, cache, mode)
+   """Retain the legacy Jetson path; phones require their explicit cable mode."""
+   protocol = peer.get('protocol') if isinstance(peer, dict) else None
+   app_capable = protocol == 3 and may_provision(peer, mode)
+--- /dev/null
++++ b/openpilot/selfdrive/modeld/jetlink/managed.py
+@@ -0,0 +1,79 @@
++"""Managed Jetson preparation; installed only into a disposable candidate.
++
++HELLO describes a capability. The current Carrot validators and offroad exact
++approval remain the trust boundary. This module performs no provisioning.
++"""
++import json
++from pathlib import Path
++
++from openpilot.common.jetlink_managed import is_managed_jetson_peer, loaded_sha
++from openpilot.selfdrive.modeld.jetlink.contracts import validate_model_spec
++from openpilot.selfdrive.modeld.jetlink.selection import ModelChanged, approved_spec, remember_spec
++from jetlink.client import EngineMissing
++
++
++def prepare_managed(client, peer, offroad, connected, progress, cache, mode='usb'):
++  # Import here because mac routes to this module before its legacy branches.
++  from openpilot.selfdrive.modeld.jetlink.mac import PreparationDeferred, PreparationTransport, require_setup
++
++  if not is_managed_jetson_peer(peer, mode):
++    raise ValueError('Invalid managed Jetson selection capability')
++  selected = loaded_sha(peer, mode)
++  if selected is None:
++    raise PreparationDeferred('Selected Jetson engine is not resident; prepare it offroad')
++  cache = Path(cache) / 'managed-jetson'
++  approved = approved_spec(cache)
++  needs_approval = approved is None or approved.sha256 != selected
++  if needs_approval:
++    require_setup(offroad, connected)
++
++  def check():
++    if not connected():
++      raise PreparationDeferred('Jetlink host disconnected; waiting for reconnection')
++    if needs_approval:
++      require_setup(offroad, connected)
++
++  def stopped():
++    # The managed server contract allows resident engines only. If an older
++    # server reports pending preparation, stop before waiting/building onroad.
++    require_setup(offroad, connected)
++    return False
++
++  def report(*args):
++    require_setup(offroad, connected)
++    progress(*args)
++
++  original = client.t
++  client.t = PreparationTransport(original, check)
++  try:
++    check()
++    current = client.state()
++    if not isinstance(current, dict) or current.get('loaded') != selected:
++      raise ModelChanged('Managed Jetson identity changed before approval')
++    try:
++      result = client.ensure_engine(selected, approved.nbytes if not needs_approval else 0,
++                                    frame_skip=4, build_timeout=30,
++                                    should_stop=stopped, progress=report)
++    except EngineMissing:
++      raise PreparationDeferred('Selected Jetson engine is not ready; prepare it offroad') from None
++    validate_model_spec(result)
++    if result.sha256 != selected:
++      raise ValueError('Managed Jetson ready SHA does not match HELLO selection')
++    canonical = json.loads(Path(__file__).with_name('cinque_v3.json').read_text())
++    if selected == canonical['sha256'] and result.to_dict() != canonical:
++      raise ValueError('Cinque V3 identity/spec does not match verified seed contract')
++    if approved is not None and approved.sha256 == selected and approved.to_dict() != result.to_dict():
++      raise ValueError('Previously approved Jetson model contract changed')
++    # Detect selection changes during ENGINE_REQ before publishing approval.
++    current = client.state()
++    if not isinstance(current, dict) or current.get('loaded') != selected:
++      raise ModelChanged('Managed Jetson identity changed during approval')
++    check()
++    if needs_approval:
++      require_setup(offroad, connected)
++      remember_spec(cache, result)
++    return result
++  finally:
++    client.t = original
++    client.progress_cb = None
++    client._should_stop = lambda: False
+--- /dev/null
++++ b/third_party/jetlink/jetlink/cinque_v3.py
+@@ -0,0 +1,325 @@
++#!/usr/bin/env python3
++"""Retype Cinque v3's uint8 image-queue inputs to fp16 for TensorRT 10.3.
++
++=====================================================================
++DESIGN (from real graph analysis, not assumed):
++
++  v3 ONNX (measured):
++    new_img      uint8  -> Unsqueeze -> unsqueeze
++    state_img_q  uint8  -> Slice     -> slice_1
++    Concat(slice_1, unsqueeze) -> next_state_img_q  (uint8)
++    next_state_img_q -> Gather -> Slice -> Reshape -> Concat -> cat_2
++    cat_2 -> Cast(uint8->fp16) [node__to_copy_4] -> vision trunk (fp16)
++
++  TensorRT 10.3 rejects UINT8 *graph inputs*
++  ("Found unsupported input type of UINT8"), so the inputs must be
++  retyped -- but unlike v2 there is NO head Cast to drop. v2's
++  patch_uint8_inputs() would fail here ("could not find the head Cast"),
++  and merely adding 'new_img' to IMG_INPUTS would hit exactly that.
++
++  This patch retypes the two image-queue inputs (new_img, state_img_q)
++  to FLOAT16 and updates the next_state_img_q output declaration to
++  FLOAT16. The queue ops (Unsqueeze/Slice/Concat/Gather/Reshape) are pure
++  data movement, and 0..255 is exactly representable in fp16, so the
++  vision trunk receives BIT-IDENTICAL fp16 values: the downstream Cast
++  (node__to_copy_4) changes from uint8->fp16 into a fp16->fp16 no-op.
++  This is verified by ORT multi-frame parity (patched vs original),
++  not claimed from the 0..255 range alone.
++
++  next_state_img_q is intentionally LEFT as fp16 (no trailing Cast back
++  to uint8): the server feeds next_state_* straight back as state_*,
++  so fp16->fp16 feedback is consistent and a trailing Cast would only
++  add a pointless quantize step.
++
++SERVER IMPACT (must match):
++  - The server must feed fp16 for new_img/state_img_q (like v2's LUT
++    uint8->fp16 conversion in queues.py).
++  - Engine I/O dtypes after this patch:
++      new_img: float16, state_img_q: float16, next_state_img_q: float16
++    The session's _check_shapes must allow exactly these backend-declared
++    transforms (see dtype_transforms), not compare against the raw ONNX
++    dtypes.
++
++Interface mirrors production onnx_patch.py so this can move into
++carrot-jetson's jetlink/onnx_patch.py later:
++  needs_patch_v3(model) -> bool
++  patch_v3_uint8_inputs(model) -> dict[str, str]  (retype record)
++
++JETSON ONLY for the actual build; the patch itself is pure ONNX
++rewriting and is unit-tested on the dev VM against the real v3 ONNX.
++=====================================================================
++"""
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++V3_IMG_INPUTS = ('new_img', 'state_img_q')
++V3_IMG_OUTPUT = 'next_state_img_q'
++# data-movement ops allowed on the image-queue path; anything else there
++# is unexpected and fails closed instead of being silently retyped
++_QUEUE_OPS = ('Unsqueeze', 'Slice', 'Concat', 'Gather', 'Reshape')
++
++
++def _elem_type_of(vi) -> int:
++    from onnx import TensorProto
++    return vi.type.tensor_type.elem_type
++
++
++def needs_patch_v3(model) -> bool:
++    """True when v3's image-queue inputs are still uint8."""
++    from onnx import TensorProto
++    return any(vi.name in V3_IMG_INPUTS
++               and _elem_type_of(vi) == TensorProto.UINT8
++               for vi in model.graph.input)
++
++
++def _consumers(graph):
++    cons = {}
++    for n in graph.node:
++        for i in n.input:
++            cons.setdefault(i, []).append(n)
++    return cons
++
++
++def patch_v3_uint8_inputs(model) -> dict[str, str]:
++    """Retype v3's uint8 image-queue path to fp16. In place.
++
++    Returns the retype record {tensor_name: 'float16'} for the session's
++    dtype_transforms contract. Raises ValueError on any unexpected graph
++    shape instead of guessing.
++    """
++    from onnx import TensorProto
++    g = model.graph
++
++    targets = [vi for vi in g.input if vi.name in V3_IMG_INPUTS]
++    if len(targets) != len(V3_IMG_INPUTS):
++        missing = set(V3_IMG_INPUTS) - {vi.name for vi in targets}
++        raise ValueError(f"v3 patch: missing image inputs {sorted(missing)}")
++    for vi in targets:
++        if _elem_type_of(vi) != TensorProto.UINT8:
++            raise ValueError(
++                f"v3 patch: {vi.name} is not uint8 (already patched?)")
++
++    # Fail-closed structural check: the image inputs must feed ONLY the
++    # known queue data-movement ops. Anything else means this is not the
++    # graph we analyzed, and blind retyping could change numerics.
++    cons = _consumers(g)
++    fp16_tensors: set[str] = set(V3_IMG_INPUTS)
++    queue = list(V3_IMG_INPUTS)
++    while queue:
++        t = queue.pop()
++        for n in cons.get(t, []):
++            if n.op_type == 'Cast':
++                if not any(a.name == 'to' and a.i == TensorProto.FLOAT16 for a in n.attribute):
++                    raise ValueError(f"v3 patch: unexpected Cast target ({n.name})")
++                # the vision read-path Cast: stop here, it becomes a no-op
++                continue
++            if n.op_type not in _QUEUE_OPS:
++                raise ValueError(
++                    f"v3 patch: unexpected {n.op_type} ({n.name}) on the "
++                    f"image-queue path at tensor {t!r}; refusing to retype")
++            for o in n.output:
++                if o not in fp16_tensors:
++                    fp16_tensors.add(o)
++                    queue.append(o)
++
++    # The queue's Concat product is a graph output: its declaration must
++    # follow the retype or parsers see a lie.
++    out = next((o for o in g.output if o.name == V3_IMG_OUTPUT), None)
++    if out is None:
++        raise ValueError(f"v3 patch: graph output {V3_IMG_OUTPUT!r} missing")
++    if _elem_type_of(out) != TensorProto.UINT8:
++        raise ValueError(
++            f"v3 patch: {V3_IMG_OUTPUT} is not uint8 (already patched?)")
++
++    for vi in targets:
++        vi.type.tensor_type.elem_type = TensorProto.FLOAT16
++    out.type.tensor_type.elem_type = TensorProto.FLOAT16
++
++    # Refresh stale value_info the same way production does: TensorRT
++    # tolerates it, onnxruntime rejects the model.
++    for vi in g.value_info:
++        if vi.name in fp16_tensors and _elem_type_of(vi) == TensorProto.UINT8:
++            vi.type.tensor_type.elem_type = TensorProto.FLOAT16
++
++    return {n: 'float16' for n in
++            ('new_img', 'state_img_q', 'next_state_img_q')}
++
++
++def patch_file_v3(src: str | Path, dst: str | Path,
++                  retypes_out: str | Path | None = None) -> dict[str, str]:
++    """Load, patch, check, save. Returns the retype record."""
++    import json
++    import os
++    import tempfile
++    import onnx
++    src, dst = Path(src), Path(dst)
++    if src.resolve() == dst.resolve() or (retypes_out is not None and
++            Path(retypes_out).resolve() in (src.resolve(), dst.resolve())):
++        raise ValueError("v3 patch: output must not overwrite source/model")
++    model = onnx.load(str(src))
++    # tinygrad layout-hint ops: same treatment as production patch_file
++    for n in [n for n in model.graph.node if n.domain == 'org.tinygrad']:
++        if n.op_type != 'Contiguous':
++            raise ValueError(f"v3 patch: unknown org.tinygrad op {n.op_type!r}")
++        # Contiguous is a layout hint; bypass single-in single-out
++        if len(n.input) != 1 or len(n.output) != 1:
++            raise ValueError("v3 patch: Contiguous is not 1-in/1-out")
++        src_t, dst_t = n.input[0], n.output[0]
++        for m in model.graph.node:
++            for i, name in enumerate(m.input):
++                if name == dst_t:
++                    m.input[i] = src_t
++        model.graph.node.remove(n)
++    if not needs_patch_v3(model):
++        raise ValueError("v3 patch: model does not need it (not uint8 v3?)")
++    retypes = patch_v3_uint8_inputs(model)
++    onnx.checker.check_model(model, full_check=False)
++    dst.parent.mkdir(parents=True, exist_ok=True)
++    with tempfile.TemporaryDirectory(prefix=dst.name + '.build-', dir=dst.parent) as td:
++        staged = Path(td) / 'patched.onnx'
++        onnx.save(model, str(staged))
++        os.replace(staged, dst)
++    if retypes_out is not None:
++        Path(retypes_out).write_text(json.dumps(retypes, indent=2))
++    return retypes
++
++
++import json
++CANONICAL_JSON = '{"checkpoint": "b9facbcc-4d47-410e-b3ce-dfcbad12ba92/56320/f78ed37d-afad-4dbc-8050-40ea885eedde/12864", "frame_skip": 4, "input_dtypes": {"action_t": "float32", "desire": "float32", "new_img": "uint8", "state_desire_q": "float32", "state_feat_q": "float32", "state_img_q": "uint8", "traffic_convention": "float32"}, "input_shapes": {"action_t": [1, 2], "desire": [8], "new_img": [2, 6, 128, 256], "state_desire_q": [132, 1, 8], "state_feat_q": [128, 1, 16384], "state_img_q": [2, 5, 6, 128, 256], "traffic_convention": [1, 2]}, "nbytes": 766354845, "output_dtypes": {"next_state_desire_q": "float32", "next_state_feat_q": "float32", "next_state_img_q": "uint8", "outputs": "float32"}, "output_shapes": {"next_state_desire_q": [132, 1, 8], "next_state_feat_q": [128, 1, 16384], "next_state_img_q": [2, 5, 6, 128, 256], "outputs": [1, 18452]}, "output_slices": {"action": [2062, 2066], "desire_pred": [855, 887], "desire_state": [2054, 2062], "hidden_state": [2066, 18450], "lane_lines": [0, 528], "lane_lines_prob": [528, 536], "lead": [1907, 2051], "lead_prob": [2051, 2054], "meta": [800, 855], "pad": [18450, 18452], "plan": [917, 1907], "pose": [887, 899], "road_edges": [536, 800], "road_transform": [905, 917], "wide_from_device_euler": [899, 905]}, "sha256": "404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4"}'
++
++
++PATCH_ID = 'cinque-v3-image-fp16-v1'
++DTYPE_TRANSFORMS = dict.fromkeys(('new_img', 'state_img_q', 'next_state_img_q'), 'float16')
++CANONICAL_SPEC = json.loads(CANONICAL_JSON)
++
++
++def file_identity(path):
++    import hashlib
++    digest, size = hashlib.sha256(), 0
++    with open(path, 'rb') as f:
++        for block in iter(lambda: f.read(4 << 20), b''):
++            digest.update(block)
++            size += len(block)
++    return {'sha256': digest.hexdigest(), 'nbytes': size}
++
++
++def is_v3_spec(spec):
++    return bool(spec and (spec.get('sha256') == CANONICAL_SPEC['sha256']
++                         or 'new_img' in spec.get('input_shapes', {})))
++
++
++def validate_spec(spec):
++    if spec != CANONICAL_SPEC:
++        raise ValueError('V3 identity/semantic spec differs from the pinned model')
++
++
++def physical_contract(spec):
++    return {kind: {n: (tuple(s), DTYPE_TRANSFORMS.get(n, spec[kind[:-1]+'_dtypes'][n]))
++                   for n, s in spec[kind[:-1]+'_shapes'].items()}
++            for kind in ('inputs', 'outputs')}
++
++
++def validate_source(path, spec):
++    validate_spec(spec)
++    identity = file_identity(path)
++    if identity != {k: CANONICAL_SPEC[k] for k in ('sha256', 'nbytes')}:
++        raise ValueError('V3 source hash/size mismatch')
++    validate_graph_file(path, spec, patched=False)
++    return identity
++
++
++def validate_graph_file(path, spec, patched):
++    import onnx
++    import numpy as np
++    model = onnx.load(str(path), load_external_data=False)
++    contract = physical_contract(spec) if patched else {
++        kind: {n: (tuple(s), spec[kind[:-1]+'_dtypes'][n]) for n, s in spec[kind[:-1]+'_shapes'].items()}
++        for kind in ('inputs', 'outputs')}
++    for kind, values in (('inputs', model.graph.input), ('outputs', model.graph.output)):
++        actual = {v.name: (tuple(d.dim_value for d in v.type.tensor_type.shape.dim),
++                          str(np.dtype(onnx.helper.tensor_dtype_to_np_dtype(v.type.tensor_type.elem_type))))
++                  for v in values}
++        if len(actual) != len(values) or actual != contract[kind]:
++            raise ValueError(f'V3 {kind} graph contract mismatch')
++    props = {p.key: p.value for p in model.metadata_props}
++    if decode_output_slices(props['output_slices']) != spec['output_slices']:
++        raise ValueError('V3 output slices mismatch')
++    if props.get('model_checkpoint') != spec['checkpoint']:
++        raise ValueError('V3 checkpoint mismatch')
++
++
++def build_record(source, patched, engine, spec):
++    validate_graph_file(patched, spec, patched=True)
++    return {'source': source, 'patched': file_identity(patched),
++            'engine': file_identity(engine), 'patch_id': PATCH_ID,
++            'semantic_spec': spec, 'dtype_transforms': DTYPE_TRANSFORMS.copy()}
++
++
++def validate_record(record, engine, spec):
++    validate_spec(spec)
++    if set(record) != {'source', 'patched', 'engine', 'patch_id', 'semantic_spec', 'dtype_transforms'}:
++        raise ValueError('invalid V3 build record fields')
++    if (record['source'] != {k: CANONICAL_SPEC[k] for k in ('sha256', 'nbytes')}
++        or record['semantic_spec'] != spec or record['patch_id'] != PATCH_ID
++        or record['dtype_transforms'] != DTYPE_TRANSFORMS):
++        raise ValueError('V3 build record identity/contract mismatch')
++    for name in ('patched', 'engine'):
++        value = record[name]
++        if (set(value) != {'sha256', 'nbytes'} or type(value['nbytes']) is not int or value['nbytes'] <= 0
++            or not isinstance(value['sha256'], str) or len(value['sha256']) != 64
++            or any(c not in '0123456789abcdef' for c in value['sha256'])):
++            raise ValueError(f'invalid V3 {name} identity')
++    if record['engine'] != file_identity(engine):
++        raise ValueError('V3 record belongs to a different engine')
++    return DTYPE_TRANSFORMS.copy()
++
++def decode_output_slices(encoded: str) -> dict:
++  """Interpret only the observed dict[str, slice] pickle grammar; execute nothing."""
++  import base64
++  import pickletools
++  stack, memo, mark = [], {}, object()
++  for op, arg, _ in pickletools.genops(base64.b64decode(encoded)):
++    name = op.name
++    if name in ('PROTO', 'FRAME'): continue
++    if name == 'EMPTY_DICT': stack.append({})
++    elif name == 'MARK': stack.append(mark)
++    elif name in ('SHORT_BINUNICODE', 'BINUNICODE', 'BININT', 'BININT1', 'BININT2'): stack.append(arg)
++    elif name == 'NONE': stack.append(None)
++    elif name == 'MEMOIZE': memo[len(memo)] = stack[-1]
++    elif name in ('BINGET', 'LONG_BINGET'): stack.append(memo[arg])
++    elif name == 'STACK_GLOBAL':
++      symbol, module = stack.pop(), stack.pop()
++      if (module, symbol) != ('builtins', 'slice'): raise ValueError('forbidden slice metadata global')
++      stack.append(('slice-constructor',))
++    elif name == 'TUPLE3':
++      args = tuple(stack[-3:]); del stack[-3:]; stack.append(args)
++    elif name == 'REDUCE':
++      args, constructor = stack.pop(), stack.pop()
++      if constructor != ('slice-constructor',) or len(args) != 3 or args[2] is not None:
++        raise ValueError('forbidden slice metadata constructor')
++      if any(type(v) is not int or v < 0 for v in args[:2]) or args[0] > args[1]:
++        raise ValueError('invalid output slice bounds')
++      stack.append(list(args[:2]))
++    elif name in ('SETITEMS', 'SETITEM'):
++      if name == 'SETITEM':
++        value, key = stack.pop(), stack.pop(); stack[-1][key] = value
++      else:
++        boundary = next(i for i in range(len(stack)-1, -1, -1) if stack[i] is mark)
++        values = stack[boundary+1:]; del stack[boundary:]
++        if len(values) % 2: raise ValueError('invalid slice metadata dictionary')
++        stack[-1].update(zip(values[::2], values[1::2]))
++    elif name == 'STOP': break
++    else: raise ValueError(f'forbidden slice metadata opcode: {name}')
++  if len(stack) != 1 or type(stack[0]) is not dict or not all(
++      type(k) is str and type(v) is list and len(v) == 2 for k, v in stack[0].items()):
++    raise ValueError('invalid output slice metadata')
++  return stack[0]
++
++
++
++def record_digest(record):
++    """Detect sidecar corruption; this is not a cryptographic signature."""
++    import hashlib
++    return hashlib.sha256(json.dumps(record, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+--- /dev/null
++++ b/third_party/jetlink/jetlink/direct_inputs.py
+@@ -0,0 +1,71 @@
++"""Opt-in Cinque V3 CPU staging into immutable physical input bindings.
++
++SPDX-License-Identifier: MIT
++Copyright (c) 2026 Zeph Leggett. Design derived from tjdgus200/openpilot
++third_party/jetlink/jetlink/direct_inputs.py at a890f6df1bd3eb0478754c68d8b5f92f15e8b722; restricted to the
++existing Cinque V3 camera/scalars12 contract. See input_cast.c for MIT notice.
++
++No compact map decoder or new wire flags are supported. Buffer ownership stays
++with the engine and staging touches only new_img/desire/traffic_convention/
++action_t. The server's existing finite/output/identity/state gates remain active.
++"""
++import numpy as np
++
++
++class DirectInputs:
++    def __init__(self, spec, dest):
++        from jetlink.cinque_v3 import CANONICAL_SPEC, DTYPE_TRANSFORMS, validate_spec
++        validate_spec(spec.to_dict())
++        if spec.packed_nelem != 12 or tuple(spec.packed_shapes) != ('desire', 'traffic_convention', 'action_t'):
++            raise ValueError('Direct inputs support only the Cinque V3 scalars12 contract')
++        if not isinstance(dest, dict) or set(dest) != set(spec.input_shapes):
++            raise ValueError('Direct input bindings do not match the complete model contract')
++        self.spec, self.dest = spec, dest
++        self.canonical = CANONICAL_SPEC
++        self.bindings = []
++        for name, shape in spec.input_shapes.items():
++            value = dest[name]
++            dtype = np.dtype(DTYPE_TRANSFORMS.get(name, spec.input_dtypes[name]))
++            if (not isinstance(value, np.ndarray) or tuple(value.shape) != tuple(shape) or value.dtype != dtype
++                    or not value.flags.c_contiguous or not value.flags.aligned or not value.flags.writeable):
++                raise ValueError(f'Unsupported direct input binding: {name}')
++            self.bindings.append((name, value, value.ctypes.data, tuple(shape), dtype, value.strides))
++        arrays = [value for _, value, *_ in self.bindings]
++        if any(np.shares_memory(left, right) for i, left in enumerate(arrays) for right in arrays[i + 1:]):
++            raise ValueError('Direct input bindings overlap')
++        # Native compilation/loading and its fixed self-test happen only here.
++        # The runtime flag is checked by the queue before importing this module.
++        if __package__ == 'jetlink':
++            from jetlink.input_cast import native_u8_to_f16
++        else:
++            from .input_cast import native_u8_to_f16
++        self.convert = native_u8_to_f16()
++
++    def _check_bindings(self, dest):
++        if dest is not self.dest or self.spec.to_dict() != self.canonical or set(dest) != {b[0] for b in self.bindings}:
++            raise ValueError('Direct input container/model changed after preparation')
++        for name, value, pointer, shape, dtype, strides in self.bindings:
++            if (dest.get(name) is not value or value.ctypes.data != pointer or value.shape != shape
++                    or value.dtype != dtype or value.strides != strides or not value.flags.c_contiguous
++                    or not value.flags.aligned or not value.flags.writeable):
++                raise ValueError(f'Direct input binding changed after preparation: {name}')
++
++    def stage(self, warped, packed, dest):
++        """Validate all sources/bindings before the first destination write."""
++        self._check_bindings(dest)
++        if (not isinstance(warped, np.ndarray) or warped.dtype != np.uint8
++                or warped.shape != self.spec.warped_shape or not warped.flags.c_contiguous
++                or not warped.flags.aligned):
++            raise ValueError('Invalid direct image shape/type/storage')
++        if (not isinstance(packed, np.ndarray) or packed.dtype != np.float32 or packed.shape != (12,)
++                or not packed.flags.c_contiguous or not packed.flags.aligned or not np.isfinite(packed).all()):
++            raise ValueError('Invalid direct scalar context; compact maps are unsupported')
++        if any(np.shares_memory(source, value) for source in (warped, packed)
++               for _, value, *_ in self.bindings):
++            raise ValueError('Direct source overlaps an engine binding')
++        # Scalar destinations were fixed to float32 at preparation and checked
++        # again above. casting=no forbids implicit narrowing or overflow.
++        self.convert(warped, dest['new_img'])
++        np.copyto(dest['desire'], packed[:8], casting='no')
++        np.copyto(dest['traffic_convention'], packed[8:10].reshape(1, 2), casting='no')
++        np.copyto(dest['action_t'], packed[10:12].reshape(1, 2), casting='no')
+--- /dev/null
++++ b/third_party/jetlink/jetlink/input_cast.c
+@@ -0,0 +1,34 @@
++/*
++ * Exact uint8 -> IEEE binary16 LUT conversion, CPU only.
++ * Adapted from tjdgus200/openpilot third_party/jetlink/jetlink/input_cast.c
++ * commit a890f6df1bd3eb0478754c68d8b5f92f15e8b722 (2026-10-20 review).
++ * No SIMD/architecture assumptions.
++ *
++ * MIT License
++ * Copyright (c) 2026 Zeph Leggett
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a copy
++ * of this software and associated documentation files (the "Software"), to deal
++ * in the Software without restriction, including without limitation the rights
++ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++ * copies of the Software, and to permit persons to whom the Software is
++ * furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice shall be included in all
++ * copies or substantial portions of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
++ */
++#include <stddef.h>
++#include <stdint.h>
++
++void jetlink_u8_f16(const uint8_t *restrict src, uint16_t *restrict dst,
++                    const uint16_t *restrict table, size_t n) {
++  for (size_t i = 0; i < n; ++i) dst[i] = table[src[i]];
++}
+--- /dev/null
++++ b/third_party/jetlink/jetlink/input_cast.py
+@@ -0,0 +1,60 @@
++"""Optional exact native CPU input conversion; preparation compiles/self-tests.
++
++SPDX-License-Identifier: MIT
++Copyright (c) 2026 Zeph Leggett. Adapted from tjdgus200/openpilot
++third_party/jetlink/jetlink/input_cast.py at a890f6df1bd3eb0478754c68d8b5f92f15e8b722. Full MIT notice is in
++the accompanying input_cast.c and the source Jetlink LICENSE.
++"""
++import ctypes
++from functools import lru_cache
++from pathlib import Path
++import shutil
++import subprocess
++import sys
++import tempfile
++
++import numpy as np
++
++
++@lru_cache(maxsize=1)
++def native_u8_to_f16():
++    """Prepare once, before accepting frames; requested failure is fail-closed.
++
++    No call in this module imports GPU runtimes. The returned callable owns the
++    loaded library and immutable table. Frame calls only validate and execute.
++    """
++    compiler = shutil.which('cc') if sys.platform == 'linux' else None
++    if compiler is None:
++        raise RuntimeError('Explicit input fastpath requires a Linux C compiler at preparation')
++    try:
++        with tempfile.TemporaryDirectory(prefix='jetlink-input-cast-') as directory:
++            library = Path(directory) / 'input_cast.so'
++            subprocess.run([compiler, '-std=c99', '-O3', '-fPIC', '-shared', '-fno-fast-math',
++                            str(Path(__file__).with_suffix('.c')), '-o', str(library)],
++                           check=True, capture_output=True, timeout=10)
++            dll = ctypes.CDLL(str(library))
++        function = dll.jetlink_u8_f16
++        function.argtypes = (ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_size_t)
++        function.restype = None
++        table = np.arange(256, dtype=np.uint8).astype(np.float16).view(np.uint16)
++        table.flags.writeable = False
++
++        def convert(source, dest, _library=dll):
++            if (not isinstance(source, np.ndarray) or not isinstance(dest, np.ndarray)
++                    or source.dtype != np.uint8 or dest.dtype != np.float16
++                    or source.shape != dest.shape or not source.flags.c_contiguous
++                    or not dest.flags.c_contiguous or not source.flags.aligned
++                    or not dest.flags.aligned or not dest.flags.writeable
++                    or np.shares_memory(source, dest)):
++                raise ValueError('Invalid native uint8/float16 input buffers')
++            function(source.ctypes.data, dest.ctypes.data, table.ctypes.data, source.size)
++
++        for length in (0, 1, 7, 8, 15, 16, 17, 31, 32, 33, 255, 256, 257):
++            source = np.arange(length, dtype=np.uint8)
++            target = np.empty(length, np.float16)
++            convert(source, target)
++            if target.tobytes() != source.astype(np.float16).tobytes():
++                raise ValueError('Native input conversion self-test failed')
++        return convert
++    except (OSError, subprocess.SubprocessError, ValueError, AttributeError) as exc:
++        raise RuntimeError('Explicit native input conversion preparation failed') from exc
+--- a/third_party/jetlink/jetlink/onnx_meta.py
++++ b/third_party/jetlink/jetlink/onnx_meta.py
+@@ -40,7 +40,8 @@
+     raw = self.props.get('output_slices')
+     if raw is None:
+       raise KeyError("output_slices not in model metadata_props")
+-    return pickle.loads(codecs.decode(raw.encode(), 'base64'))
++    from jetlink.cinque_v3 import decode_output_slices
++    return {name: slice(*bounds) for name, bounds in decode_output_slices(raw).items()}
+ 
+   @property
+   def model_checkpoint(self) -> str | None:
+--- a/third_party/jetlink/jetlink/onnx_patch.py
++++ b/third_party/jetlink/jetlink/onnx_patch.py
+@@ -410,10 +410,16 @@
+   return [cast] if cast is not None else []
+ 
+ 
+-def patch_file(src: str, dst: str, check: bool = True) -> str:
++def patch_file(src: str, dst: str, check: bool = True, spec: dict | None = None) -> str:
+   model = onnx.load(src)
+   strip_tinygrad_ops(model)
+-  if needs_patch(model):
++  from jetlink.cinque_v3 import validate_source, needs_patch_v3, patch_v3_uint8_inputs
++  if any(vi.name == 'new_img' for vi in model.graph.input):
++    validate_source(src, spec)
++    if not needs_patch_v3(model):
++      raise ValueError('V3 graph is already retyped or has unexpected dtypes')
++    patch_v3_uint8_inputs(model)
++  elif needs_patch(model):
+     patch_uint8_inputs(model)
+   if check:
+     onnx.checker.check_model(model, full_check=False)
+--- a/third_party/jetlink/jetlink/queues.py
++++ b/third_party/jetlink/jetlink/queues.py
+@@ -20,7 +20,7 @@
+ 
+ import numpy as np
+ 
+-from jetlink.spec import ModelSpec
++from jetlink.spec import ModelSpec, STATEFUL_FRAME
+ 
+ 
+ # numpy has no vectorised float16 store on aarch64: uint8 -> float16 costs
+@@ -186,3 +186,141 @@
+     dest['traffic_convention'][...] = traffic_convention.reshape(
+       dest['traffic_convention'].shape)
+     dest['action_t'][...] = action_t.reshape(dest['action_t'].shape)
++
++
++class StateValidationError(ValueError):
++  """A next_state_* output failed validation.
++
++  Raised before any state is touched: when this propagates, the previous
++  frame's state is byte-for-byte intact and the caller must not serve the
++  frame as OK (fail-closed).
++  """
++
++
++class StatefulState:
++  """Server-side state for one stateful model (openpilot #38916).
++
++  A stateful graph does the queueing itself: each frame feeds state_<q>
++  inputs from the previous frame's next_state_<q> outputs, and the hidden
++  state never leaves the graph. The state lives in the engine's pinned input
++  buffers, so keeping it is a copy from the output buffers, not an extra
++  allocation.
++
++  The state pairs come from the spec, derived from the ONNX: no
++  model-specific tensor names are hardcoded here.
++  """
++
++  def __init__(self, spec: ModelSpec, host_inputs: dict | None = None):
++    # Strict contract check: raises on shape/dtype mismatch or orphan
++    # state tensors instead of silently running with a wrong pairing.
++    self.pairs = spec.validate_stateful()
++    self.spec = spec
++    self.frame_skip = spec.frame_skip
++    # The state lives in the engine's pinned input buffers: keeping it is a
++    # copy between buffers the engine owns, not an extra allocation. Held by
++    # reference so reset()/after_run() need no arguments, like PolicyQueues.
++    self.host_inputs = host_inputs
++    self._direct_inputs = None
++    flag = __import__('os').environ.get('CARROT_TRT_INPUT_FASTPATH', '0')
++    if flag not in ('0', '1'):
++      raise ValueError('CARROT_TRT_INPUT_FASTPATH must be absent, 0 or 1')
++    if flag == '1':
++      from jetlink.direct_inputs import DirectInputs
++      self._direct_inputs = DirectInputs(spec, host_inputs)
++
++    offset = 0
++    self._packed_layout = []
++    for size, shape in zip(spec.packed_sizes, spec.packed_shapes.values(), strict=True):
++      self._packed_layout.append((offset, offset + size, shape))
++      offset += size
++
++  def reset(self) -> None:
++    """RESET_QUEUES: empty history. Zeros the state input buffers in place."""
++    if self.host_inputs is None:
++      raise RuntimeError('StatefulState.reset needs host_inputs (pass at construction)')
++    for state_in, _ in self.pairs:
++      self.host_inputs[state_in][...] = 0
++
++  def _unpack(self, packed: np.ndarray):
++    # slice views, not np.split: the offsets never change and split allocates
++    return tuple(packed[a:b].reshape(shape) for a, b, shape in self._packed_layout)
++
++  def step_into(self, warped: np.ndarray, packed: np.ndarray,
++                dest: dict) -> None:
++    """Write one frame's inputs into caller-owned buffers.
++
++    warped: (2, 6, H, W) uint8 from openpilot's warp. packed: flat float32,
++    laid out per ModelSpec.packed_shapes (desire, traffic_convention,
++    action_t). The state_<q> inputs are left alone: they already hold last
++    frame's next_state_<q> (or zeros after reset).
++
++    `dest` maps input name to an array of the declared shape. In the server
++    those are TensorRT's pinned buffers.
++    """
++    if self._direct_inputs is not None:
++      self._direct_inputs.stage(warped, packed, dest)
++      return
++    spec = self.spec
++    if warped.shape != spec.warped_shape:
++      raise ValueError(f"warped {warped.shape} != {spec.warped_shape}")
++    if packed.size != spec.packed_nelem:
++      raise ValueError(f"packed {packed.size} != {spec.packed_nelem}")
++    desire, traffic_convention, action_t = self._unpack(packed)
++    # new_img is the newest warped frame pair, cast into the model dtype
++    np.copyto(dest[STATEFUL_FRAME], warped, casting='safe')
++    dest['desire'][...] = desire.reshape(dest['desire'].shape)
++    dest['traffic_convention'][...] = traffic_convention.reshape(
++      dest['traffic_convention'].shape)
++    dest['action_t'][...] = action_t.reshape(dest['action_t'].shape)
++
++  def validate_next_states(self, outputs: dict) -> list[tuple[str, str, np.ndarray]]:
++    """Phase 1 of the state update: check everything, change nothing.
++
++    For every (state_in, state_out) pair verifies the output exists, has
++    exactly the state input's shape (tuple comparison), has a compatible
++    dtype, and is fully finite. Returns staged (state_in, state_out, array)
++    triples ready for commit_next_states().
++
++    Raises StateValidationError on the first problem. The host state
++    buffers are not modified by this method, so a failure leaves the
++    previous frame's state byte-for-byte intact.
++    """
++    if self.host_inputs is None:
++      raise RuntimeError('StatefulState.validate_next_states needs host_inputs (pass at construction)')
++    staged = []
++    for state_in, state_out in self.pairs:
++      if state_out not in outputs:
++        raise StateValidationError(f'missing state output {state_out!r}')
++      arr = np.asarray(outputs[state_out])
++      buf = self.host_inputs[state_in]
++      if tuple(arr.shape) != tuple(buf.shape):
++        raise StateValidationError(
++          f'{state_out!r} shape {tuple(arr.shape)} != state input shape {tuple(buf.shape)}')
++      if arr.dtype != buf.dtype:
++        raise StateValidationError(f'{state_out!r} dtype {arr.dtype} != state buffer {buf.dtype}')
++      if not np.all(np.isfinite(arr)):
++        raise StateValidationError(f'non-finite values in {state_out!r}')
++      staged.append((state_in, state_out, arr))
++    return staged
++
++  def commit_next_states(self, staged: list[tuple[str, str, np.ndarray]]) -> None:
++    """Phase 2 of the state update: copy the validated stage.
++
++    Validation cannot modify committed state. Copy exceptions (including a
++    read-only buffer) may leave a partial commit: the caller must invalidate
++    this loaded generation and require reload. There is no rollback.
++    """
++    if self.host_inputs is None:
++      raise RuntimeError('StatefulState.commit_next_states needs host_inputs (pass at construction)')
++    for state_in, _state_out, arr in staged:
++      buf = self.host_inputs[state_in]
++      np.copyto(buf, arr, casting='no')
++
++  def after_run(self, outputs: dict) -> None:
++    """Keep this frame's next states for the next one.
++
++    Validation failures leave state intact. Commit exceptions may partially
++    copy state; the server invalidates the generation and requires reload.
++    """
++    staged = self.validate_next_states(outputs)
++    self.commit_next_states(staged)
+--- a/third_party/jetlink/jetlink/server/backends/trt/__init__.py
++++ b/third_party/jetlink/jetlink/server/backends/trt/__init__.py
+@@ -39,12 +39,12 @@
+             'device': _build.device_tag(self.device)}
+ 
+   def build(self, onnx_path: Path, out_path: Path, report: ProgressFn | None = None,
+-            meta_extra: dict | None = None) -> Path:
++            meta_extra: dict | None = None, authorize=None) -> Path:
+     if self.device:
+       from jetlink.server.backends.trt import cudart
+       cudart.set_device(self.device)
+     return _build.build_engine(onnx_path, out_path, report=report, meta_extra=meta_extra,
+-                               timing_cache=_build.timing_cache_path(Path(out_path).parent, self.device))
++                               timing_cache=_build.timing_cache_path(Path(out_path).parent, self.device), authorize=authorize)
+ 
+   def load(self, artifact: Path, report=None):
+     # A plan that will not deserialize is not treated as ArtifactInvalid on
+@@ -52,4 +52,19 @@
+     # be stale, and the other reasons (memory, a device fault) are not cured by
+     # deleting 770 MB and building for three minutes.
+     from jetlink.server.backends.trt.engine import TrtEngine
+-    return TrtEngine(str(artifact), device=self.device if self.device else None)
++    import json
++    from jetlink import cinque_v3 as v3
++    sidecar = artifact.with_suffix('.json')
++    meta = json.loads(sidecar.read_text()) if sidecar.is_file() else {}
++    semantic = meta.get('spec')
++    transforms = {}
++    if v3.is_v3_spec(semantic):
++      if (meta.get('backend') != 'trt' or meta.get('trt_version') != self.runtime_version
++          or meta.get('device') != _build.device_tag(self.device)):
++        raise ValueError('V3 artifact runtime/device identity mismatch')
++      record = meta.get('cinque_v3_record')
++      if not isinstance(record, dict) or meta.get('cinque_v3_record_sha256') != v3.record_digest(record):
++        raise ValueError('missing or corrupt V3 build record')
++      transforms = v3.validate_record(record, artifact, semantic)
++    return TrtEngine(str(artifact), device=self.device if self.device else None,
++                     semantic_spec=semantic, dtype_transforms=transforms)
+--- a/third_party/jetlink/jetlink/server/backends/trt/build.py
++++ b/third_party/jetlink/jetlink/server/backends/trt/build.py
+@@ -184,12 +184,14 @@
+                  fp16: bool = True, optimization_level: int = 3,
+                  workspace: int | None = None,
+                  meta_extra: dict | None = None,
+-                 timing_cache: str | Path | None = None) -> Path:
++                 timing_cache: str | Path | None = None, authorize=None) -> Path:
+   """Patch, parse and build. Writes the plan atomically.
+ 
+   `meta_extra` lands in the sidecar json next to the plan; the server keeps
+   the model spec there so a later load needs neither the ONNX nor a parser.
+   """
++  if authorize is not None:
++    authorize()
+   onnx_path, out_path = Path(onnx_path), Path(out_path)
+   report = report or (lambda *_: None)
+   workspace = workspace_bytes() if workspace is None else workspace
+@@ -205,11 +207,26 @@
+   # Not at module scope: pulls in the onnx package, which a comma running the
+   # tests does not have.
+   from jetlink.onnx_patch import patch_file
++  from jetlink import cinque_v3 as v3
++  semantic = (meta_extra or {}).get('spec')
++  v3_source = None
++  if semantic is None:
++    from jetlink.onnx_meta import parse_file
++    if 'new_img' in parse_file(str(onnx_path)).inputs:
++      raise ValueError('stateful TRT build requires its pinned semantic spec')
++  if v3.is_v3_spec(semantic):
++    v3_source = v3.validate_source(onnx_path, semantic)
++    protected = {'backend', 'trt_version', 'device', 'cinque_v3_record', 'cinque_v3_record_sha256'}
++    if protected.intersection(meta_extra or {}):
++      raise ValueError('meta_extra contains protected V3 build fields')
++  v3_record = None
+ 
+   with tempfile.TemporaryDirectory(dir=str(out_path.parent)) as tmp:
+     report('patch', 0.0, 'retyping uint8 image inputs to fp16')
+     patched = Path(tmp) / 'patched.onnx'
+-    patch_file(str(onnx_path), str(patched))
++    patch_file(str(onnx_path), str(patched), spec=semantic)
++    if v3_source is not None:
++      v3.validate_graph_file(patched, semantic, patched=True)
+     report('patch', 1.0, 'patched')
+ 
+     builder = trt.Builder(logger)
+@@ -229,30 +246,77 @@
+     config.progress_monitor = _Monitor(report)
+     cache = _load_timing_cache(config, timing_cache)
+ 
++    if authorize is not None:
++      authorize()
+     report('build', 0.0, 'building engine')
+     plan = builder.build_serialized_network(network, config)
+     if plan is None:
+       raise RuntimeError("TensorRT returned no engine; see the build log")
++    if authorize is not None:
++      authorize()
+     _save_timing_cache(cache, timing_cache)
+ 
+     staged = Path(tmp) / 'engine.plan'
+     with open(staged, 'wb') as f:
+       f.write(plan)
+     out_path.parent.mkdir(parents=True, exist_ok=True)
+-    shutil.move(str(staged), str(out_path))
+-
+-  meta = {
+-    'backend': 'trt',
+-    'trt_version': trt.__version__,
+-    'device': device_tag(),
+-    'fp16': fp16,
+-    'strongly_typed': strongly_typed_only(),
+-    'optimization_level': optimization_level,
+-    'build_seconds': round(time.time() - t0, 1),
+-    'onnx': onnx_path.name,
+-    'built_at': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
+-    **(meta_extra or {}),
+-  }
+-  out_path.with_suffix('.json').write_text(json.dumps(meta, indent=2))
+-  report('build', 1.0, f"done in {meta['build_seconds']}s")
+-  return out_path
++    if v3_source is not None:
++      v3_record = v3.build_record(v3_source, patched, staged, semantic)
++    else:
++      shutil.move(str(staged), str(out_path))
++
++    meta = {
++      'backend': 'trt',
++      'trt_version': trt.__version__,
++      'device': device_tag(),
++      'fp16': fp16,
++      'strongly_typed': strongly_typed_only(),
++      'optimization_level': optimization_level,
++      'build_seconds': round(time.time() - t0, 1),
++      'onnx': onnx_path.name,
++      'built_at': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
++      **(meta_extra or {}),
++    }
++    if v3_record is not None:
++      meta['cinque_v3_record'] = v3_record
++      meta['cinque_v3_record_sha256'] = v3.record_digest(v3_record)
++      if authorize is not None:
++        authorize()
++      _publish_v3(staged, out_path, meta)
++    else:
++      out_path.with_suffix('.json').write_text(json.dumps(meta, indent=2))
++    report('build', 1.0, f"done in {meta['build_seconds']}s")
++    return out_path
++
++
++def _publish_v3(staged: Path, target: Path, meta: dict) -> None:
++  """Restore the prior pair on recoverable publish errors; not crash atomic.
++
++  A process/power failure between the two renames is detected by the persistent
++  engine digest when loading, before device-buffer allocation.
++  """
++  import os
++  sidecar = target.with_suffix('.json')
++  staged_meta = staged.with_suffix('.json')
++  staged_meta.write_text(json.dumps(meta, indent=2))
++  old_plan, old_meta = staged.parent / 'previous.plan', staged.parent / 'previous.json'
++  had_plan, had_meta = target.is_file(), sidecar.is_file()
++  if had_plan:
++    shutil.copyfile(target, old_plan)
++  if had_meta:
++    shutil.copyfile(sidecar, old_meta)
++  try:
++    os.replace(staged, target)
++    os.replace(staged_meta, sidecar)
++  except Exception:
++    # copyfile also works when an injected/OS rename error persists; retain
++    # backups in the staging directory until both restorations finish.
++    if had_plan:
++      shutil.copyfile(old_plan, target)
++    else:
++      target.unlink(missing_ok=True)
++    if had_meta:
++      shutil.copyfile(old_meta, sidecar)
++    else:
++      sidecar.unlink(missing_ok=True)
++    raise
+--- /dev/null
++++ b/third_party/jetlink/jetlink/server/backends/trt/device_state.py
+@@ -0,0 +1,321 @@
++"""Experimental H2D-only recurrence; all next-state D2H/CPU gates remain.
++
++FiniteKernel is adapted from tjdgus200/openpilot's IEEE exponent scanner:
++third_party/jetlink/jetlink/server/backends/trt/device_state.py at commit
++a890f6df1bd3eb0478754c68d8b5f92f15e8b722.
++CUDA imports/compilation are lazy and occur only after explicit flag=1 setup.
++This module never authorizes a model, relaxes a CPU gate, or aliases bindings.
++
++MIT License
++Copyright (c) 2026 Zeph Leggett
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all
++copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++SOFTWARE.
++"""
++from __future__ import annotations
++
++import ctypes
++import math
++
++import numpy as np
++
++_UNSET = object()
++
++
++FINITE_SOURCE = r'''
++extern "C" __global__ void check_finite(const void *data, unsigned long long n,
++                                      unsigned int width, unsigned int *bad) {
++  for (unsigned long long i = (unsigned long long)blockIdx.x * blockDim.x + threadIdx.x;
++       i < n; i += (unsigned long long)gridDim.x * blockDim.x) {
++    unsigned int bits = width == 2 ? ((const unsigned short *)data)[i] : ((const unsigned int *)data)[i];
++    unsigned int mask = width == 2 ? 0x7c00u : 0x7f800000u;
++    if ((bits & mask) == mask) atomicOr(bad, 1u);
++  }
++}
++'''
++
++
++def _runtime():
++    from jetlink.server.backends.trt import cudart
++    return cudart
++
++
++def _checked(result):
++    error, *values = result
++    if int(error) != 0:
++        raise RuntimeError(f'CUDA device-state operation failed: {error}')
++    return values[0] if len(values) == 1 else tuple(values)
++
++
++class FiniteKernel:
++    """The external finite scanner, with lazy CUDA/NVRTC imports."""
++    def __init__(self):
++        try:
++            from cuda.bindings import driver, nvrtc
++        except ImportError:
++            from cuda import cuda as driver, nvrtc
++        cuda = _runtime()
++        self.driver, self.module = driver, None
++        device = cuda.check(cuda._rt.cudaGetDevice())
++        _, major, minor = cuda.device_name(device)
++        program = _checked(nvrtc.nvrtcCreateProgram(FINITE_SOURCE.encode(), b'carrot_state.cu', 0, [], []))
++        try:
++            _checked(nvrtc.nvrtcCompileProgram(program, 1, [f'--gpu-architecture=compute_{major}{minor}'.encode()]))
++            size = _checked(nvrtc.nvrtcGetPTXSize(program))
++            ptx = b'\0' * size
++            _checked(nvrtc.nvrtcGetPTX(program, ptx))
++        finally:
++            _checked(nvrtc.nvrtcDestroyProgram(program))
++        self.module = _checked(driver.cuModuleLoadData(ptx))
++        try:
++            self.function = _checked(driver.cuModuleGetFunction(self.module, b'check_finite'))
++        except BaseException:
++            self.close()
++            raise
++
++    def launch(self, binding, bad, stream):
++        count = binding.nbytes // binding.dtype.itemsize
++        args = (ctypes.c_uint64(binding.device_ptr), ctypes.c_uint64(count),
++                ctypes.c_uint(binding.dtype.itemsize), ctypes.c_uint64(bad))
++        pointers = (ctypes.c_void_p * len(args))(*(ctypes.addressof(arg) for arg in args))
++        _checked(self.driver.cuLaunchKernel(self.function, min(4096, (count + 255) // 256), 1, 1,
++                                          256, 1, 1, 0, stream, ctypes.addressof(pointers), 0))
++
++    def close(self):
++        if self.module is not None:
++            _checked(self.driver.cuModuleUnload(self.module))
++            self.module = None
++
++
++def _memset(cuda, target, size, stream):
++    operation = getattr(cuda, 'memset_async', None)
++    if operation is not None:
++        return operation(target, size, stream)
++    return cuda.check(cuda._rt.cudaMemsetAsync(target, 0, size, stream))
++
++
++def _copy_device(cuda, target, source, size, stream):
++    operation = getattr(cuda, 'memcpy_d2d_async', None)
++    if operation is not None:
++        return operation(target, source, size, stream)
++    kind = cuda._rt.cudaMemcpyKind.cudaMemcpyDeviceToDevice
++    return cuda.check(cuda._rt.cudaMemcpyAsync(target, source, size, kind, stream))
++
++
++class DeviceState:
++    """Distinct device input buffers updated only after CPU validation/commit.
++
++    Initial/reset state H2D is scheduled outside CUDA graph capture. Every
++    next-state still travels D2H and through StatefulState validation. A failed
++    generation cannot reset itself; reset/close drain pending work before the
++    caller zeros host state or frees any binding.
++    """
++    def __init__(self, inputs, outputs, pairs, stream, *, owner=_UNSET, cuda=None, kernel_factory=None):
++        if not isinstance(pairs, dict) or not pairs or len(set(pairs.values())) != len(pairs):
++            raise ValueError('device state needs distinct, nonempty state pairs')
++        if not isinstance(inputs, dict) or not isinstance(outputs, dict) or set(inputs).intersection(outputs):
++            raise ValueError('device state requires separate named input/output bindings')
++        logical = {**inputs, **outputs}
++        owner = logical if owner is _UNSET else owner
++        if (not isinstance(owner, dict) or set(owner) != set(logical)
++                or any(owner[name] is not binding for name, binding in logical.items())):
++            raise ValueError('device state allocation owner differs from logical bindings')
++        self.owner = owner
++        # CUDA copies use host_ptr while CPU gates read host. Both must address
++        # exactly the same physical array from the FIRST configuration, rather
++        # than merely remain unchanged after an invalid descriptor is captured.
++        # Validate every binding, including non-state images/scalars/outputs,
++        # before importing CUDA, creating the scanner, or allocating scratch.
++        all_bindings = []
++        for kind, mapping in (('inputs', inputs), ('outputs', outputs)):
++            for name, binding in mapping.items():
++                try:
++                    array, dtype, shape = binding.host, np.dtype(binding.dtype), tuple(binding.shape)
++                    valid = (isinstance(name, str) and binding.name == name
++                        and binding.is_input is (kind == 'inputs')
++                        and type(binding.device_ptr) is int and binding.device_ptr > 0
++                        and type(binding.host_ptr) is int and binding.host_ptr > 0
++                        and type(binding.nbytes) is int and binding.nbytes > 0
++                        and all(type(dim) is int and dim > 0 for dim in shape)
++                        and dtype.kind in 'biuf' and dtype.isnative and not dtype.hasobject
++                        and binding.device_ptr % dtype.alignment == 0
++                        and isinstance(array, np.ndarray) and array.shape == shape and array.dtype == dtype
++                        and array.nbytes == binding.nbytes == math.prod(shape) * dtype.itemsize
++                        and binding.host_ptr == array.ctypes.data
++                        and array.flags.c_contiguous and array.flags.aligned and array.flags.writeable)
++                except (AttributeError, TypeError, ValueError, OverflowError):
++                    valid = False
++                if not valid:
++                    raise ValueError(f'invalid initial physical binding: {name}')
++                all_bindings.append(binding)
++        for index, binding in enumerate(all_bindings):
++            for other in all_bindings[index + 1:]:
++                if (binding.device_ptr < other.device_ptr + other.nbytes
++                        and other.device_ptr < binding.device_ptr + binding.nbytes):
++                    raise ValueError('device binding buffers overlap')
++                if np.shares_memory(binding.host, other.host):
++                    raise ValueError('host binding buffers overlap')
++        if (set(pairs) != {name for name in inputs if name.startswith('state_')}
++                or set(pairs.values()) != {name for name in outputs if name.startswith('next_state_')}):
++            raise ValueError('device state requires every state pair, without orphans')
++        self.pairs = []
++        for name, output in pairs.items():
++            if name not in inputs or output not in outputs or output != 'next_' + name:
++                raise ValueError(f'invalid state pair {name!r}/{output!r}')
++            target, source = inputs[name], outputs[output]
++            if (tuple(target.shape) != tuple(source.shape) or np.dtype(target.dtype) != np.dtype(source.dtype)
++                    or target.nbytes != source.nbytes or target.nbytes <= 0
++                    or np.dtype(target.dtype) not in (np.dtype('float16'), np.dtype('float32'))
++                    or any(type(d) is not int or d <= 0 for d in target.shape)
++                    or target.nbytes != math.prod(target.shape) * np.dtype(target.dtype).itemsize):
++                raise ValueError(f'invalid device state shape/dtype/size: {name}')
++            self.pairs.append((target, source))
++        # Check ALL bindings against every state binding, not only each pair.
++        # Cross-pair aliases can corrupt an input before validation just as a
++        # same-pair alias can. Host state/output storage must also be distinct.
++        states = [binding for pair in self.pairs for binding in pair]
++        for state in states:
++            start, end = int(state.device_ptr), int(state.device_ptr) + state.nbytes
++            if start <= 0:
++                raise ValueError('device state has no allocated device buffer')
++            for other in all_bindings:
++                if other is state:
++                    continue
++                other_start = int(other.device_ptr)
++                if start < other_start + other.nbytes and other_start < end:
++                    raise ValueError('device state buffers overlap')
++                if np.shares_memory(state.host, other.host):
++                    raise ValueError('host state/output buffers overlap')
++        self.input_names = frozenset(pairs)
++        self.output_names = frozenset(pairs.values())
++        self.inputs, self.outputs = inputs, outputs
++        self.bindings = [(kind, name, binding, int(binding.device_ptr), int(binding.host_ptr),
++                          tuple(binding.shape), np.dtype(binding.dtype), binding.nbytes,
++                          binding.host, binding.host.ctypes.data, binding.host.strides)
++                         for kind, mapping in (('inputs', inputs), ('outputs', outputs))
++                         for name, binding in mapping.items()]
++        self.stream = stream
++        self.cuda = cuda if cuda is not None else _runtime()
++        self.kernel = self.bad_device = self.bad_host = None
++        self.initialized = self.pending = self.inflight = self.checked = self.failed = self.closed = False
++        try:
++            self.kernel = (kernel_factory or FiniteKernel)()
++            self.bad_device = self.cuda.malloc(4)
++            self.bad_host = self.cuda.host_alloc(4)
++            self.bad = (ctypes.c_uint32 * 1).from_address(int(self.bad_host))
++            self.bad[0] = 0
++        except BaseException:
++            self.close()
++            raise
++
++    def _check_bindings(self, inputs=_UNSET, outputs=_UNSET, owner=_UNSET):
++        current_inputs = self.inputs if inputs is _UNSET else inputs
++        current_outputs = self.outputs if outputs is _UNSET else outputs
++        current_owner = self.owner if owner is _UNSET else owner
++        if (current_inputs is not self.inputs or current_outputs is not self.outputs
++                or current_owner is not self.owner or set(self.owner) != {name for _, name, *_ in self.bindings}
++                or set(self.inputs) != {name for kind, name, *_ in self.bindings if kind == 'inputs'}
++                or set(self.outputs) != {name for kind, name, *_ in self.bindings if kind == 'outputs'}):
++            self.failed = True
++            raise RuntimeError('device state binding container changed; reload required')
++        for kind, name, binding, device, host, shape, dtype, size, array, pointer, strides in self.bindings:
++            mapping = self.inputs if kind == 'inputs' else self.outputs
++            if (mapping.get(name) is not binding or self.owner.get(name) is not binding
++                    or binding.name != name or binding.is_input is not (kind == 'inputs')
++                    or type(binding.device_ptr) is not int or int(binding.device_ptr) != device
++                    or type(binding.host_ptr) is not int or int(binding.host_ptr) != host
++                    or type(binding.nbytes) is not int or tuple(binding.shape) != shape
++                    or np.dtype(binding.dtype) != dtype or binding.nbytes != size
++                    or binding.host is not array or array.ctypes.data != pointer
++                    or binding.host_ptr != array.ctypes.data or array.nbytes != size
++                    or tuple(array.shape) != shape or array.dtype != dtype or array.strides != strides
++                    or not array.flags.c_contiguous or not array.flags.aligned or not array.flags.writeable):
++                self.failed = True
++                raise RuntimeError(f'device state binding changed: {name}; reload required')
++
++    def before_run(self, inputs=_UNSET, outputs=_UNSET, owner=_UNSET):
++        if self.failed or self.closed:
++            raise RuntimeError('device state generation invalid; reload required')
++        self._check_bindings(inputs, outputs, owner)
++        self.inflight, self.checked = True, False
++        if not self.initialized:
++            for target, _ in self.pairs:
++                self.cuda.memcpy_h2d_async(target.device_ptr, target.host_ptr, target.nbytes, self.stream)
++            self.initialized = True
++
++    def enqueue_check(self):
++        self._check_bindings()
++        _memset(self.cuda, self.bad_device, 4, self.stream)
++        for _, source in self.pairs:
++            self.kernel.launch(source, self.bad_device, self.stream)
++        self.cuda.memcpy_d2h_async(self.bad_host, self.bad_device, 4, self.stream)
++
++    def after_sync(self, inputs=_UNSET, outputs=_UNSET, owner=_UNSET):
++        self._check_bindings(inputs, outputs, owner)
++        self.pending = self.inflight = False
++        if self.bad[0]:
++            self.failed = True
++            raise FloatingPointError('non-finite stateful GPU output')
++        self.checked = True
++
++    def enqueue_feedback(self, inputs=_UNSET, outputs=_UNSET, owner=_UNSET):
++        if self.failed or self.closed or not self.checked:
++            raise RuntimeError('device feedback requires a validated live run')
++        self._check_bindings(inputs, outputs, owner)
++        # Mark pending BEFORE enqueueing: even the first failed CUDA call may
++        # have accepted work, and a later call may leave a partial commit.
++        self.pending, self.checked = True, False
++        try:
++            for target, source in self.pairs:
++                _copy_device(self.cuda, target.device_ptr, source.device_ptr, target.nbytes, self.stream)
++        except BaseException:
++            self.failed = True
++            raise
++
++    def invalidate(self):
++        self.failed = True
++
++    def drain(self, *, force=False):
++        if force or self.pending or self.inflight:
++            # If this raises, retain flags and every allocation. Freeing live
++            # buffers after a failed drain would be a use-after-free risk.
++            self.cuda.stream_sync(self.stream)
++            self.pending = self.inflight = False
++
++    def reset(self, inputs=_UNSET, outputs=_UNSET, owner=_UNSET):
++        if self.failed or self.closed:
++            raise RuntimeError('invalid device state cannot reset; reload required')
++        self._check_bindings(inputs, outputs, owner)
++        self.drain()
++        self.initialized = self.checked = False
++
++    def close(self, inputs=_UNSET, outputs=_UNSET, owner=_UNSET):
++        if self.closed:
++            return
++        self.drain(force=True)
++        self._check_bindings(inputs, outputs, owner)
++        if self.kernel is not None:
++            self.kernel.close()
++            self.kernel = None
++        if self.bad_device is not None:
++            self.cuda.free(self.bad_device)
++            self.bad_device = None
++        if self.bad_host is not None:
++            self.cuda.host_free(self.bad_host)
++            self.bad_host = None
++        self.closed = True
+--- a/third_party/jetlink/jetlink/server/backends/trt/engine.py
++++ b/third_party/jetlink/jetlink/server/backends/trt/engine.py
+@@ -14,6 +14,7 @@
+ from __future__ import annotations
+ 
+ import ctypes
++import os
+ import time
+ from dataclasses import dataclass
+ 
+@@ -58,7 +59,13 @@
+ 
+ 
+ class TrtEngine:
+-  def __init__(self, plan_path: str, log_severity=trt.Logger.WARNING, device: int | None = None):
++  def __init__(self, plan_path: str, log_severity=trt.Logger.WARNING, device: int | None = None,
++               semantic_spec: dict | None = None, dtype_transforms: dict | None = None):
++    device_flag = os.environ.get('CARROT_TRT_DEVICE_STATE', '0')
++    if device_flag not in ('0', '1'):
++      raise ValueError('CARROT_TRT_DEVICE_STATE must be absent, 0, or 1')
++    self._device_state_requested = device_flag == '1'
++    self.device_state = None
+     self.logger = trt.Logger(log_severity)
+     # Absent on a TensorRT that dropped the V2 plugin family; the driving
+     # models use no plugins either way.
+@@ -72,6 +79,21 @@
+       self.engine = self.runtime.deserialize_cuda_engine(f.read())
+     if self.engine is None:
+       raise RuntimeError(f"failed to deserialize engine {plan_path}")
++    self.dtype_transforms = dict(dtype_transforms or {})
++    names = [self.engine.get_tensor_name(i) for i in range(self.engine.num_io_tensors)]
++    if ('new_img' in names or any(n.startswith(('state_', 'next_state_')) for n in names)
++        or (semantic_spec and 'new_img' in semantic_spec.get('input_shapes', {}))):
++      from jetlink import cinque_v3 as v3
++      v3.validate_spec(semantic_spec)
++      if self.dtype_transforms != v3.DTYPE_TRANSFORMS:
++        raise ValueError('V3 engine has no approved physical dtype transform')
++      actual = {'inputs': {}, 'outputs': {}}
++      for name in names:
++        kind = 'inputs' if self.engine.get_tensor_mode(name) == trt.TensorIOMode.INPUT else 'outputs'
++        actual[kind][name] = (tuple(self.engine.get_tensor_shape(name)),
++                             str(np.dtype(TRT_TO_NP[self.engine.get_tensor_dtype(name)])))
++      if actual != v3.physical_contract(semantic_spec):
++        raise ValueError('V3 engine physical contract mismatch before buffer allocation')
+     self.context = self.engine.create_execution_context()
+     self.stream = cudart.stream_create()
+ 
+@@ -110,19 +132,81 @@
+     """Pinned array for an input. Write into it, then call run()."""
+     return self.inputs[name].host
+ 
++  def configure_device_state(self, pairs):
++    if not self._device_state_requested:
++      return
++    if self.device_state is not None or self.graph_exec is not None:
++      raise RuntimeError('device state must be configured once, before capture')
++    from jetlink.server.backends.trt.device_state import DeviceState
++    self.device_state = DeviceState(self.inputs, self.outputs, pairs, self.stream, owner=self.bindings)
++
++  def _run_device_state(self):
++    state = self.device_state
++    started = time.perf_counter()
++    try:
++      state.before_run(self.inputs, self.outputs, self.bindings)
++      if self.graph_exec is not None:
++        cudart.graph_launch(self.graph_exec, self.stream)
++      else:
++        self._enqueue()
++      # Preserve the current full D2H completion boundary. Only validated
++      # feedback enqueued by Session can trail the reply.
++      cudart.stream_sync(self.stream)
++      state.after_sync(self.inputs, self.outputs, self.bindings)
++    except BaseException:
++      state.invalidate()
++      raise
++    self.last_gpu_us = int((time.perf_counter() - started) * 1e6)
++    return {name: binding.host for name, binding in self.outputs.items()}
++
++  def _capture_device_state_graph(self):
++    state = self.device_state
++    state.drain()
++    capturing, graph = False, None
++    try:
++      cudart.stream_begin_capture(self.stream)
++      capturing = True
++      self._enqueue()
++      capturing = False
++      graph = cudart.stream_end_capture(self.stream)
++      self.graph_exec = cudart.graph_instantiate(graph)
++      return True
++    except Exception:
++      if capturing:
++        try:
++          graph = cudart.stream_end_capture(self.stream)
++        except Exception:
++          pass
++      self.graph_exec = None
++      try:
++        cudart.stream_sync(self.stream)
++      except BaseException:
++        state.invalidate()
++        raise
++      return False
++    finally:
++      if graph is not None:
++        cudart.graph_destroy(graph)
++
+   # -- execution ------------------------------------------------------------
+ 
+   def load_inputs(self, values: dict[str, np.ndarray]) -> None:
++    if self.device_state is not None:
++      raise RuntimeError('device feedback requires queue-managed state; explicit state upload is unsupported')
+     from jetlink.server.backends.base import load_inputs
+     load_inputs(self, values)
+ 
+   def _enqueue(self) -> None:
+-    for b in self.inputs.values():
++    for name, b in self.inputs.items():
++      if self.device_state is not None and name in self.device_state.input_names:
++        continue
+       cudart.memcpy_h2d_async(b.device_ptr, b.host_ptr, b.nbytes, self.stream)
+     if not self.context.execute_async_v3(self.stream):
+       raise RuntimeError("execute_async_v3 failed")
+     for b in self.outputs.values():
+       cudart.memcpy_d2h_async(b.host_ptr, b.device_ptr, b.nbytes, self.stream)
++    if self.device_state is not None:
++      self.device_state.enqueue_check()
+ 
+   def capture_graph(self) -> bool:
+     """Capture the per-frame sequence into a CUDA graph.
+@@ -131,6 +215,8 @@
+     launch jitter. Valid only because no buffer ever moves. Call after at least
+     one warm run.
+     """
++    if self.device_state is not None:
++      return self._capture_device_state_graph()
+     if self.graph_exec is not None:
+       return True
+     try:
+@@ -156,6 +242,8 @@
+ 
+   def run(self) -> dict[str, np.ndarray]:
+     """Run one frame. Returns views over pinned output memory, valid until the next run."""
++    if self.device_state is not None:
++      return self._run_device_state()
+     t0 = time.perf_counter()
+     if self.graph_exec is not None:
+       cudart.graph_launch(self.graph_exec, self.stream)
+@@ -173,6 +261,10 @@
+   # reference back here, so a GC-driven close would free pages someone is still
+   # writing into. Whoever swaps an engine out closes it.
+   def close(self) -> None:
++    if self.device_state is not None:
++      # A failed drain deliberately aborts cleanup before ANY binding is freed.
++      self.device_state.close(self.inputs, self.outputs, self.bindings)
++      self.device_state = None
+     for b in self.bindings.values():
+       try:
+         cudart.free(b.device_ptr)
+--- a/third_party/jetlink/jetlink/server/control.py
++++ b/third_party/jetlink/jetlink/server/control.py
+@@ -457,6 +457,7 @@
+     self.publish('catalog', payload)
+ 
+   def _cmd_download(self, client: _Client, msg: dict) -> dict:
++    self.host.require_provisioning()
+     ref, sha256 = msg.get('ref'), msg.get('sha256')
+     if bool(ref) == bool(sha256):
+       raise ControlError('a download needs exactly one of ref and sha256')
+@@ -507,9 +508,10 @@
+       return
+     self._download_event(state, 'started')
+     try:
++      self.host.require_provisioning()
+       self.registry.fetch(state.ref or state.sha256,
+                           progress=lambda frac: self._download_progress(state, frac),
+-                          should_stop=lambda: state.cancel)
++                          should_stop=lambda: state.cancel or not self.host.can_provision())
+     except Exception as e:
+       if state.cancel:
+         self._download_event(state, 'cancelled')
+@@ -565,6 +567,7 @@
+     return {}
+ 
+   def _cmd_import(self, client: _Client, msg: dict) -> dict:
++    self.host.require_provisioning()
+     raw = str(msg.get('path') or '')
+     path = Path(raw).expanduser()
+     if not path.is_file():
+@@ -573,6 +576,7 @@
+     return {'queued': True}
+ 
+   def _run_import(self, path: Path, name) -> None:
++    self.host.require_provisioning()
+     seen = [-1.0]
+ 
+     def progress(frac: float) -> None:
+@@ -599,6 +603,7 @@
+                             'sha256': sha256, 'detail': detail})
+ 
+   def _cmd_prepare(self, client: _Client, msg: dict) -> dict:
++    self.host.require_provisioning()
+     sha256 = str(msg.get('sha256') or '')
+     if _SHA256.fullmatch(sha256) is None:
+       raise ControlError('sha256 must be a lowercase SHA-256 digest')
+--- a/third_party/jetlink/jetlink/server/main.py
++++ b/third_party/jetlink/jetlink/server/main.py
+@@ -277,11 +277,15 @@
+   p.add_argument('--parent-pid', type=int, default=None, metavar='PID',
+                  help='exit cleanly once this process is no longer our parent, and lead a '
+                       'process group of our own so that parent can reap the workers')
++  p.add_argument('--managed-jetson', action='store_true',
++                 help='protocol3 resident selection; provisioning stays disabled until a trusted offroad provider is wired')
+   p.add_argument('--build', metavar='ONNX', help='build an engine and exit')
+   p.add_argument('--dump-spec', metavar='ONNX',
+                  help='write this model\'s spec as json to stdout and exit')
+   p.add_argument('--log-level', default='INFO')
+   args = p.parse_args(argv)
++  if args.managed_jetson and args.build:
++    p.error('managed build requires a trusted offroad provider; configure after read-only inventory')
+ 
+   logging.basicConfig(
+     level=getattr(logging, args.log_level.upper(), logging.INFO),
+@@ -384,7 +388,15 @@
+   # sleep_after goes out in the hello: the comma tells a box that suspends when
+   # parked from one that is simply gone.
+   host = EngineHost(cache, pick_source(backend.name),
+-                    sleep_after=sleeper.after if sleeper is not None else 0.0)
++                    sleep_after=sleeper.after if sleeper is not None else 0.0,
++                    managed_selection=args.managed_jetson)
++  if args.managed_jetson:
++    original_opener = opener
++    def opener():
++      transport = original_opener()
++      if transport is not None:
++        transport.protocol_version = 3
++      return transport
+   control = None
+   if args.control_socket:
+     from jetlink.server.control import ControlServer
+--- a/third_party/jetlink/jetlink/server/session.py
++++ b/third_party/jetlink/jetlink/server/session.py
+@@ -57,6 +57,8 @@
+   engine: object
+   queues: object
+   host_inputs: dict
++  valid: bool = True
++  prev_feat: object = None
+ 
+ 
+ @dataclass
+@@ -130,8 +132,11 @@
+   are laid over segfaults rather than raising.
+   """
+ 
+-  def __init__(self, cache: EngineCache, telemetry=None, sleep_after: float = 0.0):
++  def __init__(self, cache: EngineCache, telemetry=None, sleep_after: float = 0.0,
++               managed_selection: bool = False, offroad=None):
+     self.cache = cache
++    self.managed_selection = bool(managed_selection)
++    self.offroad = offroad
+     # What --sleep-after was set to, for the hello: the comma decides from it
+     # whether letting go of the gadget when parked buys anything. 0 = never.
+     self.sleep_after = float(sleep_after)
+@@ -145,6 +150,21 @@
+     self._last_stage: tuple[str | None, float, str] = (None, 0.0, '')
+     self._last_engine: dict | None = None
+     self.frame_stats = FrameStats()
++
++  def can_provision(self) -> bool:
++    if not self.managed_selection:
++      return True
++    active = self.session
++    if active is not None and getattr(active.t, 'protocol_version', P.VERSION) == 3:
++      return False
++    try:
++      return callable(self.offroad) and self.offroad() is True
++    except Exception:
++      return False
++
++  def require_provisioning(self) -> None:
++    if not self.can_provision():
++      raise PermissionError('managed Jetson preparation requires trusted offroad authorization and no attached protocol3 session')
+ 
+   # -- listeners ------------------------------------------------------------
+ 
+@@ -186,7 +206,7 @@
+     with self.lock:
+       loaded, job = self.loaded, self.job
+       stage, frac, msg = self._last_stage
+-      if loaded is not None:
++      if loaded is not None and loaded.valid:
+         return {'state': 'ready', 'sha256': loaded.sha256, 'detail': '', 'stage': None,
+                 'frac': 1.0, 'msg': msg, 'load_only': bool(job.load_only) if job is not None else False}
+       if job is not None and job.state == 'building':
+@@ -216,7 +236,7 @@
+     loaded, job = self.loaded, self.job
+     if sha256 is None:
+       return {'state': 'none', 'detail': '', 'sha256': None, 'chunk': CHUNK}
+-    if (loaded is not None and loaded.sha256 == sha256
++    if (loaded is not None and loaded.valid and loaded.sha256 == sha256
+         and (frame_skip is None or loaded.spec.frame_skip == frame_skip)):
+       return {'state': 'ready', 'detail': '', 'sha256': sha256, 'chunk': CHUNK,
+               'spec': loaded.spec.to_dict()}
+@@ -237,7 +257,7 @@
+ 
+   def loaded_sha(self) -> str | None:
+     with self.lock:
+-      return self.loaded.sha256 if self.loaded else None
++      return self.loaded.sha256 if self.loaded and self.loaded.valid else None
+ 
+   @property
+   def backend(self):
+@@ -252,13 +272,16 @@
+         # A control-channel prepare passes none, and must not detach the
+         # comma's session from the progress it is waiting on.
+         self.session = session
+-      if (self.loaded is not None and self.loaded.sha256 == req.sha256
++      if (self.loaded is not None and self.loaded.valid and self.loaded.sha256 == req.sha256
+           and self.loaded.spec.frame_skip == req.frame_skip):
++        if req.nbytes not in (0, self.loaded.spec.nbytes):
++          return {'state': 'failed', 'sha256': req.sha256, 'chunk': CHUNK, 'detail': 'model size mismatch'}
+         return self._ready(self.loaded)
+       if self.job is not None and self.job.state == 'building':
+         # Either this model's build, which the client attaches to, or another
+         # build that owns the GPU right now.
+         return self._status(req.sha256, req.frame_skip)
++    self.require_provisioning()
+     entry = self.cache.entry(req.sha256)
+     model_path = self.cache.model_path(req.sha256)
+     spec = self._spec_on_disk(entry, model_path, req)
+@@ -308,6 +331,8 @@
+     Only a plan whose sidecar carries a spec: deriving one means parsing the
+     ONNX, too much work to do on a guess.
+     """
++    if not self.can_provision():
++      return
+     remembered = self.cache.last_loaded()
+     if remembered is None:
+       return
+@@ -319,7 +344,10 @@
+     if d is None:
+       return
+     entry = self.cache.entry(sha256)
+-    spec = ModelSpec.from_dict({**d, 'frame_skip': frame_skip})
++    spec = ModelSpec.from_dict(d)
++    if spec.sha256 != sha256 or spec.frame_skip != frame_skip:
++      log.error('remembered model differs from exact cached spec; refusing preload')
++      return
+     log.info("preloading the engine loaded last: %s", entry.path.name)
+     self._start(Job(sha256, load_only=True), Request(sha256, 0, frame_skip),
+                 entry, self.cache.model_path(sha256), spec)
+@@ -338,7 +366,11 @@
+     """
+     d = self._cached_spec(entry)
+     if d is not None:
+-      return ModelSpec.from_dict({**d, 'frame_skip': req.frame_skip})
++      cached = ModelSpec.from_dict(d)
++      if (cached.sha256 != req.sha256 or cached.frame_skip != req.frame_skip
++          or req.nbytes not in (0, cached.nbytes)):
++        raise ValueError('cached spec identity/size/frame_skip mismatch')
++      return cached
+     if _model_complete(model_path, req.nbytes):
+       try:
+         return self._derive_spec(model_path, req.frame_skip)
+@@ -350,6 +382,7 @@
+ 
+   def _start(self, job: Job, req: Request, entry: CacheEntry, model_path: Path,
+              spec: ModelSpec | None) -> None:
++    self.require_provisioning()
+     job.detail = 'loading engine' if job.load_only else 'building engine'
+     with self.lock:
+       self.job = job
+@@ -367,10 +400,12 @@
+     try:
+       # One engine resident at a time: a build needs the memory, and two 1.7 GB
+       # engines do not fit in 8 GB even for a moment.
++      self.require_provisioning()
+       self._unload()
+       if not job.load_only:
+         spec = self._build_job(req, entry, model_path, spec)
+       assert spec is not None
++      _check_request_spec(req, spec)
+       self._write_spec(entry, spec)
+ 
+       self._progress('load', 0.0, 'deserializing engine', force=True)
+@@ -391,7 +426,9 @@
+         self._write_spec(entry, spec)
+         self._progress('load', 0.0, 'deserializing engine', force=True)
+         engine = self._load_engine(entry.path)
++      self.require_provisioning()
+       loaded = self._warm(engine, spec)
++      self.require_provisioning()
+       engine = None   # owned by `loaded` from here
+       with self.lock:
+         self.loaded = loaded
+@@ -426,13 +463,15 @@
+     req = session.request
+     if req is None or done.sha256 == req.sha256:
+       return
+-    self.request(req, session)
++    if self.can_provision():
++      self.request(req, session)
+ 
+   def _build_job(self, req: Request, entry: CacheEntry, model_path: Path,
+                  spec: ModelSpec | None) -> ModelSpec:
+     if spec is None:
+       self._progress('parse', 0.0, 'reading model metadata', force=True)
+       spec = self._derive_spec(model_path, req.frame_skip)
++    _check_request_spec(req, spec)
+     self._build(model_path, entry.path, {'spec': spec.to_dict()})
+     # Offroad the clock can be behind every plan on disk, so the one just
+     # written has to be protected from the sweep.
+@@ -452,18 +491,26 @@
+       entry.write_meta({**meta, 'spec': spec.to_dict()})
+ 
+   def _warm(self, engine, spec: ModelSpec) -> Loaded:
+-    from jetlink.queues import PolicyQueues
+-    queues = PolicyQueues(spec)
++    from jetlink.queues import PolicyQueues, StatefulState
+     _check_shapes(engine, spec)
+-    # Warm runs on zeros, so the first real frame pays for nothing lazy: CUDA
+-    # state and the graph capture for TensorRT, a first replay for the others.
++    if spec.stateful and getattr(engine, '_device_state_requested', False):
++      engine.configure_device_state(spec.state_pairs)
+     host_inputs = {n: engine.host_input(n) for n in engine.inputs}
++    for name, value in host_inputs.items():
++      io = engine.inputs[name]
++      if tuple(value.shape) != tuple(io.shape) or value.dtype != np.dtype(io.dtype):
++        raise ValueError(f'physical host input contract mismatch: {name}')
++    queues = StatefulState(spec, host_inputs) if spec.stateful else PolicyQueues(spec)
++    _reset_device_state(engine, queues)
+     warped = np.zeros(spec.warped_shape, np.uint8)
+     packed = np.zeros(spec.packed_nelem, np.float32)
+     queues.step_into(warped, packed, host_inputs)
++    _check_finite_inputs(host_inputs)
+     log.info("%s", engine.warm())
+-    queues.reset()
+-    return Loaded(spec.sha256, spec, engine, queues, host_inputs)
++    _validate_outputs(engine, engine.run())
++    _reset_device_state(engine, queues)
++    previous = None if spec.stateful else np.zeros(spec.feat_dim, np.float32)
++    return Loaded(spec.sha256, spec, engine, queues, host_inputs, prev_feat=previous)
+ 
+   def unload(self) -> None:
+     """Release the engine on a client's say-so. The job thread uses _unload."""
+@@ -484,13 +531,16 @@
+   # The backend seam: everything below touches a runtime or a real ONNX.
+ 
+   def _load_engine(self, artifact: Path):
++    self.require_provisioning()
+     return self.backend.load(artifact, report=self._progress)
+ 
+   def _derive_spec(self, model_path: Path, frame_skip: int) -> ModelSpec:
+     return spec_from_onnx(str(model_path), frame_skip=frame_skip)
+ 
+   def _build(self, model_path: Path, artifact: Path, meta_extra: dict) -> None:
+-    self.backend.build(model_path, artifact, report=self._progress, meta_extra=meta_extra)
++    self.require_provisioning()
++    options = {'authorize': self.require_provisioning} if self.managed_selection and self.backend.name == 'trt' else {}
++    self.backend.build(model_path, artifact, report=self._progress, meta_extra=meta_extra, **options)
+ 
+   # -- talking back ---------------------------------------------------------
+ 
+@@ -512,21 +562,68 @@
+   return model_path.is_file() and model_path.stat().st_size == nbytes
+ 
+ 
++def _reset_device_state(engine, queues):
++  device_state = getattr(engine, 'device_state', None)
++  if device_state is not None:
++    device_state.reset(engine.inputs, engine.outputs, engine.bindings)
++  queues.reset()
++
++
++def _check_request_spec(req: Request, spec: ModelSpec) -> None:
++  if (spec.sha256 != req.sha256 or spec.frame_skip != req.frame_skip
++      or req.nbytes not in (0, spec.nbytes)):
++    raise ValueError('requested model and semantic spec identity/size differ')
++
++
+ def _check_shapes(engine, spec: ModelSpec) -> None:
+-  """The engine is what will execute and the spec came from the file, so
+-  disagreement means the artifact on disk is not this model's."""
+-  for name, io in engine.inputs.items():
+-    want = spec.input_shapes.get(name)
+-    if want is None:
+-      raise ValueError(f"engine input {name!r} is not in the model spec")
+-    if int(np.prod(io.shape)) != int(np.prod(want)):
+-      raise ValueError(f"input {name}: engine {tuple(io.shape)} vs spec {want}")
+-  missing = set(spec.input_shapes) - set(engine.inputs)
+-  if missing:
+-    raise ValueError(f"engine has no input(s) {sorted(missing)} the model spec declares")
+-  out = next(iter(engine.outputs.values())).shape
+-  if int(np.prod(out)) != spec.output_nelem:
+-    raise ValueError(f"output: engine {tuple(out)} vs spec {spec.output_nelem}")
++  """Exact named physical contract; only the pinned V3 transform is admitted."""
++  EngineCache._validate_sha256(spec.sha256)
++  if type(spec.nbytes) is not int or spec.nbytes <= 0 or type(spec.frame_skip) is not int or spec.frame_skip <= 0:
++    raise ValueError('invalid model spec size/frame_skip')
++  if spec.stateful:
++    spec.validate_stateful()
++  transforms = getattr(engine, 'dtype_transforms', {})
++  if transforms:
++    from jetlink import cinque_v3 as v3
++    v3.validate_spec(spec.to_dict())
++    if transforms != v3.DTYPE_TRANSFORMS:
++      raise ValueError('unapproved physical dtype transform')
++  for kind in ('inputs', 'outputs'):
++    values = getattr(engine, kind)
++    shapes = getattr(spec, kind[:-1] + '_shapes')
++    dtypes = getattr(spec, kind[:-1] + '_dtypes')
++    if set(values) != set(shapes):
++      raise ValueError(f'{kind} names do not match spec')
++    for name, io in values.items():
++      if tuple(io.shape) != tuple(shapes[name]):
++        raise ValueError(f'{kind} {name}: engine shape {io.shape} != spec {shapes[name]}')
++      want = transforms.get(name, dtypes.get(name))
++      if not spec.stateful and kind == 'inputs' and name in ('img', 'big_img') and want == 'uint8':
++        want = 'float16'  # Existing V2 head-Cast rewrite, unchanged.
++      if want is not None and np.dtype(io.dtype) != np.dtype(want):
++        # V2's pre-extension cache did not carry dtypes. Its established fp16
++        # physical inputs remain valid; new declared contracts are exact.
++        raise ValueError(f'{kind} {name}: physical dtype {io.dtype} != {want}')
++
++
++def _check_finite_inputs(values):
++  if any(not np.all(np.isfinite(value)) for value in values.values()):
++    raise FloatingPointError('non-finite physical input')
++
++
++def _validate_outputs(engine, outputs):
++  if set(outputs) != set(engine.outputs):
++    raise ValueError('output names do not match physical contract')
++  for name, io in engine.outputs.items():
++    value = np.asarray(outputs[name])
++    if tuple(value.shape) != tuple(io.shape) or value.dtype != np.dtype(io.dtype):
++      raise ValueError(f'output {name}: physical shape/dtype mismatch')
++    if not np.all(np.isfinite(value)):
++      raise FloatingPointError(f'non-finite output {name}')
++  out32 = np.asarray(outputs['outputs'], dtype=np.float32).reshape(-1)
++  if not np.all(np.isfinite(out32)):
++    raise FloatingPointError('non-finite wire output')
++  return out32
+ 
+ 
+ class Session:
+@@ -545,6 +642,10 @@
+     been served. The engine is not per connection and stays; see EngineHost."""
+     self.last_seq = seq
+     self.request: Request | None = None
++    self._hello_loaded = None
++    self._hello_spec = None
++    self._prepared_loaded = None
++    self._prepared_spec = None
+     self.frames = 0
+ 
+   # -- plumbing -------------------------------------------------------------
+@@ -653,9 +754,11 @@
+     log.info("hello from %s (seq %d)", who or 'an unnamed client', msg.seq)
+ 
+   def on_hello(self, msg: Message) -> None:
+-    info = self.host.backend.describe()
++    info = dict(self.host.backend.describe())
++    for reserved in ('protocol', 'carrot_host', 'carrot_model_selection_v1'):
++      info.pop(reserved, None)
+     resp = {
+-      'protocol': P.VERSION,
++      'protocol': P.validate_version(getattr(self.t, 'protocol_version', P.VERSION)),
+       **info,   # backend, runtime_version, device
+       'engine_state': self.host.status(*self._wanted())['state'],
+       'loaded': self.host.loaded_sha(),
+@@ -667,6 +770,24 @@
+       # never going to sleep; see jetlinkd.go_dormant.
+       'sleep_after': self.host.sleep_after,
+     }
++    with self.host.lock:
++      loaded = self.host.loaded
++      if resp['protocol'] == 3 and loaded is not None and loaded.valid:
++        try:
++          _reset_device_state(loaded.engine, loaded.queues)
++          if loaded.prev_feat is not None:
++            loaded.prev_feat[...] = 0
++        except Exception:
++          loaded.valid = False
++          log.exception('new protocol3 session state reset failed; generation invalid')
++      resp['loaded'] = loaded.sha256 if loaded is not None and loaded.valid else None
++      self._hello_loaded = loaded if loaded is not None and loaded.valid else None
++      self._hello_spec = json.loads(json.dumps(loaded.spec.to_dict())) if self._hello_loaded else None
++    if resp['protocol'] == 3 and info.get('backend') == 'trt':
++      self.host.managed_selection = True
++      self.host.session = self
++      resp['carrot_host'] = 'jetson'
++      resp['carrot_model_selection_v1'] = {'version': 1, 'selection': 'host'}
+     if info.get('backend') == 'trt':
+       # What the comma logged before there were backends. Kept for one
+       # release, and only where it is true.
+@@ -675,14 +796,44 @@
+ 
+   def on_engine_req(self, msg: Message) -> None:
+     d = json.loads(bytes(msg.payload))
+-    self.request = Request(str(d['sha256']), int(d['nbytes']),
+-                           int(d.get('frame_skip', DEFAULT_FRAME_SKIP)))
+-    self._send_json(P.Msg.ENGINE_RESP, msg.seq, self.host.request(self.request, self))
++    self._prepared_loaded = self._prepared_spec = None
++    if (type(d.get('nbytes')) is not int or type(d.get('frame_skip', DEFAULT_FRAME_SKIP)) is not int):
++      raise ValueError('model size and frame_skip must be integers')
++    self.request = Request(str(d['sha256']), d['nbytes'], d.get('frame_skip', DEFAULT_FRAME_SKIP))
++    if getattr(self.t, 'protocol_version', P.VERSION) == 3:
++      # The wire cannot trigger a surprise load/build while a car is onroad.
++      # Offroad host control prepares a generation; this request only adopts it.
++      with self.host.lock:
++        loaded = self.host.loaded
++        req = self.request
++        if (loaded is None or not loaded.valid or loaded is not self._hello_loaded
++            or loaded.spec.to_dict() != self._hello_spec or loaded.sha256 != req.sha256
++            or req.frame_skip != loaded.spec.frame_skip or req.nbytes not in (0, loaded.spec.nbytes)):
++          response = {'state': 'failed', 'sha256': req.sha256, 'chunk': CHUNK,
++                      'detail': 'resident generation/identity/size mismatch; repeat HELLO after offroad preparation'}
++        else:
++          self._prepared_loaded = loaded
++          self._prepared_spec = json.loads(json.dumps(loaded.spec.to_dict()))
++          response = self.host._ready(loaded)
++    else:
++      response = self.host.request(self.request, self)
++      if response.get('state') == 'ready':
++        with self.host.lock:
++          self._prepared_loaded = self.host.loaded
++          self._prepared_spec = json.loads(json.dumps(response['spec']))
++    self._send_json(P.Msg.ENGINE_RESP, msg.seq, response)
+ 
+   def _respond_engine(self, seq: int) -> None:
+-    self._send_json(P.Msg.ENGINE_RESP, seq, self.host.status(*self._wanted()))
++    response = self.host.status(*self._wanted())
++    if response.get('state') == 'ready':
++      with self.host.lock:
++        self._prepared_loaded = self.host.loaded
++        self._prepared_spec = json.loads(json.dumps(response['spec']))
++    self._send_json(P.Msg.ENGINE_RESP, seq, response)
+ 
+   def on_upload_chunk(self, msg: Message) -> None:
++    if getattr(self.t, 'protocol_version', P.VERSION) == 3:
++      return self._error(msg.seq, 'resident_only', 'provision through the offroad host control path')
+     req = self.request
+     if req is None:
+       return self._error(msg.seq, 'no_model', 'send ENGINE_REQ first')
+@@ -701,6 +852,8 @@
+     # them, so a progress write here stalls for the whole transfer timeout.
+ 
+   def on_upload_done(self, msg: Message) -> None:
++    if getattr(self.t, 'protocol_version', P.VERSION) == 3:
++      return self._error(msg.seq, 'resident_only', 'provision through the offroad host control path')
+     req = self.request
+     if req is None:
+       return self._error(msg.seq, 'no_model', 'send ENGINE_REQ first')
+@@ -721,8 +874,9 @@
+     wanted_sha, wanted_skip = self._wanted()
+     with host.lock:
+       loaded = host.loaded
+-      if (loaded is None or loaded.sha256 != wanted_sha
+-          or loaded.spec.frame_skip != wanted_skip):
++      if (loaded is None or not loaded.valid or loaded.sha256 != wanted_sha
++          or loaded.spec.frame_skip != wanted_skip
++          or loaded is not self._prepared_loaded or loaded.spec.to_dict() != self._prepared_spec):
+         self._send(P.Msg.INFER_RESP, msg.seq,
+                    (P.pack_infer_resp(0, P.Status.NOT_READY, 0, 0, 0),))
+         return
+@@ -731,7 +885,9 @@
+   def _infer(self, loaded: Loaded, msg: Message) -> None:
+     t0 = time.perf_counter()
+     spec = loaded.spec
+-    if msg.payload.nbytes != spec.infer_req_nbytes:
++    server_history = getattr(self.t, 'protocol_version', P.VERSION) == 3 and not spec.stateful
++    packed_nelem = spec.packed_nelem - (spec.feat_dim if server_history else 0)
++    if msg.payload.nbytes != P.INFER_REQ_SIZE + spec.warped_nbytes + packed_nelem * 4:
+       # The offsets below come from the spec, not the wire: a client on another
+       # model would have its scalars read out of the image, and the result would
+       # look perfectly finite.
+@@ -739,34 +895,65 @@
+                  (P.pack_infer_resp(0, P.Status.BAD_SHAPE, 0, 0, 0),))
+       return
+     frame_id, flags = P.unpack_infer_req(msg.payload)
+-    if flags & P.Flag.RESET_QUEUES:
+-      loaded.queues.reset()
+ 
+     off = P.INFER_REQ_SIZE
+     warped = np.frombuffer(msg.payload, np.uint8, spec.warped_nbytes, off).reshape(spec.warped_shape)
+     off += spec.warped_nbytes
+-    packed = np.frombuffer(msg.payload, np.float32, spec.packed_nelem, off)
+-
+-    # Gathers land straight in TensorRT's pinned input buffers: between the
+-    # wire and the GPU there is exactly one copy.
+-    loaded.queues.step_into(warped, packed, loaded.host_inputs)
+-    queue_us = int((time.perf_counter() - t0) * 1e6)
+-
+-    outputs = loaded.engine.run()
+-    out = next(iter(outputs.values())).reshape(-1)
+-
+-    # asarray, not astype: a no-op when the engine already outputs float32.
+-    # isfinite is ~7x faster on float32 and the non-finites map across exactly.
+-    # openpilot drops to the small model on a non-finite output either way, so
+-    # checking here saves the comma rescanning 18452 floats to find out.
+-    out32 = np.asarray(out, dtype=np.float32)
+-    status = P.Status.OK if np.all(np.isfinite(out32)) else P.Status.NOT_FINITE
++    packed = np.frombuffer(msg.payload, np.float32, packed_nelem, off)
++    if server_history:
++      previous = np.zeros_like(loaded.prev_feat) if flags & P.Flag.RESET_QUEUES else loaded.prev_feat
++      packed = np.concatenate((packed, previous))
++
++    reset_backup = None
++    commit_started = False
++    try:
++      if not np.all(np.isfinite(packed)):
++        raise FloatingPointError('non-finite packed input')
++      if flags & P.Flag.RESET_QUEUES:
++        if spec.stateful:
++          reset_backup = {a: loaded.host_inputs[a].copy() for a, _ in loaded.queues.pairs}
++        _reset_device_state(loaded.engine, loaded.queues)
++      loaded.queues.step_into(warped, packed, loaded.host_inputs)
++      _check_finite_inputs(loaded.host_inputs)
++      queue_us = int((time.perf_counter() - t0) * 1e6)
++      outputs = loaded.engine.run()
++      out32 = _validate_outputs(loaded.engine, outputs)
++      if spec.stateful:
++        staged = loaded.queues.validate_next_states(outputs)
++        commit_started = True
++        loaded.queues.commit_next_states(staged)
++        device_state = getattr(loaded.engine, 'device_state', None)
++        if device_state is not None:
++          device_state.enqueue_feedback(loaded.engine.inputs, loaded.engine.outputs, loaded.engine.bindings)
++      elif server_history:
++        hidden = out32[spec.output_slices['hidden_state']]
++        if hidden.shape != loaded.prev_feat.shape:
++          raise ValueError('hidden state slice shape mismatch')
++        np.copyto(loaded.prev_feat, hidden, casting='no')
++      status = P.Status.OK
++    except Exception as e:
++      # Validation preserves the old state. A copy fault can leave a partial
++      # commit. Both discard this generation; only a new load can recover it.
++      loaded.valid = False
++      device_state = getattr(loaded.engine, 'device_state', None)
++      if device_state is not None:
++        device_state.invalidate()
++      if reset_backup is not None and not commit_started:
++        try:
++          for name, value in reset_backup.items():
++            np.copyto(loaded.host_inputs[name], value, casting='no')
++        except Exception:
++          log.exception('could not restore pre-RESET state; generation remains invalid')
++      status = P.Status.NOT_FINITE if isinstance(e, FloatingPointError) else P.Status.INFER_FAILED
++      log.error('invalidating engine generation: %s', e)
++      self._send(P.Msg.INFER_RESP, msg.seq, (P.pack_infer_resp(frame_id, status, 0, 0, 0),))
++      return
+ 
+     total_us = int((time.perf_counter() - t0) * 1e6)
+     parts = [P.pack_infer_resp(frame_id, status, loaded.engine.last_gpu_us, queue_us, total_us),
+              out32]
+     if flags & P.Flag.WANT_STATE:
+-      parts.append(json.dumps(self.telemetry.read()).encode())
++      parts.append(json.dumps({**self.telemetry.read(), 'loaded': self.host.loaded.sha256 if self.host.loaded and self.host.loaded.valid else None}).encode())
+     send_started = time.perf_counter()
+     self._send(P.Msg.INFER_RESP, msg.seq, parts)
+     send_us = int((time.perf_counter() - send_started) * 1e6)
+--- a/third_party/jetlink/jetlink/spec.py
++++ b/third_party/jetlink/jetlink/spec.py
+@@ -15,7 +15,7 @@
+ 
+ import hashlib
+ import math
+-from dataclasses import dataclass
++from dataclasses import dataclass, field
+ 
+ from jetlink.onnx_meta import OnnxMeta, parse_file
+ from jetlink.protocol import INFER_REQ_SIZE, INFER_RESP_SIZE
+@@ -39,6 +39,9 @@
+   output_shapes: dict[str, tuple[int, ...]]
+   output_slices: dict[str, slice]
+   checkpoint: str | None
++  # Optional so pre-extension queued specs preserve their exact wire form.
++  input_dtypes: dict[str, str] = field(default_factory=dict)
++  output_dtypes: dict[str, str] = field(default_factory=dict)
+ 
+   # --- vision ---
+   @property
+@@ -51,6 +54,24 @@
+     """State input -> corresponding advanced-state output."""
+     return {name: f'next_{name}' for name in self.input_shapes
+             if name.startswith('state_') and f'next_{name}' in self.output_shapes}
++
++  def validate_stateful(self) -> list[tuple[str, str]]:
++    if not self.stateful:
++      raise ValueError('validate_stateful on a non-stateful spec')
++    if set(self.input_dtypes) != set(self.input_shapes) or set(self.output_dtypes) != set(self.output_shapes):
++      raise ValueError('stateful spec requires complete dtype declarations')
++    pairs = list(self.state_pairs.items())
++    if not pairs:
++      raise ValueError('stateful spec admits no state pairs')
++    for name in self.input_shapes:
++      if name.startswith('state_') and name not in self.state_pairs:
++        raise ValueError(f'state input {name!r} has no output')
++    for a, b in pairs:
++      if self.input_shapes[a] != self.output_shapes[b] or self.input_dtypes[a] != self.output_dtypes[b]:
++        raise ValueError(f'state pair {a!r}/{b!r} shape/dtype mismatch')
++    if {n for n in self.output_shapes if n.startswith('next_state_')} != {b for _, b in pairs}:
++      raise ValueError('orphan next_state output')
++    return pairs
+ 
+   @property
+   def img_shape(self) -> tuple[int, ...]:
+@@ -151,7 +172,7 @@
+   # would drift the moment a field is added.
+ 
+   def to_dict(self) -> dict:
+-    return {
++    d = {
+       'sha256': self.sha256,
+       'nbytes': self.nbytes,
+       'frame_skip': self.frame_skip,
+@@ -160,6 +181,11 @@
+       'output_shapes': {k: list(v) for k, v in self.output_shapes.items()},
+       'output_slices': {k: [v.start, v.stop] for k, v in self.output_slices.items()},
+     }
++    if self.input_dtypes:
++      d['input_dtypes'] = dict(self.input_dtypes)
++    if self.output_dtypes:
++      d['output_dtypes'] = dict(self.output_dtypes)
++    return d
+ 
+   @classmethod
+   def from_dict(cls, d: dict) -> ModelSpec:
+@@ -169,7 +195,9 @@
+       input_shapes={k: tuple(v) for k, v in d['input_shapes'].items()},
+       output_shapes={k: tuple(v) for k, v in d['output_shapes'].items()},
+       output_slices={k: slice(*v) for k, v in d['output_slices'].items()},
+-      checkpoint=d.get('checkpoint'))
++      checkpoint=d.get('checkpoint'),
++      input_dtypes=dict(d.get('input_dtypes', {})),
++      output_dtypes=dict(d.get('output_dtypes', {})))
+ 
+ 
+ def sha256_file(path: str, bufsize: int = 1 << 20) -> tuple[str, int]:
+@@ -200,4 +228,6 @@
+     output_shapes=dict(meta.outputs),
+     output_slices=meta.output_slices,
+     checkpoint=meta.model_checkpoint,
++    input_dtypes=dict(meta.input_types) if STATEFUL_FRAME in meta.inputs else {},
++    output_dtypes=dict(meta.output_types) if STATEFUL_FRAME in meta.inputs else {},
+   )

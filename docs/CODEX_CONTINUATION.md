@@ -1,4 +1,165 @@
-# Codex continuation — 2026-10-19
+# Codex continuation — 2026-10-20
+
+## Current task and checkpoint
+
+This session reviews external inference optimizations, not a second V3 port.
+Read `docs/JETSON_REVIEW_A890_ANALYSIS.md` for the complete comparison and
+decisions. Preserve the historical 2026-10-19 evidence below.
+
+Branch: `feature/jetlink-multimodel-carrot`.
+Session start: `8bf5e1e3379a37575a3420ef074bd74e96f06ff0`, clean tree.
+Verified implementation checkpoint:
+`fcecd9c31f2e29c741f2e5bf161a6e318d63ed88`.
+Final evidence/docs commits follow that code checkpoint; obtain the containing
+development HEAD with `git rev-parse HEAD` and `git log -1 --format=%H -- docs/CODEX_CONTINUATION.md`.
+Final response reports the resulting remote/development HEAD without a
+self-referential commit hash inside its own document.
+
+Ready for Jetson M0: **YES**. Installation/vehicle validation: **NO**.
+No Jetson/USB connection, operating-runtime update, build, service restart,
+Params modification, model/engine deletion or Wi-Fi port occurred.
+
+## Fresh source observations
+
+| Source | Full SHA |
+|---|---|
+| latest ajouatom/openpilot carrot-wip | `ba186915179816a9b0476cec52bf321e73d2d4b0` |
+| ajouatom/carrot-jetson main | `d0dc96fa32410403dfb2fefff3e2909c11ec109b` |
+| zoompilot/jetlink main | `d24328d849b0e5154b55f149dc18c5dfe8bd79cc` |
+| tjdgus200/openpilot codex/jetson-review | `a890f6df1bd3eb0478754c68d8b5f92f15e8b722` |
+| external inference parent / excluded Wi-Fi | `de75c056712fbe19943892919f19960f3e6d565b` |
+| external carrot-nav base | `74955c98560435895df28a8ae6f9af4d3d414d5f` |
+
+The relevant carrot-wip blobs are unchanged from previously validated5032afca.
+The branch did move; analysis and tests use the newly queried ba1869151.
+Never treat either SHA as a permanent pin. External HEAD was also freshly
+rechecked and remained a890f6df. All15 inference-commit files were reviewed;
+before/after blobs and SHA256 are in `artifacts/jetson_review_a890_sources.json`.
+
+## Completed work / commits / changed files
+
+- `e640c4fc6483ce1ac2011e669e5fcee29cf6e528`: default-off DeviceState and
+  exact InputFastpath candidates, provenance/license, CPU tests and composition.
+- `861406d747e2222c8088d6a15545fc941b9d0086`: isolated bounded AIO controller,
+  native ownership wrapper and CPU fake failure/framing tests.
+- `fcecd9c31f2e29c741f2e5bf161a6e318d63ed88`: rolling optional-candidate
+  generation/required tests, source freezing, LF reference checkout and CI path.
+- Following evidence/docs commit: analysis, continuation, source provenance,
+  refreshed portable baseline and separate standard/experimental manifests.
+
+Ported/adapted files: `experimental/jetson_optimizations/{device_state,
+device_adapter,direct_inputs,input_cast,fastpath_adapter,ffs_aio,
+aio_writer_native}.py`, `input_cast.c`, package/provenance/license;
+`tests/test_jetson_{device_state,input_fastpath,aio_candidate,
+optimization_integration}.py` and device/input subprocess peers;
+`adapters/carrot/integration.py`, checker/tests/workflow and README.
+
+Not ported: external DeviceStateQueues replacement, next_state D2H suppression,
+reply-event wrapper, navigation compact-map/spec/wire code, daemon scheduling,
+benchmark service assumptions, production AIO transport hook, Wi-Fi/HUD/
+credential/power changes. Current comma model.py/link.py/parser/daemon and wire
+remain unchanged. Existing V2 assets/engine/branches are preserved.
+
+DeviceState retains every output D2H and CPU exact shape/dtype/finite gate;
+D2D follows successful host commit. It saves state H2D only. Reset/HELLO/close
+drain pending work; partial failure invalidates until reload. Independent review
+reproduced initial host-pointer inconsistency, mutable binding-name H2D omission
+and allocation-owner map drift; all now fail closed, including explicit None
+container changes. No finite/spec/shape/time budget was relaxed.
+
+InputFastpath compiles/self-tests exact CPU byte→binary16 LUT once during
+requested preparation; validates all bindings/source storage and aliases before
+writing. It is restricted to canonical V3 scalars12, no navigation codec.
+AIO remains isolated and explicitly disabled, retaining at most32 private32KiB
+payloads until proven completion; unsafe ownership refuses cleanup/rebind.
+
+## Classification / actual evidence
+
+| Option | Result |
+|---|---|
+| DeviceState | READY_FOR_JETSON_AB — validation-preserving H2D-only variant |
+| InputFastpath | READY_FOR_JETSON_AB — exact native CPU bits, no Orin timing |
+| AIO | DEFER_UNTIL_LATENCY_PROBLEM — no generated transport hook |
+| Direct Wi-Fi | OUT_OF_SCOPE |
+
+All new tests are **CPU_FAKE / FIXTURE**. Actual native C CPU conversion is not
+TRT_REAL or JETSON_REAL. The old ORT_REAL_MODEL evidence remains historical;
+its numerical acceptance gates are not reinterpreted as passed optimizations.
+External test/performance numbers are author records, not ours.
+
+### Final verification / actual commands
+
+WSL Ubuntu24.04 Python3.12.3, existing isolated
+`~/.venvs/cinque-v3-stage3/bin/python` (`$PY`), NumPy/pytest/ONNX/cc.
+No new device runtime/system package was installed.
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 "$PY" tools/check_latest_carrot_compat.py --work-dir .candidate/rolling-a890-fcecd9c --report .reports/carrot-compat-a890-final.json --update-baseline
+
+export CINQUE_PRODUCTION_ROOT="$PWD/.candidate/historical-lf2-jetson"
+export CINQUE_COMMA_ROOT="$PWD/.candidate/historical-lf2-comma"
+export CARROT_CANDIDATE_ROOT="$PWD/.candidate/a890-frozen-standard"
+export CARROT_REFERENCE_ROOT="$PWD/.reference/carrot-wip-ba186-lf"
+PYTHONDONTWRITEBYTECODE=1 "$PY" -m pytest tests --ignore=tests/test_backport.py --ignore=tests/test_stateful_safety.py -q --junitxml=.reports/a890-all-final.xml
+
+CARROT_CANDIDATE_ROOT="$PWD/.candidate/rolling-a890-fcecd9c/optimization-candidate" CARROT_TRT_DEVICE_STATE=0 CARROT_TRT_INPUT_FASTPATH=0 PYTHONDONTWRITEBYTECODE=1 "$PY" -m pytest -q tests/test_current_carrot_server.py
+"$PY" tests/test_backport.py
+"$PY" tests/test_stateful_safety.py
+```
+
+- Final ONLINE: **PASS288 / FAIL0 / SKIP0**, exit0, fresh three heads identical
+  before/after. Portable baseline updated;813 relevant blobs,44 source hashes.
+- All repository pytest: **PASS368 +6 subtests / FAIL0 / SKIP0**, exit0.
+- Additional upstream101 → **unique pytest PASS469 / FAIL0 / SKIP0**.
+- Existing regression **366 PASS**, new **103 PASS** (Device8 +Input58 +AIO30
+  +composition3 +checker4). No repeats/internal assertion inflation.
+- Optional candidate bothflagsOFF: **9 PASS**, existing current server suite.
+- Independent final review: **123 PASS**, no remaining actionable findings;
+  three reproduced Device binding flaws fixed, explicit None guarded.
+- Standalone scripts: **76 assertion checks PASS**, optional ONNX sections
+  **SKIP3**. Prior ORT acceptance **2 deferred/not rerun**, preserving the five
+  separately tracked optional/deferred gates; no new ORT optimization claim.
+- Final unresolved test **FAIL0**. Initial wrong-interpreter collection and RED
+  characterization failures were resolved; ignored logs retain the evidence.
+- New optimization real-device **BLOCKED7** (analysis table); prior15 open gates
+  retained, overlaps not summed. No TRT_REAL/JETSON_REAL/USB_REAL/COMMA_REAL PASS.
+
+Portable results: `artifacts/jetson_review_a890_validation.json`.
+Standard patch remains SHA256
+`04c7b08fd1fbcd21efddb103bdb0b336fe0ef92bffe0837b7fe2eb7344bffcf3`
+with16 touched files; manifest now records ba1869151.
+Experimental full patch SHA256
+`c67cef9dac197ee8254dc928d72fdccdc30b840266ff3f9a78a7931cf8169776`,
+20 touched files, is separate at
+`patches/experimental-jetson-optimizations-a890.patch` with
+`artifacts/experimental_jetson_optimizations_manifest.json`.
+It starts from clean upstream; **do not stack on the standard patch**.
+Hash verification and reverse/apply roundtrip passed in disposable copies.
+Never delete V2 engines or overwrite an existing runtime to roll back.
+
+## Next work / first Jetson command
+
+Retain order: M0 → base V3 TRT10.3 build → base recurrent inference → USB P3 →
+latency → BASE/DeviceState/DeviceState+InputFastpath A/B → AIO only if needed.
+First actual device execution, from the directory containing the existing tool:
+
+```sh
+python3 tools/jetson_runtime_inventory.py --pretty
+```
+
+M0 is read only: inventory NVMe boot/L4T/kernel/TRT/CUDA/Python, power/clocks,
+service names/ExecStart/runtime/cache/V2/current release/network. No build/load,
+GPU initialization, restart, overwrite, Params changes or USB inference. Compare
+inventory before choosing an isolated writable runtime and actual host changes.
+Do not enable an optimization to hide a baseline failure.
+
+Seven optimization-specific real-device gates remain BLOCKED (listed in the
+analysis). The prior15 device/vehicle/CI-registration gates below remain open;
+overlapping gates are not summed as additional independent test failures.
+
+---
+
+# Historical continuation — 2026-10-19
 
 ## Current checkpoint / HEAD
 

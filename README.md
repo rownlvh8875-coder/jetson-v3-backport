@@ -14,6 +14,11 @@
 `python tools/check_latest_carrot_compat.py --update-baseline`으로 실행한다.
 실제 Jetson/TRT/USB 검증과 설치는 아직 완료되지 않았다.
 
+2026-10-20 [외부 Jetson 최적화 검토](docs/JETSON_REVIEW_A890_ANALYSIS.md):
+DeviceState와 InputFastpath는 기존 검증을 유지한 기본 OFF 실험 후보다.
+AIO는 운영 transport에 연결하지 않았으며, 실장 순서는 M0 → 기본 V3 → USB →
+latency 측정 → 필요한 최적화 A/B를 유지한다.
+
 > Jetson Orin Nano Super에서 Cinque V3 및 호환 Big Model을
 > Carrot/comma4와 안전하게 연결하기 위한 연구·백포트 저장소
 
