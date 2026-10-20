@@ -49,7 +49,7 @@ def comma_files(reference: Path) -> dict[str, bytes]:
     }
 
 
-def build_candidate(reference: Path, destination: Path) -> dict:
+def build_candidate(reference: Path, destination: Path, *, experimental_optimizations: bool = False) -> dict:
     from adapters.carrot.server import server_files
     reference, destination = Path(reference).resolve(), Path(destination).resolve()
     if destination.exists():
@@ -64,6 +64,13 @@ def build_candidate(reference: Path, destination: Path) -> dict:
     if changes.keys() & host_changes.keys():
         raise ValueError('Conflicting source adapter ownership')
     changes.update(host_changes)
+    if type(experimental_optimizations) is not bool:
+        raise ValueError('Experimental candidate selection must be an explicit boolean')
+    if experimental_optimizations:
+        from experimental.jetson_optimizations.device_adapter import device_optimization_files
+        from experimental.jetson_optimizations.fastpath_adapter import fastpath_optimization_files
+        changes.update(device_optimization_files(changes))
+        changes.update(fastpath_optimization_files(changes))
     # Adapters must succeed before any candidate is copied. Never copy .git,
     # untracked files, ignored model assets, credentials or another candidate.
     records = git(reference, 'ls-files', '-t', '-z').decode().split('\0')
@@ -98,6 +105,13 @@ def build_candidate(reference: Path, destination: Path) -> dict:
                 'branch': 'carrot-wip', 'evidence': 'CPU_FAKE / FIXTURE only until checked',
                 'patch_sha256': hashlib.sha256(patch).hexdigest(), 'touched_files': touched,
                 'rollback': 'Verify after hashes, git apply --reverse --check candidate.patch, then reverse in development copy only; verify before hashes. Never delete V2 engines.'}
+    if experimental_optimizations:
+        manifest['experimental_optimizations'] = True
+        manifest['external_review_sha'] = 'a890f6df1bd3eb0478754c68d8b5f92f15e8b722'
+        manifest['runtime_flags_default'] = {'CARROT_TRT_DEVICE_STATE': '0', 'CARROT_TRT_INPUT_FASTPATH': '0'}
+        manifest['limitations'] = ['All-state D2H and CPU validation retained',
+                                   'AIO and Wi-Fi are not integrated',
+                                   'No CUDA/TensorRT/Jetson/USB/vehicle validation']
     output = destination / '.jetlink-candidate'
     output.mkdir()
     (output / 'candidate.patch').write_bytes(patch)
@@ -109,8 +123,11 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('reference', type=Path)
     parser.add_argument('destination', type=Path)
+    parser.add_argument('--experimental-optimizations', action='store_true',
+                        help='Add independently default-off DeviceState/input-staging experiments; no AIO or device execution')
     args = parser.parse_args()
-    print(json.dumps(build_candidate(args.reference, args.destination), indent=2))
+    print(json.dumps(build_candidate(args.reference, args.destination,
+                                    experimental_optimizations=args.experimental_optimizations), indent=2))
 
 
 if __name__ == '__main__':
