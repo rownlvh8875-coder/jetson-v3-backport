@@ -235,6 +235,13 @@ gates remain unrerun/deferred, so the earlier five optional/deferred sections
 remain distinct from zero pytest skips. Portable totals are in
 `artifacts/jetson_review_a890_validation.json`.
 
+Feature push `ab796d3798523a9a9ebdc657553cbeb34e16d4fa` was verified remotely;
+[GitHub Actions39350896683](https://github.com/rownlvh8875-coder/jetson-v3-backport/actions/runs/39350896683)
+completed successfully, including CPU setup, checker tests and fresh rolling
+candidate verification. The following documentation-only checkpoint records
+this observation; all44 tested source hashes are unchanged. Default-branch
+manual/schedule registration remains a separate blocked administration task.
+
 The start ONLINE run also passed the pre-existing189 required cases. An initial
 native Windows checker attempt failed to collect because that interpreter has
 no pytest; it was rerun with the existing WSL test environment. RED failures
@@ -307,10 +314,9 @@ are the basis for the published candidate manifests.
 4. [x] Exact native input conversion/binding tests + optional staging candidate.
 5. [x] Isolated AIO bounded ownership/failure tests; no transport activation.
 6. [x] Existing regression, optional candidate composition and combination tests.
-7. [ ] Fresh final rolling verification, independent review, provenance/manifest,
+7. [x] Fresh final rolling verification, independent review, provenance/manifest,
    continuation update, small commits and feature-branch push.
 
 M0 → baseline V3 TRT build → baseline recurrent inference → USB protocol3 →
 latency measurement → one-at-a-time DeviceState/InputFastpath → AIO only if
 latency evidence warrants it. Optimization must not conceal a baseline failure.
-

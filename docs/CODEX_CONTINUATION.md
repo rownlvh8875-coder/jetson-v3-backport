@@ -137,6 +137,23 @@ It starts from clean upstream; **do not stack on the standard patch**.
 Hash verification and reverse/apply roundtrip passed in disposable copies.
 Never delete V2 engines or overwrite an existing runtime to roll back.
 
+### Push / CI confirmation
+
+`ab796d3798523a9a9ebdc657553cbeb34e16d4fa` was normally pushed to the same
+feature branch and the remote SHA matched. GitHub Actions
+[run39350896683](https://github.com/rownlvh8875-coder/jetson-v3-backport/actions/runs/39350896683)
+completed **success**: CPU dependency setup,24 checker tests, fresh latest
+reference/candidate verification and evidence upload all succeeded. The final
+documentation-only commit records this result and finalizes the checklist;
+the44 validated implementation/helper/provenance source hashes remain unchanged.
+The latest carrot-wip was queried again afterward and remained ba1869151.
+
+Protected remote refs remained main
+`2519ad0bdbf6e796fa590063fc90d4d6461b6b8d` and feature/cinque-v3-jetson
+`26c9c06a5e51ff0e8d3a1e8575eece548e87f3b5`. No merge, force push or reset.
+Manual/scheduled workflow registration on the default branch remains separately
+blocked; feature push CI works and no main change was made.
+
 ## Next work / first Jetson command
 
 Retain order: M0 → base V3 TRT10.3 build → base recurrent inference → USB P3 →
