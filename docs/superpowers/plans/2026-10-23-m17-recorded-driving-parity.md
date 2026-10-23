@@ -31,12 +31,12 @@
 ## Tasks
 
 - [x] Read handoff/frozen targets; fresh upstream and remote checks. Actual offroad1/onroad0 and Nav366 verified; root derived from actual hw.py, then confirmed present.
-- [ ] Inventory actual routes by modification time/file sets/segments; choose3–5 recent candidates and audit full-road/wide availability across the confirmed route root.
-- [ ] Snapshot operating source/process/config metadata and route file count/stat digest. Hash selected logs, copy only required segments via a verified read-only raw endpoint, validate source/copy hashes.
-- [ ] Inspect copied actual logs with the pinned schema/reader, summarize camera/timestamp/calibration/scalar evidence and source-backed driving observations without GPS publication. Verify actual warp/preprocessing and recording-resolution contracts.
-- [ ] Add tested pure provenance/privacy/gating helpers if needed. Run new CPU tests plus frozen adapter/semantic smoke; no production edits.
-- [ ] If complete recorded model inputs exist, create separate >=128(prefer256) sequences with zero-state start and continuous recurrence; run original ORT then guarded standalone exact-plan TRT, using existing gates only. Otherwise record exact reconstruction blocker and all independently completed analysis.
-- [ ] Recheck actual offroad/HEAD, route stat digest/selected content hashes, model/source/process metadata. Close only owned sessions. Re-query upstreams, retain numerical pins.
-- [ ] Write M17 report/artifact and continuation, independent review, privacy/hash/diff checks, small commits and normal same-feature push; verify remote equality, protected refs and clean tree.
+- [x] Inventory88routes/1037segments/4403files, select5 recent candidate routes and one nonempty middle rlog each. No fcamera/ecamera anywhere in confirmed root.
+- [x] Initial route stat/source/process snapshot;10 selected original log content hashes and5 copied rlogs/61448059bytes identity PASS. Existing raw GET source inspected; no transform/upload/cache endpoint used.
+- [x] Actual schema read431355events/5rlogs,6000 road/wide metadata pairs, all image payloads empty. Recorded calibration/DMS/Params/source/desire metadata summarized privately/safely. Warp/scalar/recording source and qcamera526×330 read-only ffprobe audited. Not full-route or V3 parity.
+- [x] Pure gate/privacy/motion/exclusive-output tests RED missing module→GREEN12. Fresh87PASS/0FAIL/0SKIP including75 frozen M16/M15/Nav smoke, no production/adapter changes.
+- [x] Conditional comparison gate BLOCKED_RECORDED_INPUT_RECONSTRUCTION: representative V3sequences0/frames0. ORT/TRT/parser/recurrent comparison NOT_RUN, no synthetic/video substitution or plan/device access. All independently useful source/log/preservation work completed; PARITY_UNDETERMINED/M2NO.
+- [x] Exact before/after route stat digest and selected content hashes, source/tracked-process identity unchanged.15 model files later before/after hashes identical. Offroad1/onroad0 and actual366 retained. Initial incomplete owned terminal cleanup verified exactly; other owned M17sessions0. No protected process terminated.
+- [ ] Finish final upstream/privacy/hash checks, independent review, same-feature evidence/handoff publication and verify remote equality, protected refs, clean tree.
 
 Execution ruling: the user explicitly chose actual comma recordings and autonomous read-only exploration/copy plus isolated comparison. Existing dedicated feature and fresh private paths provide isolation. The detailed request and earlier no-extra-question preference waive redundant design/execution approval; actual device safety and missing-data gates remain mandatory.

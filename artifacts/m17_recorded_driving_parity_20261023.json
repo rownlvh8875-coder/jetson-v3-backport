@@ -1,0 +1,801 @@
+{
+  "COMMA_REAL_inference": "NOT_RUN",
+  "JETSON_REAL": "NOT_RUN",
+  "ORT": {
+    "frames": 0,
+    "reason": "BLOCKED_RECORDED_INPUT_RECONSTRUCTION",
+    "status": "NOT_RUN"
+  },
+  "RECORDED_INPUT": "NOT_CONSTRUCTED",
+  "ROAD_TEST": "NOT_RUN",
+  "TRT": {
+    "frames": 0,
+    "reason": "BLOCKED_RECORDED_INPUT_RECONSTRUCTION",
+    "status": "NOT_RUN"
+  },
+  "TRT_REAL": "NOT_RUN",
+  "USB_REAL": "NOT_RUN",
+  "upstreams_requeried_end_unchanged": true,
+  "VEHICLE_PARKED": "NOT_RUN",
+  "access_cleanup": {
+    "access": "existing fresh owned web terminal plus source-verified unchanged raw download endpoint; no SSH relay/agent/key/config changes",
+    "only_own_incomplete_terminal_removed": true,
+    "other_owned_sessions_remaining": 0,
+    "status": "PASS"
+  },
+  "actual_carrot_nav": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+  "date": "2026-10-23",
+  "development_start": "5bd9bcb1b10d63c35eb6b16bd35ae8ae4ce0626f",
+  "implementation_commit": "66b220344ec1f4ce93e21b4d64611e1f08273acc",
+  "input_provenance": {
+    "action_t": "UNVALIDATED:dynamic per-frame lateral delay/smoothing and historical Params needed; existing code formula documented, no default substituted",
+    "calibration_transform": "PRESENT_NOT_RECONSTRUCTED:240 finite three-element calibration records per sample; current source uses device/sensor intrinsics and historical yaw trim",
+    "camera_pixels": "MISSING: no full road/wide files anywhere in confirmed route root, both FrameData.image payloads empty in all5 sampled logs",
+    "desire": "PRESENT_NOT_RECONSTRUCTED:modelV2.meta.desire is published after DH.update; input uses previous DH.desire then rising-edge pulse, not prediction argmax",
+    "frame_timestamps": "PRESENT_METADATA_ONLY:1200 road and1200 wide messages per sample; timestamp/id summaries recorded, no decoded-image alignment possible",
+    "historical_source": "logs predate actual366: recorded e330e855/ec36d5e5;01 dirty=false,02..05 dirty=true so their commit SHA cannot attest full historical source bytes; current Params/source are not proof of historical input values",
+    "preprocessing": "SOURCE_VERIFIED_NOT_EXECUTED:pinned native NV12 padding/transforms/nearest-round-clamp/6-channel packing and two model views",
+    "recurrent_state": "NOT_CREATED:zero-start continuous >=128-frame dataset would be required; no source camera pixels available",
+    "traffic_convention": "PRESENT_NOT_RECONSTRUCTED:recorded driverMonitoringState.isRHD all0; exact frame association not validated"
+  },
+  "installation": "DO_NOT_INSTALL",
+  "inventory": {
+    "filename_counts": {
+      "dcamera.hevc": 1036,
+      "dcamera.hevc.lock": 87,
+      "qcamera.ts": 1036,
+      "qcamera.ts.lock": 87,
+      "qlog.zst": 1037,
+      "rlog.lock": 83,
+      "rlog.zst": 1037
+    },
+    "files": 4403,
+    "recent_candidates": [
+      {
+        "file_names": [
+          "dcamera.hevc",
+          "dcamera.hevc.lock",
+          "qcamera.ts",
+          "qcamera.ts.lock",
+          "qlog.zst",
+          "rlog.lock",
+          "rlog.zst"
+        ],
+        "label": "ROUTE_CANDIDATE_01",
+        "segment_count": 29,
+        "total_bytes": 1499681739
+      },
+      {
+        "file_names": [
+          "dcamera.hevc",
+          "dcamera.hevc.lock",
+          "qcamera.ts",
+          "qcamera.ts.lock",
+          "qlog.zst",
+          "rlog.lock",
+          "rlog.zst"
+        ],
+        "label": "ROUTE_CANDIDATE_02",
+        "segment_count": 105,
+        "total_bytes": 5553249737
+      },
+      {
+        "file_names": [
+          "dcamera.hevc",
+          "dcamera.hevc.lock",
+          "qcamera.ts",
+          "qcamera.ts.lock",
+          "qlog.zst",
+          "rlog.lock",
+          "rlog.zst"
+        ],
+        "label": "ROUTE_CANDIDATE_03",
+        "segment_count": 103,
+        "total_bytes": 5479898908
+      },
+      {
+        "file_names": [
+          "dcamera.hevc",
+          "dcamera.hevc.lock",
+          "qcamera.ts",
+          "qcamera.ts.lock",
+          "qlog.zst",
+          "rlog.lock",
+          "rlog.zst"
+        ],
+        "label": "ROUTE_CANDIDATE_04",
+        "segment_count": 83,
+        "total_bytes": 4254546225
+      },
+      {
+        "file_names": [
+          "dcamera.hevc",
+          "dcamera.hevc.lock",
+          "qcamera.ts",
+          "qcamera.ts.lock",
+          "qlog.zst",
+          "rlog.lock",
+          "rlog.zst"
+        ],
+        "label": "ROUTE_CANDIDATE_05",
+        "segment_count": 14,
+        "total_bytes": 673112486
+      }
+    ],
+    "routes": 88,
+    "routes_with_full_road_or_wide": 0,
+    "segments": 1037
+  },
+  "local_source_sha256": {
+    "tests/test_recorded_driving_gate.py": "fb66f04b7766fd618230428a80ba345154d43c29df152a89ec7a76f7fd48d21e",
+    "tools/recorded_driving_gate.py": "03d1530795a4f177cf3c46c583278ecbcda8e89a016ea123680cfbbea7851986"
+  },
+  "next_action": "obtain an approved >=256-consecutive-frame original road/wide (or exact V3 input tensor) recording with timestamp/calibration/scalar provenance; any future recording configuration change requires separate authorization, none made here",
+  "not_established": [
+    "straight_vs_curve classification",
+    "complex road classification",
+    "actual lane change; recorded lane-change states all off",
+    "stop-to-motion transition in selected middle segments"
+  ],
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "observed_telemetry_categories": [
+    "positive_speed_logged",
+    "standstill_logged",
+    "radar_lead_reported",
+    "radar_no_lead_reported",
+    "recorded_meta_desire_change"
+  ],
+  "parity": {
+    "action": "NOT_RUN_NO_RECONSTRUCTED_RECORDED_INPUT",
+    "actual_parser": "NOT_RUN_NO_RECONSTRUCTED_RECORDED_INPUT",
+    "desire_pred": "NOT_RUN_NO_RECONSTRUCTED_RECORDED_INPUT",
+    "desire_state": "NOT_RUN_NO_RECONSTRUCTED_RECORDED_INPUT",
+    "hidden_state": "NOT_RUN_NO_RECONSTRUCTED_RECORDED_INPUT",
+    "lead_direct_and_probability": "NOT_RUN_NO_RECONSTRUCTED_RECORDED_INPUT",
+    "plan_near_mid_far": "NOT_RUN_NO_RECONSTRUCTED_RECORDED_INPUT",
+    "recurrent_turnover": "NOT_RUN_NO_RECONSTRUCTED_RECORDED_INPUT"
+  },
+  "preservation": {
+    "checks": {
+      "actual_source_matches_pinned_git_objects": true,
+      "branch": true,
+      "copied_source_hashes": true,
+      "file_count": true,
+      "flags": true,
+      "head": true,
+      "inventory_sha256": true,
+      "model_files_hashes": true,
+      "relevant_processes": true,
+      "route_count": true,
+      "segment_count": true,
+      "selected_original_content_hashes": true,
+      "source_sha256": true,
+      "video_probe_identical": true,
+      "working_tree": true
+    },
+    "content_hashed_original_logs": 10,
+    "copied_rlogs": 5,
+    "file_count": 4403,
+    "flags": {
+      "IsOffroad": "1",
+      "IsOnroad": "0"
+    },
+    "head": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+    "inventory_sha256": "f29eeb1934517f92bbd365d12019191fba27dbb36efadfa13d3514f3f1cc39d6",
+    "model_file_hashes": 15,
+    "process_identity_count": 3,
+    "route_count": 88,
+    "scope": "all route file name/size/mtime metadata;10 selected rlog/qlog content hashes;15 model files content-hashed in later before/after window;5 source file hashes and3 tracked process identities from first inventory; not a full content hash of every route/video or whole operating filesystem",
+    "segment_count": 1037,
+    "status": "PASS"
+  },
+  "ready_for_M2_parked_USB": "NO",
+  "reconstruction_gate": {
+    "missing": [
+      "paired_recorded_pixels",
+      "frame_timestamp_alignment",
+      "calibration_transform_history",
+      "traffic_convention_history",
+      "exact_desire_pulse_history",
+      "exact_action_t_history",
+      "pinned_warp_preprocessing",
+      "zero_initial_state_and_continuous_recurrence"
+    ],
+    "numerical_decision": "PARITY_UNDETERMINED",
+    "reconstructed_frames": 0,
+    "status": "BLOCKED_RECORDED_INPUT_RECONSTRUCTION"
+  },
+  "recorded_V3_model_input_frames": 0,
+  "recorded_camera_metadata_frame_pairs": 6000,
+  "remaining_blockers": [
+    "original selected road/wide camera pixels or exact recorded preprocessed V3 inputs absent",
+    "historical scalar/frame preprocessing not yet reconstructed;02..05 recorded source dirty=true without a complete source-byte attestation",
+    "approved representative semantic acceptance budgets absent",
+    "previous M16 bounded TRT deserialize resource hold remains unresolved"
+  ],
+  "representative_sequences": 0,
+  "rlog_copy_bytes": 61448059,
+  "rlog_copy_count": 5,
+  "rlog_events_inspected": 431355,
+  "runtime": {
+    "ffprobe": "existing, read-only stream metadata only",
+    "log_reader": "existing comma Python3.12/pycapnp2.1.0/zstandard0.25.0 using actual cereal schema and Event.read_multiple_bytes"
+  },
+  "schema": 1,
+  "selected_log_segments": [
+    {
+      "bytes": 12455340,
+      "camera_metadata": {
+        "roadCameraState": {
+          "count": 1200,
+          "frame_id_positive_gaps": 0,
+          "frame_identity_sha256": "ea4fb33e0768bdb150e40eed1d4ee35a72ddec71eb36bab6df8cb4372cb1b774",
+          "image_bytes_nonzero": 0,
+          "sensors": [
+            "os04c10"
+          ],
+          "timestamp_nonzero": 1200,
+          "timestamp_positive_steps": 1199
+        },
+        "wideRoadCameraState": {
+          "count": 1200,
+          "frame_id_positive_gaps": 0,
+          "frame_identity_sha256": "e9e9eab100032e3ce25faf049d2a2b4ffffe57805201e5a0ac45c659b0bf736a",
+          "image_bytes_nonzero": 0,
+          "sensors": [
+            "os04c10"
+          ],
+          "timestamp_nonzero": 1200,
+          "timestamp_positive_steps": 1199
+        }
+      },
+      "camera_metadata_frames": 1200,
+      "event_counts": {
+        "carState": 5996,
+        "driverMonitoringState": 1198,
+        "initData": 1,
+        "liveCalibration": 240,
+        "liveDelay": 240,
+        "modelV2": 1200,
+        "radarState": 1200,
+        "roadCameraState": 1200,
+        "roadEncodeData": 0,
+        "roadEncodeIdx": 1200,
+        "wideRoadCameraState": 1200,
+        "wideRoadEncodeData": 0,
+        "wideRoadEncodeIdx": 1200
+      },
+      "filename": "rlog.zst",
+      "historical_RecordRoadCam": "0",
+      "label": "REC_CANDIDATE_01",
+      "recorded_model_input_frames": 0,
+      "recorded_source": {
+        "dirty": false,
+        "gitBranch": "carrot-nav",
+        "gitCommit": "e330e8552d4ca1927c6c3d476cb74f46f8bbd1a4",
+        "gitSrcCommit": ""
+      },
+      "sha256": "d0d2b986188d647f38e623b6fc36d11d951c11a530052c557569b83745052ee2",
+      "source_copy_identity": "PASS",
+      "source_postread_identity": "PASS",
+      "telemetry": {
+        "blinker_samples": 0,
+        "live_calibration_valid_entries": 240,
+        "logged_desire_transitions": 0,
+        "radar_lead_reported": 1200,
+        "radar_no_lead_reported": 0,
+        "recorded_lane_change_states": {
+          "off": 1200
+        },
+        "recorded_model_desire_counts": {
+          "none": 1200
+        },
+        "scalars": {
+          "isRHD": {
+            "count": 1198,
+            "max": 0,
+            "mean": 0.0,
+            "min": 0
+          },
+          "live_lateral_delay": {
+            "count": 240,
+            "max": 0.24038934707641602,
+            "mean": 0.24038934707641602,
+            "min": 0.24038934707641602
+          },
+          "standstill": {
+            "count": 5996,
+            "max": 1,
+            "mean": 0.38642428285523683,
+            "min": 0
+          },
+          "steeringAngleDeg": {
+            "count": 5996,
+            "max": 2.200000047683716,
+            "mean": -0.6675283426768068,
+            "min": -18.0
+          },
+          "vEgo_mps": {
+            "count": 5996,
+            "max": 6.9937238693237305,
+            "mean": 1.898384593324187,
+            "min": -0.0030446331948041916
+          }
+        },
+        "standstill_to_motion_transitions": 0
+      }
+    },
+    {
+      "bytes": 13144070,
+      "camera_metadata": {
+        "roadCameraState": {
+          "count": 1200,
+          "frame_id_positive_gaps": 0,
+          "frame_identity_sha256": "c0ea4919556ad9e4b96c9811ee78d1ed2a85cb77d2b22614b7d5d68cec910319",
+          "image_bytes_nonzero": 0,
+          "sensors": [
+            "os04c10"
+          ],
+          "timestamp_nonzero": 1200,
+          "timestamp_positive_steps": 1199
+        },
+        "wideRoadCameraState": {
+          "count": 1200,
+          "frame_id_positive_gaps": 0,
+          "frame_identity_sha256": "154e6df153928a04f7825095c10dd3ebfcc7f57d105cb6fe4e7ac3651ffa81ff",
+          "image_bytes_nonzero": 0,
+          "sensors": [
+            "os04c10"
+          ],
+          "timestamp_nonzero": 1200,
+          "timestamp_positive_steps": 1199
+        }
+      },
+      "camera_metadata_frames": 1200,
+      "event_counts": {
+        "carState": 6001,
+        "driverMonitoringState": 1199,
+        "initData": 1,
+        "liveCalibration": 240,
+        "liveDelay": 240,
+        "modelV2": 1201,
+        "radarState": 1200,
+        "roadCameraState": 1200,
+        "roadEncodeData": 0,
+        "roadEncodeIdx": 1200,
+        "wideRoadCameraState": 1200,
+        "wideRoadEncodeData": 0,
+        "wideRoadEncodeIdx": 1200
+      },
+      "filename": "rlog.zst",
+      "historical_RecordRoadCam": "0",
+      "label": "REC_CANDIDATE_02",
+      "recorded_model_input_frames": 0,
+      "recorded_source": {
+        "dirty": true,
+        "gitBranch": "carrot-nav",
+        "gitCommit": "ec36d5e56ea8b501a41d3a817cbfb5fd13ff3939",
+        "gitSrcCommit": ""
+      },
+      "sha256": "a284f5fe3db444359110cb7e96e429466217468f2d6df6b80d5418d01ec94064",
+      "source_copy_identity": "PASS",
+      "source_postread_identity": "PASS",
+      "telemetry": {
+        "blinker_samples": 229,
+        "live_calibration_valid_entries": 240,
+        "logged_desire_transitions": 2,
+        "radar_lead_reported": 1114,
+        "radar_no_lead_reported": 86,
+        "recorded_lane_change_states": {
+          "off": 1201
+        },
+        "recorded_model_desire_counts": {
+          "none": 1157,
+          "turnLeft": 44
+        },
+        "scalars": {
+          "isRHD": {
+            "count": 1199,
+            "max": 0,
+            "mean": 0.0,
+            "min": 0
+          },
+          "live_lateral_delay": {
+            "count": 240,
+            "max": 0.24038934707641602,
+            "mean": 0.24038934707641602,
+            "min": 0.24038934707641602
+          },
+          "standstill": {
+            "count": 6001,
+            "max": 1,
+            "mean": 0.24062656223962672,
+            "min": 0
+          },
+          "steeringAngleDeg": {
+            "count": 6001,
+            "max": 16.399999618530273,
+            "mean": -6.194417603299025,
+            "min": -56.79999923706055
+          },
+          "vEgo_mps": {
+            "count": 6001,
+            "max": 12.486045837402344,
+            "mean": 5.927984163424345,
+            "min": -0.0029121919069439173
+          }
+        },
+        "standstill_to_motion_transitions": 0
+      }
+    },
+    {
+      "bytes": 13287446,
+      "camera_metadata": {
+        "roadCameraState": {
+          "count": 1200,
+          "frame_id_positive_gaps": 0,
+          "frame_identity_sha256": "3aebc1eaf705a6b1a579bc2d81557610891b829306aa489e7f4416890c89e8ca",
+          "image_bytes_nonzero": 0,
+          "sensors": [
+            "os04c10"
+          ],
+          "timestamp_nonzero": 1200,
+          "timestamp_positive_steps": 1199
+        },
+        "wideRoadCameraState": {
+          "count": 1200,
+          "frame_id_positive_gaps": 0,
+          "frame_identity_sha256": "59c66fcd711ea8f1423e3deb26eebe167584fb3caf172c199224c35273b8b11c",
+          "image_bytes_nonzero": 0,
+          "sensors": [
+            "os04c10"
+          ],
+          "timestamp_nonzero": 1200,
+          "timestamp_positive_steps": 1199
+        }
+      },
+      "camera_metadata_frames": 1200,
+      "event_counts": {
+        "carState": 6002,
+        "driverMonitoringState": 1199,
+        "initData": 1,
+        "liveCalibration": 240,
+        "liveDelay": 240,
+        "modelV2": 1201,
+        "radarState": 1200,
+        "roadCameraState": 1200,
+        "roadEncodeData": 0,
+        "roadEncodeIdx": 1200,
+        "wideRoadCameraState": 1200,
+        "wideRoadEncodeData": 0,
+        "wideRoadEncodeIdx": 1200
+      },
+      "filename": "rlog.zst",
+      "historical_RecordRoadCam": "0",
+      "label": "REC_CANDIDATE_03",
+      "recorded_model_input_frames": 0,
+      "recorded_source": {
+        "dirty": true,
+        "gitBranch": "carrot-nav",
+        "gitCommit": "ec36d5e56ea8b501a41d3a817cbfb5fd13ff3939",
+        "gitSrcCommit": ""
+      },
+      "sha256": "abc0c8c38b155713d698c3e1c50961ddbacf804883529be8a6e690dfb8e00f9b",
+      "source_copy_identity": "PASS",
+      "source_postread_identity": "PASS",
+      "telemetry": {
+        "blinker_samples": 0,
+        "live_calibration_valid_entries": 240,
+        "logged_desire_transitions": 0,
+        "radar_lead_reported": 1200,
+        "radar_no_lead_reported": 0,
+        "recorded_lane_change_states": {
+          "off": 1201
+        },
+        "recorded_model_desire_counts": {
+          "none": 1201
+        },
+        "scalars": {
+          "isRHD": {
+            "count": 1199,
+            "max": 0,
+            "mean": 0.0,
+            "min": 0
+          },
+          "live_lateral_delay": {
+            "count": 240,
+            "max": 0.23512941598892212,
+            "mean": 0.23512941598892212,
+            "min": 0.23512941598892212
+          },
+          "standstill": {
+            "count": 6002,
+            "max": 0,
+            "mean": 0.0,
+            "min": 0
+          },
+          "steeringAngleDeg": {
+            "count": 6002,
+            "max": 1.2000000476837158,
+            "mean": -0.2823558761969442,
+            "min": -2.0999999046325684
+          },
+          "vEgo_mps": {
+            "count": 6002,
+            "max": 28.891780853271484,
+            "mean": 27.032110356601308,
+            "min": 24.24155616760254
+          }
+        },
+        "standstill_to_motion_transitions": 0
+      }
+    },
+    {
+      "bytes": 10890368,
+      "camera_metadata": {
+        "roadCameraState": {
+          "count": 1200,
+          "frame_id_positive_gaps": 0,
+          "frame_identity_sha256": "93c503e700fe180e259505b2e12da47b1ddb6494c33651cbd8a6bd3bf5679a7c",
+          "image_bytes_nonzero": 0,
+          "sensors": [
+            "os04c10"
+          ],
+          "timestamp_nonzero": 1200,
+          "timestamp_positive_steps": 1199
+        },
+        "wideRoadCameraState": {
+          "count": 1200,
+          "frame_id_positive_gaps": 0,
+          "frame_identity_sha256": "669d9b753d83ec273e62f7d1b4150b5cc3c27175542b5577bba29b11f4ac0281",
+          "image_bytes_nonzero": 0,
+          "sensors": [
+            "os04c10"
+          ],
+          "timestamp_nonzero": 1200,
+          "timestamp_positive_steps": 1199
+        }
+      },
+      "camera_metadata_frames": 1200,
+      "event_counts": {
+        "carState": 6000,
+        "driverMonitoringState": 1198,
+        "initData": 1,
+        "liveCalibration": 240,
+        "liveDelay": 240,
+        "modelV2": 1200,
+        "radarState": 1200,
+        "roadCameraState": 1200,
+        "roadEncodeData": 0,
+        "roadEncodeIdx": 1200,
+        "wideRoadCameraState": 1200,
+        "wideRoadEncodeData": 0,
+        "wideRoadEncodeIdx": 1200
+      },
+      "filename": "rlog.zst",
+      "historical_RecordRoadCam": "0",
+      "label": "REC_CANDIDATE_04",
+      "recorded_model_input_frames": 0,
+      "recorded_source": {
+        "dirty": true,
+        "gitBranch": "carrot-nav",
+        "gitCommit": "ec36d5e56ea8b501a41d3a817cbfb5fd13ff3939",
+        "gitSrcCommit": ""
+      },
+      "sha256": "cad6b4a584a91946116cc10a93e2f3bba1fed4e82bbd7b9cdd7d5ceac87e723b",
+      "source_copy_identity": "PASS",
+      "source_postread_identity": "PASS",
+      "telemetry": {
+        "blinker_samples": 0,
+        "live_calibration_valid_entries": 240,
+        "logged_desire_transitions": 0,
+        "radar_lead_reported": 7,
+        "radar_no_lead_reported": 1193,
+        "recorded_lane_change_states": {
+          "off": 1200
+        },
+        "recorded_model_desire_counts": {
+          "none": 1200
+        },
+        "scalars": {
+          "isRHD": {
+            "count": 1198,
+            "max": 0,
+            "mean": 0.0,
+            "min": 0
+          },
+          "live_lateral_delay": {
+            "count": 240,
+            "max": 0.23444415628910065,
+            "mean": 0.23366833813488483,
+            "min": 0.23221193253993988
+          },
+          "standstill": {
+            "count": 6000,
+            "max": 0,
+            "mean": 0.0,
+            "min": 0
+          },
+          "steeringAngleDeg": {
+            "count": 6000,
+            "max": 3.0999999046325684,
+            "mean": 0.6910499961425861,
+            "min": -1.0
+          },
+          "vEgo_mps": {
+            "count": 6000,
+            "max": 22.257535934448242,
+            "mean": 22.192418320655822,
+            "min": 22.10627555847168
+          }
+        },
+        "standstill_to_motion_transitions": 0
+      }
+    },
+    {
+      "bytes": 11670835,
+      "camera_metadata": {
+        "roadCameraState": {
+          "count": 1200,
+          "frame_id_positive_gaps": 0,
+          "frame_identity_sha256": "c29faed7bc4adcf04e41a5cdc328bc3338a0b1c09ea5253fba51098c6c9f1cdb",
+          "image_bytes_nonzero": 0,
+          "sensors": [
+            "os04c10"
+          ],
+          "timestamp_nonzero": 1200,
+          "timestamp_positive_steps": 1199
+        },
+        "wideRoadCameraState": {
+          "count": 1200,
+          "frame_id_positive_gaps": 0,
+          "frame_identity_sha256": "7753749a8c50d745bb3f6f9a5834e6bddbcc066dbd5feac05857eb0011a56be6",
+          "image_bytes_nonzero": 0,
+          "sensors": [
+            "os04c10"
+          ],
+          "timestamp_nonzero": 1200,
+          "timestamp_positive_steps": 1199
+        }
+      },
+      "camera_metadata_frames": 1200,
+      "event_counts": {
+        "carState": 6001,
+        "driverMonitoringState": 1199,
+        "initData": 1,
+        "liveCalibration": 240,
+        "liveDelay": 240,
+        "modelV2": 1200,
+        "radarState": 1200,
+        "roadCameraState": 1200,
+        "roadEncodeData": 0,
+        "roadEncodeIdx": 1200,
+        "wideRoadCameraState": 1200,
+        "wideRoadEncodeData": 0,
+        "wideRoadEncodeIdx": 1200
+      },
+      "filename": "rlog.zst",
+      "historical_RecordRoadCam": "0",
+      "label": "REC_CANDIDATE_05",
+      "recorded_model_input_frames": 0,
+      "recorded_source": {
+        "dirty": true,
+        "gitBranch": "carrot-nav",
+        "gitCommit": "ec36d5e56ea8b501a41d3a817cbfb5fd13ff3939",
+        "gitSrcCommit": ""
+      },
+      "sha256": "9f9dabe6d1fc28e04dc38e34c5b44d236a058626debfb957fdb4d0ead910a2a3",
+      "source_copy_identity": "PASS",
+      "source_postread_identity": "PASS",
+      "telemetry": {
+        "blinker_samples": 613,
+        "live_calibration_valid_entries": 240,
+        "logged_desire_transitions": 5,
+        "radar_lead_reported": 667,
+        "radar_no_lead_reported": 533,
+        "recorded_lane_change_states": {
+          "off": 1200
+        },
+        "recorded_model_desire_counts": {
+          "none": 1079,
+          "turnLeft": 75,
+          "turnRight": 46
+        },
+        "scalars": {
+          "isRHD": {
+            "count": 1199,
+            "max": 0,
+            "mean": 0.0,
+            "min": 0
+          },
+          "live_lateral_delay": {
+            "count": 240,
+            "max": 0.2275978922843933,
+            "mean": 0.2275978922843933,
+            "min": 0.2275978922843933
+          },
+          "standstill": {
+            "count": 6001,
+            "max": 0,
+            "mean": 0.0,
+            "min": 0
+          },
+          "steeringAngleDeg": {
+            "count": 6001,
+            "max": 49.900001525878906,
+            "mean": -9.102716229576664,
+            "min": -121.30000305175781
+          },
+          "vEgo_mps": {
+            "count": 6001,
+            "max": 13.504433631896973,
+            "mean": 6.956040051197572,
+            "min": 2.850598096847534
+          }
+        },
+        "standstill_to_motion_transitions": 0
+      }
+    }
+  ],
+  "source_class": "ACTUAL_COMMA_RECORDED_LOG_METADATA",
+  "source_priority": "actual comma recordings first; no Google Drive discovery or download",
+  "source_sha256": {
+    "openpilot/cereal/log.capnp": "676d82915a0f4f4455183ae263e5b7bf268e71a0f7772b5d0486457702347351",
+    "openpilot/cereal/services.py": "2bb8305cce4070d7fba5caa00ec928bedf13a40da3424d8e16ce23ab632e4ab1",
+    "openpilot/common/transformations/camera.py": "3ac87fd236aa9c9e284059c47c9eb96a7c6e0be5106f514a95e6ec06e1060fb5",
+    "openpilot/common/transformations/model.py": "c87aad27074362fe9fe361a71da92c1fc90daf63bcfd4d8c47d65d3a936ec15e",
+    "openpilot/selfdrive/carrot/server/features/dashcam/routes.py": "1658a7a95cbbca54ad3ab454254626567126af841721bc54f0173330b7442e6e",
+    "openpilot/selfdrive/modeld/compile_modeld.py": "7bbcb18cd4499867a680268199a2f165584c34615f8f3e1359a74c94efc776c0",
+    "openpilot/selfdrive/modeld/jetlink/inputs.py": "c737e30ff8c1b170ebc2179394ee0ce63180e257ddb64ce0967aae7161398f8e",
+    "openpilot/selfdrive/modeld/jetlink/model.py": "c627644ff2f986883325aaca1b8410f216f45447c6595a123d8c1e53ef8c83da",
+    "openpilot/selfdrive/modeld/jetlink/warp.py": "85ebeb522e37cc8286bdebabd5ce21d66ab51f9af2a529ede26af61095f037ed",
+    "openpilot/selfdrive/modeld/modeld.py": "008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594",
+    "openpilot/system/camerad/cameras/nv12_info.py": "3a16d167e489b6862d67641bdbe681a1e751a90edf7e60e2eb6d9743000863be",
+    "openpilot/system/hardware/hw.py": "ce93d27d57ca5082782394a5c8f147332d656b8a04fd64dc77bb154b56123ea6",
+    "openpilot/system/loggerd/loggerd.h": "131917e2e4f336a062cb1b52bfc16267509937f86d56e671e9eed113e6b67382"
+  },
+  "status": "PARTIAL_RECORDED_SOURCE_AUDIT_COMPLETE_INPUT_RECONSTRUCTION_BLOCKED",
+  "synthetic_anomalies_reproduced_on_recorded_input": "NOT_TESTABLE_NO_RECONSTRUCTED_FRAMES",
+  "synthetic_results": "M16 historical stress remains separate; no new synthetic run or pooled recorded/synthetic metrics",
+  "target_pair": {
+    "ONNX": {
+      "bytes": 766354845,
+      "sha256": "404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4"
+    },
+    "TRT_plan": {
+      "bytes": 768580676,
+      "sha256": "8f831b5af400a10aa35128ceeceac74595df1363bdcd6fd230957415f7e540aa"
+    },
+    "identity_evidence": "previous exact M1/M16 evidence only; M17 did not open or execute the model/plan, rebuild, publish or access Jetson"
+  },
+  "tests": {
+    "classification": [
+      "CPU_FAKE",
+      "FIXTURE"
+    ],
+    "failed": 0,
+    "frozen_M16_M15_Nav_smoke": 75,
+    "new_provenance_tests": 12,
+    "passed": 87,
+    "review_repeats_not_added": true,
+    "skipped": 0
+  },
+  "upstreams": {
+    "carrot_jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "carrot_nav": "3da803836786acdd9f6699ce75ef1134d1aabc6e",
+    "carrot_wip": "3fdf82b268d69db31c1bf6d4137198d65cd548fe",
+    "external_review": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722",
+    "zoompilot_jetlink": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc"
+  },
+  "video_probe": {
+    "rc": 0,
+    "streams": [
+      {
+        "codec_name": "h264",
+        "height": 330,
+        "r_frame_rate": "20/1",
+        "width": 526
+      }
+    ]
+  }
+}

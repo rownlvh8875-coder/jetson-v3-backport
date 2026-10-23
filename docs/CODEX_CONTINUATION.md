@@ -1,5 +1,116 @@
 # Codex continuation — 2026-10-23
 
+## Latest checkpoint: M1.7 actual recordings audited; source pixels absent; M2 NO
+
+Read `docs/M17_RECORDED_DRIVING_PARITY_20261023.md` and
+`artifacts/m17_recorded_driving_parity_20261023.json` first, then M16 below.
+**PARITY_UNDETERMINED / Ready for M2 parked USB: NO / DO_NOT_INSTALL.**
+Actual comma recordings were prioritized; no Google Drive discovery/download ran.
+
+- Actual comma remains **carrot-nav366d6eae9aa9962104391e1d997fe956dea8f64d**.
+  Every device operation/download preflight used actual `cat` for IsOffroad=1
+  and IsOnroad=0 and checked the HEAD. No manager/modeld/camera/service/Params/
+  branch change, USB inference, CAN/vehicle action, new package or GPU operation.
+- Confirmed actual storage from pinned hardware source, then inventoried
+  **88routes /1037segments /4403files**. Recent5 candidate routes have
+  29/105/103/83/14segments. One nonempty middle rlog per route copied privately,
+  total61448059bytes; all5 original/copy size+SHA identities PASS, source rehash
+  unchanged afterward. Actual route names/times/GPS/raw logs/video stay ignored.
+- **No fcamera.hevc or ecamera.hevc in the entire confirmed route tree.**
+  qcamera.ts1036 and driver dcamera.hevc1036 exist. Existing ffprobe confirms
+  qcamera H.264/526×330/20fps. Driver view and reduced road video cannot replace
+  the missing original selected camera pixels. No video was copied/transcoded.
+- Actual schema reader inspected5rlogs/431355events: **6000 road/wide metadata
+  frame pairs**, both1200perstreampersample, nonzero increasing timestamps/IDs.
+  Both camera FrameData.image payloads empty for every sampled message. Each
+  sample has240 finite3element calibration entries; DMS isRHD all0. Historical
+  RecordRoadCam0 in all5. Actual full-camera recording source gates are documented;
+  no recording setting was changed or automatically proposed as an executed step.
+- Observed telemetry: positive speeds, standstill in01/02, radar lead status
+  true/false, published desire changes in02/05. All sampled lane-change states
+  off; no standstill→motion transition found in these middle segments. No
+  arbitrary straight/curve/complex-road label or whole-route coverage claim.
+  Logged meta.desire updates after DH.update and is not automatically the
+  same-frame rising-edge model input; dynamic action_t history still unvalidated.
+- Recorded source is e330e8552d4ca1927c6c3d476cb74f46f8bbd1a4 for01,
+  ec36d5e56ea8b501a41d3a817cbfb5fd13ff3939 for02..05, preceding actual366.
+  Candidate01 records dirty=false, **02..05 dirty=true**: their historical
+  commit SHA cannot attest all source bytes or reproduce unrecorded changes.
+  Do not treat their P2/Nav model outputs or today's Params as target V3 inputs.
+  Source-backed NV12 geometry, intrinsics/transform/yaw trim,6-channel packing,
+  main/extra stream selection and scalar pulse/action equations are documented.
+- **Representative V3 sequences0 / reconstructed input frames0.** ORT/TRT/
+  recurrent/parser comparison NOT_RUN due BLOCKED_RECORDED_INPUT_RECONSTRUCTION.
+  Whether synthetic anomalies reproduce on recorded input is **NOT_TESTABLE**,
+  not NO. All synthetic M16 metrics remain separate; no fabricated tensor or
+  pooled recorded/synthetic result. Approved semantic budgets also remain absent.
+
+### Code, tests and current source observations
+
+Start clean local/remote5bd9bcb1b10d63c35eb6b16bd35ae8ae4ce0626f.
+New pure provenance helper/tests/plan commit
+**66b220344ec1f4ce93e21b4d64611e1f08273acc**. New files
+`tools/recorded_driving_gate.py`, `tests/test_recorded_driving_gate.py`, M17 report/
+artifact and execution plan; README/handoff updated. No existing adapter,
+M1/M15/M16 tool, production code or patch modified. Final evidence/handoff commit
+contains this record; resolve its actual SHA using `git log -1 --format=%H --
+docs/CODEX_CONTINUATION.md`, and development HEAD using `git rev-parse HEAD`.
+
+Fresh CPU **PASS87 / FAIL0 / SKIP0**:12new pure gate/privacy/motion/output tests
+plus75 frozen M16/M15/Nav adapter/wire/loopback smoke. Repeats and previous708
+are not added. Existing WSL interpreter and3 candidate/reference roots, command:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 "$PY" -m pytest -q -p no:cacheprovider tests/test_recorded_driving_gate.py tests/test_jetson_m16_acceptance.py tests/test_jetson_m16_analysis.py tests/test_jetson_m15_semantic.py tests/test_carrot_nav_adapter.py tests/test_carrot_nav_wire.py tests/test_carrot_nav_loopback.py
+```
+
+Independent final review checked source/copy hashes, counts, privacy and scoped
+preservation; one historical clean-source wording error was corrected to the
+actual dirty flags. No remaining actionable finding; no device activity or
+reviewer test executions added to87. Final artifact/hash/privacy/diff checks PASS.
+
+Start/final re-queries match these latest observed upstreams (no automatic source adoption):
+
+| Source | Full SHA |
+|---|---|
+| Upstream carrot-nav | 3da803836786acdd9f6699ce75ef1134d1aabc6e |
+| carrot-wip | 3fdf82b268d69db31c1bf6d4137198d65cd548fe |
+| carrot-jetson main | d0dc96fa32410403dfb2fefff3e2909c11ec109b |
+| zoompilot/jetlink main | d24328d849b0e5154b55f149dc18c5dfe8bd79cc |
+| external review | a890f6df1bd3eb0478754c68d8b5f92f15e8b722 |
+
+M16's Nav shared-input drift review remains applicable; latest-Nav adapter
+compatibility **NOT_REVALIDATED**, frozen actual366 candidate unchanged.
+
+### Preservation and next precise action
+
+**Operating comma preservation PASS within measured scope.** Actual HEAD/branch/
+offroad flags/tracked working tree, all4403file name/size/mtime inventory digest
+f29eeb1934517f92bbd365d12019191fba27dbb36efadfa13d3514f3f1cc39d6 unchanged.
+Ten selected original rlog/qlog content hashes and5 copied rlogs match. Five
+launcher/manager/modeld/warp source hashes match pinned Git objects and remain
+unchanged;3 operating process identities identical.15 model file content hashes
+match in a later before/after window. This is not full content hashing of all
+route videos/runtime or a session-start attestation for all15model files.
+No Jetson access or modification this session; exact M1 plan remains untouched
+by all M17 commands, supported by prior M16 identity evidence rather than a new
+device hash. No SSH key/relay/agent configuration was created or changed.
+
+Only owned read-only helper sessions were created. An initial truncated-command
+session survived its first close attempt; final audit detected it and cleanup
+terminated only its exact locally proven owned tmux session. Other owned M17
+sessions remaining0; final actual HEAD/offroad check PASS. Private command/copy/
+observation/preservation manifests remain in `.reports/m17-20261023/` for the
+authorized next session. No raw route/private address/credentials entered Git.
+
+**Next action:** obtain one approved >=256 consecutive-frame original selected
+road/wide recording (or exact recorded V3 preprocessed inputs) with timestamp,
+calibration and scalar provenance, then run the M17 input gate again. A future
+recording configuration change requires separate authorization and must not be
+made silently. Do not substitute qcamera, change RecordRoadCam, start USB, use
+new memory workarounds or rebuild the existing plan. M16 resource/acceptance
+holds remain outstanding once valid inputs exist.
+
 ## Latest checkpoint: M1.6 historical512 measured; numerical/resource hold; M2 NO
 
 Read this section first, then `docs/M16_NUMERICAL_ACCEPTANCE_20261023.md` and

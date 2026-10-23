@@ -30,6 +30,11 @@ historical512프레임의 독립 recurrence와 teacher forcing을 측정했다. 
 128-slot turnover는 도달했으나 대표 기록 입력·승인 기준은 없으며 bounded TRT는
 deserialize OOM으로 0프레임이다. **PARITY_UNDETERMINED / M2 NO**, 운영본·adapter는 보존했다.
 
+2026-10-23 [M1.7 실제 주행 기록 조사](docs/M17_RECORDED_DRIVING_PARITY_20261023.md):
+actual comma의 88개 route를 조사하고 최근 5개 rlog의 복사·해시를 검증했다.
+원본 road/wide 영상과 로그 image payload가 없어 V3 입력 재구성은 0프레임이다.
+**ORT/TRT NOT_RUN / PARITY_UNDETERMINED / M2 NO**이며 원본·운영본을 보존했다.
+
 2026-10-20 [외부 Jetson 최적화 검토](docs/JETSON_REVIEW_A890_ANALYSIS.md):
 DeviceState와 InputFastpath는 기존 검증을 유지한 기본 OFF 실험 후보다.
 AIO는 운영 transport에 연결하지 않았으며, 실장 순서는 M0 → 기본 V3 → USB →
