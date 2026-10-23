@@ -34,42 +34,46 @@
 Files: tools/jetson_m15_semantic.py, tests/test_jetson_m15_semantic.py.
 Interfaces: export original-model ORT101-frame manifest/arrays; measure same sequence on M1 engine with raw/state/semantic/parser metrics and no acceptance claim. Reuse tools/jetson_m1{,_recurrent,_parity}.py and actual parser/constants.
 
-- [ ] Write failing CPU tests for all actual slice boundaries, denominator policy, quantiles/RMSE, input identity, schema/count/hash failures, parser mutation/shape/nonfinite, state drift diagnostics and intentional exit3.
-- [ ] Run RED; implement minimal bounded exporter/measurement and actual parser loader. Run focused tests GREEN. Expected: no CUDA/ORT import in CPU math tests; invalid inputs fail before CUDA.
-- [ ] Commit implementation after reviewable CPU evidence. Keep M1 tool behavior unchanged.
+- [x] Write failing CPU tests for all actual slice boundaries, denominator policy, quantiles/RMSE, input identity, schema/count/hash failures, parser mutation/shape/nonfinite, state drift diagnostics and intentional exit3.
+- [x] Run RED; implement minimal bounded exporter/measurement and actual parser loader. Run focused tests GREEN. Expected: no CUDA/ORT import in CPU math tests; invalid inputs fail before CUDA.
+- [x] Commit implementation after reviewable CPU evidence. Keep M1 tool behavior unchanged.
 
 ## Task2 — actual source/plan and semantic sequence
 
-- [ ] Re-establish existing known access only; read-only actual comma flags/HEAD and Jetson full preservation plus M1 identities. Stop hardware on uncertainty. No scans.
-- [ ] Export101 original ONNX ORT_CPU frames, seed73. Stage only new tool/references/provenance within M1 dev root with storage/hash checks; never overwrite frozen M1 code/reports/plan.
-- [ ] Run actual TRT under live offroad guardian. Expected: all named contracts/finite,101 matching nonstate input digests, independent recurrent state. Actual Nav parser consumes each pair of output copies. Preserve per-frame and aggregate metrics; no retries/threshold relaxation.
-- [ ] Analyze scales, state growth/plateau limits, parser behavior sensitivity; record threshold-source applicability and PARITY_UNDETERMINED unless all approval conditions actually supported. Stop adoption preparation on material behavior anomaly or unbounded evidence; independent non-activating analysis can continue.
+- [x] Re-establish existing known access only; read-only actual comma flags/HEAD and Jetson full preservation plus M1 identities. Stop hardware on uncertainty. No scans.
+- [x] Export101 original ONNX ORT_CPU frames, seed73. Stage only new tool/references/provenance within M1 dev root with storage/hash checks; never overwrite frozen M1 code/reports/plan.
+- [x] Run actual TRT under live offroad guardian. All named contracts/finite and101 normalized input digests passed; each runtime used independent recurrence and actual Nav parser copies. Initial deserialize OOM and a pre-CUDA permission refusal were retained. One corrected run followed reviewed private-file cache preparation; no engine/config/threshold change. See execution ruling below.
+- [x] Analyze scales, state growth/plateau limits, parser behavior sensitivity; record threshold-source applicability and PARITY_UNDETERMINED unless all approval conditions actually supported. Stop adoption preparation on material behavior anomaly or unbounded evidence; independent non-activating analysis can continue.
 
 ## Task3 — minimal exact-Nav candidate
 
 Files: adapters/carrot/nav.py; tests/test_carrot_nav_adapter.py; generated patches/carrot-nav-protocol3-managed.patch and artifact.
 Interfaces: build_nav_candidate(reference,destination), fail closed on actual base/source drift; manifest has base/before/after/patchSHA/touched files/rollback. Separate candidate from existing WIP generator.
 
-- [ ] Write failing source/behavior tests for dtype maps roundtrip and empty-map legacy bytes, five Nav state pairs/maps/N16, managed dispatch before exact Nav legacy branch, stale spec/SHA and onroad/unknown/missing-engine denial.
-- [ ] Implement reuse of existing comma_files/managed policy plus minimal Nav spec extension; preserve maps and original legacy branch bytes. Run RED→GREEN.
-- [ ] Generate fresh candidate from actual366d6eae; verify forward/reverse patch and untouched critical model/link/parser/daemon/updater hashes. Commit only source/tests/patch/manifest.
+- [x] Write failing source/behavior tests for dtype maps roundtrip and empty-map legacy bytes, five Nav state pairs/maps/N16, managed dispatch before exact Nav legacy branch, stale spec/SHA and onroad/unknown/missing-engine denial.
+- [x] Implement reuse of existing comma_files/managed policy plus minimal Nav spec extension; preserve maps and original legacy branch bytes. Run RED→GREEN.
+- [x] Generate fresh candidate from actual366d6eae; verify forward/reverse patch and untouched critical model/link/parser/daemon/updater hashes. Keep generated patch/manifest in the final evidence commit.
 
 ## Task4 — Nav client/server namespace regression and fallback
 
 Files: tests/test_carrot_nav_loopback.py and scoped peer helpers as needed.
 Interfaces: Nav comma candidate process versus separately generated existing reviewed WIP host candidate process, deterministic CPU engine only.
 
-- [ ] Cover actual V2/Nav P2 client framing/prev_feat/stateful_v2/N16 against exact source contracts; compare unpatched reference and candidate bytes/behavior. Distinguish real-model-required gates.
-- [ ] Exercise actual Nav generic JetlinkClient/mac.prepare/daemon IPC/actual parser/JoiningModel with full V3 P3 synthetic recurrence. Reuse existing subprocess helpers where APIs permit; hardware substituted only at engine/camera/small engine boundaries.
-- [ ] Cover reset/reconnect/generation/bad identity/spec/output/state/timeout/disconnect and local-small fallback. Keep timeout/finite/identity gates unchanged. Run existing rolling and maintained M1 regression; record exact counts and any collector limitations.
+- [x] Cover actual V2/Nav P2 client framing/prev_feat/stateful_v2/N16 against exact source contracts; compare unpatched reference and candidate bytes/behavior. Distinguish real-model-required gates.
+- [x] Exercise actual Nav generic JetlinkClient/mac.prepare/daemon IPC/actual parser/JoiningModel with full V3 P3 synthetic recurrence. Reuse existing subprocess helpers where APIs permit; hardware substituted only at engine/camera/small engine boundaries.
+- [x] Cover reset/reconnect/generation/bad identity/spec/output/state/timeout/disconnect and local-small fallback. Keep timeout/finite/identity gates unchanged. Run existing rolling and maintained M1 regression; record exact counts and any collector limitations.
 
 ## Task5 — M2 plan, evidence and continuation
 
 Files: docs/M15_ORT_TRT_PARITY_20261023.md, artifacts/m15_ort_trt_parity_20261023.json; docs/M15_CARROT_NAV_PROTOCOL3_ADAPTER_20261023.md, artifacts/m15_carrot_nav_adapter_20261023.json; docs/M2_PARKED_USB_PLAN_20261023.md; docs/CODEX_CONTINUATION.md.
 
-- [ ] Record actual/proposed threshold provenance, full semantic/state/parser tables and limitations; no raw arrays/private data in Git.
-- [ ] Prepare M2 phases0..9 with endpoint ownership, explicit approval boundary, hashes/offroad, independent launch, HELLO, synthetic USB, parser/fault/fallback, V2/Nav restore, separate GPU/server/TX/RX/client/modelExecutionTime/camera/publish latency p50/p95/p99/max/exceed count and thermal gates. No M2 execution.
-- [ ] Verify operating before/after preservation; close only own access/monitor/jobs. Refresh five upstream refs and analyze drift if any.
+- [x] Record actual/proposed threshold provenance, full semantic/state/parser tables and limitations; no raw arrays/private data in Git.
+- [x] Prepare M2 phases0..9 with endpoint ownership, explicit approval boundary, hashes/offroad, independent launch, HELLO, synthetic USB, parser/fault/fallback, V2/Nav restore, separate GPU/server/TX/RX/client/modelExecutionTime/camera/publish latency p50/p95/p99/max/exceed count and thermal gates. No M2 execution.
+- [x] Verify operating before/after preservation; close only own access/monitor/jobs. Refresh five upstream refs and analyze drift if any. All five refs remained unchanged at the final query.
 - [ ] Independent final branch review, evidence/privacy/diff checks, normal feature commits/push, remote equality/clean tree/main+old feature unchanged. Resolve final HEAD after documentation commit.
 
 Ruling: user explicitly requested autonomous ordered execution and already chose scope/base/installation boundary. Brainstorm/design approval questions are opted out; execute this plan without another confirmation. Existing requested feature checkout and disposable upstream candidates provide the requested isolation; no unrelated branch/worktree creation.
+
+Execution ruling: initial CUDA OOM occurred before any frame. A reviewed, default-OFF measurement-only option validates exact103 owned private files through pinned read-only FDs and issues POSIX_FADV_DONTNEED only for those files. A first permission gate refusal was retained; private file modes were tightened without changing bytes. Measured free memory recovery preceded one corrected101-frame measurement. No global cache flush, service intervention, swap/workspace/clock/package adjustment or rebuild occurred. After the measured parser disagreement, no additional GPU variant or adoption followed.
+
+Outcome: software candidate PASS (708 target CPU suite executions,0 failures/0 skips; separate control170 and repeated reviews excluded). Actual101-frame measurement completed, but numerical approval remains PARITY_UNDETERMINED, parser numerical approval NOT_AVAILABLE and M2 readiness NO. Task completion records investigation and preparation, not approval for USB or installation.

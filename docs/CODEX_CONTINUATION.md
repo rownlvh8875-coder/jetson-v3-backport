@@ -1,6 +1,180 @@
 # Codex continuation — 2026-10-23
 
-## Latest checkpoint: M0.5 reconciled; actual isolated M1 build and BASE recurrence
+## Latest checkpoint: M1.5 software bridge PASS; numerical hold; M2 NOT authorized
+
+Read in order: this section, `docs/M15_ORT_TRT_PARITY_20261023.md`,
+`docs/M15_CARROT_NAV_PROTOCOL3_ADAPTER_20261023.md`,
+`docs/M2_PARKED_USB_PLAN_20261023.md`, and both corresponding m15 artifacts.
+Keep the historical M1/M0 checkpoints below. **DO_NOT_INSTALL** remains active.
+
+- **101 actual paired recurrent frames completed**, original ORT1.31 CPU versus
+  same exact M1 TRT10.3 plan on Orin. Every contract/finite gate passed;
+  normalized nonstate input digests101/101 matched; each runtime used its own
+  zero-initialized recurrent state. All15 actual output slices,22 actual Nav
+  parser fields and30 plan mean/std physical channels were measured.
+- **PARITY_UNDETERMINED; Ready for M2 parked USB: NO.** Whole/plan maximum
+  absolute error4.25 (plan POSITION[0], frame45); lead maximum4.0 (frame46).
+  Parsed desire_pred argmax differed once at frame14, desire_state never.
+  Parser execution/shape/dtype/finite PASS; parser numerical approval
+  NOT_AVAILABLE because no approved criteria and a classification disagreement.
+  No model adoption or further actual GPU variant followed that observation.
+- Feature-state max0.109375→0.296875, mean0.000062456874→0.007182852221,
+  RMSE0.000963076→0.011133943 at frame100. Mean/max nondecreasing; image/desire
+  state difference0 throughout. Actual ONNX Slice(state_feat_q,1)+current
+  hidden_state[2066:18450] fills a128-slot queue. Cumulative hidden error
+  moments reconstruct every measured state mean/max exactly and RMSE to5.21e-18.
+  This explains stored-history growth; it does not establish infinite boundedness
+  or plateau before full queue turnover, or isolate state causality downstream.
+- Same M1 random-noise generator/seed73 retained, action_t=frame/20 reaches5s.
+  It is OOD numerical stress, not vehicle input. Disagreement at frame14 must
+  not be dismissed as solely a >1s horizon problem. Actual parser source was
+  hash-pinned and unmodified; safe copies prevent parser mutation of references.
+- Source precedents found: Jetlink V3 correlation.999/tiny/quiet heuristics,
+  comma/Nav PC replay tolerance.3 with many driving fields excluded, NVIDIA
+  application-specific accuracy guidance. None supplies approved V3 parsed/
+  physical/recurrent error budgets. Proposed no-desire-flip criterion is labelled
+  PROPOSED_THRESHOLD/NOT_APPROVED and is not satisfied by this stress sample.
+
+### Current sources, commits and files
+
+Session start local/remote feature HEAD:
+`12c53ef8d9d4d64bc84dcc3c3a880fc8f12f960c`, clean correct branch.
+All five upstream refs were freshly queried; observations remain:
+
+| Source | Full SHA |
+|---|---|
+| Actual comma carrot-nav | `366d6eae9aa9962104391e1d997fe956dea8f64d` |
+| Upstream carrot-nav | `366d6eae9aa9962104391e1d997fe956dea8f64d` |
+| Latest carrot-wip | `813369b0c53bb9c997b7ffbe17fca90222a755b8` |
+| carrot-jetson main | `d0dc96fa32410403dfb2fefff3e2909c11ec109b` |
+| zoompilot/jetlink main | `d24328d849b0e5154b55f149dc18c5dfe8bd79cc` |
+| External review | `a890f6df1bd3eb0478754c68d8b5f92f15e8b722` |
+
+Implementation commits: b0d721043f529340d308a0eaa2e0497294d35be2 semantic tool;
+7a80a0090f89f1889cd43c8ba6a0b46511cb785b minimal Nav bridge;
+5812a6587a1cd6211151cb10c82cd196e8214ccb explicit private file-cache preparation;
+b5f24feef15decad312229148ad24b5e8e37ea69 exact wire and patch rollback tests.
+Evidence/docs publication commit follows; resolve containing
+HEAD with `git rev-parse HEAD` / `git log -1 --format=%H -- docs/CODEX_CONTINUATION.md`.
+Never hardcode these as permanent upstream branch pins.
+
+New code: `tools/jetson_m15_semantic.py`, `adapters/carrot/nav.py`; new tests
+`test_jetson_m15_semantic.py`, `test_carrot_nav_adapter.py`,
+`test_carrot_nav_loopback.py`, `test_carrot_nav_wire.py`. Existing test peer only
+gains the Nav camera prepare callback and first-frame diagnostic assertion.
+New requested reports, m15 artifacts, M2 plan and
+`patches/carrot-nav-protocol3-managed.patch`; rolling baseline/README/this handoff
+updated. No large ONNX/plan/NPZ/private log/credential in Git.
+
+### Nav software candidate and regression evidence
+
+- Actual366d6eae base, comma-only **six files:3existing+3new**. Add explicit
+  managed dispatch before existing Nav pin and preserve optional dtype maps.
+  Empty maps stay omitted, keeping exact legacy V2/Nav dictionaries and N16
+  spec hash63b2097c114bade03c5ec7ded978d73032a93bb525c03f9b78eddf49809f8b71.
+  Exact catalog V2/Nav/V3; unknown/missing/stale/mismatched model rejects.
+  Existing offroad approval/reconnect and SHA/spec checks reused.
+- model/link/parser/daemon/selection/contracts/client/warp/inputs/updater bytes
+  untouched. Nav maps/navigation/five state pairs/P2 stateful_v2/N16 remain.
+  Existing Nav default is exact Nav, not WIP's V2 default. Same-SHA live spec
+  guard belongs paired reviewed host's prepared object/spec snapshot; HELLO is
+  not authentication and comma SHA telemetry alone is not a spec attestation.
+- Fresh expanded LF reference `.reference/m15-carrot-nav-366d6eae` includes
+  navigation; candidate `.candidate/m15-carrot-nav-complete-366d6eae`. Earlier
+  sparse-reference missing-navigation collection errors affected control and
+  candidate equally; old refs/results preserved, new complete runs passed.
+- Patch SHA bfeca1f882cbd12fe4130d17f9358b80472cdecc5a4e0e69af8a26289b535267.
+  Manifest records base and all before/after hashes. Reverse/forward checks and
+  exact restoration executed only on disposable copies, not actual devices.
+- Target CPU suite executions **PASS708 / FAIL0 / SKIP0**, branch/configuration
+  variants counted separately: rolling WIP288 +startup103 +local136 +Nav
+  upstream170 +Nav managed11. Separate original Nav control170 also PASS and
+  not added. Reviews repeat cases and are not added; final independent review
+  reran38 cases with0 failures/0 skips and found no must-fix. local136=M1regression85+
+  semantic/cache25+Nav adapter/rollback8+Nav loopback13+wire snapshots5.
+- Nav upstream counts24NavRL+53App+11statefulprotocol+42projection+40mac match
+  original control. Source metadata is exact; actual Nav model inference not run.
+  Five actual-client TCP snapshots preserve V2 P2/P3 and Nav P2/full/N16/map-codec
+  plus Nav P3 full bytes. Separate-process Nav comma/WIP host uses real client,
+  daemon IPC, parser and JoiningModel, replacing only hardware seams. Faults
+  close/reject and reach real small-fallback path; no USB or comma inference.
+- One WIP-specific legacy V2-default test was explicitly deselected under Nav;
+  a new exact Nav default test replaces it. A new stale-sequence test's incorrect
+  <1s expectation was corrected to actual existing3s deadline and existing4s
+  harness envelope, with no runtime timeout increase. Legacy bare pytest
+  collector SystemExit limitation remains; use maintained explicit suites.
+
+### Actual memory failure, correction and preservation
+
+The first101-frame TRT job failed in engine deserialize with735338624-byte
+CUDA OOM, zero frames; original logs/guardian exit1 preserved. A reviewed
+default-OFF `--release-private-file-cache` option was added to the measurement
+harness only. Its first preparation was rejected before CUDA for private
+upload permissions0775/0664. Gates were retained: only owned103 reference/M1
+source/plan files became0600, reference directory0700; byte hashes unchanged.
+No operating permissions, caches or services were altered.
+
+Same read-only pinned FD validates full SHA/size/owner/nlink/mode/device and then
+advises DONTNEED; no content reread after final advice before CUDA. Exactly
+2588748109 bytes of private-file cache were advised, not global drop_caches.
+MemFree884748288→3496996864; Cached5188825088→2599829504; swap unchanged.
+Without measured recovery>=the failed allocation size, the resource gate would
+have blocked CUDA. One corrected actual retry completed101 frames in45.061s,
+guardianPASS/workerexit3 (intentional no-approval result). No further retries,
+rebuild, workspace/swap/package/clock changes. M1's older recovered64MB tactic
+OOM remains in the history. All three inference optimization flags stayed0.
+
+Existing M1 root/model/plan remain; new results below
+`/run/carrot-data/jetson-v3-m1-20261023/m15/`:
+`result-101-cache-prepared/report.json`, cache-preparation.json, three distinct
+process/guard records, ORT101 reference/manifest, original/revised tool source
+and parser copies. Do not overwrite or delete evidence. Revised executed tool
+SHA76da628b54a2c1c6ba82b6086ca949185a13b25ce5ef800e848fc5257e816a58.
+
+Before/after operating inventory matches M1 digest
+ca2ac82d26a0eed7bc622f9887bfef9027216ed86c0b71a7382bf5bc6a50a6a1:
+V2/Nav ONNX/plans, sidecars, timing/last-loaded files (8cache files), current,
+five-release membership, service unit hash/ExecStart and dependency metadata
+unchanged. Full release source-tree hash was not measured. Isolated M1 plan
+still768580676 bytes/SHA8f831b5af400a10aa35128ceeceac74595df1363bdcd6fd230957415f7e540aa;
+source still404a18cf/766354845. The private permission change is explicitly not
+an engine-byte change. Final comma remainsNav366/offroad1/onroad0. Zero owned
+workers; monitor/master/agent/relay closed and relay port closure checked.
+
+### Commands, remaining gates and next first action
+
+Fresh local command: existing WSL Python, explicit Nav reference/candidate and
+separate WIP host roots in CARROT_NAV_REFERENCE_ROOT/CARROT_NAV_CANDIDATE_ROOT/
+CARROT_HOST_CANDIDATE_ROOT; then:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 "$PY" -m pytest -q -p no:cacheprovider tests/test_jetson_m1.py tests/test_jetson_m1_recurrent.py tests/test_jetson_m1_parity.py tests/test_jetson_m15_semantic.py tests/test_carrot_nav_adapter.py tests/test_carrot_nav_loopback.py tests/test_carrot_nav_wire.py
+PYTHONDONTWRITEBYTECODE=1 "$PY" tools/check_latest_carrot_compat.py --work-dir .candidate/m15-carrot-wip-5812a65 --report .reports/m15-20261023/carrot-compat.json --update-baseline
+```
+
+Exact real ORT/TRT argv and source hashes are in the semantic report. Raw helper
+commands, private connection details and logs remain ignored in
+`.reports/m15-20261023`. No unlocked agent or live offroad controller remains.
+
+PASS: software/strict invariants/preservation. Numerical approval BLOCKED;
+PARITY_UNDETERMINED remains. Initial actual OOM and preparation refusal were
+real failures retained in evidence, not hidden in the passing CPU count.
+USB_REAL/COMMA_REAL inference/VEHICLE_PARKED/ROAD_TEST NOT_RUN by scope.
+
+Next first action is authenticated read-only preflight, not an installation:
+on confirmed Jetson shell run `readlink /opt/carrot-jetlink/current`,
+`systemctl show carrot-jetlink.service --no-pager --property=ExecStart,ActiveState,SubState,FragmentPath,DropInPaths`,
+and `sha256sum /run/carrot-data/jetson-v3-m1-20261023/build/cinque-v3.plan`;
+recheck actual comma HEAD/road flags and all operating hashes against this
+checkpoint. Query five upstreams again. Then resolve representative sequence,
+desire disagreement and approved physical/recurrent criteria in an isolated
+numerical stage. No automatic M2 activation. M2 plan phases0..9 requires a
+separate scope and exclusive USB owner/restore authorization. Keep BASE then
+DeviceState → DeviceState+InputFastpath → only-if-needed AIO after BASE gates.
+
+---
+
+## Previous checkpoint: M0.5 reconciled; actual isolated M1 build and BASE recurrence
 
 Read these first: `docs/M05_CARROT_NAV_VS_WIP_20261023.md`,
 `docs/M1_JETSON_V3_TRT10_BUILD_20261023.md`, and sanitized

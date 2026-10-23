@@ -1,0 +1,210 @@
+{
+  "catalog": "exact reviewed V2/Nav/V3 seeds only; future models require individual validation",
+  "changed_files": 6,
+  "date": "2026-10-23",
+  "existing_files": 3,
+  "fallback": "PASS: real Nav JoiningModel path; hardware warp/small inference substituted, no vehicle acceptance",
+  "generator": "adapters/carrot/nav.py",
+  "installation": "DO_NOT_INSTALL",
+  "limits": [
+    "actual Nav ONNX/TRT/P2/P3 inference not run; metadata/source fixtures only",
+    "no operating comma/source/Params/service changes",
+    "numerical approval is separate and blocked; M2 readiness NO",
+    "initial incomplete sparse reference caused baseline+candidate collection errors, corrected by fresh reference materializing navigation, source patch hash identical",
+    "stale previous-connection test uses unchanged production3s remote deadline and existing4s test envelope; no runtime timeout increase"
+  ],
+  "live_same_SHA_spec_contract": "paired reviewed host snapshots prepared Loaded object and exact spec before inference; comma SHA-only telemetry is not independent host authentication",
+  "local_source_sha256": {
+    "adapters/carrot/nav.py": "18caade14c90bd44e635a674f9b67002e4241f05cc0308600959a9cd91e099dc",
+    "tests/current_carrot_loopback_peer.py": "19f41419397834ceaa80f54f53eb31cdd8b130e6ca7f0bcc39665e9080c8b92c",
+    "tests/test_carrot_nav_adapter.py": "63c488b6c95e4fe8c9fda9040922e7f739b9a441c464208b011f4fe0a34909ff",
+    "tests/test_carrot_nav_loopback.py": "2583194eb557dfb824d468ffb4612bedd37abee487e13be5405aa9db51efe036",
+    "tests/test_carrot_nav_wire.py": "2256d5f2f71bc1da4af269c0a632fd7c4ca66addc48dc9060d3099444565e0a9",
+    "tests/test_jetson_m15_semantic.py": "91c0052553873940cd1c4580b603072062600e82bc686ea22ee242cc5a690677",
+    "tools/jetson_m15_semantic.py": "76da628b54a2c1c6ba82b6086ca949185a13b25ce5ef800e848fc5257e816a58"
+  },
+  "managed_selection": "PASS: exact catalog, offroad first approval, exact-approved reconnect, identity/spec/dtype drift and missing/unknown reject",
+  "manifest": {
+    "base_sha": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+    "branch": "carrot-nav",
+    "evidence": "CPU_FAKE/FIXTURE only until checked",
+    "host": "existing WIP host candidate in separate process; no Nav server port",
+    "installation": "DO_NOT_INSTALL",
+    "patch_sha256": "bfeca1f882cbd12fe4130d17f9358b80472cdecc5a4e0e69af8a26289b535267",
+    "repository": "https://github.com/ajouatom/openpilot",
+    "rollback": "Check exact after hashes; reverse patch only in disposable development copy and verify before hashes. Operating V2/Nav/cache/current remain untouched.",
+    "schema": 1,
+    "status": "CANDIDATE_UNVERIFIED",
+    "touched_files": [
+      {
+        "after_sha256": "f0fb82583e3a91814efcff73ea93514aebd6c5dda063f796bf74f503be85216b",
+        "before_sha256": null,
+        "path": "openpilot/common/jetlink_managed.py"
+      },
+      {
+        "after_sha256": "6d1164105799dd777506875d73b93c1587fac90223f6780a2e766d1059788a4b",
+        "before_sha256": "208439bc1fb2f50cb348743ef9e89586604d5f53407794630f24963fc2395d18",
+        "path": "openpilot/common/jetlink_peer.py"
+      },
+      {
+        "after_sha256": "2f016f577a651670c34c7f8df27b22469145a67046dce266f0443ac3a0e0f157",
+        "before_sha256": null,
+        "path": "openpilot/selfdrive/modeld/jetlink/cinque_v3.json"
+      },
+      {
+        "after_sha256": "2aca368218a97166dc35e853b262b8f5d02850b2a50907897eb14eb2855d3a21",
+        "before_sha256": "7e73f80b814dfdeb369c2243e53331ef6cca855a26ad247f249125f4459c868d",
+        "path": "openpilot/selfdrive/modeld/jetlink/mac.py"
+      },
+      {
+        "after_sha256": "ca3b3dc3c6ec376ca491f0b34f82e3384dd1fa9d2b9c635a61a359af53044935",
+        "before_sha256": null,
+        "path": "openpilot/selfdrive/modeld/jetlink/managed.py"
+      },
+      {
+        "after_sha256": "3274fe1afdfd0593b804a2ee626dd40aa401cbeab89b6815bfbf95fd8a4e4b38",
+        "before_sha256": "ec844ccaf13ffc1d7c03ad683b0e3f2ce6a1d78f4088067739aaa419af422170",
+        "path": "third_party/jetlink/jetlink/spec.py"
+      }
+    ]
+  },
+  "new_files": 3,
+  "patch": "patches/carrot-nav-protocol3-managed.patch",
+  "preservation": {
+    "after_digest": "ca2ac82d26a0eed7bc622f9887bfef9027216ed86c0b71a7382bf5bc6a50a6a1",
+    "available_bytes": 9068023808,
+    "before_digest": "ca2ac82d26a0eed7bc622f9887bfef9027216ed86c0b71a7382bf5bc6a50a6a1",
+    "build/cinque-v3.plan": {
+      "mode": "0o600",
+      "nbytes": 768580676,
+      "sha256": "8f831b5af400a10aa35128ceeceac74595df1363bdcd6fd230957415f7e540aa"
+    },
+    "cache_revision_sha256": "76da628b54a2c1c6ba82b6086ca949185a13b25ce5ef800e848fc5257e816a58",
+    "dependency_metadata_equal": true,
+    "equal_to_M1": true,
+    "models/big_driving_supercombo_v3.onnx": {
+      "mode": "0o600",
+      "nbytes": 766354845,
+      "sha256": "404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4"
+    },
+    "operating_files": 8,
+    "operating_preservation": "PASS",
+    "owned_workers_remaining": 0,
+    "releases": 5,
+    "source_manifests_unchanged": true
+  },
+  "preserved": [
+    "legacy missing dtype maps and N16 spec hash63b2097c114bade03c5ec7ded978d73032a93bb525c03f9b78eddf49809f8b71",
+    "Nav maps/navigation/five state pairs",
+    "client/P2/stateful_v2/packed codecs/N16",
+    "existing exact Nav selection and App selection",
+    "model/link/parser/daemon/selection/updater bytes unchanged"
+  ],
+  "protocol2_Nav": "PASS: full and N16+map-codec byte equality; exact metadata/current selection/upstream regressions",
+  "protocol2_V2": "PASS: full exact-source request/reply snapshots and prev_feat retention",
+  "protocol3_V2_Nav": "PASS: original/candidate full wire snapshots",
+  "protocol3_V3": "PASS: real Nav daemon IPC/parser/JoiningModel with full-size CPU_FAKE engine and separate WIP host namespace",
+  "ready_for_M2_parked_USB": false,
+  "reason": "semantic/parsed numerical hold; desire_pred disagreement and no applicable acceptance budget",
+  "schema": 1,
+  "scope": "comma-only Nav adapter; separately reviewed WIP host candidate in different process supplies managed resident/spec/generation gates; not a Nav host merge",
+  "sources": {
+    "actual_carrot_nav": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+    "carrot_jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "carrot_wip": "813369b0c53bb9c997b7ffbe17fca90222a755b8",
+    "external_review": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722",
+    "upstream_carrot_nav": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+    "zoompilot_jetlink": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc"
+  },
+  "status": "PASS_SOFTWARE_CANDIDATE",
+  "tests": {
+    "M1_and_M15_local": {
+      "failed": 0,
+      "includes": {
+        "M1": 85,
+        "Nav_adapter": 8,
+        "Nav_loopback": 13,
+        "Nav_wire_snapshots": 5,
+        "semantic": 25
+      },
+      "passed": 136,
+      "skipped": 0
+    },
+    "Nav_managed_reused": {
+      "deselected": 1,
+      "failed": 0,
+      "passed": 11,
+      "reason": "old WIP V2 default selection expectation is deliberately not Nav behavior; new Nav exact-pin test replaces it",
+      "skipped": 0
+    },
+    "Nav_original_control": {
+      "counted_in_target_total": false,
+      "failed": 0,
+      "passed": 170,
+      "skipped": 0
+    },
+    "Nav_upstream_candidate": {
+      "failed": 0,
+      "passed": 170,
+      "skipped": 0,
+      "suites": [
+        {
+          "errors": 0,
+          "failures": 0,
+          "name": "upstream-nav-test_nav_rl",
+          "passed": 24,
+          "skipped": 0,
+          "tests": 24
+        },
+        {
+          "errors": 0,
+          "failures": 0,
+          "name": "upstream-nav-test_app_models",
+          "passed": 53,
+          "skipped": 0,
+          "tests": 53
+        },
+        {
+          "errors": 0,
+          "failures": 0,
+          "name": "upstream-nav-test_stateful_protocol",
+          "passed": 11,
+          "skipped": 0,
+          "tests": 11
+        },
+        {
+          "errors": 0,
+          "failures": 0,
+          "name": "upstream-nav-test_output_projection",
+          "passed": 42,
+          "skipped": 0,
+          "tests": 42
+        },
+        {
+          "errors": 0,
+          "failures": 0,
+          "name": "upstream-nav-test_jetlink_mac",
+          "passed": 40,
+          "skipped": 0,
+          "tests": 40
+        }
+      ]
+    },
+    "evidence": [
+      "CPU_FAKE",
+      "FIXTURE"
+    ],
+    "online_WIP": {
+      "failed": 0,
+      "passed": 288,
+      "skipped": 0
+    },
+    "qualification": "branch/configuration variants counted separately; original baseline170 not added; review repeats not added",
+    "startup_priority_watchdog": {
+      "failed": 0,
+      "passed": 103,
+      "skipped": 0
+    },
+    "target_suite_executions": 708
+  }
+}

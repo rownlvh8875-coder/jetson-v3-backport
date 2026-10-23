@@ -170,18 +170,19 @@
       "tests": 99
     }
   ],
-  "finished_utc": "2026-10-23T10:11:30.623625+00:00",
+  "finished_utc": "2026-10-23T10:57:21.012267+00:00",
   "hardware_validation": {
     "reason": "CPU software evidence only; device validation remains separate",
     "required": false,
     "status": "SKIP"
   },
-  "implementation_sha": "c64fdd3057b8d403975922a6fd3d4e776feeb701",
+  "implementation_sha": "5812a6587a1cd6211151cb10c82cd196e8214ccb",
   "implementation_source_sha256": {
     ".github/workflows/carrot-wip-compat.yml": "345d64a60a691c90bc1db438507078f78f0b7a6c855620456fb8fa6b6c56f672",
     "adapters/__init__.py": "1a15f4637d7201b55c38d5022c4271970facc3c17f0140ece6c37f9e1a5e8f4d",
     "adapters/carrot/__init__.py": "8635e3b83ef6442f4763aa8bd5f75c9296fe0b41fdfb5a341f6e3d438c25fc80",
     "adapters/carrot/integration.py": "386ce5950eb568425101cd5cce2486dc63fa21583eaebe904269fbc58de95033",
+    "adapters/carrot/nav.py": "18caade14c90bd44e635a674f9b67002e4241f05cc0308600959a9cd91e099dc",
     "adapters/carrot/peer_policy.py": "5a3374bd886febcc8f236b704a9a14ce7192ca344476d8418c7de0a4eebca819",
     "adapters/carrot/server.py": "1f6aaebc34dfd92771d78f0132ed63c2738d20b30235c9df14c4991479f02872",
     "artifacts/cinque_v3.json": "c4445632dcea7a4de12f420a69ae4a836fad779a776b2eadc48919faff8b6c62",
@@ -202,7 +203,7 @@
     "jetlink/onnx_meta.py": "6af350f87df333fc1d7993c72b6c24e6e219b53622e594757afa2d5580b528f4",
     "jetlink/queues.py": "8745cd8dd5af8592e97cf59c9293f56be91489ea65e6275032a27f6828ab2c0e",
     "jetlink/spec.py": "b85cfd75ad36fe3edcdb1468df644ccba4d2f7bd7ea5175450a267c523e5661a",
-    "tests/current_carrot_loopback_peer.py": "8f2222c718cd74b23255503c303070d273ac9a9534bb6d52cfec271446f33631",
+    "tests/current_carrot_loopback_peer.py": "19f41419397834ceaa80f54f53eb31cdd8b130e6ca7f0bcc39665e9080c8b92c",
     "tests/current_carrot_server_peer.py": "6a3eb7328f301786e94a9a945feec3436da0289dd96d4148cb17f3d35a1a6842",
     "tests/current_carrot_server_trt.py": "ead20d2fac5a477304554d21f20d76ac8f705dbe4ad94d24d02efc38752d015c",
     "tests/jetson_device_state_peer.py": "8fffadabbfbc6d3e335948353d1a1a457516fde40b17f969d062c94f7f59fd7b",
@@ -215,6 +216,7 @@
     "tests/test_jetson_device_state.py": "a256a0446edfcbf3e97449d6dcf411276adb9ba077d13e009864593261659d70",
     "tests/test_jetson_input_fastpath.py": "69b5a47c3bf9a784cf235cb0643f204d7dd2022069decf47bb0d065e11259049",
     "tests/test_jetson_m1.py": "ddc69a2eaf45996588f424c6e3a23706262b34a4afcb7807a42b5ff179d302ac",
+    "tests/test_jetson_m15_semantic.py": "91c0052553873940cd1c4580b603072062600e82bc686ea22ee242cc5a690677",
     "tests/test_jetson_m1_parity.py": "169ffef3000d84f5d36f66323fb23b7fc41450a4e9a3146617a28fe5ae7ff002",
     "tests/test_jetson_m1_recurrent.py": "a6b577f63aa62689b35f64ab6950f3821bd3e2060a794e4e49866b466bac3f49",
     "tests/test_jetson_optimization_integration.py": "368be773fc5a1d255814368f9b06565bb18b1e5c93e2d8321ed6625d88d49af0",

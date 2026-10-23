@@ -1,0 +1,390 @@
+--- /dev/null
++++ b/openpilot/common/jetlink_managed.py
+@@ -0,0 +1,79 @@
++"""Design-only policy helpers for a protocol-3 Carrot Jetson model peer.
++
++This module is intentionally independent from openpilot so its trust boundary
++can be reviewed before touching carrot-wip. It does not open USB, select a real
++model, write Params, or change the Jetson.
++
++The eventual carrot-wip integration should preserve these properties:
++- only the explicit USB/TRT/Jetson capability opts into host model selection;
++- legacy Jetsons without the capability keep the fixed V2 behavior;
++- a loaded model identity is either None or an exact lowercase SHA256;
++- this HELLO metadata is descriptive, not authentication; the full ModelSpec
++  still needs the existing offroad approval and validation gates.
++"""
++from __future__ import annotations
++
++import re
++from typing import Any
++
++
++CAPABILITY = "carrot_model_selection_v1"
++CAPABILITY_VERSION = 1
++_SHA256 = re.compile(r"[0-9a-f]{64}")
++
++
++class PeerPolicyError(ValueError):
++    pass
++
++
++def _capability(peer: dict[str, Any]) -> dict[str, Any] | None:
++    value = peer.get(CAPABILITY)
++    if not isinstance(value, dict):
++        return None
++    if type(value.get("version")) is not int or value["version"] != CAPABILITY_VERSION:
++        return None
++    # Fail closed on unknown capability semantics. A later version can define
++    # new fields rather than letting an old comma silently reinterpret them.
++    if set(value) != {"version", "selection"} or value.get("selection") != "host":
++        return None
++    return value
++
++
++def is_managed_jetson_peer(peer: Any, mode: str = "usb") -> bool:
++    """Return True only for the explicit protocol-3 Jetson selector contract."""
++    return (
++        mode == "usb"
++        and isinstance(peer, dict)
++        and type(peer.get("protocol")) is int
++        and peer["protocol"] == 3
++        and peer.get("carrot_host") == "jetson"
++        and peer.get("backend") == "trt"
++        and isinstance(peer.get("device"), str)
++        and bool(peer["device"])
++        and _capability(peer) is not None
++    )
++
++
++def loaded_sha(peer: Any, mode: str = "usb") -> str | None:
++    """Return the host-selected SHA, or None while no model is selected.
++
++    Invalid identity on an otherwise managed Jetson is an error instead of a
++    fallback to another big model. The caller may then use the internal model.
++    """
++    if not is_managed_jetson_peer(peer, mode):
++        raise PeerPolicyError("peer is not an approved managed Jetson contract")
++    value = peer.get("loaded")
++    if value is None:
++        return None
++    if not isinstance(value, str) or _SHA256.fullmatch(value) is None:
++        raise PeerPolicyError("invalid Jetson loaded model SHA256")
++    return value
++
++
++def selection_kind(peer: Any, mode: str = "usb") -> str:
++    """Classify only the distinction needed by the future carrot-wip patch."""
++    if is_managed_jetson_peer(peer, mode):
++        return "managed-jetson"
++    if isinstance(peer, dict) and peer.get("carrot_host") == "jetson":
++        return "legacy-jetson"
++    return "other"
+--- a/openpilot/common/jetlink_peer.py
++++ b/openpilot/common/jetlink_peer.py
+@@ -1,5 +1,6 @@
+ """Conservative peer classification; HELLO is descriptive, not authentication."""
+ import re
++from openpilot.common.jetlink_managed import is_managed_jetson_peer
+ 
+ MAC_DEVICE = re.compile(r'(?:coreml|ane(?:-whole)?)-Apple[ _-]M[1-9][0-9]*(?:[ _-](?:Pro|Max|Ultra))?', re.I)
+ IOS_DEVICE = re.compile(r'(?:coreml|ane(?:-whole)?)-Apple[ _-][AM][1-9][0-9]*(?:[ _-](?:Pro|Max|Ultra))?', re.I)
+--- /dev/null
++++ b/openpilot/selfdrive/modeld/jetlink/cinque_v3.json
+@@ -0,0 +1,142 @@
++{
++  "sha256": "404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4",
++  "nbytes": 766354845,
++  "frame_skip": 4,
++  "checkpoint": "b9facbcc-4d47-410e-b3ce-dfcbad12ba92/56320/f78ed37d-afad-4dbc-8050-40ea885eedde/12864",
++  "input_shapes": {
++    "new_img": [
++      2,
++      6,
++      128,
++      256
++    ],
++    "desire": [
++      8
++    ],
++    "traffic_convention": [
++      1,
++      2
++    ],
++    "action_t": [
++      1,
++      2
++    ],
++    "state_img_q": [
++      2,
++      5,
++      6,
++      128,
++      256
++    ],
++    "state_desire_q": [
++      132,
++      1,
++      8
++    ],
++    "state_feat_q": [
++      128,
++      1,
++      16384
++    ]
++  },
++  "output_shapes": {
++    "outputs": [
++      1,
++      18452
++    ],
++    "next_state_img_q": [
++      2,
++      5,
++      6,
++      128,
++      256
++    ],
++    "next_state_desire_q": [
++      132,
++      1,
++      8
++    ],
++    "next_state_feat_q": [
++      128,
++      1,
++      16384
++    ]
++  },
++  "output_slices": {
++    "lane_lines": [
++      0,
++      528
++    ],
++    "lane_lines_prob": [
++      528,
++      536
++    ],
++    "road_edges": [
++      536,
++      800
++    ],
++    "meta": [
++      800,
++      855
++    ],
++    "desire_pred": [
++      855,
++      887
++    ],
++    "pose": [
++      887,
++      899
++    ],
++    "wide_from_device_euler": [
++      899,
++      905
++    ],
++    "road_transform": [
++      905,
++      917
++    ],
++    "plan": [
++      917,
++      1907
++    ],
++    "lead": [
++      1907,
++      2051
++    ],
++    "lead_prob": [
++      2051,
++      2054
++    ],
++    "desire_state": [
++      2054,
++      2062
++    ],
++    "action": [
++      2062,
++      2066
++    ],
++    "hidden_state": [
++      2066,
++      18450
++    ],
++    "pad": [
++      18450,
++      18452
++    ]
++  },
++  "input_dtypes": {
++    "new_img": "uint8",
++    "desire": "float32",
++    "traffic_convention": "float32",
++    "action_t": "float32",
++    "state_img_q": "uint8",
++    "state_desire_q": "float32",
++    "state_feat_q": "float32"
++  },
++  "output_dtypes": {
++    "outputs": "float32",
++    "next_state_img_q": "uint8",
++    "next_state_desire_q": "float32",
++    "next_state_feat_q": "float32"
++  }
++}
+--- a/openpilot/selfdrive/modeld/jetlink/mac.py
++++ b/openpilot/selfdrive/modeld/jetlink/mac.py
+@@ -114,6 +114,9 @@
+ 
+ 
+ def prepare(client, peer, offroad, connected, progress, cache=CACHE, mode='usb'):
++  if isinstance(peer, dict) and 'carrot_model_selection_v1' in peer:
++    from openpilot.selfdrive.modeld.jetlink.managed import prepare_managed
++    return prepare_managed(client, peer, offroad, connected, progress, cache, mode)
+   """Retain the legacy Jetson path; phones require their explicit cable mode."""
+   if is_jetson(peer):
+     if mode not in ('usb', 'auto'):
+--- /dev/null
++++ b/openpilot/selfdrive/modeld/jetlink/managed.py
+@@ -0,0 +1,87 @@
++"""Managed Jetson preparation; installed only into a disposable candidate.
++
++HELLO describes a capability. The current Carrot validators and offroad exact
++approval remain the trust boundary. This module performs no provisioning.
++"""
++import json
++from pathlib import Path
++
++from openpilot.common.jetlink_managed import is_managed_jetson_peer, loaded_sha
++from openpilot.selfdrive.modeld.jetlink.contracts import validate_model_spec
++from openpilot.selfdrive.modeld.jetlink.selection import ModelChanged, approved_spec, remember_spec
++from jetlink.client import EngineMissing
++
++
++def prepare_managed(client, peer, offroad, connected, progress, cache, mode='usb'):
++  # Import here because mac routes to this module before its legacy branches.
++  from openpilot.selfdrive.modeld.jetlink.mac import PreparationDeferred, PreparationTransport, require_setup
++
++  if not is_managed_jetson_peer(peer, mode):
++    raise ValueError('Invalid managed Jetson selection capability')
++  selected = loaded_sha(peer, mode)
++  if selected is None:
++    raise PreparationDeferred('Selected Jetson engine is not resident; prepare it offroad')
++  # Nav candidate catalog is deliberately limited to reviewed exact seeds.
++  # Capability metadata alone cannot authorize an arbitrary compatible graph.
++  from jetlink.spec import ModelSpec
++  from openpilot.selfdrive.modeld.jetlink.contracts import DEFAULT_SPEC, JETSON_SPEC
++  canonical = json.loads(Path(__file__).with_name('cinque_v3.json').read_text())
++  v3 = ModelSpec.from_dict(canonical)
++  catalog = {spec.sha256: spec.to_dict() for spec in (DEFAULT_SPEC, JETSON_SPEC, v3)}
++  if selected not in catalog:
++    raise ValueError('Unknown managed Jetson model; exact reviewed catalog entry required')
++  cache = Path(cache) / 'managed-jetson'
++  approved = approved_spec(cache)
++  needs_approval = approved is None or approved.sha256 != selected
++  if needs_approval:
++    require_setup(offroad, connected)
++
++  def check():
++    if not connected():
++      raise PreparationDeferred('Jetlink host disconnected; waiting for reconnection')
++    if needs_approval:
++      require_setup(offroad, connected)
++
++  def stopped():
++    # The managed server contract allows resident engines only. If an older
++    # server reports pending preparation, stop before waiting/building onroad.
++    require_setup(offroad, connected)
++    return False
++
++  def report(*args):
++    require_setup(offroad, connected)
++    progress(*args)
++
++  original = client.t
++  client.t = PreparationTransport(original, check)
++  try:
++    check()
++    current = client.state()
++    if not isinstance(current, dict) or current.get('loaded') != selected:
++      raise ModelChanged('Managed Jetson identity changed before approval')
++    try:
++      result = client.ensure_engine(selected, approved.nbytes if not needs_approval else 0,
++                                    frame_skip=4, build_timeout=30,
++                                    should_stop=stopped, progress=report)
++    except EngineMissing:
++      raise PreparationDeferred('Selected Jetson engine is not ready; prepare it offroad') from None
++    validate_model_spec(result)
++    if result.sha256 != selected:
++      raise ValueError('Managed Jetson ready SHA does not match HELLO selection')
++    if result.to_dict() != catalog[selected]:
++      raise ValueError('Managed model identity/spec does not match exact reviewed catalog')
++    if approved is not None and approved.sha256 == selected and approved.to_dict() != result.to_dict():
++      raise ValueError('Previously approved Jetson model contract changed')
++    # Detect selection changes during ENGINE_REQ before publishing approval.
++    current = client.state()
++    if not isinstance(current, dict) or current.get('loaded') != selected:
++      raise ModelChanged('Managed Jetson identity changed during approval')
++    check()
++    if needs_approval:
++      require_setup(offroad, connected)
++      remember_spec(cache, result)
++    return result
++  finally:
++    client.t = original
++    client.progress_cb = None
++    client._should_stop = lambda: False
+--- a/third_party/jetlink/jetlink/spec.py
++++ b/third_party/jetlink/jetlink/spec.py
+@@ -15,7 +15,7 @@
+ 
+ import hashlib
+ import math
+-from dataclasses import dataclass
++from dataclasses import dataclass, field
+ 
+ from jetlink.onnx_meta import OnnxMeta, parse_file
+ from jetlink.protocol import INFER_REQ_SIZE, INFER_RESP_SIZE
+@@ -39,6 +39,8 @@
+   output_shapes: dict[str, tuple[int, ...]]
+   output_slices: dict[str, slice]
+   checkpoint: str | None
++  input_dtypes: dict[str, str] = field(default_factory=dict)
++  output_dtypes: dict[str, str] = field(default_factory=dict)
+ 
+   # --- vision ---
+   @property
+@@ -152,7 +154,7 @@
+   # would drift the moment a field is added.
+ 
+   def to_dict(self) -> dict:
+-    return {
++    d = {
+       'sha256': self.sha256,
+       'nbytes': self.nbytes,
+       'frame_skip': self.frame_skip,
+@@ -161,6 +163,11 @@
+       'output_shapes': {k: list(v) for k, v in self.output_shapes.items()},
+       'output_slices': {k: [v.start, v.stop] for k, v in self.output_slices.items()},
+     }
++    if self.input_dtypes:
++      d['input_dtypes'] = dict(self.input_dtypes)
++    if self.output_dtypes:
++      d['output_dtypes'] = dict(self.output_dtypes)
++    return d
+ 
+   @classmethod
+   def from_dict(cls, d: dict) -> ModelSpec:
+@@ -170,7 +177,9 @@
+       input_shapes={k: tuple(v) for k, v in d['input_shapes'].items()},
+       output_shapes={k: tuple(v) for k, v in d['output_shapes'].items()},
+       output_slices={k: slice(*v) for k, v in d['output_slices'].items()},
+-      checkpoint=d.get('checkpoint'))
++      checkpoint=d.get('checkpoint'),
++      input_dtypes=dict(d.get('input_dtypes', {})),
++      output_dtypes=dict(d.get('output_dtypes', {})))
+ 
+ 
+ def sha256_file(path: str, bufsize: int = 1 << 20) -> tuple[str, int]:

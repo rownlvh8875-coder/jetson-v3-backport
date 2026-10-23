@@ -18,6 +18,12 @@
 V3 빌드와 BASE 10+1000프레임/reset/reload 검사를 통과했다. ORT↔TRT는 수치 측정만 했으며
 승인 허용오차가 없다. **DO_NOT_INSTALL**. USB/comma 추론·fallback·차량 검증은 NOT_RUN이다.
 
+2026-10-23 [M1.5 semantic 비교](docs/M15_ORT_TRT_PARITY_20261023.md)는 실제 ORT/TRT
+101프레임과 Nav parser를 측정했다. desire 예측 불일치 1건과 미승인 허용오차로
+**PARITY_UNDETERMINED / M2 readiness NO**다. [최소 Nav adapter](docs/M15_CARROT_NAV_PROTOCOL3_ADAPTER_20261023.md)는
+별도 개발 사본에서 P2/V2/Nav 회귀와 P3/fallback CPU 검증을 통과했다.
+[M2 정차 USB 계획](docs/M2_PARKED_USB_PLAN_20261023.md)은 실행하지 않았다.
+
 2026-10-20 [외부 Jetson 최적화 검토](docs/JETSON_REVIEW_A890_ANALYSIS.md):
 DeviceState와 InputFastpath는 기존 검증을 유지한 기본 OFF 실험 후보다.
 AIO는 운영 transport에 연결하지 않았으며, 실장 순서는 M0 → 기본 V3 → USB →
