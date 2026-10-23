@@ -41,8 +41,32 @@ def zoom_diagnostic(source,spec,left,right):
     if len(left)!=len(right) or not left or any(a.shape!=b.shape for a,b in zip(left,right)):
         raise ValueError('exact frame/shape equality required; upstream truncation forbidden')
     if m.verify.file_identity(source)['sha256']!=m.BOUNDED_SOURCE['sha256']:raise ValueError('pinned verifier source drift')
+    spec_source=source.with_name('jetlink_spec.py')
+    spec_identity=m.verify.file_identity(spec_source)
+    if spec_identity['sha256']!='a8b9323ba86d28b32c40353f4730efd67b2e61293049524c4bebe4dd3880a9f9':raise ValueError('pinned verifier ModelSpec source drift')
     module_spec=importlib.util.spec_from_file_location('_m16_pinned_zoompilot',source)
-    module=importlib.util.module_from_spec(module_spec);module_spec.loader.exec_module(module)
+    module=importlib.util.module_from_spec(module_spec)
+    # The current host's spec predates DRIVING_OUTPUT. Load the verifier's exact
+    # matching pure spec source, then immediately restore the caller namespace.
+    # No production source is edited, and no engine/client entrypoint is called.
+    key='jetlink.spec';sentinel=object();previous=sys.modules.get(key,sentinel)
+    parent=sys.modules.get('jetlink');previous_attribute=getattr(parent,'spec',sentinel)
+    pinned_key='_m16_zoompilot_spec';prior_pinned=sys.modules.get(pinned_key,sentinel)
+    try:
+        importlib.import_module('jetlink.protocol')
+        definition=importlib.util.spec_from_file_location(pinned_key,spec_source)
+        pinned=importlib.util.module_from_spec(definition);sys.modules[pinned_key]=pinned
+        definition.loader.exec_module(pinned)
+        sys.modules[key]=pinned;module_spec.loader.exec_module(module)
+    finally:
+        if previous is sentinel:sys.modules.pop(key,None)
+        else:sys.modules[key]=previous
+        if prior_pinned is sentinel:sys.modules.pop(pinned_key,None)
+        else:sys.modules[pinned_key]=prior_pinned
+        package=sys.modules.get('jetlink')
+        if package is not None:
+            if previous_attribute is sentinel:package.__dict__.pop('spec',None)
+            else:setattr(package,'spec',previous_attribute)
     mapping=SimpleNamespace(output_slices={n:slice(*bounds) for n,bounds in spec['output_slices'].items()})
     left=[a.reshape(-1).astype(np.float32) for a in left];right=[b.reshape(-1).astype(np.float32) for b in right]
     # left=ORT reference; actual upstream API takes links first, references second.
@@ -75,7 +99,7 @@ def zoom_diagnostic(source,spec,left,right):
                     'quiet_column_fraction':len(quiet_columns)/len(column_details) if column_details else None}
     return {'status':'PASS' if all(pooled.values()) and not frame_fail else 'FAIL',
             'meaning':'ZOOMPILOT_HEURISTIC_ONLY_NOT_APPLICATION_APPROVAL','frames':len(left),
-            'source':m.BOUNDED_SOURCE,'criteria':{n:float(getattr(module,n)) for n in ('MIN_CORR','MIN_SAMPLES','QUIET_FRACTION','TINY_TOLERANCE','CONSTANT_FRACTION')},
+            'source':m.BOUNDED_SOURCE,'spec_source':spec_identity,'criteria':{n:float(getattr(module,n)) for n in ('MIN_CORR','MIN_SAMPLES','QUIET_FRACTION','TINY_TOLERANCE','CONSTANT_FRACTION')},
             'slices':rows,'console':stream.getvalue()}
 
 

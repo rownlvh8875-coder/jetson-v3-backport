@@ -62,3 +62,14 @@ def test_queue_accounting_distinguishes_filled_history_from_teacher_single_slot(
     teacher=[{**rows[1],'frame':0,'mean_abs':2.,'rmse':np.sqrt(12.)}]
     result=a.queue_accounting(teacher,depth=3,teacher=True)
     assert result['max_mean_abs_residual']==0 and result['mode']=='ONE_CHANGED_SLOT_WITH_ORT_HISTORY'
+
+
+def test_actual_pinned_zoompilot_api_uses_matching_spec_and_restores_namespace():
+    source=ROOT/'.reports/m16-20261023/provenance-sources/jetlink_verify_parity.py'
+    if not source.exists():pytest.skip('public pinned source must be fetched for source-bound diagnostic test')
+    import json
+    spec=json.loads((ROOT/'artifacts/cinque_v3.json').read_text())
+    before=sys.modules.get('jetlink.spec')
+    result=a.zoom_diagnostic(source,spec,[np.zeros((1,18452),np.float32)],[np.zeros((1,18452),np.float32)])
+    assert result['status']=='PASS' and len(result['slices'])==15
+    assert sys.modules.get('jetlink.spec') is before
