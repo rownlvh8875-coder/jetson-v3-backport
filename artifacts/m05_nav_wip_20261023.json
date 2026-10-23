@@ -1,0 +1,2872 @@
+{
+  "status": "PASS",
+  "evidence": "SOURCE_ONLY",
+  "direction": "carrot-nav -> carrot-wip",
+  "base_sha": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+  "target_sha": "813369b0c53bb9c997b7ffbe17fca90222a755b8",
+  "shortstat": "239 files changed, 16468 insertions(+), 14310 deletions(-)",
+  "groups": {
+    "full_tree": {
+      "files": 239,
+      "added": 16468,
+      "deleted": 14310,
+      "binary_files": 0,
+      "paths": []
+    },
+    "plan_relevant": {
+      "files": 108,
+      "added": 204,
+      "deleted": 8625,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/common/jetlink_peer.py",
+        "openpilot/selfdrive/modeld/jetlink/",
+        "openpilot/selfdrive/modeld/parse_model_outputs.py",
+        "openpilot/selfdrive/modeld/model_join.py",
+        "openpilot/selfdrive/modeld/modeld.py",
+        "openpilot/system/camerad/cameras/nv12_info.py",
+        "third_party/jetlink/jetlink/client.py",
+        "third_party/jetlink/jetlink/protocol.py",
+        "third_party/jetlink/jetlink/protocol_v3.py",
+        "third_party/jetlink/jetlink/spec.py",
+        "third_party/jetlink/jetlink/queues.py",
+        "third_party/jetlink/jetlink/onnx_patch.py",
+        "third_party/jetlink/jetlink/server/",
+        "tools/jetlink/",
+        "openpilot/selfdrive/carrot/server/features/",
+        "openpilot/selfdrive/carrot/web/"
+      ]
+    },
+    "jetlink_broad": {
+      "files": 108,
+      "added": 201,
+      "deleted": 8679,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/common/jetlink_peer.py",
+        "openpilot/selfdrive/modeld/jetlink/",
+        "third_party/jetlink/",
+        "tools/jetlink/"
+      ]
+    },
+    "modeld_jetlink": {
+      "files": 12,
+      "added": 58,
+      "deleted": 590,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/jetlink/"
+      ]
+    },
+    "modeld_all": {
+      "files": 32,
+      "added": 122,
+      "deleted": 1344,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/"
+      ]
+    },
+    "vendor_jetlink": {
+      "files": 19,
+      "added": 44,
+      "deleted": 964,
+      "binary_files": 0,
+      "paths": [
+        "third_party/jetlink/"
+      ]
+    },
+    "host_tools": {
+      "files": 77,
+      "added": 99,
+      "deleted": 7125,
+      "binary_files": 0,
+      "paths": [
+        "tools/jetlink/"
+      ]
+    },
+    "controls_direct": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/controls/"
+      ]
+    },
+    "hyundai": {
+      "files": 10,
+      "added": 14525,
+      "deleted": 15,
+      "binary_files": 0,
+      "paths": [
+        "opendbc_repo/opendbc/car/hyundai/"
+      ]
+    },
+    "carrot_nav_control": {
+      "files": 2,
+      "added": 188,
+      "deleted": 45,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/carrot/carrot_man.py",
+        "openpilot/selfdrive/carrot/carrot_serv.py"
+      ]
+    },
+    "navigation_navd": {
+      "files": 30,
+      "added": 738,
+      "deleted": 2029,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/navigation/",
+        "openpilot/selfdrive/navd/"
+      ]
+    },
+    "carrot_web": {
+      "files": 7,
+      "added": 3,
+      "deleted": 170,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/carrot/web/"
+      ]
+    },
+    "carrot_server": {
+      "files": 5,
+      "added": 2,
+      "deleted": 220,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/carrot/server/"
+      ]
+    },
+    "carrot_radar": {
+      "files": 2,
+      "added": 47,
+      "deleted": 1,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/carrot/radar/"
+      ]
+    },
+    "cereal": {
+      "files": 2,
+      "added": 1,
+      "deleted": 1,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/cereal/"
+      ]
+    }
+  },
+  "modules": {
+    "openpilot/common/jetlink_peer.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/common/jetlink_peer.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "openpilot/common/jetson_model.py": {
+      "files": 1,
+      "added": 0,
+      "deleted": 59,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/common/jetson_model.py"
+      ],
+      "base_exists": true,
+      "target_exists": false
+    },
+    "openpilot/selfdrive/modeld/jetlink/__init__.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/jetlink/__init__.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "openpilot/selfdrive/modeld/jetlink/aio.py": {
+      "files": 1,
+      "added": 0,
+      "deleted": 55,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/jetlink/aio.py"
+      ],
+      "base_exists": true,
+      "target_exists": false
+    },
+    "openpilot/selfdrive/modeld/jetlink/compat.py": {
+      "files": 1,
+      "added": 11,
+      "deleted": 10,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/jetlink/compat.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "openpilot/selfdrive/modeld/jetlink/contracts.py": {
+      "files": 1,
+      "added": 2,
+      "deleted": 21,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/jetlink/contracts.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "openpilot/selfdrive/modeld/jetlink/daemon.py": {
+      "files": 1,
+      "added": 16,
+      "deleted": 103,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/jetlink/daemon.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "openpilot/selfdrive/modeld/jetlink/inputs.py": {
+      "files": 1,
+      "added": 0,
+      "deleted": 26,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/jetlink/inputs.py"
+      ],
+      "base_exists": true,
+      "target_exists": false
+    },
+    "openpilot/selfdrive/modeld/jetlink/link.py": {
+      "files": 1,
+      "added": 5,
+      "deleted": 11,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/jetlink/link.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "openpilot/selfdrive/modeld/jetlink/mac.py": {
+      "files": 1,
+      "added": 1,
+      "deleted": 23,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/jetlink/mac.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "openpilot/selfdrive/modeld/jetlink/mobile.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/jetlink/mobile.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "openpilot/selfdrive/modeld/jetlink/model.py": {
+      "files": 1,
+      "added": 10,
+      "deleted": 26,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/jetlink/model.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "openpilot/selfdrive/modeld/jetlink/phase.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/jetlink/phase.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "openpilot/selfdrive/modeld/jetlink/power.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/jetlink/power.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "openpilot/selfdrive/modeld/jetlink/prepare.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/jetlink/prepare.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "openpilot/selfdrive/modeld/jetlink/scheduling.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/jetlink/scheduling.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "openpilot/selfdrive/modeld/jetlink/selection.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/jetlink/selection.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "openpilot/selfdrive/modeld/jetlink/startup.py": {
+      "files": 1,
+      "added": 5,
+      "deleted": 36,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/jetlink/startup.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "openpilot/selfdrive/modeld/jetlink/warp.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "openpilot/selfdrive/modeld/jetlink/warp.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "third_party/jetlink/jetlink/client.py": {
+      "files": 1,
+      "added": 6,
+      "deleted": 71,
+      "binary_files": 0,
+      "paths": [
+        "third_party/jetlink/jetlink/client.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "third_party/jetlink/jetlink/protocol.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "third_party/jetlink/jetlink/protocol.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "third_party/jetlink/jetlink/protocol_v3.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "third_party/jetlink/jetlink/protocol_v3.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "third_party/jetlink/jetlink/spec.py": {
+      "files": 1,
+      "added": 0,
+      "deleted": 1,
+      "binary_files": 0,
+      "paths": [
+        "third_party/jetlink/jetlink/spec.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "third_party/jetlink/jetlink/queues.py": {
+      "files": 1,
+      "added": 0,
+      "deleted": 146,
+      "binary_files": 0,
+      "paths": [
+        "third_party/jetlink/jetlink/queues.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "third_party/jetlink/jetlink/server/session.py": {
+      "files": 1,
+      "added": 21,
+      "deleted": 95,
+      "binary_files": 0,
+      "paths": [
+        "third_party/jetlink/jetlink/server/session.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "third_party/jetlink/jetlink/server/cache.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "third_party/jetlink/jetlink/server/cache.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "third_party/jetlink/jetlink/server/main.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "third_party/jetlink/jetlink/server/main.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "third_party/jetlink/jetlink/server/control.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "third_party/jetlink/jetlink/server/control.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "third_party/jetlink/jetlink/server/backends/trt/__init__.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "third_party/jetlink/jetlink/server/backends/trt/__init__.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "third_party/jetlink/jetlink/server/backends/trt/build.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "third_party/jetlink/jetlink/server/backends/trt/build.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "third_party/jetlink/jetlink/server/backends/trt/engine.py": {
+      "files": 1,
+      "added": 13,
+      "deleted": 74,
+      "binary_files": 0,
+      "paths": [
+        "third_party/jetlink/jetlink/server/backends/trt/engine.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "third_party/jetlink/jetlink/server/backends/trt/cudart.py": {
+      "files": 1,
+      "added": 2,
+      "deleted": 29,
+      "binary_files": 0,
+      "paths": [
+        "third_party/jetlink/jetlink/server/backends/trt/cudart.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "third_party/jetlink/jetlink/transport/base.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "third_party/jetlink/jetlink/transport/base.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "third_party/jetlink/jetlink/transport/ffs.py": {
+      "files": 1,
+      "added": 1,
+      "deleted": 13,
+      "binary_files": 0,
+      "paths": [
+        "third_party/jetlink/jetlink/transport/ffs.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "third_party/jetlink/jetlink/transport/tcp.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "third_party/jetlink/jetlink/transport/tcp.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "third_party/jetlink/jetlink/transport/usbbulk.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "third_party/jetlink/jetlink/transport/usbbulk.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "tools/jetlink/server.py": {
+      "files": 1,
+      "added": 4,
+      "deleted": 40,
+      "binary_files": 0,
+      "paths": [
+        "tools/jetlink/server.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "tools/jetlink/prepare_cache.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "tools/jetlink/prepare_cache.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "tools/jetlink/verify_model.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "tools/jetlink/verify_model.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "tools/jetlink/host_reader.py": {
+      "files": 1,
+      "added": 1,
+      "deleted": 5,
+      "binary_files": 0,
+      "paths": [
+        "tools/jetlink/host_reader.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "tools/jetlink/host_usb.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "tools/jetlink/host_usb.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "tools/jetlink/host_health.py": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "tools/jetlink/host_health.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "tools/jetlink/update_host.py": {
+      "files": 1,
+      "added": 14,
+      "deleted": 60,
+      "binary_files": 0,
+      "paths": [
+        "tools/jetlink/update_host.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "tools/jetlink/install_server.sh": {
+      "files": 0,
+      "added": 0,
+      "deleted": 0,
+      "binary_files": 0,
+      "paths": [
+        "tools/jetlink/install_server.sh"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "tools/jetlink/install_updates.py": {
+      "files": 1,
+      "added": 3,
+      "deleted": 41,
+      "binary_files": 0,
+      "paths": [
+        "tools/jetlink/install_updates.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "tools/jetlink/boot_update.py": {
+      "files": 1,
+      "added": 10,
+      "deleted": 63,
+      "binary_files": 0,
+      "paths": [
+        "tools/jetlink/boot_update.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    },
+    "tools/jetlink/build_host_bundle.py": {
+      "files": 1,
+      "added": 3,
+      "deleted": 20,
+      "binary_files": 0,
+      "paths": [
+        "tools/jetlink/build_host_bundle.py"
+      ],
+      "base_exists": true,
+      "target_exists": true
+    }
+  },
+  "records": [
+    {
+      "path": ".github/workflows/jetlink-checks.yaml",
+      "added": 2,
+      "deleted": 14
+    },
+    {
+      "path": ".github/workflows/mdm-model.yaml",
+      "added": 4,
+      "deleted": 24
+    },
+    {
+      "path": ".github/workflows/tests.yaml",
+      "added": 9,
+      "deleted": 0
+    },
+    {
+      "path": "AGENTS.md",
+      "added": 12,
+      "deleted": 17
+    },
+    {
+      "path": "SConstruct",
+      "added": 0,
+      "deleted": 1
+    },
+    {
+      "path": "docs/bosch_radar.md",
+      "added": 192,
+      "deleted": 0
+    },
+    {
+      "path": "docs/carrot_navi_7713_7714_deceleration.md",
+      "added": 0,
+      "deleted": 4
+    },
+    {
+      "path": "docs/carrot_navi_7714_branch_comparison.md",
+      "added": 0,
+      "deleted": 4
+    },
+    {
+      "path": "docs/egpu_output_read_timeout_20261014.md",
+      "added": 0,
+      "deleted": 224
+    },
+    {
+      "path": "docs/egpu_single_output_recovery_20261014.md",
+      "added": 0,
+      "deleted": 99
+    },
+    {
+      "path": "docs/jetson_hud_latency_review_20261014.md",
+      "added": 0,
+      "deleted": 86
+    },
+    {
+      "path": "docs/jetson_locationd_latency_20261014.md",
+      "added": 0,
+      "deleted": 317
+    },
+    {
+      "path": "docs/jetson_nav_device_20261013.md",
+      "added": 0,
+      "deleted": 155
+    },
+    {
+      "path": "docs/jetson_nav_integration_20261013.md",
+      "added": 0,
+      "deleted": 57
+    },
+    {
+      "path": "docs/jetson_nav_next_performance_20261013.md",
+      "added": 0,
+      "deleted": 108
+    },
+    {
+      "path": "docs/jetson_nav_overlap_20261014.md",
+      "added": 0,
+      "deleted": 97
+    },
+    {
+      "path": "docs/jetson_nav_performance_20261013.md",
+      "added": 0,
+      "deleted": 136
+    },
+    {
+      "path": "docs/jetson_nav_preview_drive_20261020.md",
+      "added": 0,
+      "deleted": 4
+    },
+    {
+      "path": "docs/jetson_nav_retest_20261014.md",
+      "added": 0,
+      "deleted": 182
+    },
+    {
+      "path": "docs/jetson_update_policy_20261020.md",
+      "added": 3,
+      "deleted": 5
+    },
+    {
+      "path": "docs/jetson_usb_update_review_20261020.md",
+      "added": 0,
+      "deleted": 102
+    },
+    {
+      "path": "docs/jetson_wifi_review.md",
+      "added": 0,
+      "deleted": 90
+    },
+    {
+      "path": "docs/jetson_wifi_usb_panel_20261020.md",
+      "added": 0,
+      "deleted": 4
+    },
+    {
+      "path": "docs/mapbox_empty_preview_20261015.md",
+      "added": 0,
+      "deleted": 44
+    },
+    {
+      "path": "docs/md_v3_20261015.md",
+      "added": 68,
+      "deleted": 0
+    },
+    {
+      "path": "docs/nav_gps_timing_20261012.md",
+      "added": 0,
+      "deleted": 46
+    },
+    {
+      "path": "docs/nav_model_followup_20261012.md",
+      "added": 0,
+      "deleted": 37
+    },
+    {
+      "path": "docs/nav_model_integration_20261012.md",
+      "added": 0,
+      "deleted": 78
+    },
+    {
+      "path": "docs/nav_rl_model_20261013.md",
+      "added": 0,
+      "deleted": 45
+    },
+    {
+      "path": "docs/user/en/radar.md",
+      "added": 13,
+      "deleted": 2
+    },
+    {
+      "path": "docs/user/en/settings.md",
+      "added": 3,
+      "deleted": 8
+    },
+    {
+      "path": "docs/user/ko/radar.md",
+      "added": 13,
+      "deleted": 2
+    },
+    {
+      "path": "docs/user/ko/settings.md",
+      "added": 3,
+      "deleted": 8
+    },
+    {
+      "path": "opendbc_repo/opendbc/car/hyundai/interface.py",
+      "added": 12,
+      "deleted": 4
+    },
+    {
+      "path": "opendbc_repo/opendbc/car/hyundai/radar_bosch.py",
+      "added": 7325,
+      "deleted": 0
+    },
+    {
+      "path": "opendbc_repo/opendbc/car/hyundai/radar_interface.py",
+      "added": 421,
+      "deleted": 10
+    },
+    {
+      "path": "opendbc_repo/opendbc/car/hyundai/tests/test_bosch_camera_extended.py",
+      "added": 2481,
+      "deleted": 0
+    },
+    {
+      "path": "opendbc_repo/opendbc/car/hyundai/tests/test_bosch_mature_retention.py",
+      "added": 345,
+      "deleted": 0
+    },
+    {
+      "path": "opendbc_repo/opendbc/car/hyundai/tests/test_bosch_mirror_birth.py",
+      "added": 228,
+      "deleted": 0
+    },
+    {
+      "path": "opendbc_repo/opendbc/car/hyundai/tests/test_bosch_mirror_m3.py",
+      "added": 249,
+      "deleted": 0
+    },
+    {
+      "path": "opendbc_repo/opendbc/car/hyundai/tests/test_bosch_road_edge.py",
+      "added": 270,
+      "deleted": 0
+    },
+    {
+      "path": "opendbc_repo/opendbc/car/hyundai/tests/test_radar.py",
+      "added": 3171,
+      "deleted": 1
+    },
+    {
+      "path": "opendbc_repo/opendbc/car/hyundai/values.py",
+      "added": 23,
+      "deleted": 0
+    },
+    {
+      "path": "openpilot/cereal/log.capnp",
+      "added": 0,
+      "deleted": 1
+    },
+    {
+      "path": "openpilot/cereal/services.py",
+      "added": 1,
+      "deleted": 0
+    },
+    {
+      "path": "openpilot/common/jetson_model.py",
+      "added": 0,
+      "deleted": 59
+    },
+    {
+      "path": "openpilot/common/params_keys.h",
+      "added": 1,
+      "deleted": 1
+    },
+    {
+      "path": "openpilot/common/wifi_coexistence.py",
+      "added": 0,
+      "deleted": 15
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/carrot_man.py",
+      "added": 186,
+      "deleted": 40
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/carrot_serv.py",
+      "added": 2,
+      "deleted": 5
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/cluster/cluster_config.py",
+      "added": 0,
+      "deleted": 3
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/cluster/cluster_renderer.py",
+      "added": 0,
+      "deleted": 50
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/radar/radarcan.py",
+      "added": 19,
+      "deleted": 0
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/radar/radard_dpath.py",
+      "added": 28,
+      "deleted": 1
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/server/features/__init__.py",
+      "added": 0,
+      "deleted": 2
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/server/features/navigation.py",
+      "added": 0,
+      "deleted": 119
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/server/services/device_info.py",
+      "added": 1,
+      "deleted": 5
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/server/tests/test_navigation_map.py",
+      "added": 0,
+      "deleted": 93
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/server/tests/test_settings_schema.py",
+      "added": 1,
+      "deleted": 1
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/tests/test_carrot_navi_control.py",
+      "added": 1,
+      "deleted": 2
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/tests/test_carrot_navi_route_bridge.py",
+      "added": 88,
+      "deleted": 40
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/tests/test_cluster_display.py",
+      "added": 0,
+      "deleted": 20
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/tests/test_cluster_nav_map.py",
+      "added": 0,
+      "deleted": 44
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/tests/test_radarcan_process.py",
+      "added": 21,
+      "deleted": 1
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/tests/test_radard_dpath.py",
+      "added": 178,
+      "deleted": 0
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/web/generated/asset-manifest.json",
+      "added": 1,
+      "deleted": 1
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/web/index.html",
+      "added": 0,
+      "deleted": 1
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/web/js/generated/tools.js",
+      "added": 1,
+      "deleted": 1
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/web/js/pages/navigation_map.js",
+      "added": 0,
+      "deleted": 76
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/web/navigation.html",
+      "added": 0,
+      "deleted": 20
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/web/src/features/tools/egpu_model.js",
+      "added": 1,
+      "deleted": 1
+    },
+    {
+      "path": "openpilot/selfdrive/carrot/web/tests/navigation_map.test.mjs",
+      "added": 0,
+      "deleted": 70
+    },
+    {
+      "path": "openpilot/selfdrive/carrot_settings.json",
+      "added": 7,
+      "deleted": 7
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/big_model.py",
+      "added": 9,
+      "deleted": 9
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/egpu_output_recovery.py",
+      "added": 0,
+      "deleted": 44
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/egpu_usb_wait.py",
+      "added": 3,
+      "deleted": 1
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/generic_model_runtime.py",
+      "added": 15,
+      "deleted": 73
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/jetlink/aio.c",
+      "added": 0,
+      "deleted": 106
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/jetlink/aio.py",
+      "added": 0,
+      "deleted": 55
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/jetlink/compat.py",
+      "added": 11,
+      "deleted": 10
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/jetlink/contracts.py",
+      "added": 2,
+      "deleted": 21
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/jetlink/daemon.py",
+      "added": 16,
+      "deleted": 103
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/jetlink/host_release.json",
+      "added": 8,
+      "deleted": 8
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/jetlink/inputs.py",
+      "added": 0,
+      "deleted": 26
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/jetlink/jetson_model.json",
+      "added": 0,
+      "deleted": 165
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/jetlink/link.py",
+      "added": 5,
+      "deleted": 11
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/jetlink/mac.py",
+      "added": 1,
+      "deleted": 23
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/jetlink/model.py",
+      "added": 10,
+      "deleted": 26
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/jetlink/startup.py",
+      "added": 5,
+      "deleted": 36
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/local_gpu_warp.py",
+      "added": 1,
+      "deleted": 1
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/modeld.py",
+      "added": 1,
+      "deleted": 5
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/output_validation.py",
+      "added": 0,
+      "deleted": 19
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/precompiled_model.py",
+      "added": 3,
+      "deleted": 3
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/precompiled_runner.py",
+      "added": 2,
+      "deleted": 22
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/precompiled_validation.py",
+      "added": 0,
+      "deleted": 1
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/precompiled_worker.py",
+      "added": 3,
+      "deleted": 12
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/tests/fixtures/{nav_metadata.json => md_v3_metadata.json}",
+      "added": 1,
+      "deleted": 83
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/tests/fixtures/nav_rl_metadata.json",
+      "added": 0,
+      "deleted": 254
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/tests/test_big_model.py",
+      "added": 7,
+      "deleted": 7
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/tests/test_egpu_failure_containment.py",
+      "added": 5,
+      "deleted": 6
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/tests/test_egpu_output_recovery.py",
+      "added": 0,
+      "deleted": 132
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/tests/test_jetlink_mac.py",
+      "added": 3,
+      "deleted": 2
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/tests/test_precompiled_artifact.py",
+      "added": 2,
+      "deleted": 1
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/tests/test_precompiled_model.py",
+      "added": 9,
+      "deleted": 6
+    },
+    {
+      "path": "openpilot/selfdrive/modeld/tests/test_precompiled_runner.py",
+      "added": 0,
+      "deleted": 73
+    },
+    {
+      "path": "openpilot/selfdrive/navd/SConscript",
+      "added": 21,
+      "deleted": 0
+    },
+    {
+      "path": "openpilot/selfdrive/navd/helpers.py",
+      "added": 5,
+      "deleted": 8
+    },
+    {
+      "path": "openpilot/selfdrive/navd/main.cc",
+      "added": 65,
+      "deleted": 0
+    },
+    {
+      "path": "openpilot/selfdrive/navd/map_renderer.cc",
+      "added": 368,
+      "deleted": 0
+    },
+    {
+      "path": "openpilot/selfdrive/navd/map_renderer.h",
+      "added": 59,
+      "deleted": 0
+    },
+    {
+      "path": "openpilot/selfdrive/navd/map_renderer.py",
+      "added": 96,
+      "deleted": 0
+    },
+    {
+      "path": "openpilot/selfdrive/navd/navd.py",
+      "added": 123,
+      "deleted": 141
+    },
+    {
+      "path": "openpilot/selfdrive/navd/style.json",
+      "added": 1,
+      "deleted": 0
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/SConscript",
+      "added": 0,
+      "deleted": 5
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/__init__.py",
+      "added": 0,
+      "deleted": 0
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/_rasterizer.pyx",
+      "added": 0,
+      "deleted": 58
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/helpers.py",
+      "added": 0,
+      "deleted": 115
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/jetlink_demand.py",
+      "added": 0,
+      "deleted": 18
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/map_client.py",
+      "added": 0,
+      "deleted": 43
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/mapbox_tiles.py",
+      "added": 0,
+      "deleted": 31
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/mapsd.py",
+      "added": 0,
+      "deleted": 132
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/pmtiles.py",
+      "added": 0,
+      "deleted": 134
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/preview.py",
+      "added": 0,
+      "deleted": 35
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/renderer.py",
+      "added": 0,
+      "deleted": 291
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/route.py",
+      "added": 0,
+      "deleted": 74
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/source.py",
+      "added": 0,
+      "deleted": 47
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/tests/test_inputs.py",
+      "added": 0,
+      "deleted": 99
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/tests/test_mapbox_tiles.py",
+      "added": 0,
+      "deleted": 30
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/tests/test_native_rasterizer.py",
+      "added": 0,
+      "deleted": 37
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/tests/test_position.py",
+      "added": 0,
+      "deleted": 152
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/tests/test_rendering.py",
+      "added": 0,
+      "deleted": 179
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/tests/test_route_engine.py",
+      "added": 0,
+      "deleted": 83
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/tests/test_route_position.py",
+      "added": 0,
+      "deleted": 40
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/tiles.py",
+      "added": 0,
+      "deleted": 128
+    },
+    {
+      "path": "openpilot/selfdrive/navigation/vector_tile.py",
+      "added": 0,
+      "deleted": 149
+    },
+    {
+      "path": "openpilot/selfdrive/test/process_replay/process_replay.py",
+      "added": 1,
+      "deleted": 1
+    },
+    {
+      "path": "openpilot/system/manager/process_config.py",
+      "added": 0,
+      "deleted": 1
+    },
+    {
+      "path": "openpilot/system/ui/lib/wifi_manager.py",
+      "added": 4,
+      "deleted": 15
+    },
+    {
+      "path": "third_party/jetlink/UPSTREAM.md",
+      "added": 0,
+      "deleted": 14
+    },
+    {
+      "path": "third_party/jetlink/jetlink/block_codec.py",
+      "added": 0,
+      "deleted": 52
+    },
+    {
+      "path": "third_party/jetlink/jetlink/client.py",
+      "added": 6,
+      "deleted": 71
+    },
+    {
+      "path": "third_party/jetlink/jetlink/direct_map.py",
+      "added": 0,
+      "deleted": 57
+    },
+    {
+      "path": "third_party/jetlink/jetlink/finite.c",
+      "added": 0,
+      "deleted": 30
+    },
+    {
+      "path": "third_party/jetlink/jetlink/finite.py",
+      "added": 0,
+      "deleted": 48
+    },
+    {
+      "path": "third_party/jetlink/jetlink/input_cast.c",
+      "added": 0,
+      "deleted": 8
+    },
+    {
+      "path": "third_party/jetlink/jetlink/input_cast.py",
+      "added": 0,
+      "deleted": 48
+    },
+    {
+      "path": "third_party/jetlink/jetlink/onnx_patch.py",
+      "added": 1,
+      "deleted": 47
+    },
+    {
+      "path": "third_party/jetlink/jetlink/output_projection.py",
+      "added": 0,
+      "deleted": 39
+    },
+    {
+      "path": "third_party/jetlink/jetlink/packed_codec.py",
+      "added": 0,
+      "deleted": 41
+    },
+    {
+      "path": "third_party/jetlink/jetlink/queues.py",
+      "added": 0,
+      "deleted": 146
+    },
+    {
+      "path": "third_party/jetlink/jetlink/server/backends/trt/cudart.py",
+      "added": 2,
+      "deleted": 29
+    },
+    {
+      "path": "third_party/jetlink/jetlink/server/backends/trt/device_state.py",
+      "added": 0,
+      "deleted": 140
+    },
+    {
+      "path": "third_party/jetlink/jetlink/server/backends/trt/engine.py",
+      "added": 13,
+      "deleted": 74
+    },
+    {
+      "path": "third_party/jetlink/jetlink/server/backends/trt/state_buffers.py",
+      "added": 0,
+      "deleted": 11
+    },
+    {
+      "path": "third_party/jetlink/jetlink/server/session.py",
+      "added": 21,
+      "deleted": 95
+    },
+    {
+      "path": "third_party/jetlink/jetlink/spec.py",
+      "added": 0,
+      "deleted": 1
+    },
+    {
+      "path": "third_party/jetlink/jetlink/transport/ffs.py",
+      "added": 1,
+      "deleted": 13
+    },
+    {
+      "path": "tools/docs/wiki_settings/patches/README.md",
+      "added": 27,
+      "deleted": 0
+    },
+    {
+      "path": "tools/docs/wiki_settings/patches/bosch-passive-reception.patch",
+      "added": 32,
+      "deleted": 0
+    },
+    {
+      "path": "tools/jetlink/NAV_RL.md",
+      "added": 0,
+      "deleted": 179
+    },
+    {
+      "path": "tools/jetlink/RESACTION.md",
+      "added": 0,
+      "deleted": 161
+    },
+    {
+      "path": "tools/jetlink/USB_SHA256_KO.md",
+      "added": 0,
+      "deleted": 93
+    },
+    {
+      "path": "tools/jetlink/bench_input_overlap.py",
+      "added": 0,
+      "deleted": 105
+    },
+    {
+      "path": "tools/jetlink/bench_state_feedback.py",
+      "added": 0,
+      "deleted": 196
+    },
+    {
+      "path": "tools/jetlink/boot_update.py",
+      "added": 10,
+      "deleted": 63
+    },
+    {
+      "path": "tools/jetlink/build_host_bundle.py",
+      "added": 3,
+      "deleted": 20
+    },
+    {
+      "path": "tools/jetlink/display_owner.py",
+      "added": 2,
+      "deleted": 5
+    },
+    {
+      "path": "tools/jetlink/download_experiment.py",
+      "added": 0,
+      "deleted": 67
+    },
+    {
+      "path": "tools/jetlink/download_model.py",
+      "added": 8,
+      "deleted": 17
+    },
+    {
+      "path": "tools/jetlink/fixtures/resaction_model.json",
+      "added": 0,
+      "deleted": 127
+    },
+    {
+      "path": "tools/jetlink/host_reader.py",
+      "added": 1,
+      "deleted": 5
+    },
+    {
+      "path": "tools/jetlink/hud.py",
+      "added": 1,
+      "deleted": 12
+    },
+    {
+      "path": "tools/jetlink/hud_camera.py",
+      "added": 3,
+      "deleted": 40
+    },
+    {
+      "path": "tools/jetlink/hud_nav_map.py",
+      "added": 0,
+      "deleted": 95
+    },
+    {
+      "path": "tools/jetlink/hud_navi.py",
+      "added": 0,
+      "deleted": 17
+    },
+    {
+      "path": "tools/jetlink/hud_protocol.py",
+      "added": 14,
+      "deleted": 34
+    },
+    {
+      "path": "tools/jetlink/hud_publisher.py",
+      "added": 3,
+      "deleted": 3
+    },
+    {
+      "path": "tools/jetlink/hud_signal.py",
+      "added": 0,
+      "deleted": 161
+    },
+    {
+      "path": "tools/jetlink/hud_wifi.py",
+      "added": 0,
+      "deleted": 92
+    },
+    {
+      "path": "tools/jetlink/hud_wifi_route.py",
+      "added": 0,
+      "deleted": 30
+    },
+    {
+      "path": "tools/jetlink/hud_wifi_worker.py",
+      "added": 0,
+      "deleted": 344
+    },
+    {
+      "path": "tools/jetlink/inspect_jetson.py",
+      "added": 1,
+      "deleted": 2
+    },
+    {
+      "path": "tools/jetlink/install_local_experiment.py",
+      "added": 0,
+      "deleted": 134
+    },
+    {
+      "path": "tools/jetlink/install_updates.py",
+      "added": 3,
+      "deleted": 41
+    },
+    {
+      "path": "tools/jetlink/install_usb_receiver.py",
+      "added": 0,
+      "deleted": 66
+    },
+    {
+      "path": "tools/jetlink/local_release.py",
+      "added": 0,
+      "deleted": 134
+    },
+    {
+      "path": "tools/jetlink/model_pin.py",
+      "added": 0,
+      "deleted": 6
+    },
+    {
+      "path": "tools/jetlink/prepare_local_experiment.py",
+      "added": 0,
+      "deleted": 46
+    },
+    {
+      "path": "tools/jetlink/prepare_usb_release.py",
+      "added": 0,
+      "deleted": 44
+    },
+    {
+      "path": "tools/jetlink/probe_release.py",
+      "added": 3,
+      "deleted": 8
+    },
+    {
+      "path": "tools/jetlink/refresh_sd_image.py",
+      "added": 1,
+      "deleted": 2
+    },
+    {
+      "path": "tools/jetlink/server.py",
+      "added": 4,
+      "deleted": 40
+    },
+    {
+      "path": "tools/jetlink/sign_release.py",
+      "added": 1,
+      "deleted": 4
+    },
+    {
+      "path": "tools/jetlink/test_aio_reader.py",
+      "added": 0,
+      "deleted": 79
+    },
+    {
+      "path": "tools/jetlink/test_app_models.py",
+      "added": 2,
+      "deleted": 4
+    },
+    {
+      "path": "tools/jetlink/test_bench_state_feedback.py",
+      "added": 0,
+      "deleted": 87
+    },
+    {
+      "path": "tools/jetlink/test_block_codec.py",
+      "added": 0,
+      "deleted": 95
+    },
+    {
+      "path": "tools/jetlink/test_boot_display.py",
+      "added": 0,
+      "deleted": 20
+    },
+    {
+      "path": "tools/jetlink/test_boot_update.py",
+      "added": 1,
+      "deleted": 17
+    },
+    {
+      "path": "tools/jetlink/test_connection_startup.py",
+      "added": 4,
+      "deleted": 2
+    },
+    {
+      "path": "tools/jetlink/test_daemon_timing.py",
+      "added": 8,
+      "deleted": 69
+    },
+    {
+      "path": "tools/jetlink/test_device_state.py",
+      "added": 0,
+      "deleted": 240
+    },
+    {
+      "path": "tools/jetlink/test_direct_map.py",
+      "added": 0,
+      "deleted": 109
+    },
+    {
+      "path": "tools/jetlink/test_download_model.py",
+      "added": 4,
+      "deleted": 6
+    },
+    {
+      "path": "tools/jetlink/test_hotplug_resources.py",
+      "added": 1,
+      "deleted": 1
+    },
+    {
+      "path": "tools/jetlink/test_hud_hotplug.py",
+      "added": 0,
+      "deleted": 17
+    },
+    {
+      "path": "tools/jetlink/test_hud_media.py",
+      "added": 0,
+      "deleted": 34
+    },
+    {
+      "path": "tools/jetlink/test_hud_nav_map.py",
+      "added": 0,
+      "deleted": 141
+    },
+    {
+      "path": "tools/jetlink/test_hud_signal.py",
+      "added": 0,
+      "deleted": 215
+    },
+    {
+      "path": "tools/jetlink/test_hud_wifi.py",
+      "added": 0,
+      "deleted": 122
+    },
+    {
+      "path": "tools/jetlink/test_input_overlap.py",
+      "added": 0,
+      "deleted": 136
+    },
+    {
+      "path": "tools/jetlink/test_local_experiment.py",
+      "added": 0,
+      "deleted": 210
+    },
+    {
+      "path": "tools/jetlink/test_native_finite.py",
+      "added": 0,
+      "deleted": 50
+    },
+    {
+      "path": "tools/jetlink/test_native_image.py",
+      "added": 0,
+      "deleted": 125
+    },
+    {
+      "path": "tools/jetlink/test_nav_rl.py",
+      "added": 0,
+      "deleted": 181
+    },
+    {
+      "path": "tools/jetlink/test_offline_boot_patch.py",
+      "added": 1,
+      "deleted": 1
+    },
+    {
+      "path": "tools/jetlink/test_output_projection.py",
+      "added": 0,
+      "deleted": 301
+    },
+    {
+      "path": "tools/jetlink/test_output_validation.py",
+      "added": 0,
+      "deleted": 38
+    },
+    {
+      "path": "tools/jetlink/test_packed_codec.py",
+      "added": 0,
+      "deleted": 106
+    },
+    {
+      "path": "tools/jetlink/test_refresh_sd_image.py",
+      "added": 1,
+      "deleted": 1
+    },
+    {
+      "path": "tools/jetlink/test_resaction.py",
+      "added": 0,
+      "deleted": 266
+    },
+    {
+      "path": "tools/jetlink/test_resaction_session.py",
+      "added": 0,
+      "deleted": 72
+    },
+    {
+      "path": "tools/jetlink/test_signed_nav_bundle.py",
+      "added": 0,
+      "deleted": 48
+    },
+    {
+      "path": "tools/jetlink/test_staging_integration.py",
+      "added": 0,
+      "deleted": 107
+    },
+    {
+      "path": "tools/jetlink/test_state_buffers.py",
+      "added": 0,
+      "deleted": 54
+    },
+    {
+      "path": "tools/jetlink/test_usb_sha256.py",
+      "added": 0,
+      "deleted": 433
+    },
+    {
+      "path": "tools/jetlink/test_wifi_direct_forward.py",
+      "added": 0,
+      "deleted": 143
+    },
+    {
+      "path": "tools/jetlink/update_host.py",
+      "added": 14,
+      "deleted": 60
+    },
+    {
+      "path": "tools/jetlink/usb_release.py",
+      "added": 0,
+      "deleted": 189
+    },
+    {
+      "path": "tools/jetlink/usb_release_client.py",
+      "added": 0,
+      "deleted": 103
+    },
+    {
+      "path": "tools/jetlink/validate_nav_rl_cpu.py",
+      "added": 0,
+      "deleted": 254
+    },
+    {
+      "path": "tools/jetlink/validation/nav_rl_pc.json",
+      "added": 0,
+      "deleted": 92
+    },
+    {
+      "path": "tools/jetlink/wifi_direct.py",
+      "added": 0,
+      "deleted": 277
+    },
+    {
+      "path": "tools/jetlink/wifi_direct_forward.py",
+      "added": 0,
+      "deleted": 64
+    },
+    {
+      "path": "tools/jetlink/wifi_direct_netlink.py",
+      "added": 0,
+      "deleted": 119
+    },
+    {
+      "path": "tools/jetlink/wifi_publisher.py",
+      "added": 5,
+      "deleted": 44
+    },
+    {
+      "path": "tools/modeld/{build_nav_package.py => build_md_v3_package.py}",
+      "added": 9,
+      "deleted": 10
+    },
+    {
+      "path": "tools/modeld/profile_navigation.py",
+      "added": 0,
+      "deleted": 88
+    },
+    {
+      "path": "tools/modeld/test_mdm_runtime.py",
+      "added": 8,
+      "deleted": 39
+    }
+  ],
+  "statuses": [
+    {
+      "status": "M",
+      "path": ".github/workflows/jetlink-checks.yaml"
+    },
+    {
+      "status": "M",
+      "path": ".github/workflows/mdm-model.yaml"
+    },
+    {
+      "status": "M",
+      "path": ".github/workflows/tests.yaml"
+    },
+    {
+      "status": "M",
+      "path": "AGENTS.md"
+    },
+    {
+      "status": "M",
+      "path": "SConstruct"
+    },
+    {
+      "status": "A",
+      "path": "docs/bosch_radar.md"
+    },
+    {
+      "status": "M",
+      "path": "docs/carrot_navi_7713_7714_deceleration.md"
+    },
+    {
+      "status": "M",
+      "path": "docs/carrot_navi_7714_branch_comparison.md"
+    },
+    {
+      "status": "D",
+      "path": "docs/egpu_output_read_timeout_20261014.md"
+    },
+    {
+      "status": "D",
+      "path": "docs/egpu_single_output_recovery_20261014.md"
+    },
+    {
+      "status": "D",
+      "path": "docs/jetson_hud_latency_review_20261014.md"
+    },
+    {
+      "status": "D",
+      "path": "docs/jetson_locationd_latency_20261014.md"
+    },
+    {
+      "status": "D",
+      "path": "docs/jetson_nav_device_20261013.md"
+    },
+    {
+      "status": "D",
+      "path": "docs/jetson_nav_integration_20261013.md"
+    },
+    {
+      "status": "D",
+      "path": "docs/jetson_nav_next_performance_20261013.md"
+    },
+    {
+      "status": "D",
+      "path": "docs/jetson_nav_overlap_20261014.md"
+    },
+    {
+      "status": "D",
+      "path": "docs/jetson_nav_performance_20261013.md"
+    },
+    {
+      "status": "M",
+      "path": "docs/jetson_nav_preview_drive_20261020.md"
+    },
+    {
+      "status": "D",
+      "path": "docs/jetson_nav_retest_20261014.md"
+    },
+    {
+      "status": "M",
+      "path": "docs/jetson_update_policy_20261020.md"
+    },
+    {
+      "status": "D",
+      "path": "docs/jetson_usb_update_review_20261020.md"
+    },
+    {
+      "status": "D",
+      "path": "docs/jetson_wifi_review.md"
+    },
+    {
+      "status": "M",
+      "path": "docs/jetson_wifi_usb_panel_20261020.md"
+    },
+    {
+      "status": "D",
+      "path": "docs/mapbox_empty_preview_20261015.md"
+    },
+    {
+      "status": "A",
+      "path": "docs/md_v3_20261015.md"
+    },
+    {
+      "status": "D",
+      "path": "docs/nav_gps_timing_20261012.md"
+    },
+    {
+      "status": "D",
+      "path": "docs/nav_model_followup_20261012.md"
+    },
+    {
+      "status": "D",
+      "path": "docs/nav_model_integration_20261012.md"
+    },
+    {
+      "status": "D",
+      "path": "docs/nav_rl_model_20261013.md"
+    },
+    {
+      "status": "M",
+      "path": "docs/user/en/radar.md"
+    },
+    {
+      "status": "M",
+      "path": "docs/user/en/settings.md"
+    },
+    {
+      "status": "M",
+      "path": "docs/user/ko/radar.md"
+    },
+    {
+      "status": "M",
+      "path": "docs/user/ko/settings.md"
+    },
+    {
+      "status": "M",
+      "path": "opendbc_repo/opendbc/car/hyundai/interface.py"
+    },
+    {
+      "status": "A",
+      "path": "opendbc_repo/opendbc/car/hyundai/radar_bosch.py"
+    },
+    {
+      "status": "M",
+      "path": "opendbc_repo/opendbc/car/hyundai/radar_interface.py"
+    },
+    {
+      "status": "A",
+      "path": "opendbc_repo/opendbc/car/hyundai/tests/test_bosch_camera_extended.py"
+    },
+    {
+      "status": "A",
+      "path": "opendbc_repo/opendbc/car/hyundai/tests/test_bosch_mature_retention.py"
+    },
+    {
+      "status": "A",
+      "path": "opendbc_repo/opendbc/car/hyundai/tests/test_bosch_mirror_birth.py"
+    },
+    {
+      "status": "A",
+      "path": "opendbc_repo/opendbc/car/hyundai/tests/test_bosch_mirror_m3.py"
+    },
+    {
+      "status": "A",
+      "path": "opendbc_repo/opendbc/car/hyundai/tests/test_bosch_road_edge.py"
+    },
+    {
+      "status": "M",
+      "path": "opendbc_repo/opendbc/car/hyundai/tests/test_radar.py"
+    },
+    {
+      "status": "M",
+      "path": "opendbc_repo/opendbc/car/hyundai/values.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/cereal/log.capnp"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/cereal/services.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/common/jetson_model.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/common/params_keys.h"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/common/wifi_coexistence.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot/carrot_man.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot/carrot_serv.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot/cluster/cluster_config.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot/cluster/cluster_renderer.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot/radar/radarcan.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot/radar/radard_dpath.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot/server/features/__init__.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/carrot/server/features/navigation.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot/server/services/device_info.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/carrot/server/tests/test_navigation_map.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot/server/tests/test_settings_schema.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot/tests/test_carrot_navi_control.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot/tests/test_carrot_navi_route_bridge.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot/tests/test_cluster_display.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/carrot/tests/test_cluster_nav_map.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot/tests/test_radarcan_process.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot/tests/test_radard_dpath.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot/web/generated/asset-manifest.json"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot/web/index.html"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot/web/js/generated/tools.js"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/carrot/web/js/pages/navigation_map.js"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/carrot/web/navigation.html"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot/web/src/features/tools/egpu_model.js"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/carrot/web/tests/navigation_map.test.mjs"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/carrot_settings.json"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/big_model.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/modeld/egpu_output_recovery.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/egpu_usb_wait.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/generic_model_runtime.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/modeld/jetlink/aio.c"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/modeld/jetlink/aio.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/jetlink/compat.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/jetlink/contracts.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/jetlink/daemon.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/jetlink/host_release.json"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/modeld/jetlink/inputs.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/modeld/jetlink/jetson_model.json"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/jetlink/link.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/jetlink/mac.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/jetlink/model.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/jetlink/startup.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/local_gpu_warp.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/modeld.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/modeld/output_validation.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/precompiled_model.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/precompiled_runner.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/precompiled_validation.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/precompiled_worker.py"
+    },
+    {
+      "status": "R070",
+      "path": "openpilot/selfdrive/modeld/tests/fixtures/md_v3_metadata.json",
+      "old_path": "openpilot/selfdrive/modeld/tests/fixtures/nav_metadata.json"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/modeld/tests/fixtures/nav_rl_metadata.json"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/tests/test_big_model.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/tests/test_egpu_failure_containment.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/modeld/tests/test_egpu_output_recovery.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/tests/test_jetlink_mac.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/tests/test_precompiled_artifact.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/tests/test_precompiled_model.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/modeld/tests/test_precompiled_runner.py"
+    },
+    {
+      "status": "A",
+      "path": "openpilot/selfdrive/navd/SConscript"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/navd/helpers.py"
+    },
+    {
+      "status": "A",
+      "path": "openpilot/selfdrive/navd/main.cc"
+    },
+    {
+      "status": "A",
+      "path": "openpilot/selfdrive/navd/map_renderer.cc"
+    },
+    {
+      "status": "A",
+      "path": "openpilot/selfdrive/navd/map_renderer.h"
+    },
+    {
+      "status": "A",
+      "path": "openpilot/selfdrive/navd/map_renderer.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/navd/navd.py"
+    },
+    {
+      "status": "A",
+      "path": "openpilot/selfdrive/navd/style.json"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/SConscript"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/__init__.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/_rasterizer.pyx"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/helpers.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/jetlink_demand.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/map_client.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/mapbox_tiles.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/mapsd.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/pmtiles.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/preview.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/renderer.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/route.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/source.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/tests/test_inputs.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/tests/test_mapbox_tiles.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/tests/test_native_rasterizer.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/tests/test_position.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/tests/test_rendering.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/tests/test_route_engine.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/tests/test_route_position.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/tiles.py"
+    },
+    {
+      "status": "D",
+      "path": "openpilot/selfdrive/navigation/vector_tile.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/selfdrive/test/process_replay/process_replay.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/system/manager/process_config.py"
+    },
+    {
+      "status": "M",
+      "path": "openpilot/system/ui/lib/wifi_manager.py"
+    },
+    {
+      "status": "M",
+      "path": "third_party/jetlink/UPSTREAM.md"
+    },
+    {
+      "status": "D",
+      "path": "third_party/jetlink/jetlink/block_codec.py"
+    },
+    {
+      "status": "M",
+      "path": "third_party/jetlink/jetlink/client.py"
+    },
+    {
+      "status": "D",
+      "path": "third_party/jetlink/jetlink/direct_map.py"
+    },
+    {
+      "status": "D",
+      "path": "third_party/jetlink/jetlink/finite.c"
+    },
+    {
+      "status": "D",
+      "path": "third_party/jetlink/jetlink/finite.py"
+    },
+    {
+      "status": "D",
+      "path": "third_party/jetlink/jetlink/input_cast.c"
+    },
+    {
+      "status": "D",
+      "path": "third_party/jetlink/jetlink/input_cast.py"
+    },
+    {
+      "status": "M",
+      "path": "third_party/jetlink/jetlink/onnx_patch.py"
+    },
+    {
+      "status": "D",
+      "path": "third_party/jetlink/jetlink/output_projection.py"
+    },
+    {
+      "status": "D",
+      "path": "third_party/jetlink/jetlink/packed_codec.py"
+    },
+    {
+      "status": "M",
+      "path": "third_party/jetlink/jetlink/queues.py"
+    },
+    {
+      "status": "M",
+      "path": "third_party/jetlink/jetlink/server/backends/trt/cudart.py"
+    },
+    {
+      "status": "D",
+      "path": "third_party/jetlink/jetlink/server/backends/trt/device_state.py"
+    },
+    {
+      "status": "M",
+      "path": "third_party/jetlink/jetlink/server/backends/trt/engine.py"
+    },
+    {
+      "status": "D",
+      "path": "third_party/jetlink/jetlink/server/backends/trt/state_buffers.py"
+    },
+    {
+      "status": "M",
+      "path": "third_party/jetlink/jetlink/server/session.py"
+    },
+    {
+      "status": "M",
+      "path": "third_party/jetlink/jetlink/spec.py"
+    },
+    {
+      "status": "M",
+      "path": "third_party/jetlink/jetlink/transport/ffs.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/docs/wiki_settings/patches/README.md"
+    },
+    {
+      "status": "A",
+      "path": "tools/docs/wiki_settings/patches/bosch-passive-reception.patch"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/NAV_RL.md"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/RESACTION.md"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/USB_SHA256_KO.md"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/bench_input_overlap.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/bench_state_feedback.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/boot_update.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/build_host_bundle.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/display_owner.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/download_experiment.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/download_model.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/fixtures/resaction_model.json"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/host_reader.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/hud.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/hud_camera.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/hud_nav_map.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/hud_navi.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/hud_protocol.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/hud_publisher.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/hud_signal.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/hud_wifi.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/hud_wifi_route.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/hud_wifi_worker.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/inspect_jetson.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/install_local_experiment.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/install_updates.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/install_usb_receiver.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/local_release.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/model_pin.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/prepare_local_experiment.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/prepare_usb_release.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/probe_release.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/refresh_sd_image.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/server.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/sign_release.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_aio_reader.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/test_app_models.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_bench_state_feedback.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_block_codec.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/test_boot_display.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/test_boot_update.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/test_connection_startup.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/test_daemon_timing.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_device_state.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_direct_map.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/test_download_model.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/test_hotplug_resources.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/test_hud_hotplug.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/test_hud_media.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_hud_nav_map.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_hud_signal.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_hud_wifi.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_input_overlap.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_local_experiment.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_native_finite.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_native_image.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_nav_rl.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/test_offline_boot_patch.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_output_projection.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_output_validation.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_packed_codec.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/test_refresh_sd_image.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_resaction.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_resaction_session.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_signed_nav_bundle.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_staging_integration.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_state_buffers.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_usb_sha256.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/test_wifi_direct_forward.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/update_host.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/usb_release.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/usb_release_client.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/validate_nav_rl_cpu.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/validation/nav_rl_pc.json"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/wifi_direct.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/wifi_direct_forward.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/jetlink/wifi_direct_netlink.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/jetlink/wifi_publisher.py"
+    },
+    {
+      "status": "R078",
+      "path": "tools/modeld/build_md_v3_package.py",
+      "old_path": "tools/modeld/build_nav_package.py"
+    },
+    {
+      "status": "D",
+      "path": "tools/modeld/profile_navigation.py"
+    },
+    {
+      "status": "M",
+      "path": "tools/modeld/test_mdm_runtime.py"
+    }
+  ],
+  "source_smoke": [
+    {
+      "name": "comma_files(Nav)",
+      "status": "PASS",
+      "scope": "source anchors only; bodies kept in memory",
+      "files": 5,
+      "existing_file_additions": 4,
+      "existing_file_deletions": 0,
+      "new_file_lines": 300
+    },
+    {
+      "name": "server_files(Nav)",
+      "status": "BLOCKED",
+      "expected_guard": "current server source body changed; review required: spec.py"
+    },
+    {
+      "name": "Nav canonical V3 round trip",
+      "status": "FAIL",
+      "equal": false,
+      "missing": [
+        "input_dtypes",
+        "output_dtypes"
+      ],
+      "reason": "unpatched source drops dtype maps"
+    }
+  ],
+  "hardware": {
+    "ORT_CPU": "SKIP",
+    "TensorRT": "SKIP",
+    "Jetson": "SKIP",
+    "USB": "SKIP",
+    "vehicle": "SKIP"
+  }
+}
