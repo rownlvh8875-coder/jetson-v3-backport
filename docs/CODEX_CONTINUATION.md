@@ -54,7 +54,9 @@ Implementation commits: b0d721043f529340d308a0eaa2e0497294d35be2 semantic tool;
 7a80a0090f89f1889cd43c8ba6a0b46511cb785b minimal Nav bridge;
 5812a6587a1cd6211151cb10c82cd196e8214ccb explicit private file-cache preparation;
 b5f24feef15decad312229148ad24b5e8e37ea69 exact wire and patch rollback tests.
-Evidence/docs publication commit follows; resolve containing
+Evidence/docs publication72d53b3c6c351f101639bab7665f52af6ca7dfd3 was normally
+pushed to the same feature branch and verified remote-equal, clean, with main
+and old feature refs unchanged. Final handoff commit contains this record; resolve containing
 HEAD with `git rev-parse HEAD` / `git log -1 --format=%H -- docs/CODEX_CONTINUATION.md`.
 Never hardcode these as permanent upstream branch pins.
 
