@@ -55,6 +55,9 @@ artifact and execution plan; README/handoff updated. No existing adapter,
 M1/M15/M16 tool, production code or patch modified. Final evidence/handoff commit
 contains this record; resolve its actual SHA using `git log -1 --format=%H --
 docs/CODEX_CONTINUATION.md`, and development HEAD using `git rev-parse HEAD`.
+Evidence/docs **089e5e009da28cc5b0a7f428900efd88a100a6a4** normally pushed to the
+same feature branch; remote equality, clean working tree and unchanged protected
+main/old-feature refs verified. The final handoff commit records that check.
 
 Fresh CPU **PASS87 / FAIL0 / SKIP0**:12new pure gate/privacy/motion/output tests
 plus75 frozen M16/M15/Nav adapter/wire/loopback smoke. Repeats and previous708
