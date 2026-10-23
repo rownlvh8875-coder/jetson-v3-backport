@@ -1,2 +1,8 @@
 # Unified diff context uses a mandatory space on blank lines. Keep patch bytes LF.
 patches/*.patch -text whitespace=-blank-at-eol
+# Recorder candidate source hashes must survive Windows/Linux checkouts exactly.
+recording/*.py text eol=lf
+adapters/carrot/recorder.py text eol=lf
+tests/test_v3_input_*.py text eol=lf
+tools/benchmark_v3_input_recorder.py text eol=lf
+tools/v3_input_dataset.py text eol=lf
