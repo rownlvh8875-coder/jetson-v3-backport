@@ -11,14 +11,17 @@ import argparse
 import ast
 import hashlib
 import json
-from pathlib import Path
+import os
 import re
+import stat
 import struct
 
 U32_SHA='07e2bd4cdac1479f85447c1f96182c8f24603a9184b11045086d7433b68e5b70'
 BASELINE='8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5'
 PATCH='3a3e19430ab667d204f22fd1e40438a85e1ade1dbab2e6f9dd6e3dd32de4c1ee'
 FROZEN_CHECKER_SHA='3b8f77a388caeb380e78980ba13c02c8e24e8ce4017326f01fbbb7cbf3a90904'
+PROOF_SCHEMA=1
+PROOF_SCOPE='DIRECT_U32_TO_FROZEN_M18_IN_PINNED_ACTUAL366'
 BOUNDARY_PINS={
     'B01':'4d29f423bb359427ec36704e99eedd3512af76a4cac672a74f95ae91b43fed35',
     'B02':'d20ec36947c6aefd12b425daa0f8d1fa39d0d273d1da578b13a20b079aad878a',
@@ -46,6 +49,19 @@ BLOCKERS=('runtime_caller_found','dynamic_registration_possible','target_mutatio
 
 def sha(data):
     return hashlib.sha256(data).hexdigest()
+
+
+def read_regular_bounded(path,limit):
+    """Reject streams before reading; bound acquisition even if a file grows."""
+    flags=os.O_RDONLY|getattr(os,'O_NONBLOCK',0)|getattr(os,'O_NOFOLLOW',0)|getattr(os,'O_BINARY',0)
+    fd=os.open(path,flags)
+    try:
+        info=os.fstat(fd)
+        if not stat.S_ISREG(info.st_mode) or info.st_size>limit:raise ValueError('regular file size bound')
+        with os.fdopen(fd,'rb',closefd=False) as stream:raw=stream.read(limit+1)
+        if len(raw)>limit:raise ValueError('file grew beyond bound')
+        return raw
+    finally:os.close(fd)
 
 
 def source_profile(raw):
@@ -234,6 +250,10 @@ def isolation_decision(evidence):
     requirements=evidence.get('requirements');blockers=evidence.get('blockers')
     if not isinstance(requirements,dict):requirements={}
     if not isinstance(blockers,dict):blockers={}
+    if type(evidence.get('schema')) is not int or evidence['schema']!=PROOF_SCHEMA:reasons.append('PROOF_SCHEMA')
+    if evidence.get('scope')!=PROOF_SCOPE:reasons.append('PROOF_SCOPE')
+    if set(requirements)!=set(REQUIREMENTS):reasons.append('REQUIREMENT_KEYS')
+    if set(blockers)!=set(BLOCKERS):reasons.append('BLOCKER_KEYS')
     for key,value in (('source_sha256',U32_SHA),('baseline_digest',BASELINE),('patch_sha256',PATCH)):
         if evidence.get(key)!=value:reasons.append(key.upper()+'_BINDING')
     if not re.fullmatch('[0-9a-f]{64}',str(evidence.get('evidence_sha256',''))):reasons.append('EVIDENCE_BINDING')
@@ -254,15 +274,29 @@ def receipt_digest(value):
     return sha(json.dumps(value,sort_keys=True,separators=(',',':'),allow_nan=False).encode())
 
 
-def compose_attestation(legacy,evidence,*,checker_sha256):
+def compose_attestation(legacy,evidence,*,checker_sha256,reviewed_proof_sha256=None,evidence_bundle=None):
     """Apply the user's M193 scoped isolation policy, not an unused-runtime claim.
 
     Requires a trusted frozen-checker receipt and explicitly reviewed private
     proof, both independently committed by digest. These inputs are not author
-    authentication. Never edit the old checker/manifest or grant installation.
+    authentication. The review pin must be independently retained, never derived
+    from the received proof as an approval step. The bundle is an index of actual
+    private evidence-file/profile hashes; its acquisition remains the caller's
+    trusted responsibility. Never edit the old checker or grant installation.
     """
     decision=isolation_decision(evidence);hard=[];legacy_sha=None;legacy_status=None
+    proof_sha=None;bundle_sha=None;commitments_verified=False
     try:
+        proof_sha=receipt_digest(evidence)
+        if (not re.fullmatch('[0-9a-f]{64}',str(reviewed_proof_sha256 or ''))
+                or proof_sha!=reviewed_proof_sha256):hard.append('REVIEWED_PROOF_BINDING')
+        if (not isinstance(evidence_bundle,dict) or not evidence_bundle
+                or any(not isinstance(k,str) or not re.fullmatch('[0-9a-f]{64}',str(v)) for k,v in evidence_bundle.items())):
+            hard.append('EVIDENCE_BUNDLE_FORMAT')
+        else:
+            bundle_sha=receipt_digest(evidence_bundle)
+            if evidence.get('evidence_sha256')!=bundle_sha:hard.append('EVIDENCE_BUNDLE_BINDING')
+        commitments_verified=not hard
         legacy_sha=receipt_digest(legacy)
         if legacy.get('status') in ('ATTESTED_DIRTY_BASELINE_PASS','ATTESTED_DIRTY_BASELINE_PARTIAL','ATTESTED_DIRTY_BASELINE_FAIL'):
             legacy_status=legacy['status']
@@ -283,6 +317,8 @@ def compose_attestation(legacy,evidence,*,checker_sha256):
             'status':'ATTESTED_DIRTY_BASELINE_PASS' if passed else 'ATTESTED_DIRTY_BASELINE_FAIL' if hard else 'ATTESTED_DIRTY_BASELINE_PARTIAL',
             'legacy_M192_status':legacy_status,
             'legacy_receipt_sha256':legacy_sha,
+            'reviewed_proof_sha256':proof_sha,'evidence_bundle_sha256':bundle_sha,
+            'commitments_verified':commitments_verified,
             'isolation':decision,'reasons':hard+decision['reasons'],'ready_to_retry_M19':passed,
             'current_runtime_use':'UNKNOWN','installation_authorized':False,'actual_mutations':False}
 
@@ -292,10 +328,10 @@ def main():
     parser.add_argument('source');parser.add_argument('--pyc');parser.add_argument('--public',action='store_true')
     args=parser.parse_args()
     try:
-        profile=source_profile(Path(args.source).read_bytes())
+        profile=source_profile(read_regular_bounded(args.source,1_000_000))
         out={'source':public_profile(profile) if args.public else profile}
         if args.pyc:
-            parsed=parse_pyc(Path(args.pyc).read_bytes())
+            parsed=parse_pyc(read_regular_bounded(args.pyc,2_000_000))
             out['pyc']={k:parsed[k] for k in ('pyc_sha256','payload_sha256','executed','code_objects_constructed')} if args.public else parsed
         print(json.dumps(out,allow_nan=False));return 0
     except (OSError,ValueError,TypeError,RecursionError,SyntaxError):

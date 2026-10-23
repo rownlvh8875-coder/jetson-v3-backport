@@ -101,9 +101,22 @@ def test_reference_context_separates_static_dynamic_and_generic():
 
 def proof():
     t=api()
-    return dict(source_sha256=t.U32_SHA,baseline_digest=t.BASELINE,patch_sha256=t.PATCH,
-                evidence_sha256='a'*64,requirements={k:True for k in t.REQUIREMENTS},
+    return dict(schema=1,scope='DIRECT_U32_TO_FROZEN_M18_IN_PINNED_ACTUAL366',
+                source_sha256=t.U32_SHA,baseline_digest=t.BASELINE,patch_sha256=t.PATCH,
+                evidence_sha256=t.receipt_digest(bundle()),requirements={k:True for k in t.REQUIREMENTS},
                 blockers={k:False for k in t.BLOCKERS})
+
+
+def bundle():
+    return {'fixture_receipt':'a'*64,'fixture_observation':'b'*64}
+
+
+def compose(legacy,p,**kwargs):
+    # Fixture review occurs before fault injection; real approval must come
+    # from an independently retained commitment, never re-sign received data.
+    return api().compose_attestation(legacy,p,checker_sha256=kwargs.pop('checker_sha256',api().FROZEN_CHECKER_SHA),
+        evidence_bundle=kwargs.pop('evidence_bundle',bundle()),
+        reviewed_proof_sha256=kwargs.pop('reviewed_proof_sha256',api().receipt_digest(p)),**kwargs)
 
 
 def test_accepted_unknown_requires_bound_complete_isolation_proof():
@@ -194,11 +207,14 @@ def composed_proof(receipt):
 
 def test_m193_scoped_policy_composes_without_faking_legacy_pass_or_runtime_absence():
     legacy=legacy_receipt();p=composed_proof(legacy);original=copy.deepcopy(legacy)
-    result=api().compose_attestation(legacy,p,checker_sha256=api().FROZEN_CHECKER_SHA)
+    result=compose(legacy,p)
     assert result['status']=='ATTESTED_DIRTY_BASELINE_PASS'
     assert result['legacy_M192_status']=='ATTESTED_DIRTY_BASELINE_PARTIAL'
     assert result['policy']=='M193_SCOPED_ISOLATION_V1' and result['installation_authorized'] is False
     assert 'runtime_reference_absent' not in p and legacy==original
+    assert result['reviewed_proof_sha256']==api().receipt_digest(p)
+    assert result['evidence_bundle_sha256']==api().receipt_digest(bundle())
+    assert result['commitments_verified'] is True
 
 
 @pytest.mark.parametrize('fault',['legacy_drift','missing_check','extra_check','receipt_mismatch','checker_drift','boundary_drift','policy_hold'])
@@ -212,10 +228,73 @@ def test_composition_cannot_override_structural_failures_or_unbound_review(fault
     if fault=='boundary_drift':p['boundary_hashes']['B01']='0'*64
     if fault=='policy_hold':p['blockers'][api().BLOCKERS[0]]=True
     if fault in ('legacy_drift','missing_check','extra_check'):p['legacy_receipt_sha256']=api().receipt_digest(legacy)
-    assert api().compose_attestation(legacy,p,checker_sha256=checker)['status']!='ATTESTED_DIRTY_BASELINE_PASS'
+    assert compose(legacy,p,checker_sha256=checker)['status']!='ATTESTED_DIRTY_BASELINE_PASS'
 
 
 @pytest.mark.parametrize('bad',[None,[],{'status':float('nan')}])
 def test_malformed_composition_is_anonymous_failure(bad):
-    result=api().compose_attestation(bad,proof(),checker_sha256=api().FROZEN_CHECKER_SHA)
+    result=compose(bad,proof())
     assert result['status']=='ATTESTED_DIRTY_BASELINE_FAIL'
+
+
+@pytest.mark.parametrize('fault',['valid_hex_substitution','missing_schema','schema_drift','missing_scope','scope_drift',
+    'added_requirement','added_blocker','changed_review_note','wrong_pin','missing_pin','bundle_substitution','missing_bundle'])
+def test_reviewed_proof_commitment_and_scope_cannot_be_substituted(fault):
+    legacy=legacy_receipt();p=composed_proof(legacy);approved=api().receipt_digest(p);observations=bundle()
+    if fault=='valid_hex_substitution':p['evidence_sha256']='c'*64
+    if fault=='missing_schema':p.pop('schema')
+    if fault=='schema_drift':p['schema']=2
+    if fault=='missing_scope':p.pop('scope')
+    if fault=='scope_drift':p['scope']='ARBITRARY_LIVE_RUNTIME'
+    if fault=='added_requirement':p['requirements']['runtime_absence_proved']=True
+    if fault=='added_blocker':p['blockers']['hidden_new_policy']=False
+    if fault=='changed_review_note':p['review_note']='different reviewed judgment'
+    if fault=='wrong_pin':approved='c'*64
+    if fault=='missing_pin':approved=None
+    if fault=='bundle_substitution':observations['fixture_receipt']='c'*64
+    if fault=='missing_bundle':observations=None
+    # Even a separately reviewed commitment cannot expand the fixed scope or
+    # policy key set. Do not rely only on mismatch with an old commitment.
+    if fault in ('missing_schema','schema_drift','missing_scope','scope_drift','added_requirement','added_blocker'):
+        approved=api().receipt_digest(p)
+    result=compose(legacy,p,reviewed_proof_sha256=approved,evidence_bundle=observations)
+    assert result['status']!='ATTESTED_DIRTY_BASELINE_PASS'
+    assert result['ready_to_retry_M19'] is False
+
+
+def test_acquisition_rejects_oversize_before_reading(monkeypatch,tmp_path):
+    path=tmp_path/'oversize';path.write_bytes(b'x'*17)
+    def forbidden(*args,**kwargs):raise AssertionError('oversize content must not be read')
+    monkeypatch.setattr(api().os,'fdopen',forbidden)
+    with pytest.raises(ValueError):api().read_regular_bounded(path,16)
+
+
+def test_acquisition_rejects_nonregular_without_blocking(tmp_path):
+    with pytest.raises((OSError,ValueError)):api().read_regular_bounded(tmp_path,16)
+
+
+def test_acquisition_regular_exact_limit_and_overflow(tmp_path):
+    path=tmp_path/'fixture';path.write_bytes(b'x'*16)
+    assert api().read_regular_bounded(path,16)==b'x'*16
+    with pytest.raises(ValueError):api().read_regular_bounded(path,15)
+
+
+def test_acquisition_growth_still_reads_only_limit_plus_one(monkeypatch,tmp_path):
+    path=tmp_path/'growing';path.write_bytes(b'')
+    class GrowingFile:
+        def __enter__(self):return self
+        def __exit__(self,*args):pass
+        def read(self,n):
+            assert n==17
+            return b'x'*n
+    monkeypatch.setattr(api().os,'fdopen',lambda *args,**kwargs:GrowingFile())
+    with pytest.raises(ValueError):api().read_regular_bounded(path,16)
+
+
+def test_cli_rejects_fifo_without_waiting_for_writer(tmp_path):
+    path=tmp_path/'stream'
+    if not hasattr(api().os,'mkfifo'):pytest.skip('FIFO fixture requires POSIX')
+    api().os.mkfifo(path)
+    result=subprocess.run([sys.executable,'-B',api().__file__,str(path),'--public'],capture_output=True,timeout=2)
+    assert result.returncode==1
+    assert json.loads(result.stdout)=={'status':'REJECTED_PRIVATE_INPUT','executed':False}
