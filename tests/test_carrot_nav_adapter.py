@@ -103,3 +103,21 @@ def test_base_drift_rejected_before_candidate_creation(tmp_path,monkeypatch):
 
 def test_collision_rejected(nav_candidate):
     with pytest.raises(ValueError):nav.build_nav_candidate(REFERENCE,nav_candidate)
+
+
+def test_generated_patch_reverses_and_reapplies_exactly(nav_candidate,tmp_path):
+    manifest=json.loads((nav_candidate/'.jetlink-candidate/manifest.json').read_text())
+    patch=nav_candidate/'.jetlink-candidate/candidate.patch'
+    assert hashlib.sha256(patch.read_bytes()).hexdigest()==manifest['patch_sha256']
+    for entry in manifest['touched_files']:
+        p=tmp_path/entry['path'];p.parent.mkdir(parents=True,exist_ok=True)
+        p.write_bytes((nav_candidate/entry['path']).read_bytes())
+    for args in (('--reverse','--check'),('--reverse',)):
+        subprocess.run(['git','apply',*args,str(patch)],cwd=tmp_path,check=True,capture_output=True)
+    for entry in manifest['touched_files']:
+        p=tmp_path/entry['path']
+        assert (not p.exists()) if entry['before_sha256'] is None else hashlib.sha256(p.read_bytes()).hexdigest()==entry['before_sha256']
+    for args in (('--check',),()):
+        subprocess.run(['git','apply',*args,str(patch)],cwd=tmp_path,check=True,capture_output=True)
+    for entry in manifest['touched_files']:
+        assert hashlib.sha256((tmp_path/entry['path']).read_bytes()).hexdigest()==entry['after_sha256']
