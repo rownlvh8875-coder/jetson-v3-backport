@@ -46,6 +46,12 @@ actual366/Offroad1·Onroad0와 원본 source pin은 확인했지만 미추적48�
 **BLOCKED_DIRTY_TREE**다. 설치·재시작·활성화·capture는 하지 않았고 기존 상태를 보존했다.
 정차10프레임과 주행 capture는 미실행이며 M2는 계속 NO다.
 
+2026-10-23 [M19.1 읽기 전용 감사](docs/M191_DIRTY_TREE_AUDIT_20261023.md):
+미추적48항목은 실제로2,006파일/417,208,589bytes다. 생성물19, 동일 백업1,
+런타임 필수26, 소유·생성 근거 미확정2로 분류했다. Recorder 경로 충돌은 없지만
+dependency overlay가 실제 사용 중이므로 일괄 정리는 불가하다. 전후 해시·상태를
+보존했고 이동·삭제·ignore 변경은 하지 않았다. **M19 설치 재시도 NO / M2 NO**다.
+
 2026-10-20 [외부 Jetson 최적화 검토](docs/JETSON_REVIEW_A890_ANALYSIS.md):
 DeviceState와 InputFastpath는 기존 검증을 유지한 기본 OFF 실험 후보다.
 AIO는 운영 transport에 연결하지 않았으며, 실장 순서는 M0 → 기본 V3 → USB →

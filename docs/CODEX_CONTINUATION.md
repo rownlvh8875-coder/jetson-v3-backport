@@ -1,5 +1,127 @@
 # Codex continuation — 2026-10-23
 
+## Latest checkpoint: M19.1 audited48 entries; no actual cleanup/install
+
+Read `docs/M191_DIRTY_TREE_AUDIT_20261023.md` and
+`artifacts/m191_dirty_tree_audit_20261023.json` first. **READ_ONLY_AUDIT_COMPLETE_WITH_UNKNOWNS**;
+the original **BLOCKED_DIRTY_TREE** gate remains. Ready to resolve clean tree NO,
+ready to retry M19 NO. No recorder install, activation, restart or capture.
+PARITY_UNDETERMINED / M2 NO / M1 plan DO_NOT_INSTALL unchanged and unaccessed.
+
+### Date, branch, evidence and classification
+
+2026-10-23. Started clean/remote-equal required feature at
+**a9bc99e2865f0b2fa44b3b8906765f3bbd38eacb**. Result commit:
+`git log -1 --format=%H -- artifacts/m191_dirty_tree_audit_20261023.json`;
+current development HEAD: `git rev-parse HEAD`. Only M191 result/JSON, README
+and this handoff changed. Normal same-feature push and final clean/remote check
+follow the commit. Main/old-feature are preserved; no force/rebase/reset.
+
+Actual carrot-nav **366d6eae9aa9962104391e1d997fe956dea8f64d**, fresh flags1/0,
+tracked changes0, untracked short entries48 throughout. Expanded: **2,006 regular
+files,417,208,589bytes,283directories,0symlinks**. All regular contentSHA and all
+node mode/UID/GID/mtime/ctime collected with stable descriptor/stat checks.
+Every entry is anonymously mapped U01–U48; public node IDs/hashes/metadata contain
+no raw paths/source/argv/environment/address/route names. The full private mapping
+and audit inputs remain ignored on PC, not on the comma source tree.
+
+|Classification|Count|
+|---|---:|
+|SAFE_GENERATED|19|
+|SAFE_BACKUP_NOT_REFERENCED|1|
+|CUSTOM_SOURCE_REFERENCED|0|
+|CUSTOM_SOURCE_NOT_REFERENCED|0|
+|RUNTIME_REQUIRED|26|
+|UNKNOWN_USER_OWNED|2|
+
+U02 controller backup is byte-identical to tracked366 and historical last-change
+4205086b8cc1a2c6e7146bad8220c56443258a60; no static/OS reference observed and its
+suffix is not a Python import suffix. U32 is extra custom controls code, importable
+but with no static tracked caller/OS reference observed; live in-memory import
+status and creator remain UNKNOWN. U46 generated C has no confirmed current
+producer because pinned recipe produces C++; its C++ counterpart U47 is generated.
+**U32/U46 require user/provenance review, no removal inference.**
+
+949 source/config-like files compared, including typing/Cython declarations and
+C++ headers:147 have same-basename tracked candidates,13 match some tracked bytes,
+only1 has a logical counterpart (U02, empty diff). All candidate hashes and detailed
+diff/membership matrix retained privately. Actual shallow object-store membership
+33files/19,113blobs is not commit attribution. Available PC path history has1800
+ancestors; exhaustive object traversal was PARTIAL on absent objects with lazy
+fetch disabled. No all-history absence claim or device fetch. U32 is absent from
+base and available path history; that does not identify its creator.
+
+Explicit build/producer/consumer evidence differentiates intermediates from
+runtime executables, UI font assets and model files. U03 deterministic generator
+matched exactbytes on PC in StringIO only; no device build. Fifteen producer/
+consumer sourceSHA match366. U41's0byte chunk is manifest-declared and required;
+never delete it merely because it is empty.
+
+### Runtime, import and patch boundaries
+
+31 selected related processes had complete cwd/argv/exe/maps/fd/allowlisted
+resolution-env reads. U48 dependency overlay is actually mapped by23processes,
+18distinct files/2,179map segments. No other untracked OS reference observed, but
+closed Python sources/UI textures are not excluded. Another37 inaccessible
+processes prevent whole-system non-use proof. All31 identity tuples were stable.
+
+Static PathFinder checks executed no vehicle/control/package initializer.
+Audit shell differs from manager launch environment; observed manager cwd/exe/env
+were used to reconstruct startup order. **Import shadowing YES:** required overlay
+precedes installed cffi/cryptography/idna/pycparser. No tracked-controls/recorder
+module shadow was observed. Live manager sys.path and module table were not
+injected/read; arbitrary dynamic resolution remains unknown.
+
+**RECORDER_PATCH_CONFLICT NO** in all observed path/static roots: exact/parent/
+backup/import0. New recorder package unresolved. Generic shared tracked ancestors
+are not collisions; dependency precedence is documented separately. M18 patch
+SHA remains3a3e19430ab667d204f22fd1e40438a85e1ade1dbab2e6f9dd6e3dd32de4c1ee.
+M18 core, M15 adapter and M16/M17 tools were not changed.
+
+### Preservation, tests and limits
+
+Fresh before/after and final complete-hash snapshot all MATCH:
+untracked inventory digest
+**8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5**;
+source8, model files15, observed process identities31, branch/HEAD/flags/status.
+Route metadata inventory4,497files digest
+**4bf474e52edc1b6ad250ed125b23a87a34ecd781799fa47040247aebef499c24** unchanged.
+This hashes relative names/mode/size/mtime, not all route contents. Atime excluded;
+ordinary reads may update it. Observation-window preservation, not whole-device
+image attestation. All actual audit source ran from owned shell memory; no remote
+probe file, cleanup, source/Param/service/config write. Other owned audit shells0
+at final probe; current helper exits. No stationary telemetry/control/CAN imports.
+
+Unchanged M18 **CPU_FAKE/FIXTURE PASS131 / FAIL0 / SKIP0 in26.66s**:
+
+```sh
+PYTHONPATH=. PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 "$PY" -m pytest -q -p no:cacheprovider tests/test_v3_input_format.py tests/test_v3_input_recorder.py tests/test_v3_input_dataset.py tests/test_v3_input_hook.py
+```
+
+No new production code or tests required for this evidence-only audit. Public
+artifact totals/coverage/privacy and exact patch pin also validated locally.
+Fresh independent read-only final review found no actionable finding; it verified
+all2,289 public nodes/2,006 hashes and the classification/coverage/privacy/stop
+claims against private evidence. Reviewer did not contact devices or rerun tests.
+COMMA_REAL_READ_ONLY PASS; COMMA_REAL_CAPTURE/VEHICLE_PARKED/ROAD_TEST/USB_REAL/
+JETSON_REAL/ORT/TRT NOT_RUN. No recorded tensor or on-device performance exists.
+
+All5 upstream refs re-queried at start/end unchanged: latestNav810e14aa…,
+WIPdfab65d0…, carrot-jetsond0dc96fa…, zoompilotd24328d8…, externala890f6df…;
+full SHAs in JSON and older M19 table below. Actual366 retained. Protected remote
+main2519ad0b… and old-feature26c9c06a… observed unchanged.
+
+### Next exact action
+
+Review provenance of **U32/U46** and an explicit preservation-compatible clean-tree
+solution. Twenty entries are only future outside-repository MOVE candidates;
+twenty-six runtime dependencies must stay available and two entries remain unknown.
+No approved complete cleanup/layout solution exists. Do not move/delete any entry,
+edit ignore rules, waive the clean gate, retry install or activate recording from
+this audit. Any actual resolution requires separate authorization and fresh1/0,
+exact366/source/process/route/model checks. Later M19 still needs live stationary
+confirmation and unchanged-policy tuple availability; no onroad/model/USB forcing.
+
 ## Latest checkpoint: M19 BLOCKED_DIRTY_TREE; recorder not installed
 
 Read `docs/M19_PARKED_CAPTURE_RESULT_20261023.md` and
