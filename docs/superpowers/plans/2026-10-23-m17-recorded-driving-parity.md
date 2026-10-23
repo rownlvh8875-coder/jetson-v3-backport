@@ -1,0 +1,42 @@
+# M1.7 actual comma recorded driving parity plan
+
+> **For agentic workers:** Execute inline with executing-plans and test-driven-development. A fresh final reviewer checks read-only boundaries, provenance, and result claims.
+
+**Goal:** Prioritize actual comma recordings over cloud discovery and compare only reconstructible recorded V3 inputs on the unchanged original ONNX/M1 plan.
+
+**Architecture:** Discover the storage root from actual pinned source, inventory read-only, select up to5 recent routes, hash/copy only selected log segments into ignored private PC storage. Inspect the actual camera/log/preprocessing contracts before creating a dataset. Reuse M16 ORT/TRT/parser tooling only when complete calibrated paired-camera frames and all scalar inputs can be deterministically reconstructed; otherwise publish a precise missing-source hold without substituting qcamera, driver camera, model outputs or synthetic tensors.
+
+**Tech Stack:** Existing comma read-only shell/web terminal and untouched raw-download endpoint; existing PC interpreters/CapnProto/log tooling; frozen actual Nav366d6eae source and M16 tools. No dependency/device/package/service changes.
+
+**Spec:** User2026-10-23 M1.7 actual comma representative-source request; AGENTS.md; M16 hold and exact identities.
+
+## Global constraints
+
+- Feature branch only, preserve main/old feature/user changes, no force/reset. Session start5bd9bcb1b10d63c35eb6b16bd35ae8ae4ce0626f matches remote, clean.
+- Immediately before each device operation: actual `cat /data/params/d/IsOffroad`=1 and `cat /data/params/d/IsOnroad`=0. Otherwise stop device work.
+- No comma writes, branch/source/process/manager/modeld/camera/service/Params changes; no route removal or modification. Use only fresh owned terminal sessions; disable shell history and Python bytecode.
+- No USB P3 inference, CAN/vehicle controls, engine rebuild, model/cache publication, optimizations, new memory workaround or operating-service intervention.
+- Exact ONNX404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4 and plan8f831b5af400a10aa35128ceeceac74595df1363bdcd6fd230957415f7e540aa. Numerical parser actual366d6eae stays pinned, adapter frozen.
+- Recordings/raw logs/video/actual route names/timestamps/GPS/addresses stay ignored/private. Public artifact only anonymous IDs, counts, hashes, source-backed summaries/metrics and explicit blockers.
+- No representative PARITY_PASS without sufficient genuine model inputs and approval provenance. No random substitute or combined synthetic/recorded means.
+
+## Review focus
+
+- qcamera is a reduced road recording, not interchangeable with full road/wide images; dcamera is driver-facing. Available file names alone do not prove model-input provenance.
+- Source files must remain unchanged before/after read/copy; copies require exact size/SHA identity. Route inventory digest covers names/sizes/mtimes/counts, not unread file contents.
+- Calibration/timestamps/traffic/desire pulse/action_t history must be recorded or source-reconstructed, never taken from current Params to impersonate historical values.
+- Existing P2/Nav model outputs are telemetry, not outputs of the target V3 pair; classification evidence and numerical parity are distinct.
+- Missing recordings/resource conditions cause NOT_RUN/BLOCKED, never fake ORT/TRT PASS/FAIL.
+
+## Tasks
+
+- [x] Read handoff/frozen targets; fresh upstream and remote checks. Actual offroad1/onroad0 and Nav366 verified; root derived from actual hw.py, then confirmed present.
+- [ ] Inventory actual routes by modification time/file sets/segments; choose3–5 recent candidates and audit full-road/wide availability across the confirmed route root.
+- [ ] Snapshot operating source/process/config metadata and route file count/stat digest. Hash selected logs, copy only required segments via a verified read-only raw endpoint, validate source/copy hashes.
+- [ ] Inspect copied actual logs with the pinned schema/reader, summarize camera/timestamp/calibration/scalar evidence and source-backed driving observations without GPS publication. Verify actual warp/preprocessing and recording-resolution contracts.
+- [ ] Add tested pure provenance/privacy/gating helpers if needed. Run new CPU tests plus frozen adapter/semantic smoke; no production edits.
+- [ ] If complete recorded model inputs exist, create separate >=128(prefer256) sequences with zero-state start and continuous recurrence; run original ORT then guarded standalone exact-plan TRT, using existing gates only. Otherwise record exact reconstruction blocker and all independently completed analysis.
+- [ ] Recheck actual offroad/HEAD, route stat digest/selected content hashes, model/source/process metadata. Close only owned sessions. Re-query upstreams, retain numerical pins.
+- [ ] Write M17 report/artifact and continuation, independent review, privacy/hash/diff checks, small commits and normal same-feature push; verify remote equality, protected refs and clean tree.
+
+Execution ruling: the user explicitly chose actual comma recordings and autonomous read-only exploration/copy plus isolated comparison. Existing dedicated feature and fresh private paths provide isolation. The detailed request and earlier no-extra-question preference waive redundant design/execution approval; actual device safety and missing-data gates remain mandatory.
