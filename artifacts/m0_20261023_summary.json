@@ -1,0 +1,246 @@
+{
+  "schema": 1,
+  "date": "2026-10-23",
+  "project_start_head": "254cd09106d6d01bc40010437416d227c389fd2b",
+  "branch": "feature/jetlink-multimodel-carrot",
+  "scope": "M0 read-only inventory and file identity; no installation, build, GPU initialization or inference",
+  "comma_observed": {
+    "machine": "aarch64",
+    "software_branch": "carrot-nav",
+    "software_head": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+    "read_only_web_terminal_succeeded": true,
+    "normal_ssh_current_pc_key": "DENIED",
+    "registered_github_key_count": 4,
+    "current_pc_public_key_registered": false,
+    "road_flags": {
+      "IsOffroad": "1",
+      "IsOnroad": "0"
+    }
+  },
+  "jetson_observed": {
+    "source": "authenticated SSH read-only inventory, metadata probes and CPU file SHA256; no inference requested",
+    "state": "ready",
+    "inference_active": false,
+    "temperature_c_sample": 52.562,
+    "direct_pc_ssh_route_available": false,
+    "comma_wifi_peer_tcp22": true,
+    "comma_usb_network_peer_tcp22": true,
+    "ssh_account_from_official_guide": "jetlink",
+    "ssh_current_pc_public_key": "ACCEPTED: Server accepts key",
+    "ssh_authentication": "PASS: temporary local signing agent; no private key copied or forwarded",
+    "ssh_registration_repair_needed": false,
+    "inventory_executed": true,
+    "actual_l4t": "36.4.7",
+    "actual_tensorrt": {
+      "dpkg": "10.3.0.30-1+cuda12.5",
+      "python_metadata": "10.3.0",
+      "import_or_execution": "NOT_RUN"
+    },
+    "actual_cuda": {
+      "toolkit": "12.6.11-1",
+      "nvcc_absolute": "12.6.68",
+      "cudart": "12.6.68-1",
+      "nvcc_in_default_path": false,
+      "runtime_venv_metadata": {
+        "tensorrt": "10.3.0",
+        "cuda-python": "12.9.0",
+        "cuda-bindings": "12.9.9",
+        "numpy": "1.26.4",
+        "onnx": "1.23.0",
+        "onnxruntime": "NOT_INSTALLED"
+      },
+      "gpu_initialization_by_agent": false
+    },
+    "nvme_boot": {
+      "status": "PASS",
+      "root_source": "/dev/nvme0n1p1",
+      "root_options": "ro,relatime,norecovery",
+      "data_source": "/dev/nvme0n1p17",
+      "runtime_bind_source": "/dev/nvme0n1p17[/runtime]",
+      "runtime_options": "rw,nosuid,nodev,noatime"
+    },
+    "runtime_path": "/opt/carrot-jetlink/current",
+    "service_execstart": "/opt/carrot-jetlink/venv/bin/python /opt/carrot-jetlink/current/tools/jetlink/server.py --backend trt --transport usb --cache /opt/carrot-jetlink/cache --control-socket /run/carrot-jetlink/control.sock",
+    "existing_peer_report": {
+      "protocol": 2,
+      "carrot_host": "jetson",
+      "backend": "trt",
+      "device": "Orin-sm87",
+      "runtime_version": "10.3.0",
+      "loaded": "01effc679eb46d6036ce0302673a87fe2dcfcc95a679daeeb929679e53c3647a",
+      "carrot_source_commit": "54e706fa0573e91dc3b4a0d4f625b9d81a6b68cc",
+      "engine_state": "none",
+      "trt_version": "10.3.0",
+      "stateful_v2": true,
+      "carrot_nav_u8_v1": true,
+      "carrot_n16_driving_output_v1": {
+        "schema": 1,
+        "model_sha256": "01effc679eb46d6036ce0302673a87fe2dcfcc95a679daeeb929679e53c3647a",
+        "spec_sha256": "63b2097c114bade03c5ec7ded978d73032a93bb525c03f9b78eddf49809f8b71",
+        "dtype": "float32-le",
+        "start": 0,
+        "count": 2066,
+        "full_count": 18580
+      }
+    },
+    "advertised_model_identity_matches_project_v2_or_v3": false,
+    "interpretation": "Existing Nav stateful model ONNX SHA256 agrees with saved HELLO; V2 rollback ONNX and plan identities verified. No resident-engine, recurrence, latency, USB inference or fallback acceptance test.",
+    "kernel": "5.15.148-tegra",
+    "os": "Ubuntu22.04.5 LTS",
+    "python": "3.10.12",
+    "power_mode": "MAXN_SUPER (mode2), query only",
+    "clock_lock_state": "BLOCKED: jetson_clocks --show requires root; no sudo or clock change performed",
+    "runtime_release_id": "54e706fa0573e91dc3b4a0d4f625b9d81a6b68cc",
+    "release_identity_evidence": "current symlink target and peer source field; runtime has no .git; no full source-tree attestation",
+    "cache_path": "/opt/carrot-jetlink/cache",
+    "service_account": "jetlink",
+    "services": {
+      "carrot-jetlink-boot-display.service": {
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "SubState": "running",
+        "FragmentPath": "/etc/systemd/system/carrot-jetlink-boot-display.service"
+      },
+      "carrot-jetlink-hud.service": {
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "SubState": "running",
+        "FragmentPath": "/etc/systemd/system/carrot-jetlink-hud.service"
+      },
+      "carrot-jetlink-wifi.service": {
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "SubState": "running",
+        "FragmentPath": "/etc/systemd/system/carrot-jetlink-wifi.service"
+      },
+      "carrot-jetlink.service": {
+        "LoadState": "loaded",
+        "ActiveState": "active",
+        "SubState": "running",
+        "FragmentPath": "/etc/systemd/system/carrot-jetlink.service"
+      }
+    },
+    "usb_topology": "lsusb -t: CDC network and vendor-specific interfaces at5000M; read-only enumeration only",
+    "provisioning_result": "BLOCKED: root-only provisioned.json; CARROTSETUP result not mounted; accepted SSH key independently confirmed",
+    "cached_file_identities": [
+      {
+        "path": "/opt/carrot-jetlink/cache/models/01effc679eb46d60.onnx",
+        "size": 814591107,
+        "sha256": "01effc679eb46d6036ce0302673a87fe2dcfcc95a679daeeb929679e53c3647a",
+        "stable_during_read": true
+      },
+      {
+        "path": "/opt/carrot-jetlink/cache/models/09d080f36965bb2a.onnx",
+        "size": 766040736,
+        "sha256": "09d080f36965bb2a0790500452bd328aa03c484d0222aa79d1ad9f021a522aec",
+        "stable_during_read": true
+      },
+      {
+        "path": "/opt/carrot-jetlink/cache/engines/01effc679eb46d60.trt10.3.0.Orin-sm87.json",
+        "size": 2755,
+        "sha256": "0ab092aa31647c0fc5381fd0cfbd3dabe43caea298bba30fb9ceded5223006e7",
+        "stable_during_read": true
+      },
+      {
+        "path": "/opt/carrot-jetlink/cache/engines/01effc679eb46d60.trt10.3.0.Orin-sm87.plan",
+        "size": 795042044,
+        "sha256": "2c5c5a5e0c736b4d60a6c56569539df219c9e5b32aee8fde26be6d446c96caa2",
+        "stable_during_read": true
+      },
+      {
+        "path": "/opt/carrot-jetlink/cache/engines/09d080f36965bb2a.trt10.3.0.Orin-sm87.json",
+        "size": 2221,
+        "sha256": "b0fed2847adf0a1cd784b9608028ca095ed8c51b928095ad421c4f197f8a8982",
+        "stable_during_read": true
+      },
+      {
+        "path": "/opt/carrot-jetlink/cache/engines/09d080f36965bb2a.trt10.3.0.Orin-sm87.plan",
+        "size": 771100700,
+        "sha256": "5d7a4a40ad3830fb4406694dddc1b13f1c05a8d47360586c6891bfce8f1f3ca2",
+        "stable_during_read": true
+      }
+    ],
+    "v2_onnx_identity": "PASS: exact expected SHA256 and size",
+    "v2_plan_identity": "PASS: exact imported_plan_sha256 from preserved sidecar; no engine load or inference",
+    "v3_in_enumerated_cache": false
+  },
+  "m0_status": "CORE INVENTORY PASS; PARTIAL privileged clock/provisioning queries",
+  "upstream_heads": {
+    "carrot-jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "carrot-wip": "813369b0c53bb9c997b7ffbe17fca90222a755b8",
+    "zoompilot/jetlink": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc"
+  },
+  "rolling_software_checks": {
+    "pass": 288,
+    "fail": 0,
+    "skip": 0,
+    "evidence": [
+      "CPU_FAKE",
+      "FIXTURE"
+    ]
+  },
+  "hardware_evidence": {
+    "COMMA_REAL": "read-only branch, status, route and offroad metadata only",
+    "JETSON_REAL": "authenticated read-only inventory and CPU SHA256 of existing files only",
+    "USB_REAL": "read-only topology at5000M and existing TCP path only; no throughput/inference acceptance",
+    "TRT_REAL": "NOT_RUN: no build/load/execution",
+    "VEHICLE_PARKED": "NOT_RUN",
+    "ROAD_TEST": "NOT_RUN"
+  },
+  "safety": {
+    "operating_runtime_files_changed": false,
+    "params_changed": false,
+    "services_restarted": false,
+    "models_built_or_loaded_by_agent": false,
+    "usb_inference_requested": false,
+    "private_keys_copied_or_printed": false,
+    "existing_known_hosts_modified": false,
+    "temporary_single_client_relay_closed": true,
+    "raw_logs_and_addresses": "ignored local .reports only",
+    "temporary_signing_agent_stopped": true,
+    "sudo_used": false,
+    "power_or_clocks_changed": false
+  },
+  "next": "Reconcile actual carrot-nav/Protocol2 Nav runtime with the carrot-wip Protocol3 candidate before preparing a separate development copy. Preserve V2 and the operating release; baseline V3 before optional optimization A/B.",
+  "additional_new_upstream_tests": {
+    "name": "upstream-new-startup-priority-watchdog",
+    "status": "PASS",
+    "tests": 103,
+    "passed": 103,
+    "skipped": 0,
+    "failures": 0,
+    "errors": 0
+  },
+  "current_unique_cpu_pytest_pass": 391,
+  "m0_checks": {
+    "nvme_boot_and_mounts": "PASS",
+    "os_l4t_kernel": "PASS",
+    "tensorrt_package_metadata": "PASS",
+    "cuda_toolkit_and_venv_metadata": "PASS",
+    "python_runtime": "PASS",
+    "power_mode_query": "PASS",
+    "services_and_execstart": "PASS",
+    "runtime_cache_release_paths": "PASS",
+    "cached_v2_identity": "PASS",
+    "network_metadata_and_ssh": "PASS",
+    "usb_topology_enumeration": "PASS",
+    "clock_lock_state": "BLOCKED: root permission",
+    "provisioning_result_count": "BLOCKED: root permission / setup not mounted"
+  },
+  "m0_check_counts": {
+    "PASS": 11,
+    "FAIL": 0,
+    "BLOCKED": 2
+  },
+  "execution_commands": [
+    "Reviewed tools/jetson_runtime_inventory.py streamed to env PYTHONDONTWRITEBYTECODE=1 GIT_OPTIONAL_LOCKS=0 python3 - --pretty over authenticated SSH; nvidia_smi entry omitted",
+    "Read-only metadata follow-up: systemctl show, dpkg-query, importlib.metadata, findmnt --target, df, lsusb -t, path stat/readlink, bounded cache listing",
+    "Read-only identity follow-up: hashlib.sha256 over existing ONNX/plan/JSON files; pre/post stat check; /usr/local/cuda/bin/nvcc --version"
+  ],
+  "upstream_heads_rechecked_after_m0": {
+    "carrot-wip": "813369b0c53bb9c997b7ffbe17fca90222a755b8",
+    "carrot-jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "zoompilot/jetlink": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc"
+  },
+  "upstreams_unchanged_since_cpu_verification": true
+}

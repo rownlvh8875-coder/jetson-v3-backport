@@ -1,4 +1,77 @@
-# Codex continuation — 2026-10-20
+# Codex continuation — 2026-10-23
+
+## Latest checkpoint: home devices, authenticated read-only M0
+
+Read `docs/M0_READ_ONLY_CHECKPOINT_20261023.md` and sanitized
+`artifacts/m0_20261023_summary.json` before continuing.
+
+- Start development HEAD `254cd09106d6d01bc40010437416d227c389fd2b`, correct
+  feature branch, initially clean. This session changes evidence/docs/baseline
+  only. Resolve containing HEAD with `git rev-parse HEAD` and
+  `git log -1 --format=%H -- docs/CODEX_CONTINUATION.md` after the docs commit.
+- **SSH succeeded.** Existing SSD SSH key registration was correct: verbose SSH
+  returned Server accepts key. PC key was encrypted; unattended signing failed.
+  User unlocked it locally in a temporary WSL agent, key lifetime20 minutes.
+  Earlier Jetson registration-failure diagnosis was corrected. No key enrollment
+  or private-key copy/forwarding to either device. Comma's separate GitHub-key
+  mismatch remains; its standard web terminal supplied a one-use TCP relay.
+- First helper failed for missing WSL agent lifetime/TTY; both were fixed and
+  user-only local passphrase entry succeeded. Never collect passphrases in chat
+  or reports. See ignored local helpers for access details; prepare a fresh
+  agent/unlock when needed. This session's agent keys were cleared/process
+  stopped, and the temporary relay was confirmed closed before commit.
+- **M0 core inventory PASS11, FAIL0; two privileged queries BLOCKED.** Original
+  inventory ran over authenticated SSH on stdin, with only nvidia_smi omitted,
+  Python bytecode/Git optional locks disabled. Read-only metadata/file-hash
+  follow-ups ran. No build/load/inference/GPU initialization, operating-file,
+  Params, power/clock, service restart or model-selection change.
+- Actual comma: carrot-nav `366d6eae9aa9962104391e1d997fe956dea8f64d`, aarch64;
+  road flags IsOffroad1/IsOnroad0. Actual installed branch differs from candidate.
+- Actual Jetson: NVMe root p1 **ro**, p17 CARROTDATA mounted/bound rw at runtime;
+  L4T36.4.7, kernel5.15.148-tegra, Ubuntu22.04.5, Python3.10.12;
+  TRT package10.3.0.30-1+cuda12.5/Python metadata10.3.0, CUDA toolkit12.6/nvcc12.6.68;
+  runtime venv cuda-python12.9.0/cuda-bindings12.9.9 (metadata only, no GPU test).
+  MAXN_SUPER mode2 query succeeded. jetson_clocks --show requires root; no sudo.
+  Provisioning result is root-only/setup partition unmounted; no mount performed.
+- Actual service user jetlink, ExecStart venv Python + current/tools/jetlink/
+  server.py --backend trt --transport usb --cache /opt/carrot-jetlink/cache
+  --control-socket /run/carrot-jetlink/control.sock. Main/Wi-Fi/HUD/display active.
+  current points to release54e706fa0573e91dc3b4a0d4f625b9d81a6b68cc; no .git,
+  so this is a release ID, not full source attestation. Existing releases kept.
+- V2 ONNX **exact SHA09d080f3/766040736 bytes verified**, preserved V2 plan hash
+  matches imported-plan sidecar5d7a4a40. Nav ONNX01effc67/814591107 bytes and
+  plan2c5c5a5e verified by CPU hashing; cache has no Cinque V3 among listed files.
+  No engine loaded or inference/rollback acceptance claim. Metadata identity
+  differs from target Cinque V3; do not adopt it as V3 or arbitrary replacement.
+- Saved peer is Protocol2/Orin-sm87/TRT10.3/stateful_v2/Nav-u8/N16, engine_state
+  none. Nav spec has five state pairs. USB topology shows CDC/vendor interfaces
+  at5000M: enumeration only, no throughput/inference test. Existing ready/inactive
+  state and single temperature sample are not thermal/performance acceptance.
+- Latest carrot-wip **813369b0c53bb9c997b7ffbe17fca90222a755b8**;
+  carrot-jetson d0dc96fa32410403dfb2fefff3e2909c11ec109b;
+  zoompilot/jetlink d24328d849b0e5154b55f149dc18c5dfe8bd79cc.
+  External review remains a890f6df1bd3eb0478754c68d8b5f92f15e8b722.
+  Relevant diff from ba1869151 reviewed (5 added/11 modified); no adapter change.
+- ONLINE rolling **PASS288/FAIL0/SKIP0**, baseline updated; additional isolated
+  new startup/priority/watchdog tests **PASS103/FAIL0/SKIP0**, CPU_FAKE/FIXTURE.
+  Heads freshly re-queried after M0 still match the tested sources. Distinct
+  current CPU cases391. Historical469/15 hardware blockers below were
+  not re-counted as fresh hardware results. TRT/USB inference/vehicle NOT_RUN.
+- Raw addresses/device IDs/host keys/key paths are only in ignored local
+  .reports/m0-20261023. Sanitize all evidence before Git. Current feature is the
+  only push target; main and old feature branch remain preserved.
+
+Next: reconcile actual carrot-nav + installed Nav/Protocol2 runtime with the
+carrot-wip/Protocol3 candidate before choosing the host patch or any write.
+Prepare later development in a separate writable copy; preserve current/cache/
+V2/releases. Keep BASE V3 build → recurrence → USB protocol3 → latency/fallback
+before DeviceState → DeviceState+InputFastpath → optional AIO. M0 discovery does
+not authorize blind deployment of a patch for another branch. Privileged clock
+and setup-result queries remain explicit BLOCKED; no optimization was enabled.
+
+---
+
+# Previous checkpoint — 2026-10-20
 
 ## Current task and checkpoint
 
