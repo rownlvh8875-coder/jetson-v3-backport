@@ -66,7 +66,12 @@ disposable layout 검증을 추가해 **CPU200 PASS / FAIL0 / SKIP0**다. 과거
 **UNKNOWN_ACCEPTABLE_FOR_PATCH_ISOLATION**으로 수용한다. 기존 M192 checker의
 PARTIAL은 보존하고 별도 M193 정책으로 baseline PASS를 기록한다. **M19 재시도 YES**는
 새 정차 preflight와 별도 설치 승인부터 시작한다는 뜻이다. 실제 변경·capture는 없고
-**CPU241 PASS / FAIL0 / SKIP0 / M2 NO**다.
+**CPU258 PASS / FAIL0 / SKIP0 / M2 NO**다.
+
+2026-10-24 [M19 재시도](docs/M19_PARKED_CAPTURE_RESULT_20261024.md): fresh dirty baseline은
+PASS했지만 live carState가 없어 **BLOCKED_STATIONARY_UNCONFIRMED**로 중단했다.
+설치·재시작·capture는 없고 원래48/source/model/process/route 증거를 보존했다.
+**CPU258 PASS / FAIL0 / SKIP0 / 주행 capture NO / M2 NO**다.
 
 2026-10-20 [외부 Jetson 최적화 검토](docs/JETSON_REVIEW_A890_ANALYSIS.md):
 DeviceState와 InputFastpath는 기존 검증을 유지한 기본 OFF 실험 후보다.

@@ -1,0 +1,404 @@
+{
+  "schema_version": 1,
+  "stage": "M19_RETRY_PARKED_CAPTURE",
+  "date": "2026-10-24",
+  "status": "BLOCKED_STATIONARY_UNCONFIRMED",
+  "development": {
+    "branch": "feature/jetlink-multimodel-carrot",
+    "starting_head": "78de3b2eb8f92e5b7b14367ac792be310526b5d4",
+    "start_local_remote_equal": true,
+    "start_clean": true,
+    "result_commit_resolution": "git log -1 --format=%H -- artifacts/m19_parked_capture_20261024.json"
+  },
+  "authorization": {
+    "explicit_current_user": true,
+    "scope": "Conditional exact366 recorder install, minimum supported restart, parked10 capture and exact rollback only",
+    "gate_does_not_itself_authorize_installation": true,
+    "no_extra_permission_question_needed": true
+  },
+  "actual": {
+    "branch": "carrot-nav",
+    "head": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+    "flags": {
+      "IsOffroad": "1",
+      "IsOnroad": "0"
+    },
+    "tracked_modifications": 0,
+    "untracked_short_entries": 48,
+    "recursive_regular_files": 2006,
+    "recursive_bytes": 417208589,
+    "baseline_digest": "8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5",
+    "stationary": "NOT_CONFIRMED",
+    "vehicle_moving_claim": false,
+    "state_not_inferred_from_offroad": true
+  },
+  "first_actual_shell": {
+    "commands": [
+      "cat /data/params/d/IsOffroad",
+      "cat /data/params/d/IsOnroad"
+    ],
+    "status": "PASS_OFFROAD",
+    "flags": {
+      "IsOffroad": "1",
+      "IsOnroad": "0"
+    }
+  },
+  "PRE_attestation": {
+    "status": "M193_ATTESTED_BASELINE_PASS",
+    "legacy_result": {
+      "schema": 1,
+      "status": "ATTESTED_DIRTY_BASELINE_PARTIAL",
+      "ready_to_retry_M19": false,
+      "checks": {
+        "ACTUAL366_BRANCH_HEAD": true,
+        "OFFROAD": true,
+        "PARAMS_BINDING": true,
+        "TRACKED_UNMODIFIED": true,
+        "TRACKED_INDEX_FLAGS_SAFE": true,
+        "FRESH_CHALLENGE": true,
+        "SAME_BOOT": true,
+        "EXPECTED48": true,
+        "EXACT_PRIVATE_INVENTORY": true,
+        "SOURCE_HASHES": true,
+        "MODEL_HASHES": true,
+        "ROUTES_INVENTORY": true,
+        "M18_SOURCE_PINS": true,
+        "PROCESS_IDENTITIES": true,
+        "CLASSIFICATIONS": true,
+        "RUNTIME_REQUIRED_HASHES": true,
+        "EXACT_M18_PATCH": true,
+        "PATCH_FILE_IDENTITIES": true,
+        "RECORDER_PATH_COLLISION_ABSENT": true,
+        "RECORDER_PHYSICAL_NAMESPACE_ABSENT": true,
+        "REVIEWED_IMPORT_ISOLATION": true,
+        "U32_POLICY": false,
+        "U46_POLICY": true
+      },
+      "reasons": [
+        "U32_PROVENANCE_UNRESOLVED"
+      ],
+      "classification_counts": {
+        "CUSTOM_SOURCE_NOT_REFERENCED": 0,
+        "CUSTOM_SOURCE_REFERENCED": 0,
+        "RUNTIME_REQUIRED": 26,
+        "SAFE_BACKUP_NOT_REFERENCED": 1,
+        "SAFE_GENERATED": 19,
+        "UNKNOWN_USER_OWNED": 2
+      },
+      "unknown_policy_remaining": 1,
+      "observed_inventory_digest": "8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5",
+      "evidence_kind": "READ_ONLY_COMPARISON_OF_TRUSTED_PRIVATE_OBSERVATIONS",
+      "installation_authorized": false,
+      "actual_mutations": false
+    },
+    "M193_composed_result": {
+      "policy": "M193_SCOPED_ISOLATION_V1",
+      "status": "ATTESTED_DIRTY_BASELINE_PASS",
+      "legacy_M192_status": "ATTESTED_DIRTY_BASELINE_PARTIAL",
+      "legacy_receipt_sha256": "de0a4ec4c70c6f78919de57f0233883c89938031d09aa78c7ab529170d7bbf25",
+      "reviewed_proof_sha256": "d6e7f101e968af5e94b1789cf4983e88ee42643778aa9997b380548e1dc41558",
+      "evidence_bundle_sha256": "05f9a81bdaf696b396e7a6b14a16a5b151b71bab6f4eaa8ff6aaf8d1779dbaf0",
+      "commitments_verified": true,
+      "isolation": {
+        "proposal": "U32_UNKNOWN_ACCEPTABLE_FOR_PATCH_ISOLATION",
+        "reasons": [],
+        "installation_authorized": false,
+        "legacy_attestation_policy_modified": false
+      },
+      "reasons": [],
+      "ready_to_retry_M19": true,
+      "current_runtime_use": "UNKNOWN",
+      "installation_authorized": false,
+      "actual_mutations": false
+    },
+    "fresh_observation_and_challenge": true,
+    "original_frozen_policy_modified": false,
+    "current_boundary8_exact": true,
+    "recorder_path_and_namespace_conflict": "NO",
+    "U32": "UNKNOWN_ACCEPTABLE_FOR_PATCH_ISOLATION",
+    "U32_current_runtime_use": "UNKNOWN",
+    "U32_sha256": "07e2bd4cdac1479f85447c1f96182c8f24603a9184b11045086d7433b68e5b70",
+    "U46_sha256": "21ac37949a83dcb5b2799007c8ebc93909efaff7bf6d6481fb49a8eb2a43314e",
+    "fresh_reviewed_proof_canonical_sha256": "d6e7f101e968af5e94b1789cf4983e88ee42643778aa9997b380548e1dc41558",
+    "fresh_evidence_bundle_sha256": "05f9a81bdaf696b396e7a6b14a16a5b151b71bab6f4eaa8ff6aaf8d1779dbaf0",
+    "frozen_checker_sha256": "3b8f77a388caeb380e78980ba13c02c8e24e8ce4017326f01fbbb7cbf3a90904",
+    "frozen_expected_manifest_sha256": "59d952de8a7b4f6530473c5fda392238bc500f25d490d71044b53f9bc2c2f328"
+  },
+  "stationary_observation": {
+    "status": "BLOCKED_STATIONARY_UNCONFIRMED",
+    "classification": "COMMA_REAL_READ_ONLY",
+    "subscriber_started": true,
+    "subscription_seconds": 3.04245161,
+    "message_counts": {
+      "carState": 0,
+      "managerState": 5,
+      "deviceState": 5,
+      "modelV2": 0,
+      "roadCameraState": 0,
+      "wideRoadCameraState": 0
+    },
+    "fresh_carstate_count": 0,
+    "speed_and_standstill_values_available": false,
+    "historical_or_default_zero_used": false,
+    "existing_queue_presence_checks": {
+      "carState": 59,
+      "managerState": 59,
+      "deviceState": 59,
+      "modelV2": 59,
+      "roadCameraState": 59,
+      "wideRoadCameraState": 59
+    },
+    "all6_queues_existed_before_subscription": true,
+    "absent_queue_subscription_intended": false,
+    "native_subscriber_OS_semantics": "Existing queues opened O_RDWR|O_CREAT, ftruncate/mmap and standard reader/cursor registration. Receive-only authority is not a claim of zero IPC bookkeeping writes.",
+    "no_publisher_or_CAN_reader_or_controls_process_started": true,
+    "managerState_running_samples": {
+      "modeld": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "card": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "camerad": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "jetlinkd": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    "deviceState_started_samples": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "source_policy": {
+      "exact_actual366": true,
+      "modeld": "only_onroad",
+      "card": "only_onroad",
+      "camerad": "driverview",
+      "jetlinkd": "always_run"
+    },
+    "policy_not_changed_or_forced": true,
+    "no_timeout_extension_or_retries_to_obtain_PASS": true,
+    "concurrent_queue_replacement_excluded": false
+  },
+  "recorder": {
+    "patch_sha256": "3a3e19430ab667d204f22fd1e40438a85e1ade1dbab2e6f9dd6e3dd32de4c1ee",
+    "patch_identity": "PASS",
+    "apply": "NOT_RUN",
+    "six_actual_after_hashes": "NOT_RUN",
+    "expected_existing_changes": 1,
+    "expected_new_modules": 5,
+    "default": "OFF",
+    "OFF_final_observation": "PASS_UNINSTALLED_ABSENT",
+    "restart": "BLOCKED_NOT_PERFORMED",
+    "patched_OFF_health": "NOT_RUN",
+    "device_capability_check": "NOT_RUN",
+    "device_disposable_roundtrip": "NOT_RUN",
+    "private_on_device_source_backup": "NOT_RUN",
+    "source_written": false,
+    "proposed_output_root_created": false,
+    "output_root_final_exists": false,
+    "arming": "NOT_RUN",
+    "activation": "NOT_RUN",
+    "parked_tuple_availability_gate": "NOT_RUN",
+    "tuple_unavailable_capture_code_claimed": false
+  },
+  "storage_arithmetic_only": {
+    "frames": 10,
+    "logical_payload_bytes_per_frame": 393264,
+    "record_bytes": 393408,
+    "header_bytes": 4096,
+    "binary_bytes": 3938176,
+    "writer_minimum_free_bytes": 71047040,
+    "observed_final_free_bytes": 28430614528,
+    "storage_capability_gate": "NOT_RUN",
+    "observed_free_space_not_complete_gate_PASS": true
+  },
+  "capture": {
+    "result": "OTHER",
+    "stop_reason": "BLOCKED_STATIONARY_UNCONFIRMED",
+    "attempted": false,
+    "frames": 0,
+    "dataset": "NONE",
+    "continuity": "N/A",
+    "dataset_sha256": null,
+    "validation": "NOT_RUN",
+    "reader_replay": "NOT_RUN",
+    "COMMA_REAL_CAPTURE": "NOT_RUN"
+  },
+  "actual_overhead": {
+    "observer_p50_us": null,
+    "observer_p95_us": null,
+    "observer_p99_us": null,
+    "observer_max_us": null,
+    "copy_p99_us": null,
+    "queue_high_water": null,
+    "writer_RSS_bytes": null,
+    "model_timing": "INSUFFICIENT_SAMPLE",
+    "measurement": "NOT_RUN_NO_RECORDER",
+    "host_fixture_metrics_not_substituted": true
+  },
+  "cleanup": {
+    "activation": "NOT_CREATED",
+    "ticket": "NOT_CREATED",
+    "ticket_invalidation_operation": "NOT_RUN_NOT_ARMED",
+    "writer_processes_final": 0,
+    "recorder_package_final": "ABSENT",
+    "proposed_capture_root_final": "ABSENT",
+    "capture_env_inspected_process_count": 3,
+    "capture_env_present_count": 0,
+    "other_owned_audit_sessions_remaining": 0,
+    "rollback": "NOT_RUN_NOT_INSTALLED"
+  },
+  "preservation": {
+    "status": "PASS",
+    "scope": "Read-only observation window; original files/content/metadata and selected runtime identities, not atomic whole-device attestation",
+    "original48": "UNCHANGED",
+    "U32_U46": "UNCHANGED",
+    "source_hashes_unchanged": 8,
+    "model_hashes_unchanged": 15,
+    "source_hash_mapping_digest": "ed8ef051dfafe793d481a28b20681713428670c7b0a55b203194785e84a80fc4",
+    "model_hash_mapping_digest": "4091c979060abc441a932baec9f951bc5c4ed525bd7d2d1bc53641399cd662a5",
+    "process_identities_and_resolution_env_unchanged": 31,
+    "route_metadata_files": 4497,
+    "route_metadata_digest": "4bf474e52edc1b6ad250ed125b23a87a34ecd781799fa47040247aebef499c24",
+    "whole_route_content_hashing": false,
+    "extra_index_library_cache_canaries_unchanged": 3,
+    "recorder_namespace_still_absent": true,
+    "flags_branch_HEAD_unchanged": true,
+    "final_frozen_legacy_result": {
+      "schema": 1,
+      "status": "ATTESTED_DIRTY_BASELINE_PARTIAL",
+      "ready_to_retry_M19": false,
+      "checks": {
+        "ACTUAL366_BRANCH_HEAD": true,
+        "OFFROAD": true,
+        "PARAMS_BINDING": true,
+        "TRACKED_UNMODIFIED": true,
+        "TRACKED_INDEX_FLAGS_SAFE": true,
+        "FRESH_CHALLENGE": true,
+        "SAME_BOOT": true,
+        "EXPECTED48": true,
+        "EXACT_PRIVATE_INVENTORY": true,
+        "SOURCE_HASHES": true,
+        "MODEL_HASHES": true,
+        "ROUTES_INVENTORY": true,
+        "M18_SOURCE_PINS": true,
+        "PROCESS_IDENTITIES": true,
+        "CLASSIFICATIONS": true,
+        "RUNTIME_REQUIRED_HASHES": true,
+        "EXACT_M18_PATCH": true,
+        "PATCH_FILE_IDENTITIES": true,
+        "RECORDER_PATH_COLLISION_ABSENT": true,
+        "RECORDER_PHYSICAL_NAMESPACE_ABSENT": true,
+        "REVIEWED_IMPORT_ISOLATION": true,
+        "U32_POLICY": false,
+        "U46_POLICY": true
+      },
+      "reasons": [
+        "U32_PROVENANCE_UNRESOLVED"
+      ],
+      "classification_counts": {
+        "CUSTOM_SOURCE_NOT_REFERENCED": 0,
+        "CUSTOM_SOURCE_REFERENCED": 0,
+        "RUNTIME_REQUIRED": 26,
+        "SAFE_BACKUP_NOT_REFERENCED": 1,
+        "SAFE_GENERATED": 19,
+        "UNKNOWN_USER_OWNED": 2
+      },
+      "unknown_policy_remaining": 1,
+      "observed_inventory_digest": "8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5",
+      "evidence_kind": "READ_ONLY_COMPARISON_OF_TRUSTED_PRIVATE_OBSERVATIONS",
+      "installation_authorized": false,
+      "actual_mutations": false
+    },
+    "atime_excluded": true,
+    "production_source_or_config_mutations": "NONE",
+    "telemetry_receive_native_bookkeeping": "STANDARD_EXISTING_IPC_ONLY"
+  },
+  "final_source_state": "BLOCKED",
+  "final_source_detail": "NOT_INSTALLED_UNCHANGED_PRE_PROFILE",
+  "tests": {
+    "classes": [
+      "CPU_FAKE",
+      "FIXTURE"
+    ],
+    "pass": 258,
+    "fail": 0,
+    "skip": 0,
+    "seconds": 29.37,
+    "unique_scope": {
+      "M18_recorder": 131,
+      "M192_checker": 68,
+      "dirty_layout": 1,
+      "M193_provenance": 58
+    },
+    "new_production_code_or_core_changes": false,
+    "command": "PYTHONPATH=. PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 \"$PY\" -m pytest -q -p no:cacheprovider tests/test_u32_provenance.py tests/test_comma_dirty_baseline.py tests/test_comma_dirty_layout.py tests/test_v3_input_format.py tests/test_v3_input_recorder.py tests/test_v3_input_dataset.py tests/test_v3_input_hook.py --tb=short"
+  },
+  "upstream_refs": {
+    "actual_pin_retained": true,
+    "carrot_nav": "810e14aaf51176f1a50a113939dc2e70907b394b",
+    "carrot_wip": "dfab65d03fcd7100f572fe9e6908f4c6d1e988f6",
+    "carrot_jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "zoompilot_jetlink": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc",
+    "external_review": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722",
+    "start_end_equal": true
+  },
+  "not_run": [
+    "RECORDER_INSTALL",
+    "RESTART",
+    "RECORDER_ACTIVATION",
+    "COMMA_REAL_CAPTURE",
+    "VEHICLE_PARKED_VALIDATION",
+    "ROAD_TEST",
+    "JETSON",
+    "USB_REAL",
+    "ORT_REAL_MODEL",
+    "TRT_REAL_THIS_STAGE"
+  ],
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "M2_readiness": "NO",
+  "ready_for_256_or_512_road_capture": false,
+  "privacy": {
+    "raw_paths_argv_environment_addresses_route_names_coordinates_in_artifact": false,
+    "raw_tensor_or_video_in_Git": false,
+    "private_evidence_ignored": true
+  },
+  "next_action": "Offline source-backed review of whether fresh stationary evidence and the exact input tuple can coexist under required Offroad1/Onroad0 policy; no producer/model/Params/USB change is authorized by this result.",
+  "review": {
+    "rounds": 1,
+    "result": "PASS_READ_ONLY_DOCS_AND_EVIDENCE",
+    "critical": 0,
+    "important": 0,
+    "minor": 0,
+    "reviewer_recomputed_private_commitments_and_preservation": true,
+    "reviewer_device_access": false,
+    "reviewer_reran_tests": false,
+    "limits": [
+      "No live stationary proof or capture-feasibility certification",
+      "U32 runtime use remains UNKNOWN",
+      "No whole-device/inference-health/route-payload/concurrent-IPC-replacement certification",
+      "Publication verification remains executor responsibility"
+    ]
+  }
+}

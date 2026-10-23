@@ -1,5 +1,61 @@
 # Codex continuation — 2026-10-24
 
+## Latest checkpoint: M19 retry blocked at live stationary gate
+
+Read `docs/M19_PARKED_CAPTURE_RESULT_20261024.md` and
+`artifacts/m19_parked_capture_20261024.json` first. Explicit user approval covered
+conditional install/restart/parked10 only. **Fresh PRE M193_ATTESTED_BASELINE_PASS**,
+but **BLOCKED_STATIONARY_UNCONFIRMED**. No recorder patch/install/restart/backup/
+disposable/ticket/activation/output directory/capture occurred. No Jetson/USB/GPU,
+model selection/Params/onroad/control change. M2NO, PARITY_UNDETERMINED remain.
+
+Actual366/flags1/0/tracked0, original48/2006/417208589 and baseline8b0cbfc9… exact.
+Frozen M192 code/private manifest unchanged; old PARTIAL onlyU32 retained. Fresh
+boundary8 exact; independently retained fresh scoped proof canonical SHA
+`d6e7f101e968af5e94b1789cf4983e88ee42643778aa9997b380548e1dc41558`, recomputed
+bundle `05f9a81bdaf696b396e7a6b14a16a5b151b71bab6f4eaa8ff6aaf8d1779dbaf0`.
+U32 remains accepted only for direct recorder isolation; current runtime useUNKNOWN.
+The new current user prompt supplied execution authority separately from the gate.
+
+Bounded receive-only telemetry3.04245161s: carState0, managerState5, deviceState5,
+model/cameras0. All5 managerState samples have card/modeld/camerad false and
+jetlinkd true, deviceState startedfalse. Existing6queues were present beforehand.
+Native subscriber does normal shared-queue reader/cursor bookkeeping; no publisher,
+CAN reader or producer was started. No default zeros or historical messages count
+as live vEgo/standstill. NOT_CONFIRMED is not proof of motion. Source-backed
+only_onroad policy was not changed to create evidence. Later tuple availability
+and capture gates are NOT_RUN, not CAPTURE_ZERO_FRAMES_UNAVAILABLE.
+
+Final full inventory/legacy verifier: original48/source8/model15/process31+env/
+boot/flags/routes4497 metadata match. Extra3 index/native/cache canaries match.
+Routes digest4bf474e5… is metadata, not all-content. Atime excluded. Package/output
+root absent, writer0, capture env absent in3 inspected processes, other owned audit
+sessions0. **Operating preservation PASS**, source **BLOCKED / NOT_INSTALLED**.
+No ticket was created; cleanup is NOT_CREATED, not an invalidation test.
+Actual recorder overheadNOT_MEASURED/model timingINSUFFICIENT_SAMPLE; patched-OFF
+health and after hashesNOT_RUN. Free bytes observed only, no capability gate PASS.
+
+Fresh CPU258PASS/0FAIL/0SKIP29.37s = M18recorder131 + checker68 + layout1 +
+provenance58, unique scope. Command same as M193 below. No production/core code
+change. Start required feature clean/remoteequal78de3b2eb8f92e5b7b14367ac792be310526b5d4.
+Result commit resolves via `git log -1 --format=%H -- artifacts/m19_parked_capture_20261024.json`.
+Ignored `.reports/m19-retry-20261024/`: firstflags, full before/final collectors/configs,
+private raw snapshots, freshproof/bundle/PREresult, stationary samples, finalcanaries,
+plan/progress and assertion builder. Never commit raw paths/argv/service payloads.
+
+One independent final read-only review PASS, no findings: commitments,
+preservation/counts/stop/privacy consistent. Reviewer did not contact devices,
+rerun258tests, establish stationarity/U32 non-use or certify whole-device health.
+Upstream start/end refs unchanged from M193 below. No further actual action.
+
+**Ready for256/512 road capture: NO.** Next exact action is a separate offline
+source-backed review of whether live stationary evidence and exact logical input
+tuples can coexist under required Offroad1/Onroad0. Do not force onroad, card,
+modeld, model selection or USB to bypass this. There is no actual install to roll
+back and no dataset to validate/transfer. Historical M193 readiness below referred
+to retrying preflight; this retry reached a different, live safety gate and stopped.
+
+
 ## Latest checkpoint: M19.3 U32 accepted for scoped recorder isolation
 
 Read [M19.3](M193_U32_PROVENANCE_20261024.md) and
