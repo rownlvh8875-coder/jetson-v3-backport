@@ -12,6 +12,7 @@ on:
       - 'jetlink/**'
       - 'tools/check_latest_carrot_compat.py'
       - 'tools/check_comma_dirty_baseline.py'
+      - 'tools/analyze_u32_provenance.py'
       - 'tools/build_trt_v3.py'
       - 'tools/patch_v3_uint8.py'
       - 'tests/**'
@@ -47,7 +48,7 @@ jobs:
       - name: Test read-only dirty-baseline policy with CPU fixtures
         env:
           PYTHONDONTWRITEBYTECODE: '1'
-        run: python -m pytest -q -p no:cacheprovider tests/test_comma_dirty_baseline.py
+        run: python -m pytest -q -p no:cacheprovider tests/test_comma_dirty_baseline.py tests/test_u32_provenance.py
       - name: Fetch latest heads and verify disposable source candidate
         run: python tools/check_latest_carrot_compat.py --report .reports/carrot-compat.json
       - name: Preserve evidence, review patch, manifest and test logs
