@@ -36,7 +36,9 @@ def fixture():
                     routes_inventory={'files':1,'sha256':'4'*64},
                     proc={'processes':[dict(pid=10,start_ticks='20',exe='/fixture/python',cwd='/fixture/root')],
                           'other_inaccessible_processes':[]}, nonce='a'*32,
-                    boot_id='00000000-0000-0000-0000-000000000001',params_binding_digest='8'*64)
+                    boot_id='00000000-0000-0000-0000-000000000001',params_binding_digest='8'*64,
+                    tracked_index_flags_all_H=True,
+                    recorder_namespace={'new_package_absent':True,'new_targets_absent':True,'parent_dirs_safe':True})
     files = copy.deepcopy(M18['touched_files'])
     classes = dict(c.BASELINE_CLASSES)
     provenance = {ident:dict(status=status,sha256=entries[int(ident[1:])-1]['root']['sha256'])
@@ -261,3 +263,85 @@ def test_malformed_private_structure_returns_anonymous_failure(field):
     result=check(e,a)
     assert result['status']=='ATTESTED_DIRTY_BASELINE_FAIL'
     assert 'private/' not in json.dumps(result)
+
+
+def test_readonly_git_probe_does_not_invoke_configured_fsmonitor_hook(tmp_path):
+    import shlex
+    root=tmp_path/'repo';root.mkdir();marker=tmp_path/'hook-was-run';hook=tmp_path/'fsmonitor'
+    subprocess.run(['git','init','-q',str(root)],check=True)
+    hook.write_text('#!/bin/sh\nprintf attempted > '+shlex.quote(str(marker))+'\nprintf "1\\n"\n');hook.chmod(0o755)
+    subprocess.run(['git','-C',str(root),'config','core.fsmonitor',str(hook)],check=True)
+    api()._git(root,'status','--porcelain=v1','-z')
+    assert not marker.exists()
+
+
+def test_canonical_nanosecond_vector_exceeds_javascript_number_precision():
+    wire=b'{"ctime_ns":1792768118400123457,"mtime_ns":1792768118400123456}'
+    parsed=api().load_json(wire)
+    assert parsed['ctime_ns']==1792768118400123457
+    assert api().digest(parsed)==hashlib.sha256(wire).hexdigest()
+
+
+def test_exact_large_integer_snapshot_passes_and_lossy_transport_fails():
+    e,a=fixture();stamp=1792768118400123457
+    for snapshot in (e['snapshot'],a):
+        row=snapshot['entries'][0]
+        row['root']['mtime_ns']=row['nodes'][0]['mtime_ns']=stamp
+        row['tree_digest']=api().digest(row['nodes'])
+        snapshot['inventory_digest']=api().inventory_digest(snapshot['entries'])
+    e['isolation']['baseline_digest']=a['inventory_digest']
+    exact=api().load_json(json.dumps(a).encode())
+    assert check(e,exact)['ready_to_retry_M19'] is True
+    exact['entries'][0]['nodes'][0]['mtime_ns']=int(float(stamp))
+    assert exact['entries'][0]['nodes'][0]['mtime_ns']!=stamp
+    assert check(e,exact)['status']=='ATTESTED_DIRTY_BASELINE_FAIL'
+
+
+@pytest.mark.parametrize('fault',['symlink','oversize','invalid_digit'])
+def test_Params_scalar_files_fail_closed(fault,tmp_path):
+    params=tmp_path/'params';params.mkdir();off=params/'IsOffroad';on=params/'IsOnroad'
+    off.write_text('1');on.write_text('0')
+    if fault=='symlink':
+        target=tmp_path/'target';target.write_text('1');off.unlink();off.symlink_to(target)
+    elif fault=='oversize':off.write_text('1'*4096)
+    else:off.write_text('2')
+    with pytest.raises(ValueError):api().read_flags({'params_root':str(params)})
+
+
+def test_Params_fifo_is_refused_without_blocking(tmp_path):
+    params=tmp_path/'params';params.mkdir();os.mkfifo(params/'IsOffroad');(params/'IsOnroad').write_text('0')
+    script='''import sys
+from tools.check_comma_dirty_baseline import read_flags
+try:read_flags({'params_root':sys.argv[1]})
+except ValueError:sys.exit(0)
+sys.exit(3)
+'''
+    result=subprocess.run([sys.executable,'-B','-c',script,str(params)],capture_output=True,timeout=3)
+    assert result.returncode==0
+
+
+def test_hidden_tracked_index_flags_fail_gate():
+    e,a=fixture();a['tracked_index_flags_all_H']=False
+    assert check(e,a)['ready_to_retry_M19'] is False
+
+
+def test_ignored_empty_recorder_package_is_not_hidden_by_clean_status(tmp_path):
+    root=tmp_path/'repo';root.mkdir();subprocess.run(['git','init','-q',str(root)],check=True)
+    package=root/api().PACKAGE;package.parent.mkdir(parents=True)
+    (root/'.gitignore').write_text(api().PACKAGE+'/\n')
+    before=subprocess.check_output(['git','-C',str(root),'status','--short'])
+    assert api().recorder_namespace(root)['new_package_absent'] is True
+    package.mkdir()
+    assert subprocess.check_output(['git','-C',str(root),'status','--short'])==before
+    assert api().recorder_namespace(root)['new_package_absent'] is False
+
+
+def test_namespace_probe_refuses_relative_root_without_looping():
+    script='''import sys
+from tools.check_comma_dirty_baseline import recorder_namespace
+try:recorder_namespace('relative-fixture')
+except ValueError:sys.exit(0)
+sys.exit(3)
+'''
+    result=subprocess.run([sys.executable,'-B','-c',script],capture_output=True,timeout=2)
+    assert result.returncode==0

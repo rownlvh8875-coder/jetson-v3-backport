@@ -137,6 +137,7 @@ def verify(expected,observed,*,patch,challenge):
         require('OFFROAD',base['flags']==observed['flags']=={'IsOffroad':'1','IsOnroad':'0'})
         require('PARAMS_BINDING',_hex(base.get('params_binding_digest')) and base['params_binding_digest']==observed.get('params_binding_digest'))
         require('TRACKED_UNMODIFIED',base['tracked_status']==observed['tracked_status']==[])
+        require('TRACKED_INDEX_FLAGS_SAFE',base.get('tracked_index_flags_all_H') is True and observed.get('tracked_index_flags_all_H') is True)
         require('FRESH_CHALLENGE',observed.get('nonce')==challenge)
         require('SAME_BOOT',isinstance(base.get('boot_id'),str) and re.fullmatch('[0-9a-f-]{36}',base['boot_id']) is not None and base['boot_id']==observed.get('boot_id'))
         require('EXPECTED48',len(old)==len(new)==48)
@@ -160,6 +161,9 @@ def verify(expected,observed,*,patch,challenge):
                 p=n['path']
                 if any(p==t or (n['kind']=='dir' and t.startswith(p+'/')) or p.removesuffix('.bak')==t for t in targets):collision=True
         require('RECORDER_PATH_COLLISION_ABSENT',not collision)
+        require('RECORDER_PHYSICAL_NAMESPACE_ABSENT',all(base.get('recorder_namespace',{}).get(k) is True and
+                observed.get('recorder_namespace',{}).get(k) is True for k in
+                ('new_package_absent','new_targets_absent','parent_dirs_safe')))
         isolation=expected['isolation']
         isolated=(isolation.get('status')=='PASS' and isolation.get('baseline_digest')==base['inventory_digest']
                   and isolation.get('patch_sha256')==PATCH_SHA and _hex(isolation.get('evidence_sha256'))
@@ -212,13 +216,35 @@ def read_flags(config):
         if not p.is_absolute() or '..' in p.parts or not p.is_symlink() or any(q.is_symlink() for q in p.parents):raise ValueError('Params alias')
         if p.resolve(strict=True)!=target:raise ValueError('Params alias drift')
     bound()
-    flags={n:(target/n).read_text().strip() for n in ('IsOffroad','IsOnroad')}
+    flags={}
+    for name in ('IsOffroad','IsOnroad'):
+        p=target/name;s=p.lstat()
+        if not stat.S_ISREG(s.st_mode) or s.st_size not in (1,2):raise ValueError('Params scalar type/size')
+        fd=os.open(p,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK)
+        try:
+            if _sig(s)!=_sig(os.fstat(fd)):raise ValueError('Params scalar race')
+            data=os.read(fd,3)
+            if data not in (b'0',b'1',b'0\n',b'1\n') or len(data)!=s.st_size:raise ValueError('Params scalar value')
+            if _sig(s)!=_sig(os.fstat(fd)) or _sig(s)!=_sig(p.lstat()):raise ValueError('Params scalar race')
+            flags[name]=data.decode().strip()
+        finally:os.close(fd)
     bound()
     return flags,digest({'physical_root':str(target),'known_alias':alias})
 
 
 def _sig(s):
     return s.st_dev,s.st_ino,s.st_mode,s.st_uid,s.st_gid,s.st_size,s.st_mtime_ns,s.st_ctime_ns
+
+
+def recorder_namespace(root):
+    """Probe even ignored/empty paths, which a normal Git status cannot reveal."""
+    root=_absolute(root);parent=root/PurePosixPath(PACKAGE).parent;safe=True
+    while parent!=root:
+        if parent.is_symlink() or not parent.is_dir():safe=False
+        parent=parent.parent
+    return {'new_package_absent':not os.path.lexists(root/PACKAGE),
+            'new_targets_absent':all(not os.path.lexists(root/name) for name in AFTER if name!=MODEL),
+            'parent_dirs_safe':safe}
 
 
 def _node(root,p):
@@ -242,7 +268,7 @@ def _node(root,p):
 
 
 def _git(root,*args):
-    return subprocess.check_output(['git','-C',str(root),*args],stderr=subprocess.DEVNULL,
+    return subprocess.check_output(['git','-c','core.fsmonitor=false','-c','core.untrackedCache=false','-C',str(root),*args],stderr=subprocess.DEVNULL,
         env={**os.environ,'GIT_OPTIONAL_LOCKS':'0','GIT_NO_LAZY_FETCH':'1'},timeout=30).decode()
 
 
@@ -298,6 +324,7 @@ def collect(config):
     if not _hex(config['nonce'],32):raise ValueError('nonce')
     head=_git(root,'rev-parse','HEAD').strip();branch=_git(root,'branch','--show-current').strip()
     status=_git(root,'status','--porcelain=v1','-z').split('\0')
+    index_flags=_git(root,'ls-files','-v','-z');namespace=recorder_namespace(root)
     names=[v[3:].rstrip('/') for v in status if v.startswith('?? ')]
     entries=[]
     for i,name in enumerate(names):
@@ -319,6 +346,7 @@ def collect(config):
             p=Path(base)/n;s=p.lstat();routes.append([p.relative_to(route_root).as_posix(),s.st_mode,s.st_size,s.st_mtime_ns])
     routes.sort();processes=_processes(root)
     if status!=_git(root,'status','--porcelain=v1','-z').split('\0') or head!=_git(root,'rev-parse','HEAD').strip():raise ValueError('source race')
+    if index_flags!=_git(root,'ls-files','-v','-z') or namespace!=recorder_namespace(root):raise ValueError('index/namespace race')
     if (flags,params_binding)!=read_flags(config):raise ValueError('offroad/Params binding race')
     # A second namespace/stat pass also catches changes inside a collapsed ?? dir.
     for e in entries:
@@ -334,7 +362,8 @@ def collect(config):
                 recursive_bytes=sum(e['bytes'] for e in entries),inventory_digest=inventory_digest(entries),
                 source_hashes=source,model_hashes=models,routes_inventory={'files':len(routes),'sha256':digest(routes)},
                 proc=processes,nonce=config['nonce'],boot_id=Path('/proc/sys/kernel/random/boot_id').read_text().strip(),
-                params_binding_digest=params_binding)
+                params_binding_digest=params_binding,recorder_namespace=namespace,
+                tracked_index_flags_all_H=bool(index_flags) and all(v.startswith('H ') for v in index_flags.split('\0') if v))
 
 
 def main(argv=None):

@@ -9,7 +9,7 @@
     "schema": {"const": 1},
     "snapshot": {
       "type": "object",
-      "required": ["branch", "head", "flags", "tracked_status", "entries", "inventory_digest", "recursive_regular_files", "recursive_bytes", "source_hashes", "model_hashes", "routes_inventory", "proc", "boot_id", "params_binding_digest"],
+      "required": ["branch", "head", "flags", "tracked_status", "entries", "inventory_digest", "recursive_regular_files", "recursive_bytes", "source_hashes", "model_hashes", "routes_inventory", "proc", "boot_id", "params_binding_digest", "recorder_namespace", "tracked_index_flags_all_H"],
       "properties": {
         "branch": {"const": "carrot-nav"},
         "head": {"const": "366d6eae9aa9962104391e1d997fe956dea8f64d"},
@@ -26,5 +26,5 @@
     "isolation": {"type": "object", "required": ["status", "baseline_digest", "patch_sha256", "evidence_sha256", "package_shadow", "dynamic_import_risk"]}
   },
   "$defs": {"sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
-  "$comment": "Schema shape is documentation. Runtime verification additionally recomputes node/tree commitments, checks identities and reviewed provenance. No schema validation alone grants install approval. Private expected-manifest byte digest must be pinned independently."
+  "$comment": "Schema shape is documentation. Runtime verification additionally recomputes node/tree commitments, checks identities and reviewed provenance. No schema validation alone grants install approval. Private expected-manifest byte digest must be pinned independently. Preserve original JSON bytes and exact 64-bit integer nanoseconds; do not parse and reserialize metadata via JavaScript Number."
 }
