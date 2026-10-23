@@ -14,6 +14,14 @@ PATCH = (REPO / 'patches/carrot-nav-v3-input-recorder.patch').read_bytes()
 M18 = json.loads((REPO / 'artifacts/m18_v3_input_recorder_validation_20261023.json').read_text())['manifest']
 
 
+@pytest.fixture(autouse=True)
+def isolated_fixture_git_configuration(monkeypatch):
+    # Exercise explicit fixture config, independent of host-wide Git LFS filters.
+    # Production collection still checks the complete effective device config.
+    monkeypatch.setenv('GIT_CONFIG_NOSYSTEM','1')
+    monkeypatch.setenv('GIT_CONFIG_GLOBAL',os.devnull)
+
+
 def api():
     from tools import check_comma_dirty_baseline as checker
     return checker
@@ -345,3 +353,68 @@ sys.exit(3)
 '''
     result=subprocess.run([sys.executable,'-B','-c',script],capture_output=True,timeout=2)
     assert result.returncode==0
+
+
+def filter_fixture(tmp_path):
+    root=tmp_path/'repo';root.mkdir()
+    subprocess.run(['git','init','-q',str(root)],check=True)
+    (root/'tracked.txt').write_text('original\n')
+    (root/'.gitattributes').write_text('tracked.txt filter=fixture\n')
+    subprocess.run(['git','-C',str(root),'add','.'],check=True)
+    subprocess.run(['git','-C',str(root),'-c','user.name=Fixture','-c','user.email=fixture@example.invalid',
+                    'commit','-qm','fixture'],check=True)
+    params=tmp_path/'params';params.mkdir();(params/'IsOffroad').write_text('1');(params/'IsOnroad').write_text('0')
+    models=tmp_path/'models';models.mkdir();routes=tmp_path/'routes';routes.mkdir()
+    return root,dict(root=str(root),params_root=str(params),model_root=str(models),route_root=str(routes),
+                     source_paths=['tracked.txt'],nonce='a'*32)
+
+
+@pytest.mark.parametrize('kind',['clean','process'])
+def test_collector_refuses_external_filter_before_it_can_write(kind,tmp_path):
+    import shlex
+    root,config=filter_fixture(tmp_path);marker=tmp_path/'filter-ran';hook=tmp_path/'filter-hook'
+    hook.write_text('#!/bin/sh\nprintf attempted > '+shlex.quote(str(marker))+'\n'+('cat\n' if kind=='clean' else 'exit 1\n'))
+    hook.chmod(0o755)
+    subprocess.run(['git','-C',str(root),'config','filter.fixture.'+kind,str(hook)],check=True)
+    (root/'tracked.txt').write_text('changed!\n')  # Same size forces content conversion.
+    index=root/'.git/index';before=(index.stat().st_mtime_ns,index.read_bytes());error=None
+    try:api().collect(config)
+    except Exception as exc:error=exc
+    assert not marker.exists(),'read-only collector executed external '+kind+' filter'
+    assert isinstance(error,ValueError),'external filter configuration must fail closed before status'
+    assert (index.stat().st_mtime_ns,index.read_bytes())==before
+
+
+def test_collector_refuses_gitlinks_before_submodule_filter_delegation(tmp_path):
+    import shlex
+    root,config=filter_fixture(tmp_path)
+    child=root/'nested';child.mkdir();subprocess.run(['git','init','-q',str(child)],check=True)
+    (child/'tracked.txt').write_text('original\n');(child/'.gitattributes').write_text('tracked.txt filter=fixture\n')
+    subprocess.run(['git','-C',str(child),'add','.'],check=True)
+    subprocess.run(['git','-C',str(child),'-c','user.name=Fixture','-c','user.email=fixture@example.invalid',
+                    'commit','-qm','child'],check=True)
+    (root/'.gitmodules').write_text('[submodule "nested"]\npath = nested\nurl = ../fixture-no-network\n')
+    subprocess.run(['git','-C',str(root),'add','nested','.gitmodules'],check=True,capture_output=True)
+    subprocess.run(['git','-C',str(root),'-c','user.name=Fixture','-c','user.email=fixture@example.invalid',
+                    'commit','-qm','parent'],check=True)
+    marker=tmp_path/'submodule-filter-ran';hook=tmp_path/'child-filter'
+    hook.write_text('#!/bin/sh\nprintf attempted > '+shlex.quote(str(marker))+'\ncat\n');hook.chmod(0o755)
+    subprocess.run(['git','-C',str(child),'config','filter.fixture.clean',str(hook)],check=True)
+    (child/'tracked.txt').write_text('changed!\n');error=None
+    try:api().collect(config)
+    except Exception as exc:error=exc
+    assert not marker.exists(),'read-only collector delegated status to a filtered submodule'
+    assert isinstance(error,ValueError),'gitlinks must be refused before submodule status'
+
+
+def test_inapplicable_global_filter_is_not_executed_and_dirty_status_is_preserved(tmp_path,monkeypatch):
+    import shlex
+    root,config=filter_fixture(tmp_path);marker=tmp_path/'unused-filter-ran';hook=tmp_path/'unused-filter'
+    hook.write_text('#!/bin/sh\nprintf attempted > '+shlex.quote(str(marker))+'\ncat\n');hook.chmod(0o755)
+    global_config=tmp_path/'global-config'
+    subprocess.run(['git','config','--file',str(global_config),'filter.unused.clean',str(hook)],check=True)
+    monkeypatch.setenv('GIT_CONFIG_GLOBAL',str(global_config))
+    (root/'tracked.txt').write_text('changed!\n')
+    result=api().collect(config)
+    assert not marker.exists()
+    assert any(row[3:]=='tracked.txt' for row in result['tracked_status'])

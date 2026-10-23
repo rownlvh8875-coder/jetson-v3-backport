@@ -268,8 +268,30 @@ def _node(root,p):
 
 
 def _git(root,*args):
-    return subprocess.check_output(['git','-c','core.fsmonitor=false','-c','core.untrackedCache=false','-C',str(root),*args],stderr=subprocess.DEVNULL,
-        env={**os.environ,'GIT_OPTIONAL_LOCKS':'0','GIT_NO_LAZY_FETCH':'1'},timeout=30).decode()
+    base=['git','-c','core.fsmonitor=false','-c','core.untrackedCache=false','-C',str(root)]
+    options=dict(stderr=subprocess.DEVNULL,env={**os.environ,'GIT_OPTIONAL_LOCKS':'0','GIT_NO_LAZY_FETCH':'1'},timeout=30)
+    if args and args[0]=='status':
+        # Even status can run clean/process filters for stat-dirty tracked files.
+        # Config and index enumeration do not convert working-tree content. Reject
+        # helpers rather than execute them, disable attributes or hide dirty files.
+        filters=subprocess.run([*base,'config','--name-only','--null','--get-regexp',r'^filter\..*\.(clean|process)$'],
+                               stdout=subprocess.PIPE,**options)
+        if filters.returncode not in (0,1):raise subprocess.CalledProcessError(filters.returncode,'git config')
+        staged=subprocess.check_output([*base,'ls-files','--stage','-z'],**options)
+        # Delegated submodule status can use its own unsafe config. actual366 has
+        # no gitlinks. Refuse them until separate recursive read-only handling exists.
+        if any(row.startswith(b'160000 ') for row in staged.split(b'\0')):raise ValueError('Git submodule status unsupported')
+        if filters.returncode==0:
+            drivers={key[7:].rsplit(b'.',1)[0] for key in filters.stdout.split(b'\0') if key}
+            names=[row.split(b'\t',1)[1] for row in staged.split(b'\0') if row]
+            if names:
+                attrs=subprocess.check_output([*base,'check-attr','-z','--stdin','filter'],
+                    input=b'\0'.join(names)+b'\0',**options).split(b'\0')
+                if attrs[-1]!=b'' or len(attrs)!=3*len(names)+1:raise ValueError('filter attribute coverage')
+                if any(attrs[i]!=name or attrs[i+1]!=b'filter' for i,name in zip(range(0,len(attrs)-1,3),names)):
+                    raise ValueError('filter attribute coverage')
+                if any(value in drivers for value in attrs[2:-1:3]):raise ValueError('external Git status filter unsupported')
+    return subprocess.check_output([*base,*args],**options).decode()
 
 
 def _processes(root):
