@@ -12,7 +12,10 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path
+import re
+import stat
 import numpy as np
 import build_trt_v3 as verify
 import jetson_m1 as isolation
@@ -24,6 +27,57 @@ PARSER_HASHES={'parse_model_outputs.py':'45b38da9f929bd59ca28ff9e19f64e8718286ae
                'constants.py':'5d597d287df626d08b234a17db05e884302fead646ff4e7f0153079547c8010c'}
 PLAN_AXES={'POSITION':slice(0,3),'VELOCITY':slice(3,6),'ACCELERATION':slice(6,9),
            'T_FROM_CURRENT_EULER':slice(9,12),'ORIENTATION_RATE':slice(12,15)}
+M1_PLAN={'sha256':'8f831b5af400a10aa35128ceeceac74595df1363bdcd6fd230957415f7e540aa','nbytes':768580676}
+
+
+def cache_memory():
+    return {k:int(line.split()[1])*1024 for line in Path('/proc/meminfo').read_text().splitlines()
+            if (k:=line.split(':',1)[0]) in ('MemFree','MemAvailable','Cached','SwapFree')}
+
+
+def release_private_cache(root,entries):
+    """Explicit Linux-only own-file advice; never global cache/config changes.
+
+    Hash each allowlisted file on the SAME pinned read-only FD before advice.
+    Metadata is checked after advice; no subsequent content read re-caches it.
+    Advisory success does not assert CUDA memory availability.
+    """
+    root=recurrent.guarded_root(root);isolation.validate_marker(root)
+    if not hasattr(os,'posix_fadvise'):raise ValueError('private cache advice unavailable')
+    before=cache_memory();count=total=0
+    def fingerprint(s):
+        return (s.st_dev,s.st_ino,s.st_mode,s.st_uid,s.st_nlink,s.st_size,s.st_mtime_ns,s.st_ctime_ns)
+    for name,expected in entries.items():
+        allowed=re.fullmatch(r'm15/ort-reference-101/frame-(?:00[0-9][0-9]|0100)\.npz',name)
+        if name=='models/big_driving_supercombo_v3.onnx':allowed=expected==isolation.V3_IDENTITY
+        if name=='build/cinque-v3.plan':allowed=expected==M1_PLAN
+        if not allowed:raise ValueError('private cache target not in exact allowlist')
+        p=isolation.inside(root,root/name);info=p.lstat()
+        if not stat.S_ISREG(info.st_mode):raise ValueError('private cache target is not a regular file')
+        descriptors=[]
+        try:
+            directory=os.open(root,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW);descriptors.append(directory)
+            device=os.fstat(directory).st_dev
+            for part in Path(name).parts[:-1]:
+                directory=os.open(part,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW,dir_fd=directory);descriptors.append(directory)
+                entry=os.fstat(directory)
+                if entry.st_dev!=device or entry.st_uid!=os.getuid() or entry.st_mode&0o022:raise ValueError('private parent ownership/mount mismatch')
+            fd=os.open(Path(name).name,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK,dir_fd=directory);descriptors.append(fd)
+            original=os.fstat(fd)
+            if (not stat.S_ISREG(original.st_mode) or original.st_dev!=device or original.st_uid!=os.getuid()
+                    or original.st_nlink!=1 or original.st_mode&0o022 or fingerprint(original)!=fingerprint(info)):
+                raise ValueError('private file owner/link/mode/inode mismatch')
+            digest=hashlib.sha256()
+            while block:=os.read(fd,1<<20):digest.update(block)
+            if {'sha256':digest.hexdigest(),'nbytes':original.st_size}!=expected:raise ValueError('private file hash/size mismatch')
+            if fingerprint(os.fstat(fd))!=fingerprint(original):raise ValueError('private file changed while hashing')
+            os.posix_fadvise(fd,0,0,os.POSIX_FADV_DONTNEED)
+            if fingerprint(os.fstat(fd))!=fingerprint(original) or fingerprint(p.lstat())!=fingerprint(original):raise ValueError('private file changed during advice')
+            count+=1;total+=original.st_size
+        finally:
+            for fd in reversed(descriptors):os.close(fd)
+    return {'advised_files':count,'advised_bytes':total,'memory_before':before,'memory_after':cache_memory(),
+            'meaning':'advisory own-file cache release only; not CUDA availability or numerical acceptance'}
 
 
 def epsilon(reference):
@@ -212,6 +266,14 @@ def measure_trt(args):
     manifest=validate_reference(reference,spec);parser,provenance=load_parser(parser_dir)
     if manifest['parser']!=provenance:raise ValueError('parser differs from ORT export')
     output=recurrent.create_output(root,args.out_dir);recurrent.prepare_environment(output)
+    cache_preparation=None
+    if args.release_private_file_cache:
+        entries={'m15/ort-reference-101/'+e['name']:{n:e[n] for n in ('sha256','nbytes')} for e in manifest['files']}
+        entries.update({'build/cinque-v3.plan':M1_PLAN,'models/big_driving_supercombo_v3.onnx':isolation.V3_IDENTITY})
+        cache_preparation=release_private_cache(root,entries)
+        (output/'cache-preparation.json').write_text(json.dumps(cache_preparation,indent=2)+'\n')
+        if cache_preparation['memory_after']['MemFree']-cache_preparation['memory_before']['MemFree']<735338624:
+            raise ValueError('BLOCKED_MEMORY: no measured recovery of the failed allocation size; no CUDA retry')
     generation=recurrent.Generation(recurrent.CudaTrtSession(engine,physical,metadata),physical)
     raw_acc={n:Accumulator() for n in ['outputs',*spec['output_slices']]};parsed_acc={};channel_acc={}
     rows=[];state_rows={n:[] for n in spec['output_shapes'] if n.startswith('next_state_')}
@@ -248,6 +310,7 @@ def measure_trt(args):
                 'state_drift':{n:{'summary':drift_summary(values),'frames':values} for n,values in state_rows.items()},
                 'per_frame':rows,'input_digest_matches':FRAMES,'reference_manifest':verify.file_identity(reference/'manifest.json'),
                 'sequence_limit':manifest['sequence_limit'],'all_contracts_finite':True,'optimizations':'OFF',
+                'private_file_cache_preparation':cache_preparation,
                 **decision_report({})}
     finally:generation.close()
     (output/'report.json').write_text(json.dumps(result,indent=2)+'\n')
@@ -259,6 +322,7 @@ def main(argv=None):
     export=sub.add_parser('export-ort');measure=sub.add_parser('measure-trt')
     for name in ('onnx','spec','out-dir','parser-source'):export.add_argument('--'+name,type=Path,required=True)
     for name in ('development-root','engine','spec','reference-dir','base-report','out-dir','parser-source'):measure.add_argument('--'+name,type=Path,required=True)
+    measure.add_argument('--release-private-file-cache',action='store_true',help='After a diagnosed own-file-cache pressure failure only: advise exact private files, no global caches/configuration')
     args=p.parse_args(argv)
     try:result=export_ort(args) if args.mode=='export-ort' else measure_trt(args)
     except Exception as e:result={'status':'FAIL','error_type':type(e).__name__,'error':str(e),'exit_status':1,'installation':'DO_NOT_INSTALL'}

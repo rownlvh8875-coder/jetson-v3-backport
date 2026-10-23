@@ -1,6 +1,7 @@
 """CPU_FAKE/FIXTURE mathematical and source boundary evidence only."""
 import importlib.util
 import json
+import os
 from pathlib import Path
 import sys
 
@@ -115,3 +116,59 @@ def test_actual_parser_source_drift_is_rejected_before_execution(tmp_path):
 def test_parser_dtype_drift_is_rejected():
     with pytest.raises(ValueError,match='dtype'):
         m.compare_parsed({'plan':np.zeros(2,np.float32)},{'plan':np.zeros(2,np.float64)})
+
+
+@pytest.fixture
+def private_reference(tmp_path):
+    root=tmp_path/'dev';root.mkdir(mode=0o700)
+    marker=root/'.m1-isolated.json'
+    marker.write_text(json.dumps({'schema':1,'development_root':str(root),'identity':m.isolation.V3_IDENTITY,'do_not_install':True}))
+    marker.chmod(0o600)
+    p=root/'m15/ort-reference-101/frame-0000.npz';p.parent.mkdir(parents=True)
+    p.write_bytes(b'fixture array bytes');p.chmod(0o600)
+    return root,p,{'m15/ort-reference-101/frame-0000.npz':m.verify.file_identity(p)}
+
+
+def test_private_cache_advice_is_readonly_exact_and_preserves_bytes(private_reference,monkeypatch):
+    root,p,entries=private_reference;calls=[]
+    monkeypatch.setattr(m.os,'posix_fadvise',lambda fd,start,length,advice:calls.append((os.fstat(fd).st_ino,start,length,advice)))
+    out=m.release_private_cache(root,entries)
+    assert calls==[(p.stat().st_ino,0,0,os.POSIX_FADV_DONTNEED)]
+    assert out['advised_files']==1 and out['advised_bytes']==len(b'fixture array bytes')
+    assert p.read_bytes()==b'fixture array bytes'
+    assert 'MemFree' in out['memory_before'] and 'MemFree' in out['memory_after']
+
+
+@pytest.mark.parametrize('bad',['hash','mode','symlink','hardlink','fifo','outside','unknown'])
+def test_private_cache_bad_targets_refused_before_advice(private_reference,monkeypatch,bad):
+    root,p,entries=private_reference;calls=[]
+    monkeypatch.setattr(m.os,'posix_fadvise',lambda *a:calls.append(a))
+    if bad=='hash':entries[next(iter(entries))]['sha256']='0'*64
+    elif bad=='mode':p.chmod(0o666)
+    elif bad=='hardlink':os.link(p,p.with_name('other'))
+    elif bad=='symlink':p.rename(p.with_name('other'));p.symlink_to(p.with_name('other'))
+    elif bad=='fifo':p.unlink();os.mkfifo(p)
+    elif bad=='outside':entries={'../outside':next(iter(entries.values()))}
+    elif bad=='unknown':entries={'.m1-isolated.json':m.verify.file_identity(root/'.m1-isolated.json')}
+    with pytest.raises((ValueError,m.isolation.GateError)):m.release_private_cache(root,entries)
+    assert not calls
+
+
+def test_private_cache_advice_failure_aborts_and_no_read_follows_advice(private_reference,monkeypatch):
+    root,p,entries=private_reference
+    def fail(*args):raise OSError('advice failure')
+    monkeypatch.setattr(m.os,'posix_fadvise',fail)
+    with pytest.raises(OSError):m.release_private_cache(root,entries)
+    real_read=m.os.read;advised=[]
+    def read(fd,size):
+        assert not advised,'content reread after final advice'
+        return real_read(fd,size)
+    monkeypatch.setattr(m.os,'read',read)
+    monkeypatch.setattr(m.os,'posix_fadvise',lambda *a:advised.append(True))
+    assert m.release_private_cache(root,entries)['advised_files']==1
+
+
+def test_private_cache_mutation_during_advice_fails(private_reference,monkeypatch):
+    root,p,entries=private_reference
+    monkeypatch.setattr(m.os,'posix_fadvise',lambda *a:p.write_bytes(b'changed'))
+    with pytest.raises(ValueError,match='changed'):m.release_private_cache(root,entries)
