@@ -35,6 +35,12 @@ actual comma의 88개 route를 조사하고 최근 5개 rlog의 복사·해시�
 원본 road/wide 영상과 로그 image payload가 없어 V3 입력 재구성은 0프레임이다.
 **ORT/TRT NOT_RUN / PARITY_UNDETERMINED / M2 NO**이며 원본·운영본을 보존했다.
 
+2026-10-23 [M1.8 exact input recorder](docs/M18_V3_INPUT_RECORDER_DESIGN_20261023.md):
+actual366용 기본 OFF observer patch와 strict replay reader를 오프라인 검증했다.
+신규131 + 기존 smoke87 = **CPU218 PASS**, 512프레임20Hz host simulation PASS.
+실제 콤마 설치·활성화·기록은 하지 않았다. [M19 계획](docs/M19_COMMA_CAPTURE_PLAN_20261023.md)은
+별도 승인 후 정차 preflight부터 진행한다. 수치 승인과 M2는 계속 보류한다.
+
 2026-10-20 [외부 Jetson 최적화 검토](docs/JETSON_REVIEW_A890_ANALYSIS.md):
 DeviceState와 InputFastpath는 기존 검증을 유지한 기본 OFF 실험 후보다.
 AIO는 운영 transport에 연결하지 않았으며, 실장 순서는 M0 → 기본 V3 → USB →

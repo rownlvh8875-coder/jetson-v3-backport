@@ -1,0 +1,341 @@
+{
+  "schema": 1,
+  "date": "2026-10-23",
+  "stage": "M18",
+  "status": "PASS_OFFLINE_CANDIDATE",
+  "development_start": "aa30f9ea70a3e62538bcbc0a7d8c083f1dbfad52",
+  "development_code_commit": "920a3f8fe7e5324466af9990dd93d2ed4fc10017",
+  "actual_base": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+  "actual_device_access": "NOT_RUN",
+  "default": "OFF",
+  "installation": "NOT_RUN",
+  "activation": "NOT_RUN",
+  "evidence": [
+    "CPU_FAKE",
+    "FIXTURE",
+    "CPU_HOST_BENCH"
+  ],
+  "manifest": {
+    "schema": 1,
+    "base_sha": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+    "branch": "carrot-nav",
+    "repository": "https://github.com/ajouatom/openpilot",
+    "status": "CANDIDATE_UNVERIFIED",
+    "evidence": "CPU_FAKE/FIXTURE and disposable actual366 source only",
+    "installation": "DO_NOT_INSTALL",
+    "activation": "OFF; explicit boot-bound expiring one-shot offroad arm ticket required",
+    "source_kind": "existing_jetlink_nonstate",
+    "source_model_sha": "runtime arm ticket + exact Client.spec gate",
+    "source_spec_sha": "runtime arm ticket + canonical actual Client.spec.to_dict SHA256 gate",
+    "source_pins": {
+      "openpilot/selfdrive/modeld/jetlink/model.py": "c627644ff2f986883325aaca1b8410f216f45447c6595a123d8c1e53ef8c83da",
+      "openpilot/selfdrive/modeld/jetlink/link.py": "9bdb6fb3b9c669fefd0e065e144ceea76068f839cd53eb9d5ccaf3c34c3908c4",
+      "openpilot/selfdrive/modeld/camera_gap.py": "7b959fa8bdd740c4bea150c07248a69ea33f08db327110601be3ee17d9bc938a",
+      "openpilot/selfdrive/modeld/camera_sync.py": "398980260825757393239796cb4dc10399ef1384f0fd9e23cdad0fd12d0cc0d2",
+      "third_party/jetlink/jetlink/spec.py": "ec844ccaf13ffc1d7c03ad683b0e3f2ce6a1d78f4088067739aaa419af422170"
+    },
+    "recorder_source_files": {
+      "__init__.py": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca",
+      "format.py": "9deff26ba3ba9b66642f7a471b10c637272003029866ce47fe82f80ff702acdf",
+      "recorder.py": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada",
+      "dataset.py": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7",
+      "hook.py": "e8196e46df04a0ca99dd1ba4d009d5a683bd8e8a7a91b05a8b81bec3731f5bd1"
+    },
+    "touched_files": [
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/input_recording/__init__.py",
+        "before_sha256": null,
+        "after_sha256": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca"
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/input_recording/dataset.py",
+        "before_sha256": null,
+        "after_sha256": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7"
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/input_recording/format.py",
+        "before_sha256": null,
+        "after_sha256": "9deff26ba3ba9b66642f7a471b10c637272003029866ce47fe82f80ff702acdf"
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py",
+        "before_sha256": null,
+        "after_sha256": "e8196e46df04a0ca99dd1ba4d009d5a683bd8e8a7a91b05a8b81bec3731f5bd1"
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/input_recording/recorder.py",
+        "before_sha256": null,
+        "after_sha256": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada"
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/model.py",
+        "before_sha256": "c627644ff2f986883325aaca1b8410f216f45447c6595a123d8c1e53ef8c83da",
+        "after_sha256": "4813e215b13b447a234ca78839d4cac605f69a9ec2b1a6263ed9ffa063204f0d"
+      }
+    ],
+    "patch_sha256": "3a3e19430ab667d204f22fd1e40438a85e1ade1dbab2e6f9dd6e3dd32de4c1ee",
+    "limitations": [
+      "No actual capture, device, USB, GPU, stationary overhead or vehicle validation",
+      "No V3 execution/selection; exact logical inputs borrowed from existing nonstate source",
+      "Internal-only fallback produces zero captured frames and no COMPLETE dataset",
+      "Camera binding exposes main/extra roles; physical camera stream enum is unavailable",
+      "Fixed record stores exact SOF timestamps; EOF remains available only in borrowed FrameMeta"
+    ],
+    "rollback": "In a disposable development copy only: verify all after hashes, reverse patch, verify before hashes; no operating runtime/cache/V2 files changed."
+  },
+  "modified_existing_carrot_files": 1,
+  "new_carrot_files": 5,
+  "logical_payload_bytes": 393264,
+  "record_bytes": 393408,
+  "header_bytes": 4096,
+  "default_frames": 256,
+  "bench_frames": 512,
+  "hard_max_frames": 1024,
+  "binary_bytes_512": 201428992,
+  "manifest_upper_bound_bytes": 65536,
+  "minimum_free_bytes_512": 268537856,
+  "queue": {
+    "default_depth": 4,
+    "available_depths": [
+      4,
+      8,
+      16
+    ],
+    "ring_bytes": 1577728,
+    "policy": "first overflow invalidates only recorder; no silent drop; inference unchanged",
+    "blocking": "NO_WAIT_FOR_WRITER_OR_SLOT"
+  },
+  "tests": {
+    "total_pass": 218,
+    "fail": 0,
+    "skip": 0,
+    "new_pass": 131,
+    "frozen_smoke_pass": 87,
+    "new_breakdown": {
+      "format": 8,
+      "recorder": 20,
+      "reader": 74,
+      "hook": 29
+    },
+    "full_repository_pytest": "NOT_RUN_SUCCESSFULLY: existing test_backport.py import-time SystemExit",
+    "corrected_invocation": "initial frozen smoke missing3 required env roots:18 setup failures resolved; final218PASS",
+    "independent_review": "131PASS; no remaining blocking finding",
+    "gates": {
+      "exact_byte_replay": "PASS",
+      "disabled_original_code_objects": "PASS",
+      "bounded_memory": "PASS",
+      "no_silent_drop": "PASS",
+      "failure_isolation": "PASS",
+      "privacy_schema": "PASS",
+      "reader": "PASS",
+      "512_frame_20hz_simulation": "PASS",
+      "output_collision": "PASS",
+      "disposable_reverse_forward_patch": "PASS"
+    }
+  },
+  "benchmark": {
+    "classification": "CPU_HOST_BENCH",
+    "input": "SYNTHETIC_FIXTURE",
+    "python": "3.12.3",
+    "numpy": "2.5.4",
+    "architecture": "x86_64",
+    "os": "Linux",
+    "sustained_20hz": {
+      "frames": 512,
+      "depth": 4,
+      "target_hz": 20,
+      "elapsed_s": 26.41596529399999,
+      "high_water": 1,
+      "ring_bytes": 1577728,
+      "dataset_bytes": 201428992,
+      "copy": {
+        "p50_us": 55.0765,
+        "p95_us": 80.99534999999999,
+        "p99_us": 108.64824999999999
+      },
+      "queue_send": {
+        "p50_us": 29.825,
+        "p95_us": 38.32094999999999,
+        "p99_us": 50.372179999999936
+      },
+      "observe": {
+        "p50_us": 146.792,
+        "p95_us": 197.01065,
+        "p99_us": 242.06921999999997
+      },
+      "effective_payload_mib_s": 7.271880768393929,
+      "writer_sampled_peak_rss_kib": 35304,
+      "dataset_digest": "b1110c35eff51768a2154963fdb97c6390c230794dc5005a2751b712d2ae5b36",
+      "exact_validation": "PASS"
+    },
+    "writer_throughput": [
+      {
+        "frames": 128,
+        "depth": 4,
+        "target_hz": 0,
+        "elapsed_s": 0.3106007389999377,
+        "high_water": 4,
+        "ring_bytes": 1577728,
+        "dataset_bytes": 50360320,
+        "copy": {
+          "p50_us": 32.786,
+          "p95_us": 37.732299999999995,
+          "p99_us": 41.56717000000001
+        },
+        "queue_send": {
+          "p50_us": 3.946,
+          "p95_us": 4.86045,
+          "p99_us": 6.039490000000001
+        },
+        "observe": {
+          "p50_us": 53.2345,
+          "p95_us": 61.01345,
+          "p99_us": 69.30632000000001
+        },
+        "effective_payload_mib_s": 154.61469169269952,
+        "writer_sampled_peak_rss_kib": 35684,
+        "dataset_digest": "084958128e7ca57ba330f6455ad6c7cb516621cf0be51d8b980e5fd4be11715c",
+        "exact_validation": "PASS"
+      },
+      {
+        "frames": 128,
+        "depth": 8,
+        "target_hz": 0,
+        "elapsed_s": 0.41587045799997213,
+        "high_water": 8,
+        "ring_bytes": 3151360,
+        "dataset_bytes": 50360320,
+        "copy": {
+          "p50_us": 33.3175,
+          "p95_us": 42.00209999999999,
+          "p99_us": 57.506080000000026
+        },
+        "queue_send": {
+          "p50_us": 4.4955,
+          "p95_us": 5.7905500000000005,
+          "p99_us": 7.142390000000001
+        },
+        "observe": {
+          "p50_us": 55.937,
+          "p95_us": 69.24064999999996,
+          "p99_us": 85.57117000000001
+        },
+        "effective_payload_mib_s": 115.47691492912732,
+        "writer_sampled_peak_rss_kib": 37164,
+        "dataset_digest": "7edb75c0a9247c1d425636e2bee00a58958bda8e2d5a3d9dba6e003150659abf",
+        "exact_validation": "PASS"
+      },
+      {
+        "frames": 128,
+        "depth": 16,
+        "target_hz": 0,
+        "elapsed_s": 0.36429347700004655,
+        "high_water": 16,
+        "ring_bytes": 6298624,
+        "dataset_bytes": 50360320,
+        "copy": {
+          "p50_us": 32.562,
+          "p95_us": 41.23244999999999,
+          "p99_us": 55.82750000000003
+        },
+        "queue_send": {
+          "p50_us": 4.158,
+          "p95_us": 5.7635999999999985,
+          "p99_us": 7.417150000000002
+        },
+        "observe": {
+          "p50_us": 53.035,
+          "p95_us": 69.97804999999997,
+          "p99_us": 94.85762000000008
+        },
+        "effective_payload_mib_s": 131.82623497810766,
+        "writer_sampled_peak_rss_kib": 40292,
+        "dataset_digest": "ba95732a975c489eb2ace1e6115d4508e451dc63b401a5311e40186474af6098",
+        "exact_validation": "PASS"
+      }
+    ],
+    "parent_peak_rss_kib": 232512,
+    "children_lifetime_peak_rss_kib": 232512,
+    "rss_note": "Lifetime peaks include reader mappings and pre-exec inheritance; per-run writer RSS is sampled after exec.",
+    "comma_real_performance": "NOT_MEASURED"
+  },
+  "frozen_source_hash_checks": {
+    "adapters/carrot/nav.py": true,
+    "tests/current_carrot_loopback_peer.py": true,
+    "tests/test_carrot_nav_adapter.py": true,
+    "tests/test_carrot_nav_loopback.py": true,
+    "tests/test_carrot_nav_wire.py": true,
+    "tests/test_jetson_m15_semantic.py": true,
+    "tools/jetson_m15_semantic.py": true
+  },
+  "upstream_start": {
+    "carrot_nav": "3da803836786acdd9f6699ce75ef1134d1aabc6e",
+    "carrot_wip": "3fdf82b268d69db31c1bf6d4137198d65cd548fe"
+  },
+  "upstream_end": {
+    "carrot_nav": "810e14aaf51176f1a50a113939dc2e70907b394b",
+    "carrot_wip": "dfab65d03fcd7100f572fe9e6908f4c6d1e988f6",
+    "carrot_jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "zoompilot_jetlink": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc",
+    "external_review": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722"
+  },
+  "upstream_diff_review": {
+    "nav": {
+      "files": 9,
+      "insertions": 659,
+      "deletions": 7
+    },
+    "wip": {
+      "files": 7,
+      "insertions": 641,
+      "deletions": 6
+    },
+    "relevant": "Nav full-output/N16 parse precedence; ADB handoff/mobile cleanup/USB power tooling; no additional hook bodies in start-end range",
+    "latest_compatibility": "NOT_VALIDATED; exact actual366 pin rejects otherHEADs; no adapter baseline advance",
+    "scope": "runtime/tool paths only, excluding AGENTS.md and2docs",
+    "whole_diff": {
+      "nav": {
+        "files": 12,
+        "insertions": 827,
+        "deletions": 7
+      },
+      "wip": {
+        "files": 10,
+        "insertions": 809,
+        "deletions": 6
+      }
+    }
+  },
+  "actual_preservation": {
+    "source_modified": false,
+    "recorder_installed": false,
+    "recorder_enabled": false,
+    "operating_writes": 0,
+    "live_state_reobserved": false,
+    "basis": "no device connection or device command thissession; M17 observations are historical"
+  },
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "m2_parked_usb_ready": "NO",
+  "m19_parked_preflight_ready": "YES_SEPARATE_APPROVAL_REQUIRED",
+  "NOT_RUN": [
+    "COMMA_REAL_READ_ONLY",
+    "COMMA_REAL_CAPTURE",
+    "ORT_REAL_MODEL",
+    "TRT_REAL",
+    "JETSON_REAL",
+    "USB_REAL",
+    "VEHICLE_PARKED",
+    "ROAD_TEST"
+  ],
+  "limitations": [
+    "existing Jetlink nonstate tuple only; internal-small-only path produces no complete capture",
+    "source model SHA/spec distinct from V3 replay target",
+    "SOF timestamps only; model timestamp=mainSOF",
+    "writer retains inherited CPU affinity under SCHED_OTHER/nice10; actualcomma overhead unmeasured",
+    "bounded singleton mapping/socket may remain; child can remain unreaped until explicit offhotclose or modeldexit",
+    "hashes are integrity, not authenticated camera provenance",
+    "synthetic hostbench does not prove production scheduling or numerical acceptance"
+  ],
+  "development_handoff_commit_resolution": "git log -1 --format=%H -- docs/CODEX_CONTINUATION.md",
+  "cpu_command": "PYTHONPATH=. PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 CARROT_NAV_REFERENCE_ROOT=.reference/m15-carrot-nav-366d6eae CARROT_NAV_CANDIDATE_ROOT=.candidate/m15-carrot-nav-complete-366d6eae CARROT_HOST_CANDIDATE_ROOT=.candidate/m1-carrot-20261023-frozen/candidate \"$PY\" -m pytest -q -p no:cacheprovider tests/test_v3_input_format.py tests/test_v3_input_recorder.py tests/test_v3_input_dataset.py tests/test_v3_input_hook.py tests/test_recorded_driving_gate.py tests/test_jetson_m16_acceptance.py tests/test_jetson_m16_analysis.py tests/test_jetson_m15_semantic.py tests/test_carrot_nav_adapter.py tests/test_carrot_nav_wire.py tests/test_carrot_nav_loopback.py"
+}

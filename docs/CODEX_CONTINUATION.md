@@ -1,5 +1,136 @@
 # Codex continuation — 2026-10-23
 
+## Latest checkpoint: M1.8 recorder offline PASS; actual capture not installed
+
+Read `docs/M18_V3_INPUT_RECORDER_DESIGN_20261023.md`,
+`artifacts/m18_v3_input_recorder_validation_20261023.json` and
+`docs/M19_COMMA_CAPTURE_PLAN_20261023.md` first.
+**Recorder candidate PASS / default OFF / M19 separately approved parked preflight
+ready YES. Numerical parity remains PARITY_UNDETERMINED; M2 parked USB NO.**
+
+### Date, commits and files
+
+2026-10-23, required feature branch only. Started clean local/remote
+**aa30f9ea70a3e62538bcbc0a7d8c083f1dbfad52**. Code/test/patch milestone
+**920a3f8fe7e5324466af9990dd93d2ed4fc10017**. The handoff/evidence commit resolves with
+`git log -1 --format=%H -- docs/CODEX_CONTINUATION.md`; current development HEAD
+with `git rev-parse HEAD`. This avoids embedding a commit's own self-referential SHA.
+
+Added `recording/{__init__,format,recorder,dataset,hook}.py`,
+`adapters/carrot/recorder.py`, `tools/v3_input_dataset.py`,
+`tools/benchmark_v3_input_recorder.py`, four `tests/test_v3_input_*.py`,
+`patches/carrot-nav-v3-input-recorder.patch`, M18 design+JSON evidence, M19 plan,
+execution plan; updated README/continuation, ignore rule and recorder-only LF
+attributes for reproducible source hashes. Existing M15 adapter/patch, M16/M17
+numerical/provenance tools and actual366 runtime remain frozen.
+
+### What was verified
+
+- Exact logical uint8 new_img[2,6,128,256] and FP32 desire8, traffic1x2, action1x2,
+  copied from existing actual366 Warp result + same-frame packed scalar views
+  immediately before original Client.infer. No rewarp/selection/join activation.
+  This observes existing V2/Nav compatible nonstate inputs, not V3 execution.
+  Internal-small-only fallback does not expose the tuple and cannot complete a
+  capture; M19 must not force external inference to bypass this limitation.
+- Only one existing target file receives a conditional startup footer; five new
+  package files. OFF makes no new import/process/queue/file/copy and preserves
+  original AST/compiled hot methods in tested source. Runtime source SHA/spec
+  must match a boot-bound one-shot expiring offroad-arm ticket. No ticket armed.
+- Enabled observer uses four preallocated memfd slots (1577728bytes incl control),
+  nonblocking credit socket, isolated exec writer. First overflow invalidates only
+  recording. No hash/finite scan/JSON/file operations/writer wait in model thread.
+  Child drops realtime policy before site/NumPy import, nice10/threadcaps1; CPU
+  affinity is inherited. Bounded singleton mapping/socket and possibly exited
+  child persist until off-hot close/modeld exit; M19 must measure lifecycle.
+- Fixed binary4096header +393408/record,512binary201428992bytes, default256/hard1024.
+  Logical payload393264/frame. Scalar bits/readonly source preserved; no state
+  capture. Complete marker only after durable validated expected frames+hashes.
+  Reader rejects incomplete/corrupt/extra/private metadata and unsafe files. ORT
+  feeds are four inputs only; TRT fill reuses StatefulState.step_into with exact
+  M1 physical contract and leaves recurrent states untouched.
+- Model timestamp=mainSOF; source SOFs/IDs, monotonic times, roles, actual float32
+  transforms and resets are stored. No EOF/guessed physical stream label/GPS/route/
+  raw camera/cabin/fullrlog. Preprocessed visual data is still private.
+- Disposable forward/reverse patch and all before/after hashes PASS. Patch SHA
+  **3a3e19430ab667d204f22fd1e40438a85e1ade1dbab2e6f9dd6e3dd32de4c1ee**.
+  M1 original ONNX/plan identities stay404a18cf…/8f831b5a… DO_NOT_INSTALL; no load,
+  rebuild, copy, cache publication, device/USB/service/Params/vehicle operation.
+
+### Executed tests, PASS/FAIL/SKIP/BLOCKED
+
+Fresh WSL CPU **PASS218 / FAIL0 / SKIP0**, new131+frozen87 (not repeated runs or
+old708). New breakdown format8, recorder20, reader74, hook29. Actual366 method
+bodies plus real private writer subprocess/strict reader run under CPU_FAKE/
+FIXTURE boundary substitutions only. All failure-injection/off/bytes/privacy/
+512simulation/collision/rollback gates PASS. Independent review final131PASS;
+its realtime-priority/FIFO-open/source-digest findings fixed and retested.
+
+Exact final command is stored in the M18 JSON `cpu_command` and M18 doc. It sets
+PYTHONPATH, PYTHONDONTWRITEBYTECODE and the three CARROT_*_ROOT values before
+pytest's explicit11test-file list. Existing interpreter:
+`/home/cyberpilot/.venvs/cinque-v3-stage3/bin/python` under WSL Ubuntu24.04.
+Other executed commands:
+
+```sh
+"$PY" -m tools.benchmark_v3_input_recorder --output .reports/m18-20261023/host-benchmark-final.json
+"$PY" -m adapters.carrot.recorder .reference/m15-carrot-nav-366d6eae .candidate/m18-recorder-366d6eae
+```
+
+Benchmark **CPU_HOST_BENCH**, WSL x86_64 Python3.12.3 NumPy2.5.4,512frames20Hz,
+queue highwater1/4. Whole observer p50/p95/p99=146.792/197.011/242.069µs;
+copy p99=108.648µs, send p99=50.372µs; elapsed26.416s includesfinalization.
+Depth4/8/16 unpaced throughput154.615/115.477/131.826MiB/s (one host run),
+writer sampledRSS35304KiB. Parent peak includes reader201MB mapping. These are
+not actual comma RT or end-to-end performance. All datasets temporary fixtures.
+
+Initial smoke command omitted3 required envroots and had18setupFAIL/187PASS;
+corrected final command PASS218. Bare whole-repo pytest collection is BLOCKED by
+legacy test_backport.py import-time sys.exit; no full-suite PASS asserted.
+COMMA_REAL_READ_ONLY/CAPTURE, ORT_REAL_MODEL, TRT_REAL, JETSON_REAL, USB_REAL,
+VEHICLE_PARKED and ROAD_TEST **NOT_RUN**. Actual stationary overhead/lifecycle,
+source path availability and representative acquisition remain BLOCKED_PENDING_M19.
+Representative numerical acceptance/tolerances remain BLOCKED; M2 NO.
+
+### Rolling source observations and preservation
+
+| Source | Start | End |
+|---|---|---|
+| latest carrot-nav | 3da803836786acdd9f6699ce75ef1134d1aabc6e | 810e14aaf51176f1a50a113939dc2e70907b394b |
+| latest carrot-wip | 3fdf82b268d69db31c1bf6d4137198d65cd548fe | dfab65d03fcd7100f572fe9e6908f4c6d1e988f6 |
+| carrot-jetson main | d0dc96fa32410403dfb2fefff3e2909c11ec109b | same |
+| zoompilot main | d24328d849b0e5154b55f149dc18c5dfe8bd79cc | same |
+| external review | a890f6df1bd3eb0478754c68d8b5f92f15e8b722 | same |
+
+End drift fetched/diffed in reference Git objects without checkout switch. Runtime/tool
+scope excludes AGENTS.md and two docs: Nav9files+659/-7 (whole12files+827/-7)
+adds full-output precedence when N16prefix countcollides; ADB handoff,
+mobile cleanup race, USB power/setup tests. WIP7files+641/-6 (whole10files+809/-6) shares tooling drift.
+No additional modeld/Warp/inputs/camera sync hook diff in this start-end range;
+earlier Nav shared-input changes still differ from actual366. Latest Nav/WIP
+recorder compatibility NOT_VALIDATED; strict actual366 HEAD pin rejects them.
+No full rolling adapter baseline advance or new Nav/shared-memory backport.
+
+Actual-device preservation is **by scope, no device connection/command**; live
+HEAD/flags/process/hash state not freshly re-observed. Prior M17 actual366 and
+operating route/runtime checks are historical, not newM18PASS evidence. Frozen
+M15 seven exact source hashes and selected prior numerical/spec/patch bytes
+match; protected main2519ad0… and old feature26c9c06… observed unchanged.
+Final Git clean/normal same-feature push/remote equality must be checked after
+this handoff commit; no force/reset/rebase or other-branch change is authorized.
+
+### Next action and M19 boundary
+
+Ready for **separately approved M19 parked preflight: YES**; no actual install/
+restart/activation/capture approval inferred from offline completion. First actual
+comma command pair is only `cat /data/params/d/IsOffroad` and
+`cat /data/params/d/IsOnroad`; require1/0, then source/root/hash/user-tree/process/
+storage preflight using M19 plan. Existing path may yield0frames while parked;
+do not alter join/control/USB/model predicates to make it work. Need stationary
+OFF+10frame checks and explicit road acquisition approval before256/512recording.
+No USB inference/plan installation or M2 starts automatically.
+
+---
+
 ## Latest checkpoint: M1.7 actual recordings audited; source pixels absent; M2 NO
 
 Read `docs/M17_RECORDED_DRIVING_PARITY_20261023.md` and
