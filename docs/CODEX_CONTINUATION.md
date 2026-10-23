@@ -1,5 +1,170 @@
 # Codex continuation — 2026-10-23
 
+## Latest checkpoint: M1.6 historical512 measured; numerical/resource hold; M2 NO
+
+Read this section first, then `docs/M16_NUMERICAL_ACCEPTANCE_20261023.md` and
+`artifacts/m16_numerical_acceptance_20261023.json`, its worst-case/turnover
+artifacts, and the unchanged M1/M15/M2 reports below. **DO_NOT_INSTALL** remains.
+The frozen Nav adapter was not modified. No USB/comma inference or vehicle work ran.
+
+### Decision and exact anomalies
+
+- **PARITY_UNDETERMINED; Ready for M2 parked USB: NO.** No representative
+  recorded model inputs or approved physical/behavioral parity budgets exist.
+  Historical synthetic512 reaches full queue turnover, but the separately
+  bounded TRT sequence cannot load under present protected-service memory
+  conditions using the only authorized preparation. Do not force PASS or FAIL.
+- Historical independent frame45 plan **POSITION[0]/x**, direct single mode,
+  trajectory node32 at actual10s: ORT−377.25m, TRT−373m, signed/absolute error4.25m,
+  relative0.0112657389. This is the far end of the actual nonlinear33-point
+  horizon under OOD random noise; it is not a current-position error. All33
+  nodes can influence MPC. No legacy MDN selection applies to this V3 layout.
+- Frame46 lead **direct head0/X**, trajectory node5/time10s, probability1.0
+  in both runtimes: ORT−260.5m, TRT−256.5m, error4m. This is not a low-probability
+  alternative; all three direct heads are published. ORT/TRT x std5.337752819/
+  5.583001614m is uncertainty, not a parity tolerance.
+- Frame14 desire prediction slot0: ORT none0.4479192197 versus turnRight
+  0.4403294027, margin0.0075898170; TRT turnRight0.4468784928 versus none
+  0.4414565563, margin0.0054219365. **NEAR_TIE_FLIP** describes those observed
+  margins, not a new numerical cutoff. The same flip remains teacher-forced.
+  All512 prediction flips occur at14/252/271/311/439 in both branches;
+  desire_state argmax never differs. Frame14 input/current desire is keepRight;
+  prediction argmax is not the live control desire. No full control behavior
+  equivalence is claimed. All logits/probabilities/rankings/neighbors are saved
+  in the small public worst-case artifact.
+
+### Actual measurements and resource boundary
+
+- **ORT_REAL_MODEL / TRT_REAL / JETSON_REAL / SYNTHETIC_INPUT**: historical512
+  paired frames, **1024 actual engine executions** (512 independent and512
+  ORT-state teacher-forced). Contract/shape/dtype/finite gates PASS;512 matched
+  nonstate digests and512 exact teacher-state input proofs. Guardian PASS,
+  worker exit3 means measurement-only/DO_NOT_INSTALL, not a numerical approval.
+  Worker322.0934249s, supervisor349.46613s; these diagnostic timings do not
+  establish USB or end-to-end20Hz performance.
+- The original ONNX404a18cf.../766354845bytes and M1 plan
+  **8f831b5af400a10aa35128ceeceac74595df1363bdcd6fd230957415f7e540aa** /
+  **768580676bytes** were rehashed unchanged. The plan remains solely at
+  `/run/carrot-data/jetson-v3-m1-20261023/build/cinque-v3.plan` and was not rebuilt
+  or published. Parser/constants stay pinned to actual Nav366d6eae. All three
+  optimization flags stayed0. M1 reset/reload evidence is preserved, not rerun.
+- Historical and bounded ORT512 exports both completed, independently seeded
+  from zero state. Compact feature references prove byte identity against every
+  full ORT state before reconstruction is accepted. Historical manifest
+  c760f0f7b5292ee11e204ed63d1bdc8db59f9c41ff5079442df8e54da934c49b;
+  bounded d80698f538710c7e75c43d7b715397016047973b15ff15dd9e577696d590a3da.
+  Historical first101 full404 arrays match M15 ORT bytes; TRT max/MAE/p99 match
+  M15 first101 exactly. Two float64 RMSE reduction deltas up to1.39e-17 remain
+  explicit; original M15 TRT arrays were not stored for byte comparison.
+- D1 retains old action_t=frame/20 (last25.55s), explicitly OOD. D2 changes
+  only action_t to the actual pinned verifier formula with analytic envelopes
+  [.15,.35]/[.25,.45]s. Neither is representative driving; never pool them.
+- **Bounded TRT frames0: BLOCKED_RESOURCE_OUT_OF_MEMORY.** Exact-plan deserialize
+  failed requesting735338624bytes, guardian PASS/workerexit1, before frame0.
+  Both runs used only the unchanged reviewed M15 cache preparation for the same
+  exact103 old private files. Historical MemFree100495360→2591494144bytes;
+  bounded108318720→1809616896bytes. No additional file advice, new workaround,
+  global cache drop, swap/workspace/clock/package change, service termination,
+  retry or rebuild followed. Private raw error/memory logs remain ignored;
+  public evidence contains structured error metrics and a log-excerpt hash.
+
+### Recurrence, causality and diagnostic limits
+
+- 128 stored feature slots fully turn over after frame127. Independent frame511
+  state max0.2578125, MAE0.009161624144, RMSE0.01261515248. Teacher state max
+  0.171875, MAE0.00007050066915, RMSE0.001108290825. Image/desire state errors0.
+  Rolling128 hidden-error moments reconstruct all measured independent states;
+  teacher state contains127 exact ORT history rows plus the current differing
+  hidden row. Current hidden and desire_pred outputs are **byte-identical
+  between independent and teacher branches for all512 frames**. This measures
+  stored-history accumulation; it does not prove general dynamic amplification.
+- Post128 independent state MAE lies0.009117696557..0.009183172411, slope
+  5.516259918e-08/frame; RMSE slope8.756263256e-08/frame. MAE rises/falls198/185
+  steps. The initial fill ramp no longer appears, but small positive slopes and
+  missing approved stability criteria require **INCONCLUSIVE**, not automatic
+  plateau/stability approval. Full checkpoints/rolling128 statistics are public.
+- Teacher forcing does not uniformly improve outputs: raw plan maximum4.5
+  versus independent4.25; frame45 plan error2.75 versus4.25, frame46 lead error
+  4.25 versus4.0. All5 desire flips persist. Direct execution differences remain;
+  no simplistic additive attribution or categorical behavior equivalence claimed.
+- Actual pinned Zoompilot heuristic: **independent FAIL** at planframe26
+  correlation0.9988452612<0.999; teacher PASS. Pooled correlations pass. This is
+  diagnostic only and cannot approve the application. Official comma replay
+  **NOT_RUN**: no aligned recorded events/camera/calibration provenance; its
+  selected-field tolerance excludes substantial trajectory/lead data.
+- **BLOCKED_REPRESENTATIVE_INPUT**:0 sequences, RECORDED_INPUT NONE. Scoped only
+  this and the previously authorized project; no broad user search/download.
+
+### Sources, files, tests and publication
+
+Start local/remote was clean b6b64012e6441700137517f9d38bb701bddebf81.
+New measurement commit **95150539291aa483f563056bc6fa776e684751d4**, offline analysis
+e5c8a4a731f61c74d43461f554dce44668149cce, matching verifier-spec isolation fix
+**05d0e06f5c562ed7fb7092abb30c9955f453fb16**. Executed new measurement tool SHA
+29a8bacc9b04df83925a51fc6ff6588c804d66867888706b157c87d3f32a09aa.
+The evidence/handoff publication commit contains this section; resolve its full
+SHA with `git log -1 --format=%H -- docs/CODEX_CONTINUATION.md` and current
+development HEAD with `git rev-parse HEAD`, rather than introducing self-hash
+recursion. Push only the same feature branch; main/old feature remain unchanged.
+
+| Source | Session start | End re-query |
+|---|---|---|
+| Actual comma carrot-nav | 366d6eae9aa9962104391e1d997fe956dea8f64d | same, offroad1/onroad0 |
+| Upstream carrot-nav | 366d6eae9aa9962104391e1d997fe956dea8f64d | 3da803836786acdd9f6699ce75ef1134d1aabc6e |
+| carrot-wip | 813369b0c53bb9c997b7ffbe17fca90222a755b8 | 3fdf82b268d69db31c1bf6d4137198d65cd548fe |
+| carrot-jetson main | d0dc96fa32410403dfb2fefff3e2909c11ec109b | same |
+| zoompilot/jetlink main | d24328d849b0e5154b55f149dc18c5dfe8bd79cc | same |
+| external review | a890f6df1bd3eb0478754c68d8b5f92f15e8b722 | same |
+
+Relevant end diff reviewed: Nav11 integration files add ram_input_v1 shared
+memfd/SCM_RIGHTS slots, nonce/generation/deadline ownership and Warp output_buffer
+via daemon/link/model/shared_input plus tests/mobile helper. WIP2 mobile DHCP
+helper/test files change owned dnsmasq shutdown2→5s, not inference timeout/spec/
+TRT/parser. No source adoption. Numerical parser/constants bytes unchanged.
+**Latest Nav adapter compatibility NOT_REVALIDATED**; frozen708 evidence applies
+only to actual366. Do not silently move the numerical or adapter baseline.
+
+New files: tools/jetson_m16_acceptance.py, tools/jetson_m16_analysis.py, their two
+test modules, this M16 report and3 m16 artifacts, execution plan. README/handoff
+updated. No old adapter/production/M1/M15 source or patch changed.
+
+Fresh targeted CPU result **PASS75 / FAIL0 / SKIP0**:24new +25M15 semantic +26
+frozen Nav adapter/wire/loopback. Prior708 and repeated reviewer executions are
+not added. Existing WSL interpreter, all3 candidate/reference environment roots:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 "$PY" -m pytest -q -p no:cacheprovider tests/test_jetson_m16_acceptance.py tests/test_jetson_m16_analysis.py tests/test_jetson_m15_semantic.py tests/test_carrot_nav_adapter.py tests/test_carrot_nav_wire.py tests/test_carrot_nav_loopback.py
+```
+
+See M16 report for actual export/measure/offline commands and variable bindings.
+No dependency installation. Initial missing pytest/env, TDD RED, verifier-spec
+import mismatch and slow partial staging were corrected only within the new
+harness/private copies; all private evidence was retained. Independent final
+review checked stored hashes/metrics/interpretation/preservation and required
+removing raw OOM console text from the public artifact; only structured metrics
+and private-log digest are published.
+
+### Preservation and next action
+
+**Operating preservation PASS.** Same before/after canonical digest
+ca2ac82d26a0eed7bc622f9887bfef9027216ed86c0b71a7382bf5bc6a50a6a1 as M1/M15:
+8 operating cache files including V2/Nav models/plans/sidecars/timing/last-loaded,
+current target, five release membership, unit/ExecStart/dependency metadata.
+This is not a full release-tree hash attestation. Exact source/plan/dev manifests
+also rehashed unchanged. Zero owned workers; temporary monitor/master/SSH agent/
+single-use relay closed. No operating modification, inference activation, or
+actual comma checkout change. USB_REAL/COMMA_REAL inference/VEHICLE_PARKED/
+ROAD_TEST all **NOT_RUN**.
+
+Next precise step: review already-collected read-only memory/cache-residency
+evidence and define a separately approved bounded-run recovery; this session
+authorizes no new memory workaround. On a freshly confirmed Jetson shell the
+first read-only command is **`cat /proc/meminfo /proc/buddyinfo`**, followed by
+the existing preservation/offroad checks. Do not rerun a GPU job blindly.
+Then obtain approved representative exact model-input tensors with privacy-safe
+provenance and application budgets. M2 remains blocked; no USB activation or
+optimization A/B. Preserve the exact plan and frozen actual366 adapter.
+
 ## Latest checkpoint: M1.5 software bridge PASS; numerical hold; M2 NOT authorized
 
 Read in order: this section, `docs/M15_ORT_TRT_PARITY_20261023.md`,

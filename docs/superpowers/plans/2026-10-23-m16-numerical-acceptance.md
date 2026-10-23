@@ -43,27 +43,28 @@ Files: new tool and `tests/test_jetson_m16_acceptance.py`.
 Interfaces: `export-ort --sequence historical|bounded --frames 512`; `measure-trt` consumes exact compact references, existing plan/base evidence/parser and a new output directory.
 
 - [x] Revalidate actual comma HEAD/offroad flags and complete Jetson preservation/source/plan/parser identities before any CUDA. Exact M1 inventory digest and plan/source pins retained,9.068GB disk available; new private m16 subtree only. No scans.
-- [ ] Export both PC ORT sequences; prove feature reconstruction against real outputs, exact input digests and manifest shape/hash/dtype/finite gates. Stage only reviewed code and references in new private paths.
-- [ ] Run512 independent+512 teacher-forced TRT executions per sequence, with unchanged BASE session and live guardian. Strict complete-state/finite checks, no hidden warmup, no result mixing. Retain outputs privately; copy only small result archives to PC.
-- [ ] If a real constraint blocks GPU, retain all independently possible source/localization/CPU analysis and report precise BLOCKED evidence; never imply hardware PASS.
+- [x] Export both PC ORT sequences; prove feature reconstruction against real outputs, exact input digests and manifest shape/hash/dtype/finite gates. Historical/bounded512 complete; lossless compressed staging into fresh private paths verified. Partial earlier transfer preserved unused.
+- [x] Execute guarded attempts separately: historical512 independent+512 teacher-forced TRT executions complete, all strict gates PASS. Bounded exact-plan deserialize OOM before frame0; zero bounded inference frames. Private results retained, all512 historical result archive hashes checked. The intended second1024 executions remain BLOCKED, not completed.
+- [x] Resource constraint recorded without new workaround or retry: requested735338624bytes allocation after exact unchanged103-file preparation. Independent source/localization/CPU work completed. No numerical FAIL fabricated from OOM.
 
 ## Task3 — offline semantic/causal analysis
 
-- [ ] Localize historical frame45 plan and frame46 lead maxima to exact indices/time/value/scale/adjacent profile and actual direct-mode/head semantics; verify continuity with prior101 metrics.
-- [ ] Analyze frame14 desire probabilities/logits/all rankings and neighboring10..18, plus frame14..20 plan/lead/action/desire_state/hidden differences. Base flip classification on actual margins and observed perturbation, with no acceptance cutoff.
-- [ ] Produce per-sequence independent/teacher max/MAE/RMSE/p99 tables, actual-time structural near/mid/far plan regions, selected/direct lead and probability context.
-- [ ] Analyze all requested checkpoints, hidden vs128-slot history, post-turnover slope/rolling max/p95/quarter changes and honest descriptive classification. Difference-of-differences is diagnostic, not causal linear decomposition.
+- [x] Localize historical frame45 plan/node32@10s and frame46 leadhead0/X/node5@10s, exact values/profiles and direct semantics. First101 ORT404arrays byte-match M15; TRT max/MAE/p99 match, two RMSE last-bit reduction deltas disclosed.
+- [x] Frame14 logits/probabilities/all rankings, neighbors10..18 and outputs14..20 analyzed. NEAR_TIE_FLIP based on actual0.007589817/0.005421937 margins, no universal cutoff; all5 prediction flips persist teacher-forced, current desire differs conceptually.
+- [x] Historical independent/teacher complete raw/parsed/physical-region tables and actual head probability context published. Bounded ORT-only action sensitivity separated; bounded TRT tables NOT_RUN/resource blocked.
+- [x] All checkpoints and post-turnover statistics recorded. Rolling128 moments account for stored error, I/T hidden and desire_pred byte-identical all512. Small positive slopes/no approved stability criterion yield INCONCLUSIVE; no finite→stable or additive causal claim.
 
 ## Task4 — representative sources and external diagnostics
 
-- [ ] Scoped inventory only current and previously authorized project assets; use recorded inputs only with exact model-input/preprocessing provenance. Otherwise BLOCKED_REPRESENTATIVE_INPUT.
-- [ ] Run actual pinned Zoompilot array diagnostic functions on the same complete paired driving outputs, recording correlations/tiny/quiet/small-value details separately from application approval.
-- [ ] Run official replay only with valid aligned schema logs; otherwise NOT_RUN with source-backed exclusions/applicability. Do not promote scalar tests to model replay.
+- [x] Authorized project inventory found no recorded input/reconstructible replay. BLOCKED_REPRESENTATIVE_INPUT,0sequences; no broad search/download or synthetic substitute.
+- [x] Actual hash-pinned Zoompilot functions plus matching pure spec loaded under restored namespace: historical independent FAIL(planframe26 corr0.9988452612), teacher PASS. Quiet/small/columns/per-frame metrics retained separately from application approval.
+- [x] Official replay NOT_RUN: no aligned recorded schema messages/camera/calibration provenance; selected-field tolerance excludes critical driving fields. No fake replay PASS.
 
 ## Task5 — decision, preservation and publication
 
-- [ ] Recheck complete operating preservation and actual comma state, close only own workers/access/monitor. Query upstreams again; keep numerical pins fixed.
-- [ ] Write docs/M16_NUMERICAL_ACCEPTANCE_20261023.md and sanitized m16 artifacts with worst cases/turnover/teacher/reference/diagnostics/decision/blockers. Update continuation.
-- [ ] Run new CPU suite and frozen adapter smoke; verify hashes/manifest/privacy/diff, obtain independent final review, commit/push only feature and verify clean remote equality/protected refs.
+- [x] Before/after preservation digest identical to M1/M15; source/plan/manifests unchanged; comma366/offroad1/onroad0,0ownedworkers, access/monitor closed. Five upstreams re-queried twice at end, moved Nav/WIP relevant diffs analyzed without adoption. Numerical pins fixed.
+- [x] M16 report and3 sanitized artifacts published locally; continuation/README updated. Independent review required raw OOM console removal; structured failure+private excerpt hash retained and cleared. Decision PARITY_UNDETERMINED/M2NO.
+- [x] Fresh targeted CPU75PASS/0FAIL/0SKIP (24new+25M15+26frozenNav); no prior708/reviewer repeats added. Independent final numerical/code/evidence review cleared. Frozen old hashes unchanged.
+- [ ] Complete final metadata/privacy/diff check, commit/push only feature, verify clean remote equality and protected refs. Publication verification is recorded in the containing handoff commit and private execution ledger; no device work remains authorized here.
 
 Execution ruling: user supplied the detailed ordered implementation and authorized standalone extended GPU measurement and same-branch publication. Earlier no-intermediate-question preference persists; no additional design/execution permission question is required. The existing requested feature checkout plus exclusive device/output copies provide isolation. Record limitations instead of inventing representative inputs or numerical approval.

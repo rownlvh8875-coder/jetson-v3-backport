@@ -24,6 +24,12 @@ V3 빌드와 BASE 10+1000프레임/reset/reload 검사를 통과했다. ORT↔TR
 별도 개발 사본에서 P2/V2/Nav 회귀와 P3/fallback CPU 검증을 통과했다.
 [M2 정차 USB 계획](docs/M2_PARKED_USB_PLAN_20261023.md)은 실행하지 않았다.
 
+2026-10-23 [M1.6 정밀 분석](docs/M16_NUMERICAL_ACCEPTANCE_20261023.md): 기존 plan 그대로
+historical512프레임의 독립 recurrence와 teacher forcing을 측정했다. 최대 plan/lead 차이는
+각각 10초 horizon의 x이고, desire 예측 flip은 작은 top2 margin에서 재현된다.
+128-slot turnover는 도달했으나 대표 기록 입력·승인 기준은 없으며 bounded TRT는
+deserialize OOM으로 0프레임이다. **PARITY_UNDETERMINED / M2 NO**, 운영본·adapter는 보존했다.
+
 2026-10-20 [외부 Jetson 최적화 검토](docs/JETSON_REVIEW_A890_ANALYSIS.md):
 DeviceState와 InputFastpath는 기존 검증을 유지한 기본 OFF 실험 후보다.
 AIO는 운영 transport에 연결하지 않았으며, 실장 순서는 M0 → 기본 V3 → USB →
