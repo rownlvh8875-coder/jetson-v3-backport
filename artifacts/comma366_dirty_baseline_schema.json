@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:jetson-v3-backport:comma366-dirty-baseline:1",
+  "title": "Private exact baseline policy envelope; concrete paths never belong in Git",
+  "type": "object",
+  "required": ["schema", "snapshot", "classifications", "provenance", "patch", "isolation"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": 1},
+    "snapshot": {
+      "type": "object",
+      "required": ["branch", "head", "flags", "tracked_status", "entries", "inventory_digest", "recursive_regular_files", "recursive_bytes", "source_hashes", "model_hashes", "routes_inventory", "proc", "boot_id", "params_binding_digest"],
+      "properties": {
+        "branch": {"const": "carrot-nav"},
+        "head": {"const": "366d6eae9aa9962104391e1d997fe956dea8f64d"},
+        "tracked_status": {"const": []},
+        "inventory_digest": {"$ref": "#/$defs/sha256"},
+        "entries": {"type": "array", "minItems": 48, "maxItems": 48},
+        "source_hashes": {"type": "object", "additionalProperties": {"$ref": "#/$defs/sha256"}},
+        "model_hashes": {"type": "object", "additionalProperties": {"$ref": "#/$defs/sha256"}}
+      }
+    },
+    "classifications": {"type": "object", "minProperties": 48, "maxProperties": 48},
+    "provenance": {"type": "object", "required": ["U32", "U46"]},
+    "patch": {"type": "object", "required": ["sha256", "files"], "properties": {"sha256": {"const": "3a3e19430ab667d204f22fd1e40438a85e1ade1dbab2e6f9dd6e3dd32de4c1ee"}, "files": {"type": "array", "minItems": 6, "maxItems": 6}}},
+    "isolation": {"type": "object", "required": ["status", "baseline_digest", "patch_sha256", "evidence_sha256", "package_shadow", "dynamic_import_risk"]}
+  },
+  "$defs": {"sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+  "$comment": "Schema shape is documentation. Runtime verification additionally recomputes node/tree commitments, checks identities and reviewed provenance. No schema validation alone grants install approval. Private expected-manifest byte digest must be pinned independently."
+}
