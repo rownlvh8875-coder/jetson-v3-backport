@@ -170,13 +170,13 @@
       "tests": 99
     }
   ],
-  "finished_utc": "2026-10-23T08:49:02.045685+00:00",
+  "finished_utc": "2026-10-23T10:11:30.623625+00:00",
   "hardware_validation": {
     "reason": "CPU software evidence only; device validation remains separate",
     "required": false,
     "status": "SKIP"
   },
-  "implementation_sha": "254cd09106d6d01bc40010437416d227c389fd2b",
+  "implementation_sha": "c64fdd3057b8d403975922a6fd3d4e776feeb701",
   "implementation_source_sha256": {
     ".github/workflows/carrot-wip-compat.yml": "345d64a60a691c90bc1db438507078f78f0b7a6c855620456fb8fa6b6c56f672",
     "adapters/__init__.py": "1a15f4637d7201b55c38d5022c4271970facc3c17f0140ece6c37f9e1a5e8f4d",
@@ -214,6 +214,9 @@
     "tests/test_jetson_aio_candidate.py": "8853a67030a3fbba1a6ce7f3f099ed370d0d485dbc8ec6e0b923c617822f5b4b",
     "tests/test_jetson_device_state.py": "a256a0446edfcbf3e97449d6dcf411276adb9ba077d13e009864593261659d70",
     "tests/test_jetson_input_fastpath.py": "69b5a47c3bf9a784cf235cb0643f204d7dd2022069decf47bb0d065e11259049",
+    "tests/test_jetson_m1.py": "ddc69a2eaf45996588f424c6e3a23706262b34a4afcb7807a42b5ff179d302ac",
+    "tests/test_jetson_m1_parity.py": "169ffef3000d84f5d36f66323fb23b7fc41450a4e9a3146617a28fe5ae7ff002",
+    "tests/test_jetson_m1_recurrent.py": "a6b577f63aa62689b35f64ab6950f3821bd3e2060a794e4e49866b466bac3f49",
     "tests/test_jetson_optimization_integration.py": "368be773fc5a1d255814368f9b06565bb18b1e5c93e2d8321ed6625d88d49af0",
     "tests/test_latest_carrot_compat.py": "ad7e4f925293a17b133606ebddda3b3098c6bb8e1b16b1de23e9df80ae20ebfb",
     "tests/test_multimodel_policy.py": "e49fd097b188350daa862b70b230798b8731378fe948f1bef20ed9df56a78e41",

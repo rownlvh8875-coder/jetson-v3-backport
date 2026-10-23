@@ -1,6 +1,159 @@
 # Codex continuation — 2026-10-23
 
-## Latest checkpoint: home devices, authenticated read-only M0
+## Latest checkpoint: M0.5 reconciled; actual isolated M1 build and BASE recurrence
+
+Read these first: `docs/M05_CARROT_NAV_VS_WIP_20261023.md`,
+`docs/M1_JETSON_V3_TRT10_BUILD_20261023.md`, and sanitized
+`artifacts/m1_jetson_v3_20261023.json`. Preserve the older M0 and optimization
+history below. The user explicitly authorized this isolated conditional M1
+build; operating activation, USB/comma inference and vehicle work were excluded.
+
+- **M0.5 PASS_RECOMMEND_A:** retain actual carrot-nav. Nav already has generic
+  P3 client/dynamic IPC/approval/fallback and its own five-state-pair Nav model.
+  A whole WIP switch changes239 files and removes Nav-specific behavior.
+  The future small Nav port needs dtype-preserving ModelSpec serialization and
+  explicit managed Jetson dispatch before its legacy exact Nav pin. No comma
+  source change was made; full WIP server adapter correctly refuses Nav drift.
+- **M1 TRT_BUILD_PASS:** actual Orin-sm87/TRT10.3.0 built exact Cinque V3 once.
+  **BASE recurrent TRT_REAL_PASS:**10 smoke+1000 stress+2 reset/reload replay
+  executions; every output exact physical shape/dtype/finite. Both replay tests
+  exact. This is JETSON_REAL/TRT_REAL/SYNTHETIC_INPUT, not camera/vehicle input.
+- **ORT↔TRT MEASURED_NO_ACCEPTANCE_THRESHOLD:**5 independent recurrent frames,
+  actual original-model ORT1.31 CPU vs actual TRT. Outputs maximum absolute
+  error0.625, mean of frame means0.008650338405; feature state max0.1484375,
+  mean0.000197953225; image/desire state error0. Feature mean drift increases
+  across these5 frames. Measurement intentionally exits3; no approved numerical
+  tolerance exists, so no parity approval or deployment readiness claim.
+- **DO_NOT_INSTALL.** Engine/sidecar remain below the isolated development root.
+  USB/COMMA/VEHICLE/ROAD_TEST and optimization A/B NOT_RUN. Optional DeviceState,
+  InputFastpath and AIO flags all0; no CUDA graph. No operational server.py,
+  updater, service restart, model selection, Params/package/clock/remount change.
+
+### Fresh source and development checkpoints
+
+All five upstreams were queried at session start and after the GPU work;
+unchanged. Re-query on every subsequent session; these are not permanent pins.
+
+| Source | Full SHA |
+|---|---|
+| Actual comma carrot-nav / latest carrot-nav | `366d6eae9aa9962104391e1d997fe956dea8f64d` |
+| Latest carrot-wip | `813369b0c53bb9c997b7ffbe17fca90222a755b8` |
+| carrot-jetson main | `d0dc96fa32410403dfb2fefff3e2909c11ec109b` |
+| zoompilot/jetlink main | `d24328d849b0e5154b55f149dc18c5dfe8bd79cc` |
+| External review | `a890f6df1bd3eb0478754c68d8b5f92f15e8b722` |
+| Session-start actual local/remote feature HEAD | `5aa0bbac095686afd480627eddb627b1d011dc19` |
+| M0.5 analysis commit | `29e613f7af448348a9c10b6e3e542068a20a64dc` |
+| Build/recurrent code used on device | `e945e5665f8162910d5571231151607c64530764` |
+| Parity implementation / frozen rolling checkpoint | `c64fdd3057b8d403975922a6fd3d4e776feeb701` |
+
+Final evidence/continuation commits follow these checkpoints. Obtain the actual
+current containing HEAD with `git rev-parse HEAD` and
+`git log -1 --format=%H -- docs/CODEX_CONTINUATION.md`; the final response records
+the resulting remote HEAD. Only feature/jetlink-multimodel-carrot is the target.
+Main remains2519ad0bdbf6e796fa590063fc90d4d6461b6b8d; old feature remains
+26c9c06a5e51ff0e8d3a1e8575eece548e87f3b5.
+
+### Device artifacts, isolation and preservation
+
+Actual NVMe/L4T/TRT/CUDA baseline remains the authoritative M0 inventory below.
+Read-only permissions/mount/disk checks chose a NEW exclusive directory:
+`/run/carrot-data/jetson-v3-m1-20261023` (uid1000,0700). Existing NOPASSWD policy
+was verified; privileged use was limited to creating/chowning this new directory.
+No parent permission or mount changed. Minimum free-space gate6GiB passed;
+12,482,035,712 bytes before,10,123,317,248 after. HOME/tmp/CUDA/XDG caches and
+all new source/model/plan/report files are isolated there, bytecode disabled.
+
+- Original: `models/big_driving_supercombo_v3.onnx`,766354845 bytes,
+  SHA404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4.
+  Official HF source pinned to model repository commit
+  eed9e515dccd5aa9be969a2d6c57eb469174a97d; TLS/stream/full post-write hash PASS.
+- Patched: `build/cinque-v3-patched.onnx`,766352690 bytes,
+  SHA38f8664e65da3c8140674df0b56c8fc444be86ff41a1e54c13d9d9cc96273037.
+  Raw and physical graph contract PASS; only verified V3 image queue boundary
+  UINT8→FP16, full model identity and three state-pair gates retained.
+- Plan: `build/cinque-v3.plan`,768580676 bytes,
+  SHA8f831b5af400a10aa35128ceeceac74595df1363bdcd6fd230957415f7e540aa.
+  Bound sidecar `build/cinque-v3.json`; builder149.5s, worker162.975s;
+  workspace1536MiB, FP16, optimization3, no timing cache. The builder log contains
+  one recovered64,704,384-byte tactic-allocation OOM (one warning/two error
+  entries); TRT skipped it and produced a validated plan, exit0. No retry or
+  gate relaxation. Memory/swap and exact log identities are in the artifact.
+- Reports: `build/m1-build-result.json`, `build/guard-result.json`,
+  `results/base-10-1000/report.json`, `results/ort-trt-measurement-v1/report.json`,
+  plus per-frame timings, process logs, source/reference manifests. Keep them.
+  All53 original staged source hashes and7 parity/reference hashes verified
+  again afterward. Existing outputs deliberately refuse overwrite.
+- Stress GPU mean22.145ms; host roundtrip mean46.849/p99 47.107/max47.968ms.
+  Smoke host max93.131ms and2/10 above50ms were retained. These measured regions
+  exclude USB/camera/production scheduling and are not end-to-end20Hz approval.
+- Live read-only comma observations issued a30s remote monotonic lease, renewed
+  about3s, checked by1s own-worker supervisor and builder callbacks. Loss/unsafe
+  flags retire only this process group. No production provider was fabricated.
+- Before/after full hashes of8 operating cache files, service unit/ExecStart,
+  working directory, current link and membership of5 releases matched exactly.
+  V2 ONNX/plan, Nav ONNX/plan, sidecars, last-loaded record and timing cache
+  **UNCHANGED**. Dependency metadata also equal. No full source-tree attestation
+  of packaged releases is implied. Canonical inventory digest both times:
+  ca2ac82d26a0eed7bc622f9887bfef9027216ed86c0b71a7382bf5bc6a50a6a1.
+- Final comma read-only check: carrot-nav366d6eae, IsOffroad1/IsOnroad0 unchanged.
+  Params monitor, temporary SSH master/signing agent and single-use relay closed;
+  relay port closure and zero owned M1 workers confirmed. Connection/credential
+  details stay only in ignored `.reports/m05-m1-20261023`. No reusable unlocked
+  agent or live controller remains; re-establish access/observations next session.
+
+### Files, actual test commands and outcomes
+
+New tools: `tools/jetson_m1.py`, `tools/jetson_m1_recurrent.py`,
+`tools/jetson_m1_parity.py`; matching three tests. Reused current candidate
+builder/patcher, existing build_trt_v3 validation/frame generation and lightweight
+ONNX metadata. No model/link/parser/daemon rewrite or optimization integration.
+New docs/evidence: M05 report+`artifacts/m05_nav_wip_20261023.json`, M1 report+
+`artifacts/m1_jetson_v3_20261023.json`, execution plan. Updated rolling baseline
+and this continuation. No ONNX/plan/NPZ/timing cache/raw private logs in Git.
+
+Fresh commands (`PY`=existing WSL test interpreter):
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 "$PY" -m pytest -q -p no:cacheprovider tests/test_jetson_m1.py tests/test_jetson_m1_recurrent.py tests/test_jetson_m1_parity.py tests/test_v3_build_verify.py
+PYTHONDONTWRITEBYTECODE=1 "$PY" tools/check_latest_carrot_compat.py --work-dir .candidate/m1-carrot-20261023-frozen --report .reports/m05-m1-20261023/carrot-compat-frozen.json --update-baseline
+PYTHONDONTWRITEBYTECODE=1 "$PY" .reports/m05-m1-20261023/check_startup_regression.py
+```
+
+- PASS: focused126 (new85 +existing builder41); rolling288; startup/priority/
+  watchdog103. Distinct CPU cases **476**, FAIL0, SKIP0. Counts overlap as
+  described; independent reviews61+24 overlap and are not added. CPU_FAKE/FIXTURE.
+- PASS: actual GPU build,10+1000 BASE recurrence, reset/reload and preservation.
+  Full device argv and measured metrics are recorded in the M1 report.
+- MEASURED: actual five-frame ORT↔TRT; intentional exit3, not a numerical PASS.
+- BLOCKED: numerical acceptance until approved per-tensor/slice/drift criteria.
+- SKIP/NOT_RUN by scope: USB/COMMA/vehicle/road/end-to-end thermal/fallback/
+  optional optimization A/B. Prior M0 privileged setup/clock queries were not
+  rerun and are not silently promoted to PASS.
+- Diagnostics retained: first online attempt refused concurrent source drift,
+  no baseline advance; frozen rerun passed. First ORT invocation lacked candidate
+  PYTHONPATH; corrected environment succeeded. Historical bare pytest aggregator
+  aborts on test_backport.py top-level SystemExit; use explicit maintained suites.
+
+### Next work / first device action
+
+First device action remains authenticated read-only inventory: recheck branch,
+offroad flags, current/service/cache hashes and development marker/plan identity
+against this checkpoint. Do not rerun a builder into existing paths, activate
+USB or restart anything merely because a plan exists. `tools/jetson_runtime_inventory.py`
+or equivalent read-only commands remain the inventory entry point; keep raw
+identifiers out of Git and retain the M0 decision to omit nvidia_smi if avoiding
+GPU initialization. Re-query upstreams and analyze relevant drift first.
+
+Then establish reviewed numerical acceptance criteria and validate a minimal
+Nav-specific ModelSpec dtype/managed-selection adapter in a separate development
+copy with V2/Nav/P2/P3 regressions. A separately scoped M2 must validate parked
+USB/parser/local-small fallback and full latency/thermal behavior. Current plan
+stays **DO_NOT_INSTALL**. Order remains BASE → DeviceState → DeviceState+
+InputFastpath → only-if-needed AIO; vehicle behavior conclusions remain untested.
+
+---
+
+## Previous checkpoint: home devices, authenticated read-only M0
 
 Read `docs/M0_READ_ONLY_CHECKPOINT_20261023.md` and sanitized
 `artifacts/m0_20261023_summary.json` before continuing.

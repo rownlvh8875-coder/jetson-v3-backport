@@ -1,0 +1,926 @@
+{
+  "build": {
+    "build_exit_status": 0,
+    "builder_seconds": 149.5,
+    "elapsed_seconds": 162.97508509399995,
+    "engine": {
+      "nbytes": 768580676,
+      "sha256": "8f831b5af400a10aa35128ceeceac74595df1363bdcd6fd230957415f7e540aa"
+    },
+    "evidence": [
+      "TRT_REAL_PRECHECK",
+      "TRT_REAL",
+      "JETSON_REAL"
+    ],
+    "fp16": true,
+    "installation": "DO_NOT_INSTALL",
+    "memory_after": {
+      "MemAvailable": 3592892416,
+      "MemTotal": 7990013952,
+      "SwapFree": 2916278272,
+      "SwapTotal": 3995000832
+    },
+    "memory_before": {
+      "MemAvailable": 5438328832,
+      "MemTotal": 7990013952,
+      "SwapFree": 3995000832,
+      "SwapTotal": 3995000832
+    },
+    "optimization_level": 3,
+    "optional_optimizations": "OFF",
+    "patched": {
+      "nbytes": 766352690,
+      "sha256": "38f8664e65da3c8140674df0b56c8fc444be86ff41a1e54c13d9d9cc96273037"
+    },
+    "precheck": {
+      "compute_capability": [
+        8,
+        7
+      ],
+      "evidence": "TRT_REAL_PRECHECK",
+      "gpu": "Orin",
+      "parser_created": true,
+      "status": "PASS",
+      "tensorrt": "10.3.0"
+    },
+    "schema": 1,
+    "semantic_contract": "PASS: exact identity, names/shapes/dtypes/slices/checkpoint and3 state pairs",
+    "source": {
+      "nbytes": 766354845,
+      "sha256": "404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4"
+    },
+    "status": "TRT_BUILD_PASS",
+    "timing_cache": "NONE: cold build; operating timing cache never opened",
+    "trt_record_digest": "9102f1a74c2b046d09d55bbd28350e69b1c8ae0f86f32e1a13c08d4739e20ae4",
+    "workspace_bytes": 1610612736
+  },
+  "build_guard": {
+    "elapsed_seconds": 165.26970461200017,
+    "guardian": "PASS",
+    "kind": "build",
+    "operating_service_changed": false,
+    "worker_exit_status": 0
+  },
+  "builder_log": {
+    "errors": {
+      "[TRT] [E] Error Code: 9: Skipping tactic 0x0000000000000000 due to exception [region-alloc.cpp:allocate:60] 64704384-byte region '__mye116564-consts' allocation failed.": 1,
+      "[TRT] [E] [defaultAllocator.cpp::allocate::31] Error Code 1: Cuda Runtime (out of memory)": 1
+    },
+    "interpretation": "One recoverable allocation failure while selecting tactics; TRT skipped that tactic. Worker exit0, final validated plan and record produced; no retry or gate relaxation. Error entries are retained, not described as zero errors.",
+    "nbytes": 4137298,
+    "sha256": "a7936539d09039d7ad063ec3204c8b41e50babfa15783a40d90801915f813b99",
+    "warnings": {
+      "[TRT] [W] Requested amount of GPU memory (64704384 bytes) could not be allocated. There may not be enough free memory for allocation to succeed.": 1
+    }
+  },
+  "classification": [
+    "TRT_REAL_PRECHECK",
+    "TRT_REAL",
+    "JETSON_REAL",
+    "SYNTHETIC_INPUT",
+    "ORT_REAL_MODEL"
+  ],
+  "date": "2026-10-23",
+  "environment": {
+    "architecture": "aarch64",
+    "cuda_toolkit": "12.6",
+    "data_partition": "/dev/nvme0n1p17",
+    "gpu": "NVIDIA Jetson Orin Nano Super / Orin-sm87",
+    "kernel": "5.15.148-tegra",
+    "l4t": "36.4.7",
+    "nvcc": "12.6.68",
+    "packages_changed": false,
+    "power_mode": "MAXN_SUPER mode2; no clock/power changes",
+    "python": "3.10.12",
+    "root": "/dev/nvme0n1p1",
+    "root_read_only": true,
+    "tensorrt_package": "10.3.0.30-1+cuda12.5",
+    "tensorrt_python": "10.3.0",
+    "ubuntu": "22.04.5"
+  },
+  "implementation": {
+    "build_and_recurrent": "e945e5665f8162910d5571231151607c64530764",
+    "m05": "29e613f7af448348a9c10b6e3e542068a20a64dc",
+    "parity_and_frozen_rolling": "c64fdd3057b8d403975922a6fd3d4e776feeb701",
+    "session_start": "5aa0bbac095686afd480627eddb627b1d011dc19"
+  },
+  "installation": "DO_NOT_INSTALL",
+  "isolation": {
+    "access_cleanup": {
+      "master_exit_status": 0,
+      "master_socket_removed": true,
+      "single_use_relay_closed": true,
+      "temporary_agent_stopped": true
+    },
+    "available_after_bytes": 10123317248,
+    "available_before_bytes": 12482035712,
+    "development_root": "/run/carrot-data/jetson-v3-m1-20261023",
+    "final_source_audit": {
+      "available_bytes": 10123317248,
+      "development_root_mode": "0o700",
+      "development_root_owner": 1000,
+      "owned_workers_remaining": 0,
+      "parity_files_verified": 7,
+      "source_files_verified": 53
+    },
+    "flags": {
+      "CARROT_JETLINK_AIO_WRITE": "0",
+      "CARROT_TRT_DEVICE_STATE": "0",
+      "CARROT_TRT_INPUT_FASTPATH": "0"
+    },
+    "home_tmp_cuda_xdg_cache": "development root only",
+    "minimum_available_bytes": 6442450944,
+    "new_root_creation": "existing verified NOPASSWD policy used only to create/chown the new exclusive directory; no parent permissions or mount changes",
+    "offroad": {
+      "IsOffroad": "1",
+      "IsOnroad": "0",
+      "controller_refresh_seconds": 3,
+      "lease_maximum_age_seconds": 30,
+      "owned_child_shutdown": "TERM then KILL/reap only its process group; tested SIGTERM/SIGHUP during creation and running",
+      "supervisor_poll_seconds": 1
+    },
+    "root_mode": "0700",
+    "root_uid": 1000
+  },
+  "m05": "PASS_RECOMMEND_A",
+  "not_run": {
+    "comma_model_inference": "NOT_RUN",
+    "end_to_end_latency_thermal_fallback": "NOT_RUN",
+    "optimization_ab": "NOT_RUN",
+    "road_test": "NOT_RUN",
+    "usb_protocol3_inference": "NOT_RUN",
+    "vehicle_parked_validation": "NOT_RUN"
+  },
+  "ort_trt": {
+    "acceptance": "UNDETERMINED: no established tolerance",
+    "aggregate": {
+      "next_state_desire_q": {
+        "last_max_abs_minus_first_frame": 0.0,
+        "maximum_max_abs": 0.0,
+        "mean_frame_mean_abs": 0.0
+      },
+      "next_state_feat_q": {
+        "last_max_abs_minus_first_frame": 0.0390625,
+        "maximum_max_abs": 0.1484375,
+        "mean_frame_mean_abs": 0.0001979532249947624
+      },
+      "next_state_img_q": {
+        "last_max_abs_minus_first_frame": 0.0,
+        "maximum_max_abs": 0.0,
+        "mean_frame_mean_abs": 0.0
+      },
+      "outputs": {
+        "last_max_abs_minus_first_frame": 0.0,
+        "maximum_max_abs": 0.625,
+        "mean_frame_mean_abs": 0.00865033840489651
+      }
+    },
+    "all_outputs_exact_contract_and_finite": true,
+    "base_report": {
+      "nbytes": 5809,
+      "sha256": "e93f1951582faa0bfbbd6079cbd9339bf24069be258330f85eb255f71a5b228e"
+    },
+    "comparison": "original-ORT-CPU-vs-BASE-TRT/independent-recurrent",
+    "device": "Orin-sm87",
+    "engine": {
+      "nbytes": 768580676,
+      "sha256": "8f831b5af400a10aa35128ceeceac74595df1363bdcd6fd230957415f7e540aa"
+    },
+    "evidence": "ORT_CPU_REFERENCE/TRT_REAL_SYNTHETIC",
+    "exit_status": 3,
+    "frame_count": 5,
+    "frames": [
+      {
+        "frame": 0,
+        "tensors": {
+          "next_state_desire_q": {
+            "max_abs": 0.0,
+            "max_abs_delta_previous_frame": 0.0,
+            "max_abs_minus_first_frame": 0.0,
+            "mean_abs": 0.0,
+            "mean_abs_minus_first_frame": 0.0
+          },
+          "next_state_feat_q": {
+            "max_abs": 0.109375,
+            "max_abs_delta_previous_frame": 0.0,
+            "max_abs_minus_first_frame": 0.0,
+            "mean_abs": 6.245687353612084e-05,
+            "mean_abs_minus_first_frame": 0.0
+          },
+          "next_state_img_q": {
+            "max_abs": 0.0,
+            "max_abs_delta_previous_frame": 0.0,
+            "max_abs_minus_first_frame": 0.0,
+            "mean_abs": 0.0,
+            "mean_abs_minus_first_frame": 0.0
+          },
+          "outputs": {
+            "max_abs": 0.375,
+            "max_abs_delta_previous_frame": 0.0,
+            "max_abs_minus_first_frame": 0.0,
+            "mean_abs": 0.00803611163472292,
+            "mean_abs_minus_first_frame": 0.0
+          }
+        },
+        "timing": {
+          "completed_h2d_execute_d2h_ms": 57.96423100036918,
+          "enqueue_ms": 50.263479000022926,
+          "gpu_execute_ms": 52.33631896972656,
+          "host_roundtrip_ms": 86.67483099998208
+        }
+      },
+      {
+        "frame": 1,
+        "tensors": {
+          "next_state_desire_q": {
+            "max_abs": 0.0,
+            "max_abs_delta_previous_frame": 0.0,
+            "max_abs_minus_first_frame": 0.0,
+            "mean_abs": 0.0,
+            "mean_abs_minus_first_frame": 0.0
+          },
+          "next_state_feat_q": {
+            "max_abs": 0.109375,
+            "max_abs_delta_previous_frame": 0.0,
+            "max_abs_minus_first_frame": 0.0,
+            "mean_abs": 0.0001289727280209263,
+            "mean_abs_minus_first_frame": 6.651585448480546e-05
+          },
+          "next_state_img_q": {
+            "max_abs": 0.0,
+            "max_abs_delta_previous_frame": 0.0,
+            "max_abs_minus_first_frame": 0.0,
+            "mean_abs": 0.0,
+            "mean_abs_minus_first_frame": 0.0
+          },
+          "outputs": {
+            "max_abs": 0.1875,
+            "max_abs_delta_previous_frame": -0.1875,
+            "max_abs_minus_first_frame": -0.1875,
+            "mean_abs": 0.008307700786548196,
+            "mean_abs_minus_first_frame": 0.0002715891518252755
+          }
+        },
+        "timing": {
+          "completed_h2d_execute_d2h_ms": 24.50774699991598,
+          "enqueue_ms": 4.7598350001862855,
+          "gpu_execute_ms": 21.940576553344727,
+          "host_roundtrip_ms": 50.59206900023128
+        }
+      },
+      {
+        "frame": 2,
+        "tensors": {
+          "next_state_desire_q": {
+            "max_abs": 0.0,
+            "max_abs_delta_previous_frame": 0.0,
+            "max_abs_minus_first_frame": 0.0,
+            "mean_abs": 0.0,
+            "mean_abs_minus_first_frame": 0.0
+          },
+          "next_state_feat_q": {
+            "max_abs": 0.12109375,
+            "max_abs_delta_previous_frame": 0.01171875,
+            "max_abs_minus_first_frame": 0.01171875,
+            "mean_abs": 0.0001970055310209773,
+            "mean_abs_minus_first_frame": 0.00013454865748485645
+          },
+          "next_state_img_q": {
+            "max_abs": 0.0,
+            "max_abs_delta_previous_frame": 0.0,
+            "max_abs_minus_first_frame": 0.0,
+            "mean_abs": 0.0,
+            "mean_abs_minus_first_frame": 0.0
+          },
+          "outputs": {
+            "max_abs": 0.625,
+            "max_abs_delta_previous_frame": 0.4375,
+            "max_abs_minus_first_frame": 0.25,
+            "mean_abs": 0.008846282300012581,
+            "mean_abs_minus_first_frame": 0.0008101706652896608
+          }
+        },
+        "timing": {
+          "completed_h2d_execute_d2h_ms": 24.499137999555387,
+          "enqueue_ms": 4.8273579996021,
+          "gpu_execute_ms": 21.973440170288086,
+          "host_roundtrip_ms": 47.79259800034197
+        }
+      },
+      {
+        "frame": 3,
+        "tensors": {
+          "next_state_desire_q": {
+            "max_abs": 0.0,
+            "max_abs_delta_previous_frame": 0.0,
+            "max_abs_minus_first_frame": 0.0,
+            "mean_abs": 0.0,
+            "mean_abs_minus_first_frame": 0.0
+          },
+          "next_state_feat_q": {
+            "max_abs": 0.12109375,
+            "max_abs_delta_previous_frame": 0.0,
+            "max_abs_minus_first_frame": 0.01171875,
+            "mean_abs": 0.0002658534431532189,
+            "mean_abs_minus_first_frame": 0.00020339656961709807
+          },
+          "next_state_img_q": {
+            "max_abs": 0.0,
+            "max_abs_delta_previous_frame": 0.0,
+            "max_abs_minus_first_frame": 0.0,
+            "mean_abs": 0.0,
+            "mean_abs_minus_first_frame": 0.0
+          },
+          "outputs": {
+            "max_abs": 0.625,
+            "max_abs_delta_previous_frame": 0.0,
+            "max_abs_minus_first_frame": 0.25,
+            "mean_abs": 0.009100693342821629,
+            "mean_abs_minus_first_frame": 0.0010645817080987083
+          }
+        },
+        "timing": {
+          "completed_h2d_execute_d2h_ms": 24.62394400026824,
+          "enqueue_ms": 4.117634000067483,
+          "gpu_execute_ms": 22.04047966003418,
+          "host_roundtrip_ms": 47.97068500010937
+        }
+      },
+      {
+        "frame": 4,
+        "tensors": {
+          "next_state_desire_q": {
+            "max_abs": 0.0,
+            "max_abs_delta_previous_frame": 0.0,
+            "max_abs_minus_first_frame": 0.0,
+            "mean_abs": 0.0,
+            "mean_abs_minus_first_frame": 0.0
+          },
+          "next_state_feat_q": {
+            "max_abs": 0.1484375,
+            "max_abs_delta_previous_frame": 0.02734375,
+            "max_abs_minus_first_frame": 0.0390625,
+            "mean_abs": 0.0003354775492425688,
+            "mean_abs_minus_first_frame": 0.00027302067570644795
+          },
+          "next_state_img_q": {
+            "max_abs": 0.0,
+            "max_abs_delta_previous_frame": 0.0,
+            "max_abs_minus_first_frame": 0.0,
+            "mean_abs": 0.0,
+            "mean_abs_minus_first_frame": 0.0
+          },
+          "outputs": {
+            "max_abs": 0.375,
+            "max_abs_delta_previous_frame": -0.25,
+            "max_abs_minus_first_frame": 0.0,
+            "mean_abs": 0.00896090396037723,
+            "mean_abs_minus_first_frame": 0.0009247923256543097
+          }
+        },
+        "timing": {
+          "completed_h2d_execute_d2h_ms": 24.547365000216814,
+          "enqueue_ms": 4.152323000198521,
+          "gpu_execute_ms": 21.975648880004883,
+          "host_roundtrip_ms": 47.797653999623435
+        }
+      }
+    ],
+    "installation": "DO_NOT_INSTALL",
+    "optional_optimizations": "OFF",
+    "reference_manifest": {
+      "nbytes": 6634,
+      "sha256": "fd944f27d3a82adbed387d27a05f978761c4a92bc6915a6086f394137bb05e42"
+    },
+    "reference_runtime": {
+      "onnxruntime": "1.31.0",
+      "providers": [
+        "CPUExecutionProvider"
+      ],
+      "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+      "requested_provider": "CPUExecutionProvider"
+    },
+    "schema": 1,
+    "seed": 73,
+    "source": {
+      "nbytes": 766354845,
+      "sha256": "404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4"
+    },
+    "status": "MEASURED_NO_ACCEPTANCE",
+    "trt_version": "10.3.0"
+  },
+  "parity_guard": {
+    "elapsed_seconds": 4.0064429869999,
+    "guardian": "PASS",
+    "kind": "parity",
+    "operating_service_changed": false,
+    "worker_exit_status": 3
+  },
+  "parity_source_manifest": {
+    "files": {
+      "ort-reference-v1/frame-0000.npz": {
+        "nbytes": 10433788,
+        "sha256": "8223fe29f5624572aa2c1dc693e4bec00e3e5df45c89c364ce2136d3ea9bdc9c"
+      },
+      "ort-reference-v1/frame-0001.npz": {
+        "nbytes": 10433788,
+        "sha256": "39a1ed6c33c55161d2ee088a2da5a6e872172c4ca3ac4a1193552cc7cca016c8"
+      },
+      "ort-reference-v1/frame-0002.npz": {
+        "nbytes": 10433788,
+        "sha256": "1d01b0c98306278e83e8c9f6c92627a5adc4c407d658ef8848790bc773e400f5"
+      },
+      "ort-reference-v1/frame-0003.npz": {
+        "nbytes": 10433788,
+        "sha256": "d93275fb14f4e0d4a605ada0e2b3bb45f5002c75f540346ab31d0935ac1f7377"
+      },
+      "ort-reference-v1/frame-0004.npz": {
+        "nbytes": 10433788,
+        "sha256": "acff4fd8ea11a59d8e6f5a252bec24b7dbb7ad77e6621f2b20bbc65453ae8101"
+      },
+      "ort-reference-v1/manifest.json": {
+        "nbytes": 6634,
+        "sha256": "fd944f27d3a82adbed387d27a05f978761c4a92bc6915a6086f394137bb05e42"
+      },
+      "repo/tools/jetson_m1_parity.py": {
+        "nbytes": 14045,
+        "sha256": "c85ec9dda9afe1f369472ef4919daa347c4bf7b8e5e2f2d272dd234e8faafaa2"
+      }
+    },
+    "implementation_head": "c64fdd3057b8d403975922a6fd3d4e776feeb701"
+  },
+  "preservation": {
+    "after_digest": "ca2ac82d26a0eed7bc622f9887bfef9027216ed86c0b71a7382bf5bc6a50a6a1",
+    "all_fields_exactly_equal": true,
+    "before_digest": "ca2ac82d26a0eed7bc622f9887bfef9027216ed86c0b71a7382bf5bc6a50a6a1",
+    "cache": {
+      "01effc679eb46d60.onnx": {
+        "nbytes": 814591107,
+        "sha256": "01effc679eb46d6036ce0302673a87fe2dcfcc95a679daeeb929679e53c3647a",
+        "stable": true
+      },
+      "01effc679eb46d60.trt10.3.0.Orin-sm87.json": {
+        "nbytes": 2755,
+        "sha256": "0ab092aa31647c0fc5381fd0cfbd3dabe43caea298bba30fb9ceded5223006e7",
+        "stable": true
+      },
+      "01effc679eb46d60.trt10.3.0.Orin-sm87.plan": {
+        "nbytes": 795042044,
+        "sha256": "2c5c5a5e0c736b4d60a6c56569539df219c9e5b32aee8fde26be6d446c96caa2",
+        "stable": true
+      },
+      "09d080f36965bb2a.onnx": {
+        "nbytes": 766040736,
+        "sha256": "09d080f36965bb2a0790500452bd328aa03c484d0222aa79d1ad9f021a522aec",
+        "stable": true
+      },
+      "09d080f36965bb2a.trt10.3.0.Orin-sm87.json": {
+        "nbytes": 2221,
+        "sha256": "b0fed2847adf0a1cd784b9608028ca095ed8c51b928095ad421c4f197f8a8982",
+        "stable": true
+      },
+      "09d080f36965bb2a.trt10.3.0.Orin-sm87.plan": {
+        "nbytes": 771100700,
+        "sha256": "5d7a4a40ad3830fb4406694dddc1b13f1c05a8d47360586c6891bfce8f1f3ca2",
+        "stable": true
+      },
+      "last-loaded.json": {
+        "nbytes": 113,
+        "sha256": "b5ee1362e11319e2d5f12a0410f1645b1a2237a4c4d3a0d328331227a2f49b9c",
+        "stable": true
+      },
+      "timing.trt10.3.0.Orin-sm87.cache": {
+        "nbytes": 3365253,
+        "sha256": "14d9329fa9ecde9594f9521a266255410e91741032a39e98d41a68e60eb6aeff",
+        "stable": true
+      }
+    },
+    "cache_hashing_stable": true,
+    "cache_regular_files": 8,
+    "current_target": "/opt/carrot-jetlink/releases/54e706fa0573e91dc3b4a0d4f625b9d81a6b68cc",
+    "execstart_equal": true,
+    "release_count": 5,
+    "release_membership_equal": true,
+    "release_source_tree_hashes": "NOT_MEASURED: release membership/current symlink and service/cache verified; not full source attestation",
+    "runtime_dependency_metadata_equal": true,
+    "status": "PASS",
+    "unit_file": {
+      "nbytes": 874,
+      "sha256": "ee0475b95cb309f929d9880007ca1dd306e06a6b4879d14009cc3667b80c1add",
+      "stable": true
+    },
+    "unit_file_equal": true,
+    "working_directory_equal": true
+  },
+  "recurrent": {
+    "all_outputs_exact_contract_and_finite": true,
+    "contract": {
+      "inputs": {
+        "action_t": {
+          "dtype": "float32",
+          "shape": [
+            1,
+            2
+          ]
+        },
+        "desire": {
+          "dtype": "float32",
+          "shape": [
+            8
+          ]
+        },
+        "new_img": {
+          "dtype": "float16",
+          "shape": [
+            2,
+            6,
+            128,
+            256
+          ]
+        },
+        "state_desire_q": {
+          "dtype": "float32",
+          "shape": [
+            132,
+            1,
+            8
+          ]
+        },
+        "state_feat_q": {
+          "dtype": "float32",
+          "shape": [
+            128,
+            1,
+            16384
+          ]
+        },
+        "state_img_q": {
+          "dtype": "float16",
+          "shape": [
+            2,
+            5,
+            6,
+            128,
+            256
+          ]
+        },
+        "traffic_convention": {
+          "dtype": "float32",
+          "shape": [
+            1,
+            2
+          ]
+        }
+      },
+      "outputs": {
+        "next_state_desire_q": {
+          "dtype": "float32",
+          "shape": [
+            132,
+            1,
+            8
+          ]
+        },
+        "next_state_feat_q": {
+          "dtype": "float32",
+          "shape": [
+            128,
+            1,
+            16384
+          ]
+        },
+        "next_state_img_q": {
+          "dtype": "float16",
+          "shape": [
+            2,
+            5,
+            6,
+            128,
+            256
+          ]
+        },
+        "outputs": {
+          "dtype": "float32",
+          "shape": [
+            1,
+            18452
+          ]
+        }
+      }
+    },
+    "device": "Orin-sm87",
+    "engine": {
+      "nbytes": 768580676,
+      "sha256": "8f831b5af400a10aa35128ceeceac74595df1363bdcd6fd230957415f7e540aa"
+    },
+    "evidence": "TRT_REAL/SYNTHETIC",
+    "latency_acceptance": "SKIP: measurements only; no end-to-end/USB claim",
+    "mode": "BASE/all-state-host-roundtrip/no-CUDA-graph",
+    "parity": "SEPARATE: five-frame ORT_CPU/TRT_REAL measurement below, no acceptance threshold",
+    "probe": {
+      "nbytes": 18696,
+      "sha256": "17589ec49e8a507f8beb8d0abb52f02fd7608d5c642baccec8d554e8d2c40218"
+    },
+    "reload_first_frame_exact": true,
+    "reset_first_frame_exact": true,
+    "runtime_version": "10.3.0",
+    "schema": 1,
+    "seed": 73,
+    "smoke": {
+      "completed_h2d_execute_d2h_ms": {
+        "maximum": 63.81114600026194,
+        "mean": 28.557190200262994,
+        "p50": 24.63861549995272,
+        "p95": 46.21575045016466,
+        "p99": 60.2920668902425,
+        "samples": 10
+      },
+      "enqueue_ms": {
+        "maximum": 55.179576000227826,
+        "mean": 9.516059700126789,
+        "p50": 4.317849499784643,
+        "p95": 32.584882500077526,
+        "p99": 50.660637300197784,
+        "samples": 10
+      },
+      "frames": 10,
+      "frames_over_50ms": 2,
+      "gpu_execute_ms": {
+        "maximum": 57.59369659423828,
+        "mean": 25.65313606262207,
+        "p50": 22.10372829437256,
+        "p95": 41.6509088516235,
+        "p99": 54.40513904571534,
+        "samples": 10
+      },
+      "host_roundtrip_ms": {
+        "maximum": 93.13098800066655,
+        "mean": 53.22590620016854,
+        "p50": 49.81919350029784,
+        "p95": 74.81273405028328,
+        "p99": 89.4673372105899,
+        "samples": 10
+      },
+      "memory": {
+        "end": {
+          "process_high_water_bytes": 1785597952,
+          "process_rss_bytes": 1296805888,
+          "system_available_bytes": 4753186816
+        },
+        "max_sampled_process_rss_bytes": 1296805888,
+        "minimum_sampled_system_available_bytes": 4753186816,
+        "samples": 2,
+        "start": {
+          "process_high_water_bytes": 1785597952,
+          "process_rss_bytes": 1143418880,
+          "system_available_bytes": 4904865792
+        }
+      }
+    },
+    "source": {
+      "nbytes": 766354845,
+      "sha256": "404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4"
+    },
+    "status": "PASS",
+    "stress": {
+      "completed_h2d_execute_d2h_ms": {
+        "maximum": 24.867129000085697,
+        "mean": 24.679648898999403,
+        "p50": 24.674697499449394,
+        "p95": 24.76496210010737,
+        "p99": 24.794620320408285,
+        "samples": 1000
+      },
+      "enqueue_ms": {
+        "maximum": 4.303832000005059,
+        "mean": 4.13421669399213,
+        "p50": 4.131501000301796,
+        "p95": 4.219489400338716,
+        "p99": 4.258621360149846,
+        "samples": 1000
+      },
+      "frames": 1000,
+      "frames_over_50ms": 0,
+      "gpu_execute_ms": {
+        "maximum": 22.263391494750977,
+        "mean": 22.14548142814636,
+        "p50": 22.14472007751465,
+        "p95": 22.20448246002197,
+        "p99": 22.22614990234375,
+        "samples": 1000
+      },
+      "host_roundtrip_ms": {
+        "maximum": 47.96756799987634,
+        "mean": 46.848594435981795,
+        "p50": 46.8406374998267,
+        "p95": 46.93337669978064,
+        "p99": 47.10685405007098,
+        "samples": 1000
+      },
+      "memory": {
+        "end": {
+          "process_high_water_bytes": 1785597952,
+          "process_rss_bytes": 1328406528,
+          "system_available_bytes": 4720226304
+        },
+        "max_sampled_process_rss_bytes": 1328492544,
+        "minimum_sampled_system_available_bytes": 4720021504,
+        "samples": 22,
+        "start": {
+          "process_high_water_bytes": 1785597952,
+          "process_rss_bytes": 1315721216,
+          "system_available_bytes": 4740521984
+        }
+      }
+    }
+  },
+  "recurrent_guard": {
+    "elapsed_seconds": 55.073096032999274,
+    "guardian": "PASS",
+    "kind": "recurrent",
+    "operating_service_changed": false,
+    "worker_exit_status": 0
+  },
+  "schema": 1,
+  "source_acquisition": {
+    "elapsed_seconds": 497.59474318699995,
+    "evidence": "REAL_ONNX_IDENTITY",
+    "identity": {
+      "nbytes": 766354845,
+      "sha256": "404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4"
+    },
+    "operating_cache_used": false,
+    "source_commit": "eed9e515dccd5aa9be969a2d6c57eb469174a97d",
+    "source_repository": "commaai/openpilot_driving_models",
+    "status": "PASS",
+    "tls_verification": true
+  },
+  "source_manifest": {
+    "candidate_base_sha": "813369b0c53bb9c997b7ffbe17fca90222a755b8",
+    "experimental_optimizations": false,
+    "files": {
+      "candidate/third_party/jetlink/jetlink/__init__.py": "cb10a5e5f6d5bab47b5e82b4d57d94e3601f898003de7eecebc87b292d5f5e19",
+      "candidate/third_party/jetlink/jetlink/cinque_v3.py": "730abb47a564ecbe366037cfe97a6f3ab18e24b0a88fa3b74d04d1b7e2ee0809",
+      "candidate/third_party/jetlink/jetlink/client.py": "74142420235ed7468492e0ce0627db4bdfde98de0114942abed062b61d95b999",
+      "candidate/third_party/jetlink/jetlink/onnx_meta.py": "ca713a55727afaf96a4780d0322e3cc27e7eaef420949987682b76e1fc2d5c7d",
+      "candidate/third_party/jetlink/jetlink/onnx_patch.py": "a8f0b9165e67d8bcbd2d4b72099ef5ed240d51b42310fa122831a7ca954952f6",
+      "candidate/third_party/jetlink/jetlink/protocol.py": "27921d6cbac744f28db9f3c3487e42bdf405ac184db41322352f91aad9e3fb51",
+      "candidate/third_party/jetlink/jetlink/protocol_v3.py": "d1282c08caa0c11a188b3b3c3f4b77311b3ecef9a8dae44a5dfc755aecdfe985",
+      "candidate/third_party/jetlink/jetlink/queues.py": "18002bbdc994f74f7bee08c433211777e90917a517e8f29a7d09a9c5cb986e40",
+      "candidate/third_party/jetlink/jetlink/registry/__init__.py": "40719606179c25be356ddde356221570eb19bce8a05f0271c2bfd36f69adc68c",
+      "candidate/third_party/jetlink/jetlink/registry/__main__.py": "530d89ab63044be36bbbee57bca8bf25873b8908369ec8c9cb266ad21d7eb3b0",
+      "candidate/third_party/jetlink/jetlink/registry/catalog.py": "99bdffd09d37388e747a35fd8c20ce21a90821797a28f5f6d9822a5706149b70",
+      "candidate/third_party/jetlink/jetlink/registry/cli.py": "273db70805a87eb4232f87ec5cba79d4be82f547fc2adad4727174b3f4f43ea7",
+      "candidate/third_party/jetlink/jetlink/registry/lfs.py": "06dd089aa2897962be98b2d837eb144ff95cdd9f3be3c02816b39b22d81176ab",
+      "candidate/third_party/jetlink/jetlink/server/__init__.py": "063e99352fe576d780cd2e0d43e25d30cd238fe62cb466f5698627646c20345c",
+      "candidate/third_party/jetlink/jetlink/server/backends/__init__.py": "4cde37a31f52aa8260c46fa3954a22b84d41fb97c9154b8c2c7fafa22d155c53",
+      "candidate/third_party/jetlink/jetlink/server/backends/base.py": "e786b7abc667b137bbb5d693db26bcc3357473124aad1f911dfdee373761bfb2",
+      "candidate/third_party/jetlink/jetlink/server/backends/ort/__init__.py": "e17451f9824417de8a399dc2cf486079d684f0e8b8ba35c8d20052f8ab362021",
+      "candidate/third_party/jetlink/jetlink/server/backends/ort/engine.py": "3cfc0d810fd1c8104c28c44af23f90b68bbeded39773dc7062184880ff674dbe",
+      "candidate/third_party/jetlink/jetlink/server/backends/ort/metal.py": "eb8a2f7425680e1b8d366ca1363c050335a4d3c86dfb7059f8549c2fa1d8e9f9",
+      "candidate/third_party/jetlink/jetlink/server/backends/ort/worker.py": "3399adfe9bf3f64e87edb51ec518a253c0334368fb8308db34fbd33e10e79c23",
+      "candidate/third_party/jetlink/jetlink/server/backends/tinygrad/__init__.py": "99a9b611376fa8ed9693a36450ef3525db9335a67e258509ef5e58331ca28c02",
+      "candidate/third_party/jetlink/jetlink/server/backends/tinygrad/build.py": "c3e32f0c2c35a7dbd0a7a1e1478f58dd406d1e7b47a0c03d3d955c7d22c87134",
+      "candidate/third_party/jetlink/jetlink/server/backends/tinygrad/engine.py": "3a89461890c60a1c81284747c03a66fc2090694256c808a8254aed0cd1f9dc94",
+      "candidate/third_party/jetlink/jetlink/server/backends/tinygrad/owner.py": "ca3480f105aae20211f3e31a91e741de3e8ae42e6783898738c7b38be7c89054",
+      "candidate/third_party/jetlink/jetlink/server/backends/trt/__init__.py": "d6b38b17e5a95366b3ffb5953634b0cfca4e0e38468df23ceb3bfa675d15a4d6",
+      "candidate/third_party/jetlink/jetlink/server/backends/trt/build.py": "a503b037706f39ef6f171cb8f0617c4ae0285e133cb6f2dc807fae98ba7d781b",
+      "candidate/third_party/jetlink/jetlink/server/backends/trt/cudart.py": "e125ce6092d4945270e2abb4beb9eb697885db18f613627c76badd813ee6f4c7",
+      "candidate/third_party/jetlink/jetlink/server/backends/trt/engine.py": "0571d68dd322eeb8a4c6910a5a2ef8c106b76c7da7774cf241c4b3bdeba996f0",
+      "candidate/third_party/jetlink/jetlink/server/builder.py": "e6a53cf34158e8dd01dec454795e58838e4c68e0249c8625b4ce795e7f2a95e8",
+      "candidate/third_party/jetlink/jetlink/server/cache.py": "b679f3bd2838221c3b59112ade3a25cacf1618624a51721ec570e169d6ef74bf",
+      "candidate/third_party/jetlink/jetlink/server/control.py": "8492415f55542f682c10bfc9c27a71ccd88fb34ad85f30fffc5f8590728d4a9d",
+      "candidate/third_party/jetlink/jetlink/server/cudart.py": "97039510a6f9f5b27456561cfdf872599246083dfe03d3010ee26755bad14c31",
+      "candidate/third_party/jetlink/jetlink/server/engine.py": "e38308bca2868d83ef5f85de1f64c083ae2e9972335922ab9f4e19d79deba2bd",
+      "candidate/third_party/jetlink/jetlink/server/main.py": "a69940f7de798c6c21360df5eec6d44a53a4ac5232fc1eb6c170195fc6ece662",
+      "candidate/third_party/jetlink/jetlink/server/platform.py": "6b5883efbd3ee3f020b2d9e8e6fc328fa32404b25120f3f35c3569078b9a73a8",
+      "candidate/third_party/jetlink/jetlink/server/power.py": "f963bdc5481a54dcb52448b3a94db3b8c6de13cd5555fe8fe6a4693f6e1dfa64",
+      "candidate/third_party/jetlink/jetlink/server/session.py": "4acee13c84e264199b8daa8da8864df15e721372f8323beb5136dcdb4c16a23f",
+      "candidate/third_party/jetlink/jetlink/server/sleep.py": "53b031ddc5e77918dd2db185a2211d0331caf797dcd8984901300a91230deded",
+      "candidate/third_party/jetlink/jetlink/server/telemetry.py": "743332c0df4fc53b95498ef70e2c4886f9167354a44b05f0a25da02030ad0274",
+      "candidate/third_party/jetlink/jetlink/spec.py": "556a8a3b8f7cbe7faf90e36032e3e969e97f2f57ce0f756f13837c933bdb57a4",
+      "candidate/third_party/jetlink/jetlink/transport/__init__.py": "732cd10ec6ffe56b8e99dd4c81114ca2c9594e69c59855bb23d11a980baed1ab",
+      "candidate/third_party/jetlink/jetlink/transport/base.py": "1861db5ec506b274f940797a6d2b181f075e94a928326d699c34cfd6b0c93a3b",
+      "candidate/third_party/jetlink/jetlink/transport/ffs.py": "95e59a1a9a5b7b898f194cfe76b9031cdcfbccd95002713ca95df2e5576f7237",
+      "candidate/third_party/jetlink/jetlink/transport/priority.py": "11811547e4c3a50515660b0344f88f098f00cbd5e8ad2427c14baaefabd25d53",
+      "candidate/third_party/jetlink/jetlink/transport/tcp.py": "12cd63a8d74afe8862c67b8ad246975d1539eaec3580d618a24dc72c30de2687",
+      "candidate/third_party/jetlink/jetlink/transport/usbbulk.py": "24dfbc0f421d17ae849abd53d255246df5eb973dddab4357eae9ba2db9038859",
+      "candidate/third_party/jetlink/jetlink/transport/watchdog.py": "8a5d2a360f1986fbca9a53a0dfd045afcdf7c6b63fbdda05ec8ffdc9f6ceca7f",
+      "repo/artifacts/cinque_v3.json": "c4445632dcea7a4de12f420a69ae4a836fad779a776b2eadc48919faff8b6c62",
+      "repo/tools/build_trt_v3.py": "a33f113c82104bd7942ba9bec5b2ae0ef2bbc861871153fd3857f2954829f686",
+      "repo/tools/jetson_m1.py": "c60ce15e625b09098945b6738fbbc83a808e3b84c0c21930713515c93decd441",
+      "repo/tools/jetson_m1_recurrent.py": "17589ec49e8a507f8beb8d0abb52f02fd7608d5c642baccec8d554e8d2c40218",
+      "repo/tools/onnx_meta_light.py": "9bb65e407d595452b286c68adff73dbf66df16834faf2321f70b4778f3aa1c33",
+      "repo/tools/patch_v3_uint8.py": "8e1298345ec5fb5505f9e0845f61227cc58f0b2745db8a1401de5295b4489d06"
+    },
+    "implementation_head": "e945e5665f8162910d5571231151607c64530764"
+  },
+  "sources": {
+    "actual_comma": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+    "carrot_jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "external_review": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722",
+    "latest_carrot_nav": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+    "latest_carrot_wip": "813369b0c53bb9c997b7ffbe17fca90222a755b8",
+    "zoompilot_jetlink": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc"
+  },
+  "status": "TRT_BUILD_PASS",
+  "tests": {
+    "cpu_evidence": [
+      "CPU_FAKE",
+      "FIXTURE"
+    ],
+    "diagnostics": [
+      "Initial online run correctly refused source changes made during verification; no baseline advanced; frozen rerun PASS288.",
+      "Initial ORT invocation lacked candidate PYTHONPATH; corrected environment, real ORT export completed; no gate changed.",
+      "Bare pytest collection aborts in historical test_backport.py top-level SystemExit; maintained explicit suites are the acceptance command."
+    ],
+    "distinct_cpu_cases": 476,
+    "focused_command": {
+      "builder_tests_overlap_with_rolling": 41,
+      "failed": 0,
+      "passed": 126,
+      "skipped": 0
+    },
+    "new_m1": {
+      "failed": 0,
+      "guard": 26,
+      "parity": 24,
+      "passed": 85,
+      "recurrence": 35,
+      "skipped": 0
+    },
+    "rolling": {
+      "failed": 0,
+      "implementation_sha": "c64fdd3057b8d403975922a6fd3d4e776feeb701",
+      "passed": 288,
+      "skipped": 0,
+      "suites": [
+        {
+          "errors": 0,
+          "failures": 0,
+          "name": "current-carrot-integration",
+          "passed": 38,
+          "skipped": 0,
+          "tests": 38
+        },
+        {
+          "errors": 0,
+          "failures": 0,
+          "name": "multimodel-policy",
+          "passed": 9,
+          "skipped": 0,
+          "tests": 9
+        },
+        {
+          "errors": 0,
+          "failures": 0,
+          "name": "trt-builder-cpu-contracts",
+          "passed": 41,
+          "skipped": 0,
+          "tests": 41
+        },
+        {
+          "errors": 0,
+          "failures": 0,
+          "name": "upstream-phase-linux-sockets",
+          "passed": 6,
+          "skipped": 0,
+          "tests": 6
+        },
+        {
+          "errors": 0,
+          "failures": 0,
+          "name": "upstream-wire-model-cache",
+          "passed": 65,
+          "skipped": 0,
+          "tests": 65
+        },
+        {
+          "errors": 0,
+          "failures": 0,
+          "name": "upstream-modeld-ipc-warp",
+          "passed": 30,
+          "skipped": 0,
+          "tests": 30
+        },
+        {
+          "errors": 0,
+          "failures": 0,
+          "name": "optional-optimization-contracts",
+          "passed": 99,
+          "skipped": 0,
+          "tests": 99
+        }
+      ]
+    },
+    "startup_priority_watchdog": {
+      "failed": 0,
+      "passed": 103,
+      "skipped": 0
+    }
+  },
+  "unresolved": {
+    "nav_managed_adapter": "future separate source port + V2/Nav regression; no comma changes this stage",
+    "ort_trt_numeric_acceptance": "MEASURED_NO_ACCEPTANCE_THRESHOLD; establish approved per-tensor/slice/drift criteria before adopting the engine"
+  }
+}
