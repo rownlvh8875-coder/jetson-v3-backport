@@ -1,0 +1,186 @@
+{
+  "schema": 1,
+  "date": "2026-10-23",
+  "stage": "M19_PARKED_CAPTURE",
+  "status": "BLOCKED_DIRTY_TREE",
+  "development_start": "3940a8d3a8d130342e66a14a96c128a7237772a7",
+  "development_handoff_commit_resolution": "git log -1 --format=%H -- docs/CODEX_CONTINUATION.md",
+  "actual": {
+    "branch": "carrot-nav",
+    "head": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+    "flags": {
+      "IsOffroad": "1",
+      "IsOnroad": "0"
+    },
+    "running_source_root_verified": true,
+    "root_basis": "all manager-argv candidate cwd roots resolve to the same pinned repository",
+    "stationary": "NOT_CONFIRMED",
+    "stationary_telemetry": "NOT_RUN: source gate checked before importing live telemetry code; dirty tree blocks later phases",
+    "tree": {
+      "clean": false,
+      "tracked_changes": 0,
+      "untracked_short_entries": 48,
+      "short_status_sha256": "eafe978a1bf1b6a00055bdcdaf957c7bc87ebf06dbcf60b65f4083f89a8385ca",
+      "note": "48 collapsed short-status entries, not a recursive file count; build-like files plus backup/custom source; ownership not assumed"
+    }
+  },
+  "access": {
+    "kind": "existing read-only Carrot web terminal",
+    "direct_ssh": "NOT_ESTABLISHED: strict host verification refused; no bypass or access-configuration change",
+    "first_actual_shell_commands": [
+      "cat /data/params/d/IsOffroad",
+      "cat /data/params/d/IsOnroad"
+    ],
+    "helper_sessions": "fresh owned only, history and bytecode disabled after initial two cat commands; automatic exit",
+    "other_owned_sessions_in_final_probe": 0
+  },
+  "patch": {
+    "base": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+    "sha256": "3a3e19430ab667d204f22fd1e40438a85e1ade1dbab2e6f9dd6e3dd32de4c1ee",
+    "local_identity": "PASS",
+    "actual_apply": "NOT_RUN",
+    "actual_original_source_pins": "PASS",
+    "actual_after_hashes": "NOT_RUN",
+    "original_source_hashes": {
+      "openpilot/selfdrive/modeld/jetlink/model.py": "c627644ff2f986883325aaca1b8410f216f45447c6595a123d8c1e53ef8c83da",
+      "openpilot/selfdrive/modeld/jetlink/link.py": "9bdb6fb3b9c669fefd0e065e144ceea76068f839cd53eb9d5ccaf3c34c3908c4",
+      "openpilot/selfdrive/modeld/camera_gap.py": "7b959fa8bdd740c4bea150c07248a69ea33f08db327110601be3ee17d9bc938a",
+      "openpilot/selfdrive/modeld/camera_sync.py": "398980260825757393239796cb4dc10399ef1384f0fd9e23cdad0fd12d0cc0d2",
+      "third_party/jetlink/jetlink/spec.py": "ec844ccaf13ffc1d7c03ad683b0e3f2ce6a1d78f4088067739aaa419af422170"
+    },
+    "disposable_device_test": "NOT_RUN",
+    "device_backup": "NOT_CREATED",
+    "default_off_runtime_test": "NOT_RUN",
+    "activation_env_in_inspected_processes": false,
+    "source_package_present": false,
+    "final_state": "BLOCKED_NOT_INSTALLED"
+  },
+  "gates": {
+    "offroad": "PASS",
+    "running_source": "PASS",
+    "exact_branch_head": "PASS",
+    "clean_tree": "FAIL",
+    "stationary": "NOT_CONFIRMED",
+    "storage_capability_disposable_apply_restart": "NOT_RUN_AFTER_STOP",
+    "stop_rule": "D: source tree gate mismatch",
+    "no_cleanup_reset_or_ignore_override": true
+  },
+  "storage": {
+    "free_bytes_observed": 28415758336,
+    "binary_bytes_for_requested10": 3938176,
+    "writer_minimum_free_bytes_for10": 71047040,
+    "note": "read-only free-space observation only; permissions/capabilities/allocation/output-root selection not performed"
+  },
+  "restart": {
+    "status": "BLOCKED",
+    "performed": false,
+    "normal_restart_mechanism_used": false
+  },
+  "capture": {
+    "result": "NOT_RUN_BLOCKED_DIRTY_TREE",
+    "attempted": false,
+    "requested_frames": 10,
+    "queue_depth": 4,
+    "frames": 0,
+    "dataset": "NONE",
+    "continuity": "N/A",
+    "dataset_sha256": null,
+    "anonymous_capture_id": null,
+    "tuple_availability": "NOT_TESTED: no activation or camera/model launch",
+    "zero_frames_unavailable_claim": false
+  },
+  "overhead": {
+    "classification": "NOT_MEASURED",
+    "observer_p50": null,
+    "observer_p95": null,
+    "observer_p99": null,
+    "observer_max": null,
+    "queue_high_water": null,
+    "writer_rss": null,
+    "model_timing_regression": "INSUFFICIENT_SAMPLE",
+    "off_baseline": "NOT_RUN",
+    "note": "M18 host figures are not actual comma measurements"
+  },
+  "cleanup": {
+    "activation": "NOT_CREATED",
+    "arm_ticket": "NOT_CREATED",
+    "writer_processes_before": 0,
+    "writer_processes_after": 0,
+    "capture_output_root_present_before": false,
+    "capture_output_root_present_after": false,
+    "source_rollback": "NOT_NEEDED: never applied",
+    "operating_restart": false
+  },
+  "preservation": {
+    "status": "PASS_WITHIN_READ_ONLY_OBSERVATION_WINDOW",
+    "checks": {
+      "source_hashes": true,
+      "runtime_source_hashes": true,
+      "untracked_canary_hashes": true,
+      "model_hashes": true,
+      "routes_inventory": true,
+      "processes": true
+    },
+    "source_files": 5,
+    "runtime_source_files": 3,
+    "runtime_source_pins_match": {
+      "openpilot/system/manager/manager.py": true,
+      "openpilot/system/manager/process_config.py": true,
+      "openpilot/selfdrive/modeld/modeld.py": true
+    },
+    "untracked_canary_content_files": 2,
+    "models_content_files": 15,
+    "model_set_sha256": "4091c979060abc441a932baec9f951bc5c4ed525bd7d2d1bc53641399cd662a5",
+    "observed_process_identities": 3,
+    "routes": {
+      "files": 4497,
+      "sha256": "4bf474e52edc1b6ad250ed125b23a87a34ecd781799fa47040247aebef499c24",
+      "basis": "relative path/mode/size/mtime; not all-content hash"
+    },
+    "scope": "route relative paths/mode/size/mtime inventory, not full content hashes of all recordings; other untracked content not exhaustively hashed",
+    "original_untracked_entries_unchanged": true,
+    "no_operating_source_or_runtime_change": true,
+    "existing_user_files_preserved": true
+  },
+  "offline_tests": {
+    "classification": [
+      "CPU_FAKE",
+      "FIXTURE"
+    ],
+    "pass_count": 131,
+    "fail_count": 0,
+    "skip_count": 0,
+    "command": "PYTHONPATH=. PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 \"$PY\" -m pytest -q -p no:cacheprovider tests/test_v3_input_format.py tests/test_v3_input_recorder.py tests/test_v3_input_dataset.py tests/test_v3_input_hook.py",
+    "duration_s": 26.34,
+    "note": "unchanged M18 code tested offline; no new recorder/evidence-parser production code added"
+  },
+  "evidence": {
+    "COMMA_REAL_READ_ONLY": "PASS",
+    "COMMA_REAL_CAPTURE": "NOT_RUN",
+    "VEHICLE_PARKED": "NOT_RUN",
+    "ROAD_TEST": "NOT_RUN",
+    "USB_REAL": "NOT_RUN",
+    "TRT_REAL": "NOT_RUN_THIS_STAGE",
+    "JETSON_ACCESS": "NOT_RUN"
+  },
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "m2_readiness": "NO",
+  "ready_for_256_512_road_capture": "NO",
+  "upstreams_start": {
+    "carrot_nav": "810e14aaf51176f1a50a113939dc2e70907b394b",
+    "carrot_wip": "dfab65d03fcd7100f572fe9e6908f4c6d1e988f6",
+    "carrot_jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "zoompilot_jetlink": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc",
+    "external_review": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722"
+  },
+  "next_action": "Read-only ownership/generation audit of the48 untracked short-status entries; resolve the clean-tree gate explicitly without deleting/resetting user files",
+  "upstreams_end": {
+    "carrot_nav": "810e14aaf51176f1a50a113939dc2e70907b394b",
+    "carrot_wip": "dfab65d03fcd7100f572fe9e6908f4c6d1e988f6",
+    "carrot_jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "zoompilot_jetlink": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc",
+    "external_review": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722"
+  },
+  "upstreams_end_requeried_unchanged": true,
+  "final_review": "PASS: independent local read-only review; counts, preservation, patch/source hashes, privacy, classifications and unchanged upstreams verified; no blocking or important finding; no reviewer device access"
+}

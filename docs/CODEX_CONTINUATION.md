@@ -1,5 +1,115 @@
 # Codex continuation — 2026-10-23
 
+## Latest checkpoint: M19 BLOCKED_DIRTY_TREE; recorder not installed
+
+Read `docs/M19_PARKED_CAPTURE_RESULT_20261023.md` and
+`artifacts/m19_parked_capture_20261023.json` first, then M18 design/plan below.
+**M19 stopped before installation. Capture0frames/no attempt/no dataset.
+PARITY_UNDETERMINED / M2 NO / Ready for256/512 road capture NO.**
+
+### Date, HEADs and exact stop
+
+2026-10-23. Project started clean/remote-equal required feature at
+**3940a8d3a8d130342e66a14a96c128a7237772a7**. No recorder or production code changed;
+M19 result/JSON, this handoff and README are the only tracked changes. The M19
+commit resolves with `git log -1 --format=%H -- docs/CODEX_CONTINUATION.md`;
+development HEAD with `git rev-parse HEAD`. Normal same-feature push and clean/
+remote/protected-ref checks follow the commit; no force/rebase/reset/main change.
+
+Actual running root was derived from manager-argv candidates' cwd; all mapped
+to the same repository. Actual branch carrot-nav and exact HEAD
+**366d6eae9aa9962104391e1d997fe956dea8f64d**, fresh Offroad1/Onroad0, original
+M18 source5pins all MATCH. But `git status --short` returned **48untracked short
+entries, tracked modifications0**. They mix build-like outputs and backup/custom
+control source; ownership is not assumed. These are collapsed status entries,
+not a recursive48file count. All entries remain in place and unchanged.
+
+User explicitly required a completely clean tree and STOP RULE D. No automatic
+ignore/generated-file exception, stash/reset/delete or source overwrite was used.
+Actual patch/disposable copy/backup/restart/capability/write test/ticket/output
+directory/activation/capture/rollback **NOT_RUN / NOT_CREATED**. Source final
+state **BLOCKED_NOT_INSTALLED**. This is not zero-frame-unavailable capture:
+capture and tuple availability were never attempted. Current stationary telemetry
+was also NOT_RUN: trusted running source/tree gate was checked before importing
+subscriber code; it failed. Stationary **NOT_CONFIRMED**, not moving or inferred
+from Offroad/historical logs/default zero values.
+
+### Access, preservation and exact scope
+
+DirectSSH with strict host checking refused an unknown hostkey; no bypass/key/
+agent/relay/config change. Reused existing Carrot web terminal, fresh owned helpers
+only. First actual commands were exactly catIsOffroad/catIsOnroad and returned1/0.
+First parser assumed trailing newlines, corrected for Params digit-followed-by-
+prompt format; fresh read and all subsequent preflights confirmed1/0. No new
+probe/source file was uploaded. Private raw status/process/access evidence stays
+in the ignored M19 PC report area; no addresses/argv/route names go into public JSON.
+
+Read-only before/after window PASS: source5SHA, runtime manager/config/modeld3SHA
+(also pinned Git matches), two untracked backup/custom canary contentSHA, all15
+regular model files' contentSHA,3 observed process identities, branch/HEAD/tree/
+flags, and existing route metadata inventory4497entries. Route digest
+**4bf474e52edc1b6ad250ed125b23a87a34ecd781799fa47040247aebef499c24** hashes
+relativepaths/mode/size/mtime, not all route contents. Other untracked content
+was not exhaustively hashed. Do not compare this count directly against older
+M17 or claim whole-device/session-start content attestation. No pickle executed.
+
+Recorder package and proposed output root absent in both snapshots; no capture
+environment in inspected manager-lineage/Jetlink processes; writer0 in both.
+Other owned M19 sessions0 at final probe, current helper automatically exits.
+No live modeld/card/camerad observed, consistent with source only_onroad policy
+for modeld/card. It is not a health fault proof, live tuple-availability test or
+authorization to force onroad/camera/model/USB. Functional V2/Nav inference and
+patched-OFF timing were not tested. Existing manager/Jetlink identities preserved.
+
+Free-space stat about28.4GB;10binary would3938176bytes, writer reserve gate71047040.
+This does not mean storage/permission/capability PASS: no output allocation or
+memfd/pass_fds/fsync/link test after stop. No package/service/Params/recording/
+selection/control/CAN/road/USB/Jetson/GPU/model/cache action.
+
+### Tests and immutable targets
+
+Fresh **CPU_FAKE/FIXTURE PASS131 / FAIL0 / SKIP0 in26.34s**, unchanged M18 suites:
+
+```sh
+PYTHONPATH=. PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 "$PY" -m pytest -q -p no:cacheprovider tests/test_v3_input_format.py tests/test_v3_input_recorder.py tests/test_v3_input_dataset.py tests/test_v3_input_hook.py
+```
+
+Existing reviewed WSL interpreter was used; no packages installed. Prior218/708
+and repeats not summed. No new production/evidence-parser code needed or added.
+M18 patchSHA remains
+**3a3e19430ab667d204f22fd1e40438a85e1ade1dbab2e6f9dd6e3dd32de4c1ee**.
+M18 code/adapter/numerical tools frozen. M1 plan8f831b5a… DO_NOT_INSTALL remains
+unaccessed, not a fresh Jetson identity measurement. COMMA_REAL_READ_ONLY PASS;
+COMMA_REAL_CAPTURE/VEHICLE_PARKED/ROAD_TEST/USB_REAL/ORT/TRT/Jetson NOT_RUN.
+No on-device observer/copy/queue/RSS/CPU/latency measurement exists this stage.
+Fresh independent local read-only final review PASS: evidence counts/preservation,
+patch/source hashes, privacy, stop and NOT_RUN classifications consistent; no
+blocking/important finding. Reviewer made no actual-device call.
+
+All5 upstreams re-queried at start/end and unchanged:
+
+| Source | HEAD |
+|---|---|
+| latest carrot-nav |810e14aaf51176f1a50a113939dc2e70907b394b |
+| latest carrot-wip |dfab65d03fcd7100f572fe9e6908f4c6d1e988f6 |
+| carrot-jetson main |d0dc96fa32410403dfb2fefff3e2909c11ec109b |
+| zoompilot main |d24328d849b0e5154b55f149dc18c5dfe8bd79cc |
+| external review |a890f6df1bd3eb0478754c68d8b5f92f15e8b722 |
+
+No latest source adopted. Protected remote main2519ad0b… and oldfeature26c9c06a…
+observed unchanged; final postpush equality/clean check remains required.
+
+### Next exact action
+
+Read-only ownership/generation audit of the48untracked short-status entries.
+Do not clear/relabel them or bypass the clean gate; current user approval requires
+clean source. Resolve ownership and the gate explicitly before any install. A
+future fresh parked preflight must also confirm current stationary state and
+tuple availability under unchanged offroad policy. Do not infer permission for
+onroad/road recording or force model/USB startup. M19 goal remains not achieved.
+
+---
+
 ## Latest checkpoint: M1.8 recorder offline PASS; actual capture not installed
 
 Read `docs/M18_V3_INPUT_RECORDER_DESIGN_20261023.md`,

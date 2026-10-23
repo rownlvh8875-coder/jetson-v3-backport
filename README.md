@@ -41,6 +41,11 @@ actual366용 기본 OFF observer patch와 strict replay reader를 오프라인 �
 실제 콤마 설치·활성화·기록은 하지 않았다. [M19 계획](docs/M19_COMMA_CAPTURE_PLAN_20261023.md)은
 별도 승인 후 정차 preflight부터 진행한다. 수치 승인과 M2는 계속 보류한다.
 
+2026-10-23 [M19 정차 capture 결과](docs/M19_PARKED_CAPTURE_RESULT_20261023.md):
+actual366/Offroad1·Onroad0와 원본 source pin은 확인했지만 미추적48항목으로
+**BLOCKED_DIRTY_TREE**다. 설치·재시작·활성화·capture는 하지 않았고 기존 상태를 보존했다.
+정차10프레임과 주행 capture는 미실행이며 M2는 계속 NO다.
+
 2026-10-20 [외부 Jetson 최적화 검토](docs/JETSON_REVIEW_A890_ANALYSIS.md):
 DeviceState와 InputFastpath는 기존 검증을 유지한 기본 OFF 실험 후보다.
 AIO는 운영 transport에 연결하지 않았으며, 실장 순서는 M0 → 기본 V3 → USB →
