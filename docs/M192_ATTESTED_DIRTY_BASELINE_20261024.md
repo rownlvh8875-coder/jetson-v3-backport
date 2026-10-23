@@ -1,5 +1,10 @@
 # M19.2 — exact attestation of the actual366 runtime overlay
 
+Later [M19.3](M193_U32_PROVENANCE_20261024.md) adds a separately versioned,
+reviewed scoped-isolation policy under the user's newer criteria. It preserves
+the exact M192 checker and its PARTIAL result below, without inventing runtime
+non-use or changing the original48 manifest. Consult M193 for current retry gates.
+
 2026-10-24. **ATTESTED_DIRTY_BASELINE_PARTIAL / Ready to retry M19: NO.**
 All measured preservation checks pass. U46 is resolved by byte-exact PC
 regeneration; U32 remains `POSSIBLY_DYNAMIC_REFERENCED`, without an accepted-unknown

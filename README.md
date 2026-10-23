@@ -60,6 +60,14 @@ disposable layout 검증을 추가해 **CPU200 PASS / FAIL0 / SKIP0**다. 과거
 전송기의 nanosecond 정밀도 손실도 수정·재수집했으며 baseline은 바꾸지 않았다.
 실제 source 변경·recorder 설치·재시작·capture는 하지 않았다. **M2 NO**를 유지한다.
 
+2026-10-24 [M19.3 U32 provenance](docs/M193_U32_PROVENANCE_20261024.md):
+관련 공개 fork의99.80% 유사 source와 exact PC pyc 재생성을 확인했다. 현재 runtime
+사용 여부는 UNKNOWN이며, actual366의 고정된 source/namespace/OFF 경계에 한정해
+**UNKNOWN_ACCEPTABLE_FOR_PATCH_ISOLATION**으로 수용한다. 기존 M192 checker의
+PARTIAL은 보존하고 별도 M193 정책으로 baseline PASS를 기록한다. **M19 재시도 YES**는
+새 정차 preflight와 별도 설치 승인부터 시작한다는 뜻이다. 실제 변경·capture는 없고
+**CPU241 PASS / FAIL0 / SKIP0 / M2 NO**다.
+
 2026-10-20 [외부 Jetson 최적화 검토](docs/JETSON_REVIEW_A890_ANALYSIS.md):
 DeviceState와 InputFastpath는 기존 검증을 유지한 기본 OFF 실험 후보다.
 AIO는 운영 transport에 연결하지 않았으며, 실장 순서는 M0 → 기본 V3 → USB →

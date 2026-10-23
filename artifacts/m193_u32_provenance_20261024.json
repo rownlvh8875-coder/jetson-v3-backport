@@ -1,0 +1,417 @@
+{
+  "schema_version": 1,
+  "stage": "M193",
+  "date": "2026-10-24",
+  "development": {
+    "branch": "feature/jetlink-multimodel-carrot",
+    "starting_head": "9005b3d910eccc4e99cb41ce554dcb13bc9ad13c",
+    "code_commit": "8dfda5d0ecb648b6fc3917c84cc6aca6b98756a2",
+    "result_commit_resolution": "git log -1 --format=%H -- artifacts/m193_u32_provenance_20261024.json",
+    "review_fix_commit": "e84b921b0fe74501701624ed515a8be69c217bff"
+  },
+  "evidence_classes": [
+    "COMMA_REAL_READ_ONLY",
+    "CPU_FAKE",
+    "FIXTURE"
+  ],
+  "actual": {
+    "branch": "carrot-nav",
+    "head": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+    "offroad": 1,
+    "onroad": 0,
+    "tracked_modifications": 0,
+    "untracked_short_entries": 48,
+    "regular_files": 2006,
+    "bytes": 417208589,
+    "baseline_digest": "8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5",
+    "baseline_drift": false
+  },
+  "U32": {
+    "classification": "U32_UNKNOWN_ACCEPTABLE_FOR_PATCH_ISOLATION",
+    "semantic_category": "OBSERVER_WITH_PUBLISH",
+    "source_sha256": "07e2bd4cdac1479f85447c1f96182c8f24603a9184b11045086d7433b68e5b70",
+    "source_bytes": 11831,
+    "remote_source_provenance": "PARTIAL",
+    "current_runtime_use": "UNKNOWN",
+    "dynamic_caller_risk": "UNKNOWN",
+    "current_static_caller_observed": false,
+    "recorder_interaction": "NONE_OBSERVED_IN_REVIEWED_SCOPE",
+    "accepted_unknown": true,
+    "unused_runtime_claim": false,
+    "creator_or_deployment_command_identified": false
+  },
+  "static_profile": {
+    "source_sha256": "07e2bd4cdac1479f85447c1f96182c8f24603a9184b11045086d7433b68e5b70",
+    "source_bytes": 11831,
+    "category": "OBSERVER_WITH_PUBLISH",
+    "imports": 7,
+    "definitions": 16,
+    "fingerprints": [
+      {
+        "id": "F01",
+        "kind": "CLASS",
+        "sha256": "007320b78fffc5af75284a450061ba089a477fa131de298d3bc021e8e1c7ac9c"
+      },
+      {
+        "id": "F02",
+        "kind": "CLASS",
+        "sha256": "f9e2d00ae16ea8205c463418b158f6246a57703ff2dba94bda7ab0cf86cbb546"
+      },
+      {
+        "id": "F03",
+        "kind": "MESSAGE",
+        "sha256": "2ea03638942f36c15475f4f30daf7796215ee487216ad67c55a7840b3d23f788"
+      },
+      {
+        "id": "F04",
+        "kind": "MESSAGE",
+        "sha256": "6f028e9fb2a5a44b8612fcbea300d6b80df6a35375298ee218a578f11bf799fa"
+      }
+    ],
+    "registration_calls": 0,
+    "external_assignments": 0,
+    "executed": false
+  },
+  "static_scope": {
+    "module_functions": 3,
+    "classes": 2,
+    "methods": 11,
+    "decorators": 3,
+    "module_global_objects": 6,
+    "module_singletons": 0,
+    "registration_calls": 0,
+    "direct_CAN_or_actuator_authority_found": false,
+    "Params_API_found": false,
+    "thread_or_process_spawn_found": false,
+    "direct_filesystem_or_socket_API_found": false,
+    "telemetry_publish_sites": 2,
+    "SubMaster_or_PubMaster_constructor_sites": 0,
+    "setattr_on_fresh_telemetry_output_sites": 3,
+    "full_private_symbol_inventory_retained": true,
+    "static_analysis_not_universal_behavior_or_timing_proof": true
+  },
+  "remote": {
+    "repo": "rownlvh8875-coder/openpilot",
+    "commit": "6383e0cda19f7d9bfeddb6a7732a6da764cca3da",
+    "commit_date": "2026-09-07T13:29:16Z",
+    "git_blob_sha": "2b6e18a83f9a871d857dda9f53fe3e8fad863dd7",
+    "source_sha256": "f8d991c2e2bc09f0b458401d40c0d32774692752903412f359ad29bbc43eca59",
+    "source_bytes": 11878,
+    "source_path_sha256": "4256ce4d660480966c43b3ae459a183cf91225d20f14f6994e7f4b4d0099ed7e",
+    "byte_similarity": 0.9980176304356996,
+    "similarity_method": "difflib.SequenceMatcher on raw bytes, autojunk=False",
+    "remote_extra_config_snapshot_lines": 1,
+    "actual_extra_lines": 0,
+    "semantic_delta": "One observational config-snapshot scalar field; no target authority change found.",
+    "retained_branch_heads": [
+      "7c70355361c929142b520e41412a7965d27bb60e",
+      "00c5fbce0762d6d8058c83798a55635145e551db"
+    ],
+    "historical_planner_import_and_construction_found": true,
+    "historical_caller_sha256": "873065f31178fdfabcdd8f7a730d1c62f3d8a62449f1cb52a07dee783c16d176",
+    "exact_remote_match": false,
+    "direct_device_deployment_proven": false,
+    "direct_tip_file_probes": 20,
+    "tip_success": 2,
+    "tip_404": 18,
+    "scope": "Seven public branch tips of the related user fork plus two upstream tips and reviewed external tip; no private-repository crawl.",
+    "retained_branches": [
+      "carrot-wip-integrated-v6",
+      "dev-integrated-handoff-20260908"
+    ]
+  },
+  "pyc": {
+    "sha256": "8cb1ccbaae6cbda662145a50671ede87103baf61edd7e165381412b5d68c48c3",
+    "bytes": 17067,
+    "magic_hex": "cb0d0d0a",
+    "python": "3.12.3",
+    "mode": "TIMESTAMP_BASED",
+    "header_source_size_match": true,
+    "header_source_mtime_seconds_match": true,
+    "payload_sha256": "0af649ca4050fc08e333335ac42e997d6500aa9a90424c795e5aa3b592b6ea5d",
+    "metadata_sha256": "ed115ea87dda4f6d7ce93196489e19b0be65f811ceb0fc7dd9909835694d0a3d",
+    "PC_compile_exact_bytes": true,
+    "PC_compile_matching_optimization_values": [
+      0,
+      1,
+      2
+    ],
+    "original_optimization_level_identified": false,
+    "code_filename_published": false,
+    "code_names_and_consts_private_only": true,
+    "target_executed": false,
+    "target_imported": false,
+    "untrusted_CodeType_constructed": false,
+    "untrusted_marshal_loads": false,
+    "actual_device_compile": false,
+    "PC_source_compile_constructs_code_but_never_executes_it": true,
+    "current_loaded_module_proof": false
+  },
+  "time_correlation": {
+    "source_mtime_UTC_seconds": "2026-09-09T14:01:31+00:00",
+    "source_ctime_UTC_seconds": "2026-09-09T18:45:19+00:00",
+    "pyc_mtime_UTC_seconds": "2026-09-09T19:18:04+00:00",
+    "boot_UTC_seconds": "2026-10-23T08:37:20+00:00",
+    "pyc_predates_current_boot_seconds": 3763156,
+    "exact_HEAD_reflog_precedes_boot_seconds": 30,
+    "all31_processes_start_after_exact_HEAD_record": true,
+    "creation_or_creator_proof": false,
+    "private_nanosecond_integers_preserved_exactly": true
+  },
+  "reverse_reference_search": {
+    "files": 6912,
+    "bytes": 125666133,
+    "complete_within_extension_size_budget": true,
+    "max_file_bytes": 8000000,
+    "matches": {
+      "self_source": 1,
+      "self_pyc": 1,
+      "external": 0
+    },
+    "generic_dynamic_site_files": 212,
+    "nonregular_candidates_skipped": 2,
+    "dynamic_runtime_construction_excluded": false,
+    "bounded_log_files": 67,
+    "bounded_log_bytes": 699392,
+    "log_mentions": 7,
+    "log_mentions_classification": "UPDATER_STAGING_CLEAN_OUTPUT",
+    "log_traceback_matches": 0,
+    "updater_methods_invoked_by_audit": false,
+    "source_backup_exact_candidates": 6,
+    "regular_source_backups_found": 0,
+    "existing_overlay_whiteout_character_0_0": true,
+    "whiteout_content_read": false
+  },
+  "local_git": {
+    "existing_objects": 39130,
+    "existing_blobs": 19113,
+    "selected_size_min": 100,
+    "selected_size_max": 262144,
+    "selected_blobs_scanned": 18426,
+    "scanned_bytes": 391138258,
+    "bounded_sorted_segments": [
+      12800,
+      5626
+    ],
+    "matching_fingerprint_blobs": 0,
+    "stash_ref_present": false,
+    "refs": 30,
+    "reflog_records": 337,
+    "includes_available_unreachable_objects": true,
+    "missing_object_fetch": false,
+    "whole_history_absence_claim": false
+  },
+  "runtime": {
+    "selected_processes": 31,
+    "focused_rows_errors": 0,
+    "U32_argv_matches": 0,
+    "U32_fd_mmap_cwd_exe_matches": 0,
+    "other_parent_native_mapping_records": 720,
+    "live_python_module_table_observed": false,
+    "intrusive_attach_or_injection": false,
+    "current_runtime_use": "UNKNOWN"
+  },
+  "isolation": {
+    "scope": "DIRECT_U32_TO_FROZEN_M18_IN_PINNED_ACTUAL366",
+    "requirements": {
+      "path_disjoint": true,
+      "namespace_shadow_absent": true,
+      "static_caller_relation_absent": true,
+      "callback_registration_relation_absent": true,
+      "target_mutation_evidence_absent": true,
+      "off_path_interaction_absent": true,
+      "baseline_exact": true,
+      "post_patch_preservation_verifiable": true,
+      "rollback_health_gate_defined": true
+    },
+    "current_target_blockers": {
+      "runtime_caller_found": false,
+      "dynamic_registration_possible": false,
+      "target_mutation_possible": false,
+      "same_namespace_shadow": false,
+      "import_order_interaction": false,
+      "custom_runtime_patch_evidence": false,
+      "current_boot_execution_role_unclear": false
+    },
+    "historical_custom_runtime_integration_found": true,
+    "blocker_scope": "Current relevant registration, target mutation or import interaction supported by inspected exact source/bytecode and pinned actual366 boundaries; not historical integration and not universal live-module absence.",
+    "boundary_hashes": {
+      "B01": "4d29f423bb359427ec36704e99eedd3512af76a4cac672a74f95ae91b43fed35",
+      "B02": "d20ec36947c6aefd12b425daa0f8d1fa39d0d273d1da578b13a20b079aad878a",
+      "B03": "c41f66de1daa06643f09bf6b93163279167f00ae753be0019f18dbe546f7708e",
+      "B04": "2bb8305cce4070d7fba5caa00ec928bedf13a40da3424d8e16ce23ab632e4ab1",
+      "B05": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "B06": "d91817debcdddb7ff4833faacd6c8b84f9cce2b8f2809177d75f307339f37866",
+      "B07": "c627644ff2f986883325aaca1b8410f216f45447c6595a123d8c1e53ef8c83da",
+      "B08": "59254235f9d5ee6dcfd5ca2ef451d7a851a6d531664e014504e067d029cc8038"
+    },
+    "private_reviewed_proof_sha256": "6dc06952ed0e21d78b5a542ffc432288780834ed4e867a005d745a87351c2c17",
+    "evidence_bundle_sha256": "0e50bb2aacb7c5af876688acdf84d083a313296b4a7a6235bb43cfd11e779604",
+    "matrix": {
+      "patch_modifies_U32": "NO",
+      "namespace_shadow": "NO_OBSERVED",
+      "recorder_imports_U32": "NO",
+      "U32_monkeypatches_target": "NO_OBSERVED",
+      "callbacks_or_registration_affect_hook": "NO_OBSERVED",
+      "model_input_mutation": "NO_OBSERVED",
+      "OFF_interaction": "NONE_IN_FROZEN_PATH"
+    },
+    "post_patch_preservation": "DEFINED_AND_VERIFIABLE_NOT_EXECUTED",
+    "rollback_and_runtime_health": "FUTURE_M19_GATE_NOT_EXECUTED"
+  },
+  "attestation": {
+    "frozen_checker_sha256": "3b8f77a388caeb380e78980ba13c02c8e24e8ce4017326f01fbbb7cbf3a90904",
+    "frozen_private_manifest_sha256": "59d952de8a7b4f6530473c5fda392238bc500f25d490d71044b53f9bc2c2f328",
+    "legacy_M192_result": {
+      "schema": 1,
+      "status": "ATTESTED_DIRTY_BASELINE_PARTIAL",
+      "ready_to_retry_M19": false,
+      "checks": {
+        "ACTUAL366_BRANCH_HEAD": true,
+        "OFFROAD": true,
+        "PARAMS_BINDING": true,
+        "TRACKED_UNMODIFIED": true,
+        "TRACKED_INDEX_FLAGS_SAFE": true,
+        "FRESH_CHALLENGE": true,
+        "SAME_BOOT": true,
+        "EXPECTED48": true,
+        "EXACT_PRIVATE_INVENTORY": true,
+        "SOURCE_HASHES": true,
+        "MODEL_HASHES": true,
+        "ROUTES_INVENTORY": true,
+        "M18_SOURCE_PINS": true,
+        "PROCESS_IDENTITIES": true,
+        "CLASSIFICATIONS": true,
+        "RUNTIME_REQUIRED_HASHES": true,
+        "EXACT_M18_PATCH": true,
+        "PATCH_FILE_IDENTITIES": true,
+        "RECORDER_PATH_COLLISION_ABSENT": true,
+        "RECORDER_PHYSICAL_NAMESPACE_ABSENT": true,
+        "REVIEWED_IMPORT_ISOLATION": true,
+        "U32_POLICY": false,
+        "U46_POLICY": true
+      },
+      "reasons": [
+        "U32_PROVENANCE_UNRESOLVED"
+      ],
+      "classification_counts": {
+        "CUSTOM_SOURCE_NOT_REFERENCED": 0,
+        "CUSTOM_SOURCE_REFERENCED": 0,
+        "RUNTIME_REQUIRED": 26,
+        "SAFE_BACKUP_NOT_REFERENCED": 1,
+        "SAFE_GENERATED": 19,
+        "UNKNOWN_USER_OWNED": 2
+      },
+      "unknown_policy_remaining": 1,
+      "observed_inventory_digest": "8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5",
+      "evidence_kind": "READ_ONLY_COMPARISON_OF_TRUSTED_PRIVATE_OBSERVATIONS",
+      "installation_authorized": false,
+      "actual_mutations": false
+    },
+    "M193_result": {
+      "policy": "M193_SCOPED_ISOLATION_V1",
+      "status": "ATTESTED_DIRTY_BASELINE_PASS",
+      "legacy_M192_status": "ATTESTED_DIRTY_BASELINE_PARTIAL",
+      "legacy_receipt_sha256": "de0a4ec4c70c6f78919de57f0233883c89938031d09aa78c7ab529170d7bbf25",
+      "reviewed_proof_sha256": "fc924921912b1ef3a7fd0e21edfb8695db3e29f209234c739962d772630c680e",
+      "evidence_bundle_sha256": "0e50bb2aacb7c5af876688acdf84d083a313296b4a7a6235bb43cfd11e779604",
+      "commitments_verified": true,
+      "isolation": {
+        "proposal": "U32_UNKNOWN_ACCEPTABLE_FOR_PATCH_ISOLATION",
+        "reasons": [],
+        "installation_authorized": false,
+        "legacy_attestation_policy_modified": false
+      },
+      "reasons": [],
+      "ready_to_retry_M19": true,
+      "current_runtime_use": "UNKNOWN",
+      "installation_authorized": false,
+      "actual_mutations": false
+    },
+    "legacy_policy_or_code_modified": false,
+    "runtime_reference_absence_not_fabricated": true,
+    "policy_change_authority": "User M19.3 sections17/18/22 permit explicitly scoped accepted-unknown with strong isolation, without asserting unused runtime.",
+    "trusted_observation_and_explicit_review_required": true,
+    "hashes_not_author_authentication": true,
+    "future_fresh_preflight_required": true,
+    "independently_approved_proof_canonical_sha256": "fc924921912b1ef3a7fd0e21edfb8695db3e29f209234c739962d772630c680e",
+    "reviewed_evidence_bundle_recomputed": true,
+    "fixed_schema_scope_and_exact_condition_keys": true,
+    "stored_receipts_not_future_freshness_proof": true,
+    "future_fresh_receipt_requires_new_reviewed_proof_and_pin": true
+  },
+  "preservation": {
+    "status": "PASS",
+    "all48_hash_metadata_unchanged": true,
+    "source_hashes_unchanged": 8,
+    "model_hashes_unchanged": 15,
+    "process_identities_resolution_env_unchanged": 31,
+    "additional_argv_hashes_unchanged": 31,
+    "current_boundary_hashes_unchanged": 8,
+    "route_metadata_files_unchanged": 4497,
+    "route_metadata_digest": "4bf474e52edc1b6ad250ed125b23a87a34ecd781799fa47040247aebef499c24",
+    "route_content_all_hashed": false,
+    "extra_index_library_pyc_canaries_unchanged": 3,
+    "other_owned_audit_sessions_remaining": 0,
+    "actual_operational_mutations": "NONE",
+    "atime_excluded": true,
+    "whole_device_image_attestation": false
+  },
+  "tests": {
+    "pass": 258,
+    "fail": 0,
+    "skip": 0,
+    "seconds": 28.68,
+    "new_provenance_tests": 58,
+    "frozen_baseline_and_recorder_regression": 200,
+    "classes": [
+      "CPU_FAKE",
+      "FIXTURE"
+    ],
+    "CI_scope": "Provenance and frozen checker CPU fixtures; no device collector or private source.",
+    "command": "PYTHONPATH=. PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 \"$PY\" -m pytest -q -p no:cacheprovider tests/test_u32_provenance.py tests/test_comma_dirty_baseline.py tests/test_comma_dirty_layout.py tests/test_v3_input_format.py tests/test_v3_input_recorder.py tests/test_v3_input_dataset.py tests/test_v3_input_hook.py --tb=short"
+  },
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "M2_readiness": "NO",
+  "ready_to_retry_M19": true,
+  "actual_modifications": "NONE",
+  "not_run": [
+    "RECORDER_INSTALL",
+    "RESTART",
+    "RECORDER_ACTIVATION",
+    "CAPTURE",
+    "JETSON",
+    "USB_REAL",
+    "TRT_REAL",
+    "VEHICLE_PARKED",
+    "ROAD_TEST"
+  ],
+  "privacy": {
+    "raw_paths_source_code_argv_env_credentials_locations_published": false,
+    "raw_source_and_pyc_in_git": false,
+    "anonymous_fingerprints_and_boundaries_only": true
+  },
+  "next_action": "In a separately authorized M19 retry, first read fresh Offroad/Onroad and establish stationary evidence; revalidate frozen structural receipt plus M193 isolation proof before any installation.",
+  "review": {
+    "rounds": 1,
+    "verdict_before_fixes": "CHANGES_REQUESTED",
+    "critical": 0,
+    "important": 1,
+    "minor": 1,
+    "important_fix": "Verify independently retained canonical proof commitment, exact schema/scope/condition keys, recomputed evidence bundle; emit commitments.",
+    "minor_fix": "Bound regular-file acquisition before parsing; reject streams and oversize, including growth race.",
+    "new_review_regression_cases": 17,
+    "fix_verification": "RED then GREEN; full258-test suite rerun",
+    "second_review": "NOT_RUN_PER_SINGLE_FINAL_REVIEW_POLICY",
+    "policy_interpretation": "Defensible only for direct frozen-recorder interaction; does not prove arbitrary live dynamic non-use."
+  },
+  "upstream_refs": {
+    "start_end_equal": true,
+    "actual_baseline_not_rebased": true,
+    "ajouatom_openpilot_carrot_nav": "810e14aaf51176f1a50a113939dc2e70907b394b",
+    "ajouatom_openpilot_carrot_wip": "dfab65d03fcd7100f572fe9e6908f4c6d1e988f6",
+    "ajouatom_carrot_jetson_main": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "zoompilot_jetlink_main": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc",
+    "tjdgus200_openpilot_codex_jetson_review": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722"
+  }
+}

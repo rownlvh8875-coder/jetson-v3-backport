@@ -1,5 +1,130 @@
 # Codex continuation — 2026-10-24
 
+## Latest checkpoint: M19.3 U32 accepted for scoped recorder isolation
+
+Read [M19.3](M193_U32_PROVENANCE_20261024.md) and
+`artifacts/m193_u32_provenance_20261024.json` first. **U32_UNKNOWN_ACCEPTABLE_FOR_PATCH_ISOLATION**;
+M193 scoped baseline assessment PASS / ready to retry M19 YES, with separate
+parked/stationary preflight and installation authorization. No actual changes,
+recorder install/restart/ticket/capture, Jetson/USB/TRT or vehicle operation.
+This does not identify U32 as unused: current live use and precise creator/
+deployment command UNKNOWN, public source provenance PARTIAL.
+
+### Explicit policy versioning, not a legacy false PASS
+
+The user M193 sections17/18/22 permit strong isolation acceptance without runtime
+inactivity proof. Frozen M192 collector/verifier and original private policy stay
+unchanged: before/final legacy CLI exits1 PARTIAL onlyU32. **M193_SCOPED_ISOLATION_V1**
+requires that exact trusted legacy receipt, all22 non-U32 checks true, U32-only
+hold, fixed checkerSHA, receipt binding, boundary8 exact hashes, independently
+pinned canonical proof/schema/scope, recomputed evidence-bundle commitment and reviewed9
+isolation conditions/7 current-target blockers. It records a distinct PASS and
+retains legacy PARTIAL. No fabricated runtime_reference_absent assertion. No
+count whitelist, provenance erasure, live-import absence or install authorization.
+Any new caller/registration/mutation or source/metadata/boundary drift invalidates
+acceptance. A stored receipt/proof is not the next fresh preflight.
+
+### New evidence
+
+Actual366 flags1/0/tracked0, original48/2006files417208589bytes remain exact:
+`8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5`.
+Runtime26/generated+backup20 remain in place, no cleanup. U46 prior resolution is
+unchanged; U32 source11,831SHA07e2bd4c… and cache17,067SHA8cb1ccba… untouched.
+
+AST role OBSERVER_WITH_PUBLISH:7imports/3modulefunctions/2classes/11methods/
+3decorators/6globals; no singleton/registration/CAN/Params/thread/file/socket API
+or target tensor mutation. Two telemetry publish sites and three writes to fresh
+local output messages are explicit effects. No side-effect-free/timing claim.
+Four unique class/message fingerprints F01–F04 are kept privately with public
+hash commitments; raw source/symbols/paths are not committed.
+
+Related public fork commit6383e0cda19f7d9bfeddb6a7732a6da764cca3da (Sep7)
+introduces a99.801763% near source,11878bytes/SHAf8d991c2…/Gitblob
+2b6e18a83f9a871d857dda9f53fe3e8fad863dd7. Actual lacks one47byte config-snapshot
+read; no target authority change. Historical planner imports/constructs helper;
+current boundary8 exact366 has none. Do not call this exact remote deployment.
+20 immutable-tip/path probes had2near matches/18HTTP404; search indexes missed it.
+
+Offline bounded CPython312 parser constructs only data, no marshal.loads or
+CodeType load. Matching PC Python3.12.3 compile (never execute/import) produces
+the exact full cache bytes at0/1/2, so original optimization level is unknown.
+SourcemtimeSep9T14:01:31UTC, ctime18:45:19, pyc19:18:04; all predate currentboot
+Oct23T08:37:20. Exact366 HEAD reflog record is30s before boot and all31 observed
+process starts. Correlation does not prove a creator or current import.
+
+Expanded6912source/config/cache files125666133B: self+selfcache hits only,
+212genericdynamic files not callers;2nonregular exclusions.31focusedOSrows have
+0U32path/argvrefs;720otherparent maps are native libraries. Live module useUNKNOWN.
+67boundedlogs699392B yielded7updater staging cleanup mentions/0tracebacks.
+One of6source-derived backup candidates is an existing char0/0whiteout, not a
+regular backup; no content read or updater/cleanup function executed.
+AvailableGit39130objects/19113blobs;18426small candidates fully fingerprint-scanned
+in sorted bounded12800+5626segments,0hits,30refs337reflogs/no stash/no fetch.
+Missing/large history remains outside an absence claim.
+
+### Files, tests and private proof
+
+New `tools/analyze_u32_provenance.py` and `tests/test_u32_provenance.py` cover
+static profiles/fingerprints, data-only pyc metadata, reference classification,
+explicit scoped acceptance and composition. No vehicle/adapter/recorder code
+changes. CI adds provenance fixtures. Code commit:
+`8dfda5d0ecb648b6fc3917c84cc6aca6b98756a2`; started clean/remoteequal required
+feature at9005b3d910eccc4e99cb41ce554dcb13bc9ad13c. Result commit resolves with
+`git log -1 --format=%H -- artifacts/m193_u32_provenance_20261024.json`.
+
+CPU_FAKE/FIXTURE **258PASS/0FAIL/0SKIP28.68s**:58new +200frozen regressions.
+One independent final review raised Important proof-binding and Minor acquisition
+bounds findings; both fixed in one TDD pass, full suite rerun. No second review.
+Fix commit `e84b921b0fe74501701624ed515a8be69c217bff`. No reviewer hardware/live-use
+endorsement. The analyzer's input acquisition is bounded and regular-file-only.
+
+```sh
+PYTHONPATH=. PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 "$PY" -m pytest -q -p no:cacheprovider tests/test_u32_provenance.py tests/test_comma_dirty_baseline.py tests/test_comma_dirty_layout.py tests/test_v3_input_format.py tests/test_v3_input_recorder.py tests/test_v3_input_dataset.py tests/test_v3_input_hook.py --tb=short
+```
+
+Ignored evidence `.reports/m193-20261024/` contains exact raw before/final JSON,
+source/cache, source/pyc profiles, compile result, remote/context/search/history,
+runtime/boundary snapshots and `reviewed-isolation-proof-private.json`.
+Private proof byteSHA:
+`6dc06952ed0e21d78b5a542ffc432288780834ed4e867a005d745a87351c2c17`.
+`baseline-final-legacy-verdict.json` retains exact legacy PARTIAL;
+`m193-policy-result.json` is the pre-review superseded result; use corrected
+`m193-policy-result-v2.json` plus `reviewed-evidence-bundle-private.json`.
+Independent canonical proof pin:
+`fc924921912b1ef3a7fd0e21edfb8695db3e29f209234c739962d772630c680e`.
+Recomputed evidence-index digest:
+`0e50bb2aacb7c5af876688acdf84d083a313296b4a7a6235bb43cfd11e779604`.
+Do not calculate approval from a received proof. A future fresh legacy receipt
+requires new reviewed proof and an independently retained approval commitment.
+Frozen checkerSHA
+3b8f77a3… and M192expectedpolicySHA59d952de… are unchanged. Old rounded M191
+time metadata remains unsuitable; original raw JSON/integer commitments are used.
+
+Final preservation: original48 exact, source8/model15/process31+env+boot,31argv
+hashes, boundary8 and canaries3 match. Routes4497 metadata digest4bf474e5… unchanged
+(not whole-route payload hashes); atime excluded, observation-window scope only.
+Other owned audit sessions0. No actual source/runtime/Params/overlay mutations.
+
+### Upstream refs at M193 start/end
+
+Unchanged: Nav810e14aaf51176f1a50a113939dc2e70907b394b,
+WIPdfab65d03fcd7100f572fe9e6908f4c6d1e988f6,
+carrot-jetson d0dc96fa32410403dfb2fefff3e2909c11ec109b,
+zoompilot d24328d849b0e5154b55f149dc18c5dfe8bd79cc,
+external a890f6df1bd3eb0478754c68d8b5f92f15e8b722. Actual366 never changed.
+
+### Next exact action
+
+In a separately authorized M19 retry, first read fresh1/0 and establish stationary
+evidence. Obtain new frozen structural receipt, recheck current boundary8 and the
+M193 reviewed isolation proof; never edit the old policy to assert unused runtime.
+No actual install is authorized by this handoff. After an authorized patch, use
+the separate POST6afterhashes+original48-by-private-path profile. Preserve all48;
+do not reuse shifted anonymous IDs or run PRE gates as a POST profile.
+COMMA_REAL_READ_ONLY only. Numerical PARITY_UNDETERMINED/M2NO/M1DO_NOT_INSTALL
+unchanged and Jetson plan unaccessed. The M192/M191 sections below are historical;
+their U32 hold is superseded only by the explicit M193 scoped policy above.
+
 ## Latest checkpoint: M19.2 exact attestation PARTIAL, U32 hold only
 
 Read [M19.2](M192_ATTESTED_DIRTY_BASELINE_20261024.md) and
