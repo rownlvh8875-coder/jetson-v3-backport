@@ -102,7 +102,10 @@ New measurement commit **95150539291aa483f563056bc6fa776e684751d4**, offline ana
 e5c8a4a731f61c74d43461f554dce44668149cce, matching verifier-spec isolation fix
 **05d0e06f5c562ed7fb7092abb30c9955f453fb16**. Executed new measurement tool SHA
 29a8bacc9b04df83925a51fc6ff6588c804d66867888706b157c87d3f32a09aa.
-The evidence/handoff publication commit contains this section; resolve its full
+Evidence/docs publication **34e9b591cffb3a29f7d25279f5f4d10eb10221f2** was normally
+pushed to the same feature branch; remote equality, clean working tree and
+unchanged main/old-feature refs were verified afterward. The final handoff
+commit contains this verification record; resolve its full
 SHA with `git log -1 --format=%H -- docs/CODEX_CONTINUATION.md` and current
 development HEAD with `git rev-parse HEAD`, rather than introducing self-hash
 recursion. Push only the same feature branch; main/old feature remain unchanged.
