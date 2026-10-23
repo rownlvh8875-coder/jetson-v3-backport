@@ -50,6 +50,10 @@ Final evidence/continuation commits follow these checkpoints. Obtain the actual
 current containing HEAD with `git rev-parse HEAD` and
 `git log -1 --format=%H -- docs/CODEX_CONTINUATION.md`; the final response records
 the resulting remote HEAD. Only feature/jetlink-multimodel-carrot is the target.
+Evidence publication commit **f467036265dfdbf21f1a1abf38accb24e5828c02** was
+normally pushed and verified equal to the remote feature HEAD, with a clean
+tree, before this final handoff-only update. This update does not change any
+executed implementation, source hash or device result.
 Main remains2519ad0bdbf6e796fa590063fc90d4d6461b6b8d; old feature remains
 26c9c06a5e51ff0e8d3a1e8575eece548e87f3b5.
 
