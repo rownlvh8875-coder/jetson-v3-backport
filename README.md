@@ -52,6 +52,14 @@ actual366/Offroad1·Onroad0와 원본 source pin은 확인했지만 미추적48�
 dependency overlay가 실제 사용 중이므로 일괄 정리는 불가하다. 전후 해시·상태를
 보존했고 이동·삭제·ignore 변경은 하지 않았다. **M19 설치 재시도 NO / M2 NO**다.
 
+2026-10-24 [M19.2 exact dirty baseline](docs/M192_ATTESTED_DIRTY_BASELINE_20261024.md):
+runtime overlay 48항목을 이동·삭제 없이 원래 digest로 재검증했다. U46은 PC에서
+byte-exact 재생성했지만 U32의 현재 dynamic 사용 여부가 미확정이므로
+**ATTESTED_DIRTY_BASELINE_PARTIAL / M19 재시도 NO**다. 읽기 전용 checker와
+disposable layout 검증을 추가해 **CPU200 PASS / FAIL0 / SKIP0**다. 과거 JSON
+전송기의 nanosecond 정밀도 손실도 수정·재수집했으며 baseline은 바꾸지 않았다.
+실제 source 변경·recorder 설치·재시작·capture는 하지 않았다. **M2 NO**를 유지한다.
+
 2026-10-20 [외부 Jetson 최적화 검토](docs/JETSON_REVIEW_A890_ANALYSIS.md):
 DeviceState와 InputFastpath는 기존 검증을 유지한 기본 OFF 실험 후보다.
 AIO는 운영 transport에 연결하지 않았으며, 실장 순서는 M0 → 기본 V3 → USB →

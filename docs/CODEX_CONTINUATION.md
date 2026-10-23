@@ -1,4 +1,135 @@
-# Codex continuation — 2026-10-23
+# Codex continuation — 2026-10-24
+
+## Latest checkpoint: M19.2 exact attestation PARTIAL, U32 hold only
+
+Read [M19.2](M192_ATTESTED_DIRTY_BASELINE_20261024.md) and
+`artifacts/m192_attested_dirty_baseline_20261024.json` first. The user explicitly
+replaced the former actual clean-tree gate with exact private attestation.
+**Preserve all48 entries in place. ATTESTED_DIRTY_BASELINE_PARTIAL;
+Ready to retry M19 NO.** U46 is resolved by byte-exact PC generation; U32 remains
+POSSIBLY_DYNAMIC_REFERENCED with runtime/import use UNKNOWN. No accepted-unknown
+exception was granted. Do not clean up, install, restart, arm or capture.
+
+### Date, commits and exact preserved baseline
+
+2026-10-24. Started clean/remote-equal on the required feature at
+**377e37653423d69cb5a6a7153da93c60fd9af313**. Checker commits:
+`2bb91ff1562694328bf1fe1d038b644afed7bf00` and
+`25dc746a476fcb1ee35b7acaf35d16ffe4795a76`; final review fix
+`efa65e669bc51f9edd392a30af50a217613244a6`. Result commit resolves with
+`git log -1 --format=%H -- artifacts/m192_attested_dirty_baseline_20261024.json`;
+current HEAD with `git rev-parse HEAD`. Final result/docs commit and normal
+same-feature push follow final review. Main and original feature stay unchanged.
+
+Actual carrot-nav **366d6eae9aa9962104391e1d997fe956dea8f64d**, flags1/0,
+tracked0, collapsed untracked48: **2006 regular files /417208589bytes /283dirs /
+0symlinks**. Every48 tree digest and original full inventory commitment recompute
+exactly:
+`8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5`.
+Source8/model15 hashes, process31 identities+resolution-env+boot, Params physical
+binding, route4497 metadata digest and index/native-library/U32-cache canaries
+match before/final. Route digest:
+`4bf474e52edc1b6ad250ed125b23a87a34ecd781799fa47040247aebef499c24`;
+not all-route content hashing. Atime excluded; this is observation-window scope,
+not a whole-device image/live Python module attestation. No actual writes.
+
+Original classifications remain generated19/backup1/runtime26/unknown2.
+Separate refined policy resolves U46, so **remaining unknown1**. Runtime26 and
+generated/backup20 stay in place; earlier MOVE proposals are not execution steps.
+U48 overlay is mapped by23processes/18files/2179segments. Recorder-specific
+path/parent/backup/import collision NO in audited physical/static scope.
+
+### Provenance findings and hold
+
+U32 SHA `07e2bd4cdac1479f85447c1f96182c8f24603a9184b11045086d7433b68e5b70`,
+11831bytes: AST observer helpers publish telemetry; no direct CAN/actuator/Params
+authority found. Not executed/imported and not certified side-effect-free.
+Scoped4795-file scan found no exact external module/class reference; generic
+method matches are not callers. Timestamp-based CPython3.12 cache source-size/
+mtime header matches but proves neither exact source bytes nor current activity.
+No observed OS reference among31 related processes;37 inaccessible others and
+closed Python sources prevent runtime absence proof. Local19113blobs/30refs/
+337reflog records and two bounded logs did not identify a creator. **U32_POLICY
+false is the only attestation hold. Do not turn namespace isolation into a claim
+that U32 is unused or automatically accept the unknown.**
+
+U46 SHA `21ac37949a83dcb5b2799007c8ebc93909efaff7bf6d6481fb49a8eb2a43314e`,
+1056482bytes: historical2163byte source at1cd1b2c… plus isolated official Cython
+3.2.9/Python3.12.3/C mode/original layout+metadata regenerated identical rawbytes.
+No generated-output rewriting, source execution, native compilation or actual
+build. All12 inspected historical recipes choose C++; original creating command
+is unknown, but generated legacy content is established. Current C++ derivative
+is mapped by15processes; preserve it and the C intermediate.
+
+### Metadata precision correction and private evidence
+
+M191's old private receiver parsed/re-serialized JSON through JavaScript Number,
+rounding4574/4578 nanosecond node time fields. SHA strings and original on-device
+8b0c… digest survived. New strict verifier rejected rounded records. Fixed private
+receiver saves original verified decompressed JSON bytes; local VM RED→GREEN and
+fresh Python-int recomputation recover all48 original digests without rebaseline
+or time tolerance. Historical M191 docs/JSON retain values with a correction note.
+**Do not use old numeric times, rounded expected files or the former receiver.**
+
+Final ignored evidence is `.reports/m192-20261024/`:
+`collector-exact-before-private.json`, `collector-filterguard-final-private.json`,
+`expected-baseline-policy-v2-private.json`, `attestation-final-public.json`,
+provenance/reference/history/regeneration files and
+`canaries-filterguard-final-private.json`. `collector-approved-final-private.json`
+is the pre-review intermediate; the filterguard snapshot was collected with the
+final code. Pin the raw
+expected-file byteSHA independently before verify:
+`59d952de8a7b4f6530473c5fda392238bc500f25d490d71044b53f9bc2c2f328`.
+Earlier expected files are intermediate/historical, not current policy. None of
+these private raw mappings/source/argv/env/addresses is committed.
+
+### Checker, tests and future gate
+
+New stdlib-only `tools/check_comma_dirty_baseline.py` separates memory-only Linux
+`collect-private` from anonymous pure `verify`. Requires trusted observations,
+expected-file digest, fresh correlation challenge, exact original classifications,
+sameboot/process/source/model/routes, bound Params alias, ordinary Git index flags,
+exact M18 patch and absent physical recorder namespace (including ignored/empty
+paths). No writes/imports/cleanup/fetch; Git external fsmonitor disabled ephemerally.
+Challenge/hashes do not authenticate a sender or replace a fresh next preflight.
+Actual CLI exits1 intentionally: PARTIAL, onlyU32_PROVENANCE_UNRESOLVED.
+
+**CPU_FAKE/FIXTURE200 PASS /0 FAIL /0 SKIP in27.61s**: checker68, actual366
+disposable48-role layout1, frozen recorder131. Local raw-JSON Node VM separately
+PASS. Layout test verifies forward/reverse hashes, original AST/function identity,
+OFF path and recorder root/overlay precedence without vehicle imports. This does
+not attest actual overlay contents by fixture. CI runs checker CPU fixtures only.
+
+Final independent static review found one Important external-filter execution
+gap. Clean/process filter and delegated-submodule marker writes reproduced RED;
+the status guard now rejects applicable external drivers and gitlinks before
+status. All3 GREEN plus inapplicable-global-filter regression and suite200/200.
+Actual read-only scope found1 registered driver but0 applicable among6160indexed
+paths and0gitlinks. Nothing is disabled/rewritten in actual Git config/attributes.
+Reviewer recomputed exact48 commitments; no device/test execution or live module/
+install/parity approval. No second reviewer.
+
+```sh
+PYTHONPATH=. PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 "$PY" -m pytest -q -p no:cacheprovider tests/test_comma_dirty_baseline.py tests/test_comma_dirty_layout.py tests/test_v3_input_format.py tests/test_v3_input_recorder.py tests/test_v3_input_dataset.py tests/test_v3_input_hook.py --tb=short
+```
+
+Next action: obtain concrete U32 creator/caller/deployment provenance, or the
+strong explicit isolation review required by the policy, without runtime injection
+or file mutation. After resolution, a separately authorized M19 needs fresh
+offroad/stationary checks and PRE attestation. After an authorized patch, use a
+separate POST profile: six exact after hashes plus original48 by private path,
+not shifted anonymous IDs/count guesses. Do not relax PRE tracked0/namespace
+checks. Offline M18 builder still needs a clean disposable reference.
+
+All5 upstream refs re-queried unchanged: Nav810e14aa…, WIPdfab65d0…,
+carrot-jetsond0dc96fa…, zoompilotd24328d8…, externala890f6df…; fullSHAs in M192
+JSON. Actual366 retained. Protected remote main2519ad0b…/old-feature26c9c06a…
+unchanged. COMMA_REAL_READ_ONLY only; recorder install/activation/capture,
+VEHICLE_PARKED/ROAD_TEST/Jetson/USB/ORT/TRT NOT_RUN. M15/M18 core/M16/M17 frozen.
+**PARITY_UNDETERMINED / M2 NO / M1 DO_NOT_INSTALL** remain; Jetson plan unaccessed.
+
+The M191/M19 sections below are historical; their clean-tree/U46-unknown advice
+is superseded only as described above.
 
 ## Latest checkpoint: M19.1 audited48 entries; no actual cleanup/install
 

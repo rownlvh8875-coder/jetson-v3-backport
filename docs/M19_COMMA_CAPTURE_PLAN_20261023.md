@@ -1,5 +1,15 @@
 # M19 — future comma capture plan; NOT_EXECUTED
 
+**2026-10-24 gate update:** the user explicitly replaced the earlier clean-tree
+requirement with the exact private attestation gate in
+[M19.2](M192_ATTESTED_DIRTY_BASELINE_20261024.md). Preserve all48 runtime-overlay
+entries in place. This is not a count whitelist or installation approval.
+Require ATTESTED_DIRTY_BASELINE_PASS with freshly bound identity/content/metadata,
+resolved or explicitly reviewed U32/U46 isolation and zero recorder collision.
+The current actual result is PARTIAL on U32, so installation remains blocked.
+The parked/stationary, disposable device test, OFF health and separate execution
+authorization below still apply. M19.2 itself performs no install/restart/capture.
+
 This plan requires separate explicit user approval before any actual installation,
 restart, activation or recording. M18 only prepared/tested an offline default-OFF
 candidate. Numerical parity is PARITY_UNDETERMINED, M2 USB readiness NO. No V3
@@ -20,8 +30,9 @@ branch/HEAD/working tree and require carrot-nav
 `366d6eae9aa9962104391e1d997fe956dea8f64d`; latest Nav is not a replacement.
 Capture private before hashes of the five M18 source pins, existing model files,
 current launch/manager/modeld process identities, and route file inventory. No GPS,
-route names or network/SSH details go to public evidence. Dirty user files or any
-pin mismatch stop deployment; never stash/reset/delete their changes automatically.
+route names or network/SSH details go to public evidence. Any tracked change,
+unattested untracked content or pin mismatch stops deployment; never
+stash/reset/delete changes automatically.
 
 Read-only inspect candidate storage mount/permissions/free space. Recommended
 root `/data/media/0/v3_input_capture/` is not yet created or verified. It must be

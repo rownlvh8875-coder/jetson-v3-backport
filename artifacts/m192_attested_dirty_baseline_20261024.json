@@ -1,0 +1,794 @@
+{
+  "schema_version": 1,
+  "stage": "M192",
+  "date": "2026-10-24",
+  "status": "ATTESTED_DIRTY_BASELINE_PARTIAL",
+  "evidence_classes": [
+    "COMMA_REAL_READ_ONLY",
+    "CPU_FAKE",
+    "FIXTURE"
+  ],
+  "development": {
+    "branch": "feature/jetlink-multimodel-carrot",
+    "starting_head": "377e37653423d69cb5a6a7153da93c60fd9af313",
+    "code_commits": [
+      "2bb91ff1562694328bf1fe1d038b644afed7bf00",
+      "25dc746a476fcb1ee35b7acaf35d16ffe4795a76",
+      "efa65e669bc51f9edd392a30af50a217613244a6"
+    ],
+    "result_commit_resolution": "git log -1 --format=%H -- artifacts/m192_attested_dirty_baseline_20261024.json"
+  },
+  "actual": {
+    "branch": "carrot-nav",
+    "head": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+    "offroad": 1,
+    "onroad": 0,
+    "tracked_modifications": 0,
+    "untracked_short_entries": 48,
+    "recursive_regular_files": 2006,
+    "recursive_bytes": 417208589,
+    "directories": 283,
+    "symlinks": 0,
+    "baseline_digest": "8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5",
+    "attestation_is_not_installation_authorization": true
+  },
+  "entries": [
+    {
+      "id": "U01",
+      "root_kind": "file",
+      "root_sha256": "c3e261196f81a403c6eb23c1f67fedec56669b0821efc6ccc0d9fb7b45d06dee",
+      "tree_digest": "f96e445b85bcd72845c127ed13bda6f1d10309b0365f9204cf42bfbfe59fe1e0",
+      "regular_files": 1,
+      "bytes": 600952,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U02",
+      "root_kind": "file",
+      "root_sha256": "285fea414f09d7d09c9984ca33e7d80a2495247ba81da1d5fa8b50aad4d42179",
+      "tree_digest": "8846182b1dfedb2c0b854c8c4755704cf7e778fc78c2e7a95244fdc33df3f81b",
+      "regular_files": 1,
+      "bytes": 43702,
+      "historical_classification": "SAFE_BACKUP_NOT_REFERENCED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U03",
+      "root_kind": "file",
+      "root_sha256": "6252667dc3e5f24152a955035b054e7a66d636f633c3657ad644197787d29daf",
+      "tree_digest": "18a07f6567a8a5ab15ed4564d70775f25b7b0708565f15f3892c25e99cdbdca6",
+      "regular_files": 1,
+      "bytes": 53886,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U04",
+      "root_kind": "dir",
+      "root_sha256": null,
+      "tree_digest": "483f0cfa5f151a3ff439a59a91030971c4ca4df1d7535cd7e1467a4393c2e68e",
+      "regular_files": 12,
+      "bytes": 7688342,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U05",
+      "root_kind": "file",
+      "root_sha256": "4f1368346b84ede435b38e401647594c7a084da5fc4246d998897d746f024e6f",
+      "tree_digest": "c44051fcfa17e01d4f296719af09a77e4f31e6d7648cf5eaa91a3c6fb8ba42ef",
+      "regular_files": 1,
+      "bytes": 1896688,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U06",
+      "root_kind": "file",
+      "root_sha256": "be17c3f3f854c745e70eb5b6ad259bfa88b1706695778f81250f2050b95f5601",
+      "tree_digest": "e1d6525489bb93902cffad8463e379fbce886865e322da52a202cd0f7620f948",
+      "regular_files": 1,
+      "bytes": 6418,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U07",
+      "root_kind": "file",
+      "root_sha256": "38fcfcfaf70e6c70d789543e7337ad0774d6570842f1a9efe98a8f2c02ac78cf",
+      "tree_digest": "6b05d9ea6ac4a7b8bb0e6c14d924f5667a83e0b1443a89b46b94e85d011c00d7",
+      "regular_files": 1,
+      "bytes": 25050,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U08",
+      "root_kind": "file",
+      "root_sha256": "ee8cd91a5906bef8e5d17c7cccfa9024c49a5a96ce639350cf40c3b74668a3b3",
+      "tree_digest": "b7826fe972c4facaa0973a15c0ef1cd9f7d203c86afa57e4c6d5cf0d99a4c572",
+      "regular_files": 1,
+      "bytes": 406015,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U09",
+      "root_kind": "file",
+      "root_sha256": "91a34b5027b30ecf2b406e2e56860129ef9ba9396d9a8c293b4c5fb123f92758",
+      "tree_digest": "1ad685c97fec132cedc6bb87c5fccae6a13f4df07b9484cb67a8ba99d6b9274f",
+      "regular_files": 1,
+      "bytes": 25048,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U10",
+      "root_kind": "file",
+      "root_sha256": "e56dd3a3b9d06b9e2c4c3a6a4180d8a50d4f463220c25464bed9c1f4078b2c57",
+      "tree_digest": "4ba88ead4d9c2f53662f60f9e75bb5700fb2478c56a0ded82940375dcd3e7622",
+      "regular_files": 1,
+      "bytes": 416743,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U11",
+      "root_kind": "file",
+      "root_sha256": "6a5d7090eb5f4ae3e31cc438f5a32df1ec8b940c3b70d98dff6862b30296e9d3",
+      "tree_digest": "ca28e684488163266d8fdf911f1b36666f4e83f59ab66dd6cf36eaaac4d0a400",
+      "regular_files": 1,
+      "bytes": 25058,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U12",
+      "root_kind": "file",
+      "root_sha256": "b7ab64a4cbb0098384f6f2012164cdf35e4b3380cf807a0ac70b9ef1ee716ff6",
+      "tree_digest": "07cbdc7be30fa607d1818c759dadd872e3ba02416a5868df66bc28d009d50e29",
+      "regular_files": 1,
+      "bytes": 413006,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U13",
+      "root_kind": "file",
+      "root_sha256": "321635653169776ba7b418b6e05b5584532062c0e27272bcf2d253ba1a8d1e2b",
+      "tree_digest": "efe7afb4dc2d80d0919ed5044d006f3ff848c1cb5c7638f6534402093b8a1d36",
+      "regular_files": 1,
+      "bytes": 25060,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U14",
+      "root_kind": "file",
+      "root_sha256": "f145e62f6bbea2e23b37f0f9091f0dc85f707f6f28d26f41a9ad0ce945fe7c78",
+      "tree_digest": "46d6547c5a47defd8aa243e89546f590ca22770c5eeacca34189127763bf698b",
+      "regular_files": 1,
+      "bytes": 440652,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U15",
+      "root_kind": "file",
+      "root_sha256": "d71fab6e304d4a6a30995032e97a489b7b63adb3a80cd166e2530ed4a7cb97c1",
+      "tree_digest": "6bac9edaa0b83a73b77767bae80e8b86f498fb7ba6af44a363129936d8b326f0",
+      "regular_files": 1,
+      "bytes": 25050,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U16",
+      "root_kind": "file",
+      "root_sha256": "2777298a6581451f402bb30f56477048abbad9e4f8c0a146dafd803fe534e854",
+      "tree_digest": "8f32903c68dc2a61a3d83df485827acd07e6e56f4bc7f24f84335b6acd464034",
+      "regular_files": 1,
+      "bytes": 435239,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U17",
+      "root_kind": "file",
+      "root_sha256": "9687dcadd13325b77f6376e500fd5b0dfd6050b2d62f5767535f9585309b5018",
+      "tree_digest": "9edc1f3465ff399c672b7803e4209640b65c237e995ce1bed769a9f04d0f7875",
+      "regular_files": 1,
+      "bytes": 25052,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U18",
+      "root_kind": "file",
+      "root_sha256": "e6a1c60339ea57f3060012bf289a488ac4747f78f0c98703e38f39e69bede922",
+      "tree_digest": "77e425314f8010d6c6b0a95f51b6da10f06ad84d72217859533a441fba2be069",
+      "regular_files": 1,
+      "bytes": 428080,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U19",
+      "root_kind": "file",
+      "root_sha256": "c279a65bfd9ed7d3438f4e107d902084f88f02b8d955fd326a9d8c4de9e3daf2",
+      "tree_digest": "ccd10b5b340602e8f4dc5104e57c8b0b6004679c95db61c373fef90dd9778f2e",
+      "regular_files": 1,
+      "bytes": 25054,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U20",
+      "root_kind": "file",
+      "root_sha256": "391c036a711b24b282dfd2a2091cb2571f1f1dab48a55b04169812303a66f64d",
+      "tree_digest": "9acf303881c629d349dbacb11957ac15ce00ee19cef4dbbcd8d92df6a0f13d14",
+      "regular_files": 1,
+      "bytes": 427473,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U21",
+      "root_kind": "file",
+      "root_sha256": "8d25e63e0c1fb8d8ed6a83a4e59ed4b5e982100b8bd2121976a5fa21f4074553",
+      "tree_digest": "682754f93a33d1e44aa5f534a1cf490d8387137adea25628a64cdddb04d1557b",
+      "regular_files": 1,
+      "bytes": 25056,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U22",
+      "root_kind": "file",
+      "root_sha256": "01df1469bd804a75baa4706a6f194abcee5022358ea5c139f45cc4655bf06c99",
+      "tree_digest": "bbc844a6f4e07b65a6d1ef672165bec775ffc628137c512e4de28e5f3db00209",
+      "regular_files": 1,
+      "bytes": 423313,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U23",
+      "root_kind": "file",
+      "root_sha256": "9d56808f7dc143bc926d44351807e690023b8ae3c1d118d3485e32cb71216b79",
+      "tree_digest": "a04bc6ef595a0cd4322a8d81c8302224b0cf41781569d4968176cdf7daa20063",
+      "regular_files": 1,
+      "bytes": 25048,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U24",
+      "root_kind": "file",
+      "root_sha256": "808fd8c134ca1089c71c0c3b23b13f12ba06d6a1f7dc9588a3ee6d4f8398608e",
+      "tree_digest": "817225e7359cd47ee92ed3985152d9814ccf9a4fcdebf4dcb15ff3e6b4c86e5b",
+      "regular_files": 1,
+      "bytes": 439049,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U25",
+      "root_kind": "file",
+      "root_sha256": "30a867407c4da38d53d899fdf8f858edd072b8883ea3cf199abcae188599a9b3",
+      "tree_digest": "e3f0511e00b2c10d1d545b4c0d6ac04c8a989b41965d9ba65b9ace3134019e96",
+      "regular_files": 1,
+      "bytes": 24617,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U26",
+      "root_kind": "file",
+      "root_sha256": "bbb765d775f0e52e481b531ed6926c06dedf07fb58cf9c8ab0923fb7faca951c",
+      "tree_digest": "2525c16f8059017e3c3b2e35e437b764ea72c2fcd99d0e6fbba783e1c43dc18e",
+      "regular_files": 1,
+      "bytes": 369483,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U27",
+      "root_kind": "file",
+      "root_sha256": "3d8db69686550dd24a8a390c0abb0086851b39878b279d1863068d40283d6b48",
+      "tree_digest": "5770f7bbfbc2626ea1c2689272ba0bc79c35555913b658f7cd6e4c4d1fe5bdea",
+      "regular_files": 1,
+      "bytes": 1415130,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U28",
+      "root_kind": "file",
+      "root_sha256": "6f863b107f7b1668a28205f7d98be74897a9461a824e1d33b15c95d4288ab694",
+      "tree_digest": "7aa0ad06eefa5b1d3f5b81fc0a2b06eaa9486cd0b43b370b00302fbf3c45fa43",
+      "regular_files": 1,
+      "bytes": 6449929,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U29",
+      "root_kind": "file",
+      "root_sha256": "e529805611111ec63a216d7d0691737da8cd765906ebed7d18ccdbfa86b748a5",
+      "tree_digest": "6decd22ef6b9a513eeb6a38d720b64cf5ee48e30cc41ff44042d0b5ea9a58dec",
+      "regular_files": 1,
+      "bytes": 1422455,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U30",
+      "root_kind": "file",
+      "root_sha256": "db197e3a74ea4b1fc7120e2b0d84c4de5b550ca4b9f953a29f343434c16bc32e",
+      "tree_digest": "da536e4f74ce13151f938e14c86a608493b86bb6c0d219541f53e072463a1f8d",
+      "regular_files": 1,
+      "bytes": 587778,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U31",
+      "root_kind": "file",
+      "root_sha256": "c082cded5221b2ef2093894ac14787f231a18e6827a4be6452f01ad91ae6577f",
+      "tree_digest": "5a5691b07a198992516e98a16be99b1e8578095d252da6f26e1ef0cf2b46d3ca",
+      "regular_files": 1,
+      "bytes": 431784,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U32",
+      "root_kind": "file",
+      "root_sha256": "07e2bd4cdac1479f85447c1f96182c8f24603a9184b11045086d7433b68e5b70",
+      "tree_digest": "d751262a37c76089fe063769fdec1d8adbea0ed6cfe38951a1becd83320d6a36",
+      "regular_files": 1,
+      "bytes": 11831,
+      "historical_classification": "UNKNOWN_USER_OWNED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U33",
+      "root_kind": "file",
+      "root_sha256": "355c074a31f53e90d0bb21f3c8c2f3f54ec4628145e1f4647790753ed497aa9b",
+      "tree_digest": "066700256ef569d5422a5858342eea4a895f01f51c34a3e7bc86d024b2ab4f79",
+      "regular_files": 1,
+      "bytes": 123,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U34",
+      "root_kind": "file",
+      "root_sha256": "896fa842691af0ab98733964107e53b31694f016416e8e0de85de035d026f84d",
+      "tree_digest": "45ab77cefe7e1d5b930019c4e55b144b7028de2aa6e090a98f281f9d0207d4f1",
+      "regular_files": 1,
+      "bytes": 1406645,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U35",
+      "root_kind": "file",
+      "root_sha256": "0388db35231f6bb0a9f2b5d0f6da45b5589662c809634a978ae2c8bacd78c0c7",
+      "tree_digest": "4a01d6f915072c2a7c6196f570de88d8d67a6686e980a61f9457367aa7bab764",
+      "regular_files": 1,
+      "bytes": 1406475,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U36",
+      "root_kind": "file",
+      "root_sha256": "8139895b0f810e351b1e3e9fd649ffcc80d7fe26583e8482f58f341c7d2900d5",
+      "tree_digest": "1fbdb6cbe425f71abe3452387fcc18bfcbba3bfdc17332dfa056de5ffa06d2b6",
+      "regular_files": 1,
+      "bytes": 818,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U37",
+      "root_kind": "file",
+      "root_sha256": "19d1eb56d165a93d6194d999ac144caca49e67ff9ff3c4912c24963e2b001ec3",
+      "tree_digest": "ae3c6556a0cfdb95ced3b4898793cc88aca2c758bc465c827266359e72d558d4",
+      "regular_files": 1,
+      "bytes": 29315473,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U38",
+      "root_kind": "file",
+      "root_sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+      "tree_digest": "2b850ea61ca026c6996252d7b06d887865bc6d7edae567226789e57400eee33b",
+      "regular_files": 1,
+      "bytes": 1,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U39",
+      "root_kind": "file",
+      "root_sha256": "c5a2eda4dda9ab5b0072be0946d406279f6735f548c40806ce8b9df218f4f3cd",
+      "tree_digest": "f70e7b3109978386a78c7bbe0bfb5926e5ea111ed69e39856640cf694d7a49c3",
+      "regular_files": 1,
+      "bytes": 47185920,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U40",
+      "root_kind": "file",
+      "root_sha256": "d9ed156241f1396473ab397224d4f4a6b1c38149446d36c84363cab632827a85",
+      "tree_digest": "b1bf0a574f2ddd78947b3f6ee2003f7a7fa4361b44eed8dbd85f8547b450a00f",
+      "regular_files": 1,
+      "bytes": 37378400,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U41",
+      "root_kind": "file",
+      "root_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tree_digest": "d64233c19f8956ea871c515c86cdd616a526e8abbcdc4a39f55a67811fcafbfc",
+      "regular_files": 1,
+      "bytes": 0,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U42",
+      "root_kind": "file",
+      "root_sha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce",
+      "tree_digest": "6cc63efa335ae0909d470748dd13cc2862d4c53161cd128a5468622facd5ffc0",
+      "regular_files": 1,
+      "bytes": 1,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U43",
+      "root_kind": "file",
+      "root_sha256": "6af431ec3d16e5fe39abcf1e9432d5eaacb8c106e72dc6c1d260b33f2534ef09",
+      "tree_digest": "dc90e7c1bd061ba11b937670015174f78e538f0ae0597a25e3633a61b266bd02",
+      "regular_files": 1,
+      "bytes": 224,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U44",
+      "root_kind": "file",
+      "root_sha256": "181ded47256cd872b7bbc2405b78043a640cb85ff0f2b6a8fc7216623504cd4f",
+      "tree_digest": "49e70ced78e0b422ba0510f90e1f160cd9c5d9f3da9f0bf6961fc2a558d89a9f",
+      "regular_files": 1,
+      "bytes": 1048690,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U45",
+      "root_kind": "file",
+      "root_sha256": "f3580f64fa95b5f77280ffbc7626dd338409f5f21f5d6a0166a0e988b219be71",
+      "tree_digest": "ad0c7ee0a87c271b963c3de2109be696e88f131eb83bdd65aa60df898346525d",
+      "regular_files": 1,
+      "bytes": 6125944,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    },
+    {
+      "id": "U46",
+      "root_kind": "file",
+      "root_sha256": "21ac37949a83dcb5b2799007c8ebc93909efaff7bf6d6481fb49a8eb2a43314e",
+      "tree_digest": "51cb940e78091f21e9e82d9751061763326222958a5bbd7513fe4f94ca5160a8",
+      "regular_files": 1,
+      "bytes": 1056482,
+      "historical_classification": "UNKNOWN_USER_OWNED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U47",
+      "root_kind": "file",
+      "root_sha256": "76712fde72dbf0ffb2fd6fff5a65d19748912a83c3943ad0657e9e8a67028e9b",
+      "tree_digest": "505f7944bac48dfb3f5d2394edce3a47963b9e60b80e1117179f984a49ad6903",
+      "regular_files": 1,
+      "bytes": 1912633,
+      "historical_classification": "SAFE_GENERATED",
+      "recommendation": "KEEP_IN_PLACE"
+    },
+    {
+      "id": "U48",
+      "root_kind": "dir",
+      "root_sha256": null,
+      "tree_digest": "9a6f906c4772613e86e1cde52d508d007b7b4639a5549288ad6bdc1bd75d648d",
+      "regular_files": 1948,
+      "bytes": 265312719,
+      "historical_classification": "RUNTIME_REQUIRED",
+      "recommendation": "RUNTIME_DEPENDENCY_DO_NOT_TOUCH"
+    }
+  ],
+  "historical_classification_counts": {
+    "CUSTOM_SOURCE_NOT_REFERENCED": 0,
+    "CUSTOM_SOURCE_REFERENCED": 0,
+    "RUNTIME_REQUIRED": 26,
+    "SAFE_BACKUP_NOT_REFERENCED": 1,
+    "SAFE_GENERATED": 19,
+    "UNKNOWN_USER_OWNED": 2
+  },
+  "refined_policy": {
+    "runtime_required_preserved": 26,
+    "generated_and_backup_preserved": 20,
+    "unresolved_remaining": 1,
+    "accepted_unknown_exceptions": 0,
+    "original_classification_manifest_unchanged": true,
+    "U32": {
+      "status": "POSSIBLY_DYNAMIC_REFERENCED",
+      "bytes": 11831,
+      "sha256": "07e2bd4cdac1479f85447c1f96182c8f24603a9184b11045086d7433b68e5b70",
+      "runtime_reference": "UNKNOWN",
+      "general_import_risk": "UNKNOWN",
+      "recorder_namespace_shadow_observed": false,
+      "decision": "UNRESOLVED_NO_ACCEPTANCE",
+      "static_semantics": "Observer-oriented helpers publish two telemetry message types; no direct CAN, actuator or Params authority found. No execution or side-effect-free claim.",
+      "reference_search": {
+        "files": 4795,
+        "bytes": 87537788,
+        "exact_external_module_class_references": 0,
+        "generic_method_match_files_not_callers": 1178,
+        "dynamic_site_files": 206,
+        "target_literal_in_dynamic_sites": 0,
+        "excluded_large_or_nonregular_candidates": 3,
+        "scope": "Declared source extensions and size bounds; arbitrary constructed dynamic import remains unknown."
+      },
+      "pycache": {
+        "sha256": "8cb1ccbaae6cbda662145a50671ede87103baf61edd7e165381412b5d68c48c3",
+        "bytes": 17067,
+        "cpython": "3.12",
+        "header": "TIMESTAMP_BASED",
+        "header_source_size_mtime_seconds_match": true,
+        "hash_based_source_equivalence_proven": false,
+        "current_runtime_import_proven": false,
+        "marshal_payload_executed": false
+      },
+      "local_git": {
+        "refs": 30,
+        "reflog_records": 337,
+        "existing_local_blobs": 19113,
+        "includes_existing_unreachable_objects": true,
+        "exact_blob_present": false,
+        "available_path_history_matches": 0,
+        "network_fetch": false,
+        "creator_identified": false
+      },
+      "bounded_known_history_log_files_checked": 2,
+      "filename_mentions_found": 0
+    },
+    "U46": {
+      "status": "SAFE_GENERATED_LEGACY",
+      "bytes": 1056482,
+      "sha256": "21ac37949a83dcb5b2799007c8ebc93909efaff7bf6d6481fb49a8eb2a43314e",
+      "source_runtime_reference": "NO_OBSERVED_IN_AUDITED_SCOPE",
+      "current_cpp_derivative_runtime_mapped_processes": 15,
+      "generated_function_name_counts": {
+        "U46": 42,
+        "U47": 87
+      },
+      "same_source_revision_as_U47": false,
+      "pc_regeneration": {
+        "historical_source_commit": "1cd1b2c6748c6603ad97c9357858a2447c36a3d2",
+        "source_bytes": 2163,
+        "source_sha256": "d2246a1562cc751db585977bc33563c64263f88a30e2c0cf6f33c4d35e16c9b2",
+        "cython": "3.2.9",
+        "python": "3.12.3",
+        "language": "C",
+        "wheel_sha256": "a2b0e87f6b80790c929308ca0831d686f7a180feab684fe8cd4a4380bd96aaca",
+        "package_source": "https://pypi.org/project/Cython/3.2.9/",
+        "original_relative_layout_and_observed_metadata": true,
+        "output_bytes": 1056482,
+        "output_sha256": "21ac37949a83dcb5b2799007c8ebc93909efaff7bf6d6481fb49a8eb2a43314e",
+        "byte_exact": true,
+        "output_rewritten_or_normalized": false,
+        "native_compile_or_link": false,
+        "target_source_executed": false,
+        "actual_comma_build": false,
+        "device_package_change": false,
+        "available_historical_cpp_recipes_inspected": 12,
+        "original_creating_invocation_identified": false
+      }
+    }
+  },
+  "attestation": {
+    "result": {
+      "schema": 1,
+      "status": "ATTESTED_DIRTY_BASELINE_PARTIAL",
+      "ready_to_retry_M19": false,
+      "checks": {
+        "ACTUAL366_BRANCH_HEAD": true,
+        "OFFROAD": true,
+        "PARAMS_BINDING": true,
+        "TRACKED_UNMODIFIED": true,
+        "TRACKED_INDEX_FLAGS_SAFE": true,
+        "FRESH_CHALLENGE": true,
+        "SAME_BOOT": true,
+        "EXPECTED48": true,
+        "EXACT_PRIVATE_INVENTORY": true,
+        "SOURCE_HASHES": true,
+        "MODEL_HASHES": true,
+        "ROUTES_INVENTORY": true,
+        "M18_SOURCE_PINS": true,
+        "PROCESS_IDENTITIES": true,
+        "CLASSIFICATIONS": true,
+        "RUNTIME_REQUIRED_HASHES": true,
+        "EXACT_M18_PATCH": true,
+        "PATCH_FILE_IDENTITIES": true,
+        "RECORDER_PATH_COLLISION_ABSENT": true,
+        "RECORDER_PHYSICAL_NAMESPACE_ABSENT": true,
+        "REVIEWED_IMPORT_ISOLATION": true,
+        "U32_POLICY": false,
+        "U46_POLICY": true
+      },
+      "reasons": [
+        "U32_PROVENANCE_UNRESOLVED"
+      ],
+      "classification_counts": {
+        "CUSTOM_SOURCE_NOT_REFERENCED": 0,
+        "CUSTOM_SOURCE_REFERENCED": 0,
+        "RUNTIME_REQUIRED": 26,
+        "SAFE_BACKUP_NOT_REFERENCED": 1,
+        "SAFE_GENERATED": 19,
+        "UNKNOWN_USER_OWNED": 2
+      },
+      "unknown_policy_remaining": 1,
+      "observed_inventory_digest": "8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5",
+      "evidence_kind": "READ_ONLY_COMPARISON_OF_TRUSTED_PRIVATE_OBSERVATIONS",
+      "installation_authorized": false,
+      "actual_mutations": false
+    },
+    "private_policy_sha256": "59d952de8a7b4f6530473c5fda392238bc500f25d490d71044b53f9bc2c2f328",
+    "checker_sha256": "3b8f77a388caeb380e78980ba13c02c8e24e8ce4017326f01fbbb7cbf3a90904",
+    "private_schema_sha256": "3620d91e3eac6c2e889a29285faafc53f3ace58fc7315037ca575e02289db127",
+    "actual_cli_exit": 1,
+    "exit_semantics": "PARTIAL intentionally returns nonzero; this is not a CPU test failure.",
+    "fresh_challenge_scope": "Correlation only, not cryptographic freshness or authentication.",
+    "trusted_channel_and_reviewed_expected_manifest_required": true,
+    "stored_snapshot_not_future_preflight": true,
+    "read_only": true
+  },
+  "metadata_transport_correction": {
+    "historical_rounding_cause": "JSON.parse and JSON.stringify through JavaScript Number in the former private receiver.",
+    "node_time_fields_rounded": 4574,
+    "node_time_fields_total": 4578,
+    "historical_numeric_nanosecond_fields_not_exact": true,
+    "digest_strings_preserved": true,
+    "receiver_now_preserves_verified_original_json_bytes": true,
+    "all_original_tree_digests_recomputed": 48,
+    "original_inventory_digest_recomputed_unchanged": true,
+    "rebaseline_or_rounding_tolerance": false,
+    "transport_vm_regression": "PASS"
+  },
+  "recorder_patch": {
+    "sha256": "3a3e19430ab667d204f22fd1e40438a85e1ade1dbab2e6f9dd6e3dd32de4c1ee",
+    "existing_modified_files": 1,
+    "new_modules": 5,
+    "conflict": "NO",
+    "scope": "Audited physical/static namespace and disposable layout fixture, not live Python module table.",
+    "ignored_empty_physical_namespace_collision": false,
+    "dirty_layout_fixture": "PASS",
+    "dependency_overlay_precedence_preserved_fixture_packages": 4,
+    "actual_apply": "NOT_RUN"
+  },
+  "preservation": {
+    "status": "PASS",
+    "branch_head_flags_status_unchanged": true,
+    "all_48_entries_content_metadata_unchanged": true,
+    "source_hashes_unchanged": 8,
+    "model_hashes_unchanged": 15,
+    "process_identities_and_resolution_env_unchanged": 31,
+    "same_boot": true,
+    "route_metadata_files_unchanged": 4497,
+    "route_metadata_digest": "4bf474e52edc1b6ad250ed125b23a87a34ecd781799fa47040247aebef499c24",
+    "all_route_content_hashed": false,
+    "extra_hash_metadata_canaries_unchanged": 3,
+    "other_owned_audit_sessions_remaining": 0,
+    "operational_mutations": "NONE",
+    "atime_excluded": true,
+    "whole_device_image_attested": false
+  },
+  "runtime_scope": {
+    "selected_processes": 31,
+    "inaccessible_other_processes": 37,
+    "U48_mapped_processes": 23,
+    "U48_distinct_mapped_files": 18,
+    "U48_map_segments": 2179,
+    "U32_observed_OS_references": 0,
+    "live_python_module_table_observed": false,
+    "intrusive_attach_or_injection": false
+  },
+  "tests": {
+    "evidence_classes": [
+      "CPU_FAKE",
+      "FIXTURE"
+    ],
+    "pass": 200,
+    "fail": 0,
+    "skip": 0,
+    "seconds": 27.61,
+    "new_checker": 68,
+    "new_disposable_layout": 1,
+    "unchanged_recorder": 131,
+    "separate_transport_vm_regression": "PASS",
+    "command": "PYTHONPATH=. PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 \"$PY\" -m pytest -q -p no:cacheprovider tests/test_comma_dirty_baseline.py tests/test_comma_dirty_layout.py tests/test_v3_input_format.py tests/test_v3_input_recorder.py tests/test_v3_input_dataset.py tests/test_v3_input_hook.py --tb=short",
+    "CI_scope": "Checker CPU fixtures only; no device collector/private evidence."
+  },
+  "upstreams_start_end": {
+    "carrot_nav": "810e14aaf51176f1a50a113939dc2e70907b394b",
+    "carrot_wip": "dfab65d03fcd7100f572fe9e6908f4c6d1e988f6",
+    "carrot_jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "zoompilot_jetlink": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc",
+    "external_review": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722",
+    "unchanged": true,
+    "actual_baseline_not_rebased": true
+  },
+  "protected_remote_refs": {
+    "main": "2519ad0bdbf6e796fa590063fc90d4d6461b6b8d",
+    "feature_cinque_v3_jetson": "26c9c06a5e51ff0e8d3a1e8575eece548e87f3b5"
+  },
+  "privacy": {
+    "actual_raw_paths_published": false,
+    "raw_U32_U46_source_published": false,
+    "private_argv_or_environment_published": false,
+    "route_names_addresses_credentials_published": false,
+    "public_numeric_nanosecond_timestamps": false,
+    "private_evidence_git_ignored": true
+  },
+  "not_run": [
+    "RECORDER_INSTALL",
+    "RECORDER_ACTIVATION",
+    "COMMA_REAL_CAPTURE",
+    "VEHICLE_PARKED",
+    "ROAD_TEST",
+    "JETSON",
+    "USB_REAL",
+    "ORT",
+    "TRT"
+  ],
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "M1_plan_status": "DO_NOT_INSTALL",
+  "M2_readiness": "NO",
+  "ready_to_retry_M19": false,
+  "next_action": "Review concrete U32 creator/caller/deployment provenance or strong explicitly reviewed isolation evidence; no cleanup or installation.",
+  "read_only_git_status_guard": {
+    "effective_configured_drivers": 1,
+    "indexed_paths_attribute_checked": 6160,
+    "applicable_external_filter_paths": 0,
+    "gitlinks": 0,
+    "filter_commands_executed": false,
+    "attribute_or_config_mutation": false,
+    "policy": "Refuse applicable external clean/process drivers and any gitlink before status. Inapplicable drivers execute nothing. Concurrent hostile configuration writers are outside observation-window guarantees."
+  },
+  "independent_final_review": {
+    "mode": "FRESH_CONTEXT_STATIC_READ_ONLY",
+    "critical": 0,
+    "important": 1,
+    "important_fixed": 1,
+    "minor": 0,
+    "fix_commit": "efa65e669bc51f9edd392a30af50a217613244a6",
+    "finding": "Git status could execute external clean/process filters or delegate to submodule configuration.",
+    "verification": "Three marker-writing fixtures RED then GREEN; inapplicable global-driver regression; full200/200 suite.",
+    "second_review_dispatched": false,
+    "independent_tree_commitments_recomputed": 48,
+    "declined_to_judge": [
+      "Fresh device/network/ref state and operational runtime behavior without device contact.",
+      "Independent test execution and regeneration; static evidence inspection only.",
+      "Universal live Python import absence, U32 inactivity and U46 creator attribution.",
+      "Installation, capture, numerical parity and Jetson/USB/vehicle readiness."
+    ]
+  }
+}

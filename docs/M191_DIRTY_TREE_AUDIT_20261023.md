@@ -1,5 +1,16 @@
 # M19.1 — read-only dirty-tree audit
 
+**2026-10-24 precision correction:** the old PC terminal receiver parsed and
+re-serialized JSON through JavaScript Number. Its saved numeric nanosecond fields
+lost precision (4,574 of4,578 node time fields); derived time displays are also
+approximate. The on-device computed file/tree/inventory SHA256 strings, bytes,
+mode/UID/GID and counts were preserved. Do not use those old numeric times as an
+exact private attestation manifest. M19.2 preserves original JSON bytes, re-collects
+exact integers and recomputes all48 original tree digests and the same8b0cbfc9…
+inventory digest. No device metadata changed or gate was relaxed. See
+[M19.2](M192_ATTESTED_DIRTY_BASELINE_20261024.md). Original records remain below
+with this correction, rather than being silently replaced.
+
 2026-10-23. **Audit complete with stated unknowns; M19 remains BLOCKED_DIRTY_TREE.**
 Actual carrot-nav **366d6eae9aa9962104391e1d997fe956dea8f64d**, fresh Offroad1/Onroad0, tracked modifications0,
 untracked short entries48. No cleanup, ignore change, source patch, restart,

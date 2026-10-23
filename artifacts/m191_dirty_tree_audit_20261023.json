@@ -28554,5 +28554,15 @@
       "whole-system non-use or live Python imports",
       "independent fresh test execution"
     ]
+  },
+  "metadata_transport_precision_correction_20261024": {
+    "issue": "Historical PC receiver parsed and reserialized JSON via JavaScript Number; saved nanosecond values are approximate.",
+    "node_time_fields_rounded": 4574,
+    "node_time_fields_total": 4578,
+    "original_actual_computed_digests_preserved": true,
+    "content_hashes_counts_modes_uid_gid_unaffected": true,
+    "do_not_use_old_numeric_time_fields_as_exact_manifest": true,
+    "recovery": "M192 raw JSON byte preservation, exact integer recollection, all original48 tree digests and inventory8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5 recomputed exactly.",
+    "original_numbers_left_intact": true
   }
 }
