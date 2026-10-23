@@ -348,7 +348,11 @@ def drive_daemon(remote, peer, scenario, spec, cache, diagnostics, report):
                 def __init__(self):
                     self.images = iter((42, 133))
 
-                def __call__(self, *args):
+                def __call__(self, *args, prepare=None):
+                    # Nav overlaps same-frame CPU input preparation with warp.
+                    # Execute that actual callback at this camera hardware seam.
+                    if prepare is not None:
+                        prepare()
                     return np.full(spec.warped_shape, next(self.images), np.uint8)
 
             # QCOM constructor is the hardware seam; run() is the current method.
@@ -379,6 +383,7 @@ def drive_daemon(remote, peer, scenario, spec, cache, diagnostics, report):
                       'action_t': np.array([[.2, .3]], np.float32)}
             if scenario in ('daemon_invalid_state', 'daemon_identity_change'):
                 first = joined.run({}, {}, inputs, False)
+                assert 'plan' in first, joined.error
                 report.update(initial_remote_active=joined.active, remote_plan_shape=list(first['plan'].shape))
             else:
                 # These wire faults act on the first response, exercising a
