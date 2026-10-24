@@ -9,6 +9,11 @@
 
 **최신 작업 인계:** [CODEX_CONTINUATION.md](docs/CODEX_CONTINUATION.md).
 
+2026-10-24 [M19-C1.1 actual OFF 배포](docs/M19C11_060DE9_ACTUAL_OFF_DEPLOYMENT_20261024.md):
+새 첫 실제 상태값이 OFF/ON0/1이어서 **BLOCKED_NOT_OFFROAD**, 실제 설치는 하지 않았다.
+별도 fresh CPU543 PASS이며 ticket·capture·restart·Jetson 변경은 없다.
+actual HEAD/package/writer/POST는 확인하지 않았고, 다음은 별도 읽기 전용 OFF 상태 원인 진단이다.
+
 2026-10-24 [M19-C0.1 exact060de9 transport 검토](docs/M19C01_060DE9_REQUEST_CHUNKS_20261024.md):
 810e recorder 동작 재사용과 Protocol2 chunk/reassembly 입력 byte identity를 오프라인 검증했다.
 **CPU543 PASS**, 별도060 프로필·surviving366 migration/reverse·strict reader 준비 완료다.

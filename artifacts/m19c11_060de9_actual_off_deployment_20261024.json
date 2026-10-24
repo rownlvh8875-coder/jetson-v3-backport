@@ -1,0 +1,213 @@
+{
+  "schema": 1,
+  "stage": "M19-C1.1",
+  "date": "2026-10-24",
+  "status": "BLOCKED_NOT_OFFROAD",
+  "development_branch": "feature/jetlink-multimodel-carrot",
+  "validation_head": "8c6bbac8aa9ab7dc5c7b58f8ed0f4834f43ae2c1",
+  "start_working_tree": "CLEAN",
+  "start_local_remote_equal": true,
+  "result_commit_resolution": "git log -1 --format=%H -- artifacts/m19c11_060de9_actual_off_deployment_20261024.json",
+  "required_target": {
+    "branch": "carrot-nav",
+    "head": "060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c",
+    "profile": "RECORDER_060DE9_REQUEST_CHUNKS_V1",
+    "layout": "surviving366"
+  },
+  "actual": {
+    "classification": "COMMA_REAL_READ_ONLY",
+    "first_commands": [
+      "cat /data/params/d/IsOffroad",
+      "cat /data/params/d/IsOnroad"
+    ],
+    "flags": {
+      "IsOffroad": "0",
+      "IsOnroad": "1"
+    },
+    "genuine_off": "FAIL_FIRST_FLAG_GATE",
+    "device_state_started": null,
+    "ignition_line": null,
+    "ignition_can": null,
+    "observed_branch": null,
+    "observed_head": null,
+    "tracked_modifications": null,
+    "process_termination": "NOT_CHECKED",
+    "flag_receipt_sha256": "c3ee3c22e919f0a21a9b701a41b42358e029f47f928b4ec24b2737eda2a4a562",
+    "local_terminal_created_at": "2026-10-24T16:27:17.445000+09:00",
+    "new_terminal_created": true,
+    "terminal_cleanup": "EXIT_SENT_AND_WEBSOCKET_CLOSED",
+    "cause_of_onroad_report": "NOT_DIAGNOSED_AFTER_STOP"
+  },
+  "pre": {
+    "pure060_model": "NOT_RUN",
+    "surviving_old_package": "NOT_RUN",
+    "source_pins": "NOT_RUN",
+    "n16_model": "NOT_RUN",
+    "n16_spec": "NOT_RUN",
+    "request_chunk_source": "NOT_RUN_ON_DEVICE",
+    "fresh_overlay_attestation": "NOT_RUN",
+    "ticket_namespace": "NOT_CHECKED",
+    "writer_count": null,
+    "capture_environment": "NOT_CHECKED",
+    "source_model_route_index_process_boot_snapshot": "NOT_RUN"
+  },
+  "migration": {
+    "forward_sha256": "2b09f9753d5cf3e717b126898445ed2e33a44ad6871c0b64062aa2a24044e099",
+    "forward_identity": "PASS_LOCAL",
+    "reverse_sha256": "cd07d062c5fbd06e49d5581b908ea5108b633b69442cb15f548079daaa88d473",
+    "reverse_identity": "PASS_LOCAL",
+    "expected_before_profile": {
+      "openpilot/selfdrive/modeld/jetlink/model.py": "103dc0c7eb1b4998ddbf0a498be55ffd02fd51b195ce20cb7ea44ba3dbce6c42",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/__init__.py": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/format.py": "9deff26ba3ba9b66642f7a471b10c637272003029866ce47fe82f80ff702acdf",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/recorder.py": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/dataset.py": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py": "9e688299d4fcefeea3a5ebc1460ee8fd72afd1c15c9f2d1a1fd3f58b1a5ca7de"
+    },
+    "expected_after_profile": {
+      "openpilot/selfdrive/modeld/jetlink/model.py": "329125177e2372eb006a55035ef13c08bbcb41fcf63981fdc8cdd0e567edac29",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/__init__.py": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/format.py": "b37ee019febbc56ead607147134a7b5ac4ffbc4380df72697f22111723d4eb12",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/recorder.py": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/dataset.py": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py": "88a1e296b6bdb538174e8de0aba99f4733ec16b94480ae44e3a591962f8cfceb"
+    },
+    "expected_source_pins": {
+      "openpilot/selfdrive/modeld/jetlink/model.py": "103dc0c7eb1b4998ddbf0a498be55ffd02fd51b195ce20cb7ea44ba3dbce6c42",
+      "openpilot/selfdrive/modeld/jetlink/link.py": "3143bc6788132435d6dbeb108f1c68582f702df7913e76f262569f099316ca35",
+      "openpilot/selfdrive/modeld/jetlink/shared_input.py": "dc36519c3dc6fad49047fe35a24c5b33f439364c2e4a2559d0f357dfb8e0921e",
+      "openpilot/selfdrive/modeld/jetlink/contracts.py": "100f92e154b9540ddfe8b8b5ca6c3e2973cce14428fb3442ad98701c976f9ca2",
+      "openpilot/selfdrive/modeld/jetlink/daemon.py": "d95e7f44597f150f642f70432143ee9cba8c395bb0513a9e475bc4f597859980",
+      "openpilot/selfdrive/modeld/jetlink/inputs.py": "c737e30ff8c1b170ebc2179394ee0ce63180e257ddb64ce0967aae7161398f8e",
+      "openpilot/selfdrive/modeld/jetlink/prepare.py": "c6a9e9fc1fe122b655ea3a6fbbd3b0fff9ad7d3f918e720e9401fd19e0afb4e7",
+      "openpilot/selfdrive/modeld/jetlink/jetson_model.json": "ceb07d1a502966f10cb1afc33c6d686a418b3f204320685cf5e36bbf44c62f6d",
+      "openpilot/selfdrive/modeld/camera_gap.py": "7b959fa8bdd740c4bea150c07248a69ea33f08db327110601be3ee17d9bc938a",
+      "openpilot/selfdrive/modeld/camera_sync.py": "398980260825757393239796cb4dc10399ef1384f0fd9e23cdad0fd12d0cc0d2",
+      "openpilot/selfdrive/modeld/modeld.py": "008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594",
+      "openpilot/system/manager/process.py": "fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752",
+      "third_party/jetlink/jetlink/spec.py": "ec844ccaf13ffc1d7c03ad683b0e3f2ce6a1d78f4088067739aaa419af422170",
+      "third_party/jetlink/jetlink/server/session.py": "a4a5c08f917294806395b1e0fa9c359d747fbc6ced7842dbc3c32d924af2847d",
+      "third_party/jetlink/jetlink/queues.py": "c251eecc45e38704c15b2a10f0969c270cd9fa11603ebdaae88c1b1187112ea8",
+      "third_party/jetlink/jetlink/client.py": "05d500179dd3e49d8875d8cfc370a59dd692839eb6b1b939efee5fb72b9092b9",
+      "third_party/jetlink/jetlink/protocol.py": "27921d6cbac744f28db9f3c3487e42bdf405ac184db41322352f91aad9e3fb51",
+      "third_party/jetlink/jetlink/request_chunks.py": "a4ac4bcf467b09df3b703e05a59e757ce2ebb8e016898eb1808ad0031a1905e1",
+      "third_party/jetlink/jetlink/packed_codec.py": "8d67a94951e6188d811c8ad7072e5db1b40ff9ef24ec28049634b07cb26c9004",
+      "third_party/jetlink/jetlink/block_codec.py": "a42299bd1fccdf53022afd50066909caa5740f4790cec1a88eec9665f8e7ad5e",
+      "third_party/jetlink/jetlink/transport/base.py": "1861db5ec506b274f940797a6d2b181f075e94a928326d699c34cfd6b0c93a3b",
+      "third_party/jetlink/jetlink/transport/ffs.py": "41580e2d6ae5c4533e5c089375a1788920f3480f59b80fbb7d0eabe2f8b7fd50",
+      "third_party/jetlink/jetlink/transport/request_writer.py": "7d6846fdeebfafdffb849b17c7771f39ea6f352211ee879f61acdf3e71029d53",
+      "third_party/jetlink/jetlink/transport/request_writer.c": "a05f1c9bf1d875625cbb46c5c5d402537c22cb1c625f0aa413db906cbc882bc9",
+      "tools/jetlink/host_reader.py": "991b975dfb4c65c93f82711da25818981b71ef01281a65bc94a28946246b319a",
+      "tools/jetlink/host_usb.py": "49609ee4a4179369d6e6e3e048ff1669854de9ec42d92ac5f764eb23c50dcba4",
+      "tools/jetlink/server.py": "10298c588d517c6aad2c5223b1bc0506fb1a5b89c6f965f5d0b5a7a16b839e87",
+      "openpilot/selfdrive/modeld/jetlink/host_release.json": "c113776620f9644bd899bc719a3ded13be3ef851c501d0f323bede7c6181a242"
+    },
+    "profile_label": "EXPECTED_ONLY; not freshly observed on actual comma",
+    "package_init_filename": "__init__.py",
+    "disposable_roundtrip": "NOT_RUN_ON_DEVICE",
+    "private_backup": "NOT_RUN",
+    "actual_apply": "NOT_RUN",
+    "rollback": "NOT_NEEDED_NOT_APPLIED"
+  },
+  "after": {
+    "six_hashes": "NOT_RUN",
+    "shared_input_wrapper": "NOT_RUN_ON_DEVICE",
+    "request_chunk_independence": "NOT_RUN_ON_DEVICE",
+    "strategy_b_footer": "NOT_RUN_ON_DEVICE",
+    "default_off": "NOT_CHECKED",
+    "post_attestation": "NOT_RUN"
+  },
+  "lifecycle": {
+    "ticket": "NOT_CREATED_BY_STAGE",
+    "activation": "NOT_RUN",
+    "writer": "NOT_CHECKED",
+    "dataset_created": "NONE",
+    "frames": 0,
+    "restart": "NOT_RUN_BY_SCOPE",
+    "capture": "NOT_RUN_BY_SCOPE",
+    "jetson_access": "NOT_RUN",
+    "jetson_mutation": "NONE",
+    "actual_jetson_host_identity": "NOT_REQUIRED_THIS_STAGE; NOT_RUN",
+    "usb_change": "NONE",
+    "v3_p3": "NOT_RUN",
+    "params_write": false
+  },
+  "preservation": {
+    "requested_operating_mutations": "NONE",
+    "actual_source_patch": false,
+    "source_hash_comparison": "NOT_RUN_AFTER_FAILED_OFF_GATE",
+    "operating_preservation": "NOT_ATTESTED",
+    "reason": "No requested source/config write; no fresh before/after operating hash proof collected"
+  },
+  "tests": {
+    "classification": [
+      "CPU_FAKE",
+      "FIXTURE"
+    ],
+    "fresh": true,
+    "pass_count": 543,
+    "fail_count": 0,
+    "skip_count": 0,
+    "scoped": {
+      "pass_count": 449,
+      "fail_count": 0,
+      "skip_count": 0,
+      "exit_status": 0,
+      "junit_sha256": "2f01ad01ae1ea65962fa6ff149b12f3729aae9d67413bdca9e989e75f070b250",
+      "elapsed_seconds": 139.243,
+      "command": "PYTHONPATH=.:tests PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 python -B -m pytest -q -p no:cacheprovider tests/test_recorder_activation_v2.py tests/test_recorder_activation_deployment.py tests/test_u32_provenance.py tests/test_comma_dirty_baseline.py tests/test_comma_dirty_layout.py tests/test_v3_input_format.py tests/test_v3_input_recorder.py tests/test_v3_input_dataset.py tests/test_v3_input_hook.py tests/test_recorder_810e.py tests/test_recorder_810e_activation.py tests/test_recorder_810e_dataset.py tests/test_recorder_810e_shared.py tests/test_recorder_810e_wire.py tests/test_recorder_060de9.py tests/test_recorder_060de9_gates.py tests/test_recorder_060de9_wire.py --tb=short --junitxml=.reports/m19c11-20261024/scoped.xml"
+    },
+    "upstream": {
+      "pass_count": 94,
+      "fail_count": 0,
+      "skip_count": 0,
+      "exit_status": 0,
+      "junit_sha256": "b867efe471cba1b18d024a91c29f07656aa6f1a53503c339e6b9feab96b93f5e",
+      "elapsed_seconds": 8.526,
+      "command": "PYTHONPATH=.reports/m19c01-20261024/source/tools/jetlink:.reports/m19c01-20261024/source/third_party/jetlink PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 python -B -m pytest -q -p no:cacheprovider .reports/m19c01-20261024/source/tools/jetlink/test_request_chunks.py .reports/m19c01-20261024/source/tools/jetlink/test_request_writer.py .reports/m19c01-20261024/source/tools/jetlink/test_host_request_queue.py .reports/m19c01-20261024/source/tools/jetlink/test_host_usb.py --tb=short --junitxml=.reports/m19c11-20261024/upstream.xml"
+    },
+    "unique_count_policy": "449 scoped plus94 disjoint upstream cases, historical415 contained once; no prior totals added",
+    "deployment_receipt_tests_added": 0,
+    "environment": "WSL2 Linux x86_64 / Python3.12.3 / NumPy2.5.4",
+    "setup_failure": "Limited upstream mirror check initially requested absent camera_gap before pytest; corrected to actual transport/tools files, no candidate or gate change",
+    "root_collection": "NOT_RERUN; existing C0.1 tests/test_backport.py:192 import SystemExit0 / pytest3 remains BLOCKED"
+  },
+  "upstream": {
+    "carrot_nav": "a559fcd971ccaa5a87befb8ec080f59a2966325b",
+    "carrot_wip": "4536a072b4bbd4b26ee147aea275722bc423b5fc",
+    "carrot_jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "zoompilot": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc",
+    "review": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722",
+    "actual_head": "NOT_QUERIED_AFTER_FAILED_OFF_GATE",
+    "wip_diff": {
+      "base": "deb63e276d95d3e0fc2234ad4b312b4c4d075269",
+      "head": "4536a072b4bbd4b26ee147aea275722bc423b5fc",
+      "status": "ahead",
+      "commits": 2,
+      "files": [
+        ".github/workflows/jetlink-checks.yaml",
+        "openpilot/common/runtime_diagnostics.py",
+        "openpilot/common/tests/test_runtime_diagnostics.py",
+        "openpilot/selfdrive/modeld/jetlink/daemon.py",
+        "tools/jetlink/test_daemon_timing.py"
+      ],
+      "relevant": [
+        "openpilot/selfdrive/modeld/jetlink/daemon.py",
+        "tools/jetlink/test_daemon_timing.py"
+      ],
+      "source": "https://api.github.com/repos/ajouatom/openpilot/compare/deb63e276d95d3e0fc2234ad4b312b4c4d075269...4536a072b4bbd4b26ee147aea275722bc423b5fc",
+      "retargeted": false
+    },
+    "wip_review": "RuntimeDiagnostics peak_metric usb_exchange_ms and daemon measured exchange field; no retarget/current060 pin change",
+    "retargeted": false
+  },
+  "protected_refs": {
+    "main": "2519ad0bdbf6e796fa590063fc90d4d6461b6b8d",
+    "old_feature": "26c9c06a5e51ff0e8d3a1e8575eece548e87f3b5"
+  },
+  "final_source_state": "BLOCKED",
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "m2_readiness": "NO",
+  "ready_for_vehicle10": "NO",
+  "next_action": "Separate read-only OFF-state diagnosis: fresh deviceState/Panda ignition/manager evidence; no install, forced Params/ignition, producer restart or capture"
+}

@@ -1,5 +1,55 @@
 # Codex continuation — 2026-10-24
 
+## Latest checkpoint: M19-C1.1 actual deployment BLOCKED_NOT_OFFROAD
+
+Read `docs/M19C11_060DE9_ACTUAL_OFF_DEPLOYMENT_20261024.md` and
+`artifacts/m19c11_060de9_actual_off_deployment_20261024.json` first.
+Fresh new private terminal first commands returned **IsOffroad0 /IsOnroad1**.
+Explicit C1.1 STOP condition: no subsequent actual Git/source/package/pin/overlay/
+model/route/index/boot/process/ticket/writer/telemetry query. Required carrot-nav
+060de9 is expected-only, NOT freshly observed. Do not reuse earlier1/0 or060HEAD
+as current. device.started/ignition/process termination/writer0/default OFF and
+operating preservation remain NOT_CHECKED/NOT_ATTESTED, not PASS. No cause of the
+current0/1 report was diagnosed after STOP. User's existing actual deployment
+approval is limited to genuine-OFF+exact060 and does not waive failed gates.
+
+No device disposable copy/backup/forward or reverse apply, ticket, activation,
+capture, restart, Params/source/config/model/USB write or Jetson access. Final
+source state BLOCKED, not installed; actual current package state is unknown.
+No actual Git commit. Helper required created=true, sent exit and closed the
+connection. Private terminal receipt under ignored `.reports/m19c11-20261024/`;
+only digest/sanitized flags public, no addresses/raw frames/argv/environment.
+
+Development start8c6bbac8aa9ab7dc5c7b58f8ed0f4834f43ae2c1 clean/localremoteequal
+feature.060 forward2b09f975.../reversecd07d062... local hash PASS, no candidate/
+generator/test/source changes. Expected six before/after and28pins included with
+expected-only label. Package file is __init__.py per approved artifact, not an
+additional init.py. Neither810 nor clean-layout patch applied.
+
+Fresh requested authoritative **543 unique PASS/0FAIL/0SKIP**, CPU_FAKE/FIXTURE:
+449 scoped139.25s +94 exact060 upstream8.53s, exit0 each. Historical415 included
+once; disjoint JUnit case IDs/digests/commands verified, no old counts added.
+No new receipt tests because no deployment receipt. Private setup check initially
+requested absent camera_gap from a limited extraction before pytest; corrected
+to check actual transport/tools mirror, no production/gate modification. Existing
+root tests/test_backport.py:192 SystemExit0/pytest3 collection blocker remains
+separately documented from C0.1, not rerun here. Full-root PASS not claimed.
+
+Public metadata Nav a559fcd971ccaa5a87befb8ec080f59a2966325b/WIP
+4536a072b4bbd4b26ee147aea275722bc423b5fc, hostd0dc96.../zoomd24328.../reviewa890f6...
+queried without actual retargeting. WIP increment fromdeb63e adds runtime diagnostic
+peak_metric=usb_exchange_ms and daemon exchange timing field, plus CI/tests.
+No current060 compatibility evidence is extended to that HEAD. Protected refs
+unchanged; no main/old-feature/source/patch changes.
+
+**Next:** separate read-only OFF-state diagnosis of fresh deviceState/Panda
+ignition/manager policy, without install/restart/Params/ignition manipulation.
+Do not simply repeat a power-off instruction or infer the reason for0/1. Any
+later C1.1 retry requires fresh1/0 and all genuine-OFF/exact060/private-overlay
+gates. If actual HEAD differs, STOP; no pull/reset/checkout/rebase to fit a patch.
+Numerical PARITY_UNDETERMINED, M2 NO, vehicle10 readiness NO.
+Result commit resolves via `git log -1 --format=%H -- artifacts/m19c11_060de9_actual_off_deployment_20261024.json`.
+
 ## Latest checkpoint: M19-C0.1 exact060de9 request-chunk candidate PASS, OFFLINE ONLY
 
 Read `docs/M19C01_060DE9_REQUEST_CHUNKS_20261024.md` and
