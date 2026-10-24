@@ -1,5 +1,37 @@
 # Codex continuation — 2026-10-24
 
+## Latest checkpoint: M19-C2 exact5bb Vehicle10 — DEFERRED_BY_USER_NOT_ARMED
+
+Read docs/M19C2_5BB_VEHICLE10_CAPTURE_20261024.md and
+artifacts/m19c2_5bb_vehicle10_capture_20261024.json first.
+User deferred ignition until tomorrow (2026-10-25, Asia/Seoul). DO NOT run the
+prepared capture monitor, arm a ticket, or resume automatically overnight.
+User must contact this chat BEFORE ignition ON; repeat all fresh OFF/source/
+profile/storage/namespace gates then validate one120s10-frame/depth4 ticket
+before normal stationary P ignition ON. Existing capture authorization is timing
+deferred; no new software/model/deployment authority is implied.
+
+Actual carrot-nav5bbbe160822c7cae4245d7a8e96b40d158941ff7, installed5bb profile;
+fresh six/33/N16 exact, index/boot/status stable. First cat OFF/ON1/0;12.001s
+simultaneous receive-only window PASS:22device/110Panda/22manager, startedfalse,
+ignitionfalsefalse, normal OFF policy. Final read-only guard PASS. Today's
+evidence CANNOT replace tomorrow's fresh gates. Jetlink OFF telemetry waiting/
+App selection/no peer; protocol/model UNKNOWN, not a capture failure.
+
+Storage /data/v3_input_capture unchanged empty0700 owner1000:1000, ext4/data,
+no route/Git/uploader overlap; final27092.22265625MiB free. No storage probe/write.
+TicketNOT_CREATED/namespaceABSENT/consumedABSENT/claims0, activationNOT_RUN,
+writer0, memfds0, frames0, datasetNONE. No actual mutation, restart/reboot,
+source/Params/Git/updater change or Jetson access/mutation. No capture attempted.
+
+Fresh authoritative CPU/POSIX1165PASS/0FAIL/0SKIP exactC04 IDs/no duplicates;
+separate synthetic stationary10PASS excluded from1165. Diagnostics4 missing
+zstandard and root collection blocker remain separate. Prior6807private reports/
+sources unchanged. Vehicle10NOT_RUN; parity readinessNO;
+PARITY_UNDETERMINED/M2NO. Future capture gets a new dated receipt, preserving
+this deferred evidence. Result commit:
+git log -1 --format=%H -- artifacts/m19c2_5bb_vehicle10_capture_20261024.json
+
 ## Latest checkpoint: M19-C2.1 exact5bb private storage — PASS_STORAGE_READY
 
 Read docs/M19C21_5BB_PRIVATE_CAPTURE_STORAGE_20261024.md and

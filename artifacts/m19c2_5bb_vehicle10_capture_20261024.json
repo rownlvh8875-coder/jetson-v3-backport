@@ -1,0 +1,756 @@
+{
+  "schema": "m19c2-5bb-vehicle10-deferred-v1",
+  "stage": "M19-C2 exact5bb Vehicle10",
+  "date": "2026-10-24",
+  "created_utc": "2026-10-24T14:14:16.606059+00:00",
+  "status": "DEFERRED_BY_USER_NOT_ARMED",
+  "technical_failure_classification": null,
+  "user_steering": {
+    "decision": "Defer physical ignition/capture until tomorrow; user is going to sleep.",
+    "planned_resume_date_local": "2026-10-25",
+    "timezone": "Asia/Seoul",
+    "overnight_ticket": false,
+    "automatic_resume": false,
+    "reminder_created": false,
+    "instruction": "Contact this chat before normal ignition ON; fresh gates and valid ticket must precede ON."
+  },
+  "repository": "https://github.com/rownlvh8875-coder/jetson-v3-backport",
+  "development_branch": "feature/jetlink-multimodel-carrot",
+  "start_development_head": "f2f646fca1825cd6c61f2f23577bcaed6fb60cbf",
+  "tested_development_head": "f2f646fca1825cd6c61f2f23577bcaed6fb60cbf",
+  "start_working_tree": "CLEAN",
+  "start_local_remote_equal": true,
+  "result_commit_resolution": "git log -1 --format=%H -- artifacts/m19c2_5bb_vehicle10_capture_20261024.json",
+  "actual": {
+    "branch": "carrot-nav",
+    "head": "5bbbe160822c7cae4245d7a8e96b40d158941ff7",
+    "profile": "RECORDER_5BB_DEFERRED_NAV_V1",
+    "source_state": "RECORDER_5BB_DEFERRED_NAV_V1_INSTALLED_OFF",
+    "flags": {
+      "IsOffroad": "1",
+      "IsOnroad": "0"
+    },
+    "six_file_profile": "PASS",
+    "source_pins": "33/33 PASS"
+  },
+  "fresh_off": {
+    "status": "GENUINE_OFF_CAPTURE_PRECHECK_PASS",
+    "fresh": true,
+    "historical_state_reused": false,
+    "first_commands": [
+      "cat /data/params/d/IsOffroad",
+      "cat /data/params/d/IsOnroad"
+    ],
+    "flags": {
+      "IsOffroad": "1",
+      "IsOnroad": "0"
+    },
+    "window_seconds": 12.001085137,
+    "receive_only": true,
+    "simultaneous_services": {
+      "deviceState": {
+        "samples": 22,
+        "seconds": 11.427397416
+      },
+      "managerState": {
+        "samples": 22,
+        "seconds": 11.422006234
+      },
+      "pandaStates": {
+        "samples": 110,
+        "seconds": 11.846569284
+      }
+    },
+    "device_started": false,
+    "ignitionLine": false,
+    "ignitionCan": false,
+    "onroad_only_roles_inactive": [
+      "card",
+      "modeld",
+      "camerad",
+      "controlsd",
+      "selfdrived"
+    ],
+    "normal_off_roles": [
+      "hardwared",
+      "pandad",
+      "jetlinkd"
+    ],
+    "manager_policy_verified": true,
+    "all_checks_pass": true,
+    "reusable_for_tomorrow": false
+  },
+  "source_contract": {
+    "six": [
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/input_recording/__init__.py",
+        "expected_sha256": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca",
+        "pre_actual_sha256": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca",
+        "post_actual_sha256": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca",
+        "match": true
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/input_recording/dataset.py",
+        "expected_sha256": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7",
+        "pre_actual_sha256": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7",
+        "post_actual_sha256": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7",
+        "match": true
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/input_recording/format.py",
+        "expected_sha256": "838cbb11d254132f55ff808ef59e3010a18f0f0a0d157e7a215635229950810a",
+        "pre_actual_sha256": "838cbb11d254132f55ff808ef59e3010a18f0f0a0d157e7a215635229950810a",
+        "post_actual_sha256": "838cbb11d254132f55ff808ef59e3010a18f0f0a0d157e7a215635229950810a",
+        "match": true
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py",
+        "expected_sha256": "1b0331426cc13c3f1ec27910f69eea4c4bc210af339acdf63bebf5098e041f83",
+        "pre_actual_sha256": "1b0331426cc13c3f1ec27910f69eea4c4bc210af339acdf63bebf5098e041f83",
+        "post_actual_sha256": "1b0331426cc13c3f1ec27910f69eea4c4bc210af339acdf63bebf5098e041f83",
+        "match": true
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/input_recording/recorder.py",
+        "expected_sha256": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada",
+        "pre_actual_sha256": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada",
+        "post_actual_sha256": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada",
+        "match": true
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/model.py",
+        "expected_sha256": "65b9006aba819376344e72114b2de55330aa76cd358f30c7e80488f0dd9e799a",
+        "pre_actual_sha256": "65b9006aba819376344e72114b2de55330aa76cd358f30c7e80488f0dd9e799a",
+        "post_actual_sha256": "65b9006aba819376344e72114b2de55330aa76cd358f30c7e80488f0dd9e799a",
+        "match": true
+      }
+    ],
+    "source_pins": [
+      {
+        "path": "openpilot/common/runtime_diagnostics.py",
+        "expected_sha256": "f5e6c161a5d7c99aebfdfa89c132b86e519980abe6a5b6d787dc2dd8dd3ac1ea",
+        "pre_actual_sha256": "f5e6c161a5d7c99aebfdfa89c132b86e519980abe6a5b6d787dc2dd8dd3ac1ea",
+        "post_actual_sha256": "f5e6c161a5d7c99aebfdfa89c132b86e519980abe6a5b6d787dc2dd8dd3ac1ea",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/camera_gap.py",
+        "expected_sha256": "7b959fa8bdd740c4bea150c07248a69ea33f08db327110601be3ee17d9bc938a",
+        "pre_actual_sha256": "7b959fa8bdd740c4bea150c07248a69ea33f08db327110601be3ee17d9bc938a",
+        "post_actual_sha256": "7b959fa8bdd740c4bea150c07248a69ea33f08db327110601be3ee17d9bc938a",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/camera_sync.py",
+        "expected_sha256": "398980260825757393239796cb4dc10399ef1384f0fd9e23cdad0fd12d0cc0d2",
+        "pre_actual_sha256": "398980260825757393239796cb4dc10399ef1384f0fd9e23cdad0fd12d0cc0d2",
+        "post_actual_sha256": "398980260825757393239796cb4dc10399ef1384f0fd9e23cdad0fd12d0cc0d2",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/contracts.py",
+        "expected_sha256": "100f92e154b9540ddfe8b8b5ca6c3e2973cce14428fb3442ad98701c976f9ca2",
+        "pre_actual_sha256": "100f92e154b9540ddfe8b8b5ca6c3e2973cce14428fb3442ad98701c976f9ca2",
+        "post_actual_sha256": "100f92e154b9540ddfe8b8b5ca6c3e2973cce14428fb3442ad98701c976f9ca2",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/daemon.py",
+        "expected_sha256": "f7038e4f417fdc093c4bd086c0d8184d6e8f2b235c11b519215a7aab4cad0670",
+        "pre_actual_sha256": "f7038e4f417fdc093c4bd086c0d8184d6e8f2b235c11b519215a7aab4cad0670",
+        "post_actual_sha256": "f7038e4f417fdc093c4bd086c0d8184d6e8f2b235c11b519215a7aab4cad0670",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/host_release.json",
+        "expected_sha256": "2f36e9a081ea0591e937b8631208652365eadf3dca559157d7a4c8e03a639516",
+        "pre_actual_sha256": "2f36e9a081ea0591e937b8631208652365eadf3dca559157d7a4c8e03a639516",
+        "post_actual_sha256": "2f36e9a081ea0591e937b8631208652365eadf3dca559157d7a4c8e03a639516",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/inputs.py",
+        "expected_sha256": "c737e30ff8c1b170ebc2179394ee0ce63180e257ddb64ce0967aae7161398f8e",
+        "pre_actual_sha256": "c737e30ff8c1b170ebc2179394ee0ce63180e257ddb64ce0967aae7161398f8e",
+        "post_actual_sha256": "c737e30ff8c1b170ebc2179394ee0ce63180e257ddb64ce0967aae7161398f8e",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/jetson_model.json",
+        "expected_sha256": "ceb07d1a502966f10cb1afc33c6d686a418b3f204320685cf5e36bbf44c62f6d",
+        "pre_actual_sha256": "ceb07d1a502966f10cb1afc33c6d686a418b3f204320685cf5e36bbf44c62f6d",
+        "post_actual_sha256": "ceb07d1a502966f10cb1afc33c6d686a418b3f204320685cf5e36bbf44c62f6d",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/link.py",
+        "expected_sha256": "3be648e18f899ffbcbba08d0cf10de318f5b57a140157d3ceba1cddd96dc7df5",
+        "pre_actual_sha256": "3be648e18f899ffbcbba08d0cf10de318f5b57a140157d3ceba1cddd96dc7df5",
+        "post_actual_sha256": "3be648e18f899ffbcbba08d0cf10de318f5b57a140157d3ceba1cddd96dc7df5",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/model.py",
+        "expected_sha256": "6e04d29bca6b1802ecc012f8f8ea154f28ec7854961dbf4fd4b6b963328eccee",
+        "pre_actual_sha256": "6e04d29bca6b1802ecc012f8f8ea154f28ec7854961dbf4fd4b6b963328eccee",
+        "post_actual_sha256": "6e04d29bca6b1802ecc012f8f8ea154f28ec7854961dbf4fd4b6b963328eccee",
+        "match": true,
+        "normalization": "EXACT_REVIEWED_FOOTER_REMOVED"
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/prepare.py",
+        "expected_sha256": "c6a9e9fc1fe122b655ea3a6fbbd3b0fff9ad7d3f918e720e9401fd19e0afb4e7",
+        "pre_actual_sha256": "c6a9e9fc1fe122b655ea3a6fbbd3b0fff9ad7d3f918e720e9401fd19e0afb4e7",
+        "post_actual_sha256": "c6a9e9fc1fe122b655ea3a6fbbd3b0fff9ad7d3f918e720e9401fd19e0afb4e7",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/shared_input.py",
+        "expected_sha256": "dc36519c3dc6fad49047fe35a24c5b33f439364c2e4a2559d0f357dfb8e0921e",
+        "pre_actual_sha256": "dc36519c3dc6fad49047fe35a24c5b33f439364c2e4a2559d0f357dfb8e0921e",
+        "post_actual_sha256": "dc36519c3dc6fad49047fe35a24c5b33f439364c2e4a2559d0f357dfb8e0921e",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "openpilot/selfdrive/modeld/modeld.py",
+        "expected_sha256": "008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594",
+        "pre_actual_sha256": "008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594",
+        "post_actual_sha256": "008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "openpilot/selfdrive/navigation/map_client.py",
+        "expected_sha256": "6fb6e19701ecd22c3dd2cec2de00bb0c8748daedeea5183847c4ea151b0e1cfc",
+        "pre_actual_sha256": "6fb6e19701ecd22c3dd2cec2de00bb0c8748daedeea5183847c4ea151b0e1cfc",
+        "post_actual_sha256": "6fb6e19701ecd22c3dd2cec2de00bb0c8748daedeea5183847c4ea151b0e1cfc",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "openpilot/system/manager/process.py",
+        "expected_sha256": "fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752",
+        "pre_actual_sha256": "fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752",
+        "post_actual_sha256": "fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/block_codec.py",
+        "expected_sha256": "a42299bd1fccdf53022afd50066909caa5740f4790cec1a88eec9665f8e7ad5e",
+        "pre_actual_sha256": "a42299bd1fccdf53022afd50066909caa5740f4790cec1a88eec9665f8e7ad5e",
+        "post_actual_sha256": "a42299bd1fccdf53022afd50066909caa5740f4790cec1a88eec9665f8e7ad5e",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/client.py",
+        "expected_sha256": "cda14a04353f87a99b143c5e16ba9c8db69e6bd80a89143e845fde6ffe33ea1c",
+        "pre_actual_sha256": "cda14a04353f87a99b143c5e16ba9c8db69e6bd80a89143e845fde6ffe33ea1c",
+        "post_actual_sha256": "cda14a04353f87a99b143c5e16ba9c8db69e6bd80a89143e845fde6ffe33ea1c",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/deferred_map.py",
+        "expected_sha256": "69e47a2a26b4c71a64d9b4de8fd4dd9f38ad2c92c4bc6e7a1c7f760573c38c86",
+        "pre_actual_sha256": "69e47a2a26b4c71a64d9b4de8fd4dd9f38ad2c92c4bc6e7a1c7f760573c38c86",
+        "post_actual_sha256": "69e47a2a26b4c71a64d9b4de8fd4dd9f38ad2c92c4bc6e7a1c7f760573c38c86",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/output_projection.py",
+        "expected_sha256": "d76547e3426c488c6f8ab341a2b1f0613c183a02c6b6710c9871af8a94d3a534",
+        "pre_actual_sha256": "d76547e3426c488c6f8ab341a2b1f0613c183a02c6b6710c9871af8a94d3a534",
+        "post_actual_sha256": "d76547e3426c488c6f8ab341a2b1f0613c183a02c6b6710c9871af8a94d3a534",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/packed_codec.py",
+        "expected_sha256": "8d67a94951e6188d811c8ad7072e5db1b40ff9ef24ec28049634b07cb26c9004",
+        "pre_actual_sha256": "8d67a94951e6188d811c8ad7072e5db1b40ff9ef24ec28049634b07cb26c9004",
+        "post_actual_sha256": "8d67a94951e6188d811c8ad7072e5db1b40ff9ef24ec28049634b07cb26c9004",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/protocol.py",
+        "expected_sha256": "27921d6cbac744f28db9f3c3487e42bdf405ac184db41322352f91aad9e3fb51",
+        "pre_actual_sha256": "27921d6cbac744f28db9f3c3487e42bdf405ac184db41322352f91aad9e3fb51",
+        "post_actual_sha256": "27921d6cbac744f28db9f3c3487e42bdf405ac184db41322352f91aad9e3fb51",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/queues.py",
+        "expected_sha256": "c251eecc45e38704c15b2a10f0969c270cd9fa11603ebdaae88c1b1187112ea8",
+        "pre_actual_sha256": "c251eecc45e38704c15b2a10f0969c270cd9fa11603ebdaae88c1b1187112ea8",
+        "post_actual_sha256": "c251eecc45e38704c15b2a10f0969c270cd9fa11603ebdaae88c1b1187112ea8",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/request_chunks.py",
+        "expected_sha256": "f97d2b3310e2e049d20c2c2526ffb93068cb1b17aa5214a826ebe95bed670a73",
+        "pre_actual_sha256": "f97d2b3310e2e049d20c2c2526ffb93068cb1b17aa5214a826ebe95bed670a73",
+        "post_actual_sha256": "f97d2b3310e2e049d20c2c2526ffb93068cb1b17aa5214a826ebe95bed670a73",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/server/session.py",
+        "expected_sha256": "a4a5c08f917294806395b1e0fa9c359d747fbc6ced7842dbc3c32d924af2847d",
+        "pre_actual_sha256": "a4a5c08f917294806395b1e0fa9c359d747fbc6ced7842dbc3c32d924af2847d",
+        "post_actual_sha256": "a4a5c08f917294806395b1e0fa9c359d747fbc6ced7842dbc3c32d924af2847d",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/spec.py",
+        "expected_sha256": "ec844ccaf13ffc1d7c03ad683b0e3f2ce6a1d78f4088067739aaa419af422170",
+        "pre_actual_sha256": "ec844ccaf13ffc1d7c03ad683b0e3f2ce6a1d78f4088067739aaa419af422170",
+        "post_actual_sha256": "ec844ccaf13ffc1d7c03ad683b0e3f2ce6a1d78f4088067739aaa419af422170",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/transport/base.py",
+        "expected_sha256": "1861db5ec506b274f940797a6d2b181f075e94a928326d699c34cfd6b0c93a3b",
+        "pre_actual_sha256": "1861db5ec506b274f940797a6d2b181f075e94a928326d699c34cfd6b0c93a3b",
+        "post_actual_sha256": "1861db5ec506b274f940797a6d2b181f075e94a928326d699c34cfd6b0c93a3b",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/transport/ffs.py",
+        "expected_sha256": "01a7561451a7194b8ac840a29c78784d8a63731860d146299d43cbf97c852dbd",
+        "pre_actual_sha256": "01a7561451a7194b8ac840a29c78784d8a63731860d146299d43cbf97c852dbd",
+        "post_actual_sha256": "01a7561451a7194b8ac840a29c78784d8a63731860d146299d43cbf97c852dbd",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/transport/request_writer.c",
+        "expected_sha256": "1161ddd29a8ac6852e14832dd94af0bd2c7c1d8fe009a74d83f423fb57d58b89",
+        "pre_actual_sha256": "1161ddd29a8ac6852e14832dd94af0bd2c7c1d8fe009a74d83f423fb57d58b89",
+        "post_actual_sha256": "1161ddd29a8ac6852e14832dd94af0bd2c7c1d8fe009a74d83f423fb57d58b89",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/transport/request_writer.py",
+        "expected_sha256": "1fd5ba1a4e446187e41b8c6c73aaff6436ba0b33d6a159c1d6aa1b497ffe1e1e",
+        "pre_actual_sha256": "1fd5ba1a4e446187e41b8c6c73aaff6436ba0b33d6a159c1d6aa1b497ffe1e1e",
+        "post_actual_sha256": "1fd5ba1a4e446187e41b8c6c73aaff6436ba0b33d6a159c1d6aa1b497ffe1e1e",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "tools/jetlink/host_lpm.py",
+        "expected_sha256": "36d2d2de86cb6fe585c80fe262802bb1e31aedddca37c0ff9d98621ab5aa1139",
+        "pre_actual_sha256": "36d2d2de86cb6fe585c80fe262802bb1e31aedddca37c0ff9d98621ab5aa1139",
+        "post_actual_sha256": "36d2d2de86cb6fe585c80fe262802bb1e31aedddca37c0ff9d98621ab5aa1139",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "tools/jetlink/host_reader.py",
+        "expected_sha256": "991b975dfb4c65c93f82711da25818981b71ef01281a65bc94a28946246b319a",
+        "pre_actual_sha256": "991b975dfb4c65c93f82711da25818981b71ef01281a65bc94a28946246b319a",
+        "post_actual_sha256": "991b975dfb4c65c93f82711da25818981b71ef01281a65bc94a28946246b319a",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "tools/jetlink/host_usb.py",
+        "expected_sha256": "49609ee4a4179369d6e6e3e048ff1669854de9ec42d92ac5f764eb23c50dcba4",
+        "pre_actual_sha256": "49609ee4a4179369d6e6e3e048ff1669854de9ec42d92ac5f764eb23c50dcba4",
+        "post_actual_sha256": "49609ee4a4179369d6e6e3e048ff1669854de9ec42d92ac5f764eb23c50dcba4",
+        "match": true,
+        "normalization": "NONE"
+      },
+      {
+        "path": "tools/jetlink/server.py",
+        "expected_sha256": "4fedc5455adccf09c45980ff4de132d6027249dcffaf622fa6353d69452bd0c7",
+        "pre_actual_sha256": "4fedc5455adccf09c45980ff4de132d6027249dcffaf622fa6353d69452bd0c7",
+        "post_actual_sha256": "4fedc5455adccf09c45980ff4de132d6027249dcffaf622fa6353d69452bd0c7",
+        "match": true,
+        "normalization": "NONE"
+      }
+    ],
+    "source_pin_count": 33,
+    "api": {
+      "deferred_nav_source": true,
+      "generic_kwargs": false,
+      "signature": "(self, image, packed, frame, reset=False, source_sof=0, nav_metadata=None)",
+      "status": "PASS"
+    },
+    "n16": {
+      "model_sha256": "01effc679eb46d6036ce0302673a87fe2dcfcc95a679daeeb929679e53c3647a",
+      "packed_nelem": 65595,
+      "packed_shapes": {
+        "action_t": [
+          1,
+          2
+        ],
+        "desire": [
+          8
+        ],
+        "nav_map": [
+          1,
+          1,
+          256,
+          256
+        ],
+        "navigation": [
+          1,
+          47
+        ],
+        "traffic_convention": [
+          1,
+          2
+        ]
+      },
+      "spec_sha256": "63b2097c114bade03c5ec7ded978d73032a93bb525c03f9b78eddf49809f8b71",
+      "state_pairs": {
+        "state_desire_q": "next_state_desire_q",
+        "state_feat_q": "next_state_feat_q",
+        "state_img_q": "next_state_img_q",
+        "state_map_features_q": "next_state_map_features_q",
+        "state_navigation_features_q": "next_state_navigation_features_q"
+      },
+      "stateful": true,
+      "switch_occurrences": {
+        "JETLINK_COMPACT_REPLY": 1,
+        "JETLINK_CPU_OVERLAP": 2,
+        "JETLINK_DEFER_NAV": 1,
+        "JETLINK_REQUEST_CHUNKS": 1
+      },
+      "warped_shape": [
+        2,
+        6,
+        128,
+        256
+      ]
+    },
+    "n16_verification": "DECLARED_SOURCE_ONLY_NO_MODEL_EXECUTION",
+    "footer": "single exact bound RECORDER_5BB_DEFERRED_NAV_V1 footer; pure body normalized only for model pin"
+  },
+  "storage": {
+    "root": "/data/v3_input_capture",
+    "status": "PASS",
+    "created_this_stage": false,
+    "type": "DIRECTORY",
+    "canonical": "PASS",
+    "symlink": false,
+    "uid": 1000,
+    "gid": 1000,
+    "mode": "0700",
+    "children": 0,
+    "empty_before_arm": "PASS",
+    "writable": "PASS_READ_ONLY_ACCESS_CHECK",
+    "probe_this_stage": "NOT_RUN",
+    "filesystem": "ext4",
+    "mount": "/data",
+    "removable": false,
+    "route_overlap": false,
+    "git_overlap": false,
+    "uploader_integration": "NO",
+    "boundary_source_hashes_reverified": true,
+    "available_bytes": 28408254464,
+    "available_mib": 27092.22265625,
+    "available_percent": 30.053827810804474,
+    "flags": 3078,
+    "frsize": 4096,
+    "total_bytes": 94524579840
+  },
+  "jetlink_operational_preflight": {
+    "evidence": "existing comma-visible telemetry only while OFF",
+    "state": "waiting",
+    "protocol": "UNKNOWN",
+    "operational_model": "UNKNOWN",
+    "displayed_selection": "App selection",
+    "peer_present": false,
+    "ready_for_capture": "NOT_ESTABLISHED_OFF",
+    "terminal_capture_failure": false,
+    "jetson_access": false,
+    "jetson_mutation": "NONE"
+  },
+  "arm": {
+    "ticket_created": false,
+    "helper_called": false,
+    "arm_discovered_calls": 0,
+    "requested_frames": 10,
+    "planned_depth": 4,
+    "planned_expiry_seconds": 120,
+    "actual_expiry_seconds": null,
+    "ticket_contract": "NOT_RUN",
+    "capture_id": null,
+    "prepared_monitor": "LOCAL_ONLY_NOT_EXECUTED",
+    "ticket_recreation": false
+  },
+  "vehicle_transition": {
+    "off_to_on_observed": false,
+    "on_requested": false,
+    "stationary_during_capture": "NOT_RUN",
+    "vEgo": null,
+    "gear": null
+  },
+  "consumption": {
+    "arm_ticket": "ABSENT_NOT_CREATED",
+    "consumed_marker": "ABSENT",
+    "claims": 0,
+    "one_shot_consumption": "NOT_RUN"
+  },
+  "recorder": {
+    "activated": false,
+    "writer_started": false,
+    "writer_count": 0,
+    "capture_memfds": 0,
+    "frames_written": 0,
+    "overflow": false,
+    "error": null,
+    "default_off": "PASS",
+    "final_state": "NOT_STARTED"
+  },
+  "dataset": {
+    "status": "NONE",
+    "profile": "RECORDER_5BB_DEFERRED_NAV_V1",
+    "frames": 0,
+    "raw_location": "NONE",
+    "strict_reader": "tools/v3_input_dataset_5bb.py",
+    "validation": "NOT_RUN_NO_DATASET",
+    "manifest": "NOT_RUN",
+    "provenance": "NOT_RUN",
+    "record_checksums": "NOT_RUN",
+    "shapes_dtypes": "NOT_RUN",
+    "digest": null,
+    "per_frame_digests": [],
+    "extra_frames": 0,
+    "state_tensors_stored": false,
+    "contract": "FOUR_INPUT_SUFFICIENT",
+    "fields": [
+      "new_img",
+      "desire",
+      "traffic_convention",
+      "action_t"
+    ],
+    "capture_bytes_exported": false
+  },
+  "preservation": {
+    "final_readonly_guard": "PASS",
+    "head_stable": true,
+    "six_hashes_stable": true,
+    "source_pins_stable": true,
+    "index_stable": true,
+    "index_sha256": "9751090fdae24186b4c77120af843ad9abacd528f04042b3e90bdd2fed606733",
+    "boot_stable": true,
+    "status_stable": true,
+    "updater_drift": "NONE_OBSERVED",
+    "historical_reports_unchanged": true,
+    "historical_private_files_verified": 6807,
+    "final_namespace": "ABSENT",
+    "final_ticket": "ABSENT",
+    "consumed_marker": "ABSENT",
+    "claims": 0,
+    "storage_children": 0,
+    "writer_count": 0,
+    "actual_mutations": "NONE",
+    "source_writes": 0,
+    "params_writes": 0,
+    "git_mutations": 0,
+    "storage_writes": 0,
+    "updater_control": false,
+    "manager_restart": false,
+    "modeld_restart": false,
+    "reboot": false,
+    "jetson_access": false,
+    "jetson_mutation": "NONE"
+  },
+  "tests": {
+    "kind": "FRESH_OFFLINE_CPU_POSIX_FAKE_FIXTURE",
+    "status": "PASS",
+    "pass_count": 1165,
+    "fail": 0,
+    "errors": 0,
+    "skip": 0,
+    "unique_case_count": 1165,
+    "duplicate_ids": 0,
+    "exact_C04_id_match": true,
+    "environment": {
+      "os": "WSL Ubuntu-24.04",
+      "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+      "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+      "numpy": "2.5.4",
+      "pytest": "9.1.1",
+      "cc": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+      "zstandard_available": false
+    },
+    "groups": [
+      {
+        "scope": "historical_scoped",
+        "pass_count": 533,
+        "fail": 0,
+        "errors": 0,
+        "skip": 0
+      },
+      {
+        "scope": "exact_transport_upstream",
+        "pass_count": 108,
+        "fail": 0,
+        "errors": 0,
+        "skip": 0
+      },
+      {
+        "scope": "exact_deferred_upstream",
+        "pass_count": 43,
+        "fail": 0,
+        "errors": 0,
+        "skip": 0
+      },
+      {
+        "scope": "remaining_exact_upstream",
+        "pass_count": 203,
+        "fail": 0,
+        "errors": 0,
+        "skip": 0
+      },
+      {
+        "scope": "transport_supplementary",
+        "pass_count": 34,
+        "fail": 0,
+        "errors": 0,
+        "skip": 0
+      },
+      {
+        "scope": "deferred_supplementary",
+        "pass_count": 25,
+        "fail": 0,
+        "errors": 0,
+        "skip": 0
+      },
+      {
+        "scope": "direct_review",
+        "pass_count": 7,
+        "fail": 0,
+        "errors": 0,
+        "skip": 0
+      },
+      {
+        "scope": "matrix",
+        "pass_count": 68,
+        "fail": 0,
+        "errors": 0,
+        "skip": 0
+      },
+      {
+        "scope": "fixed_profile_api_matrix_migration_default_off",
+        "pass_count": 119,
+        "fail": 0,
+        "errors": 0,
+        "skip": 0
+      },
+      {
+        "scope": "wrapped_unwrapped_source_equivalence",
+        "pass_count": 25,
+        "fail": 0,
+        "errors": 0,
+        "skip": 0
+      }
+    ],
+    "command_template": "python -B -m pytest -q -p no:cacheprovider -p baseline_evidence_plugin <group files> --tb=short --junitxml=<private report> --basetemp=<private temporary directory>",
+    "commands_and_junit": "Full exact commands, logs, JUnit, collected node IDs and hashes retained privately.",
+    "matrix_receipts": 68,
+    "fixed_matrix_receipts": 36,
+    "paired_receipts": 25,
+    "paired_wrapped_unwrapped_executions": 50,
+    "synthetic_stationary_fixture": {
+      "pass_count": 10,
+      "fail": 0,
+      "skip": 0,
+      "counted_in_authoritative_total": false,
+      "actual_device_access": false,
+      "checks": [
+        "all10_images_and_observer_times_bracketed",
+        "transient_movement_rejected",
+        "nonpark_rejected",
+        "standstill_false_rejected",
+        "missing_tail_rejected",
+        "missing_initial_image_coverage_rejected",
+        "stale_samples_rejected",
+        "large_bracketing_gap_rejected",
+        "empty_records_rejected",
+        "input_receipts_not_mutated"
+      ]
+    },
+    "diagnostics": {
+      "status": "BLOCKED",
+      "count": 4,
+      "reason": "missing zstandard",
+      "counted_in_authoritative_total": false
+    },
+    "root_collection": {
+      "status": "BLOCKED",
+      "executed": false,
+      "reason": "Static import-time network calls and sys.exit in test_backport.py; excluded from scoped1165."
+    },
+    "physical_USB": false,
+    "ORT": false,
+    "TensorRT": false,
+    "GPU": false,
+    "vehicle_capture": false
+  },
+  "evidence_commitments_sha256": {
+    "first-flags-private.json": "87dfd3cd9b6e788b3bb034f2e1a4f4c9860cb3e8c59f06280897d9c0ed81db89",
+    "preflight-private.json": "71e876553b7054c016276ce717bdc1d4f2d4bd514a7fa3dc306ca4ceca21f718",
+    "operational-private.json": "93ae4aad45dc1b18029927912add48ec1aa9a726c6bbe4d31ee0fa39ff990d6d",
+    "deferred-final-private.json": "ebf77ec48a1ec42d4cca9d713af79dcb086764457b09f4daceae99563109fcee",
+    "baseline-audit.json": "ed6fa87403da7ca2600f34e098c74e07a9159b5e0589ddfdac246252cd73ade3",
+    "baseline-audit.md": "6d1c79ac1a7516bd9ad4d4a556fa3dadae6ba4724a443f162775080bd1837927",
+    "regression/final-check.json": "275ca21ebb097cd18190703a5cdfbaca563554bb4db370380a50e8790a3e16f5",
+    "regression/source-manifest.json": "d85c97f7fa78de42c8e278f43dcdfdcc408510cc7d2ba953c28017999e0a6b23",
+    "regression/test-source-hashes.json": "78742ae9e3eb31638b28fce945f0e5e5e86f794e9e77cc8230ce45cd2bbce236",
+    "regression/preservation.json": "4e9617016b18f4550fcbf9082eedf843a65f713e2f8a02b9ee7eabc9a31b04e9",
+    "regression/retained-receipt-manifest.json": "5e511f7e6531c14b50fee9a06ba0992e69d4eac62b80e838ff6da60728009c8d",
+    "stationary-fixture-checks.json": "addd85e9348f15ea7136c40f83e8f907a4e623c92b9fef2c023e63f4e93f58ed",
+    "deferred-receipt-verification.json": "c7f7d76b420a6473c39b3d9cd63e9327e18c677c7a73b83b990897f37173feea",
+    "capture_core.py": "f66f84912e79712965dce678d0d99ea63df5563acdec22f33bf52b815bf04e2b",
+    "capture_monitor.py": "f56a1fcadd03dda03fcdbee5d7177954271444b23b67e919fab878479b24bccd",
+    "capture_stream.cjs": "af21164d88faf0412af749ff519a93e615512d6b8ce5549aec09910426ccc19d"
+  },
+  "privacy": {
+    "raw_dataset_in_git": false,
+    "images_published": false,
+    "device_address_published": false,
+    "process_argv_published": false,
+    "route_or_location_published": false,
+    "private_evidence": "Local ignored receipts only; hashes and sanitized summaries are public."
+  },
+  "readiness": {
+    "vehicle10": "DEFERRED_REQUIRES_FRESH_GATES",
+    "real_input_parity": false,
+    "vehicle10_pass": false,
+    "numerical_decision": "PARITY_UNDETERMINED",
+    "M2": false
+  },
+  "next_action": "2026-10-25 ignition ON 전에 사용자 연락 후 fresh OFF/source/profile/storage 재검증부터 재개.",
+  "limitations": [
+    "No ticket was created and no capture was attempted; this is neither Vehicle10 PASS nor a technical capture failure.",
+    "Today's fresh OFF and source evidence must not authorize a ticket tomorrow without new checks.",
+    "No operational N16/protocol2 READY assertion from OFF telemetry.",
+    "No actual dataset validation or numerical parity result; no automatic continuation or overnight ticket."
+  ]
+}
