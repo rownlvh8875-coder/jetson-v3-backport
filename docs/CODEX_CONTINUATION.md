@@ -1,5 +1,56 @@
 # Codex continuation — 2026-10-24
 
+## Latest checkpoint: M19-C1.3 exact-a559 INSTALLED_OFF
+
+Read `docs/M19C13_A559_ACTUAL_OFF_DEPLOYMENT_20261024.md` and
+`artifacts/m19c13_a559_actual_off_deployment_20261024.json` first.
+**RECORDER_A559_EXECUTION_SWITCHES_V1_INSTALLED_OFF** on actual carrot-nav
+a559fcd971ccaa5a87befb8ec080f59a2966325b. Explicit user deployment approval;
+capture excluded. First actual commands were the two requested cat reads:1/0.
+Fresh initial/immediate-before/after/final12s device+panda+manager windows PASS,
+startedfalse/ignitionfalse-false/harnessnotConnected/thermalgreen; onroad-only
+roles absent, hardwared/pandad/jetlinkd normal. Final22/111/22 fresh samples.
+
+Pure PRE model and old366/B1 five-file package exact. Fresh full30pins and N16
+source/spec/stateful5pairs/image2x6x128x256/packed65595/first12 PASS. All three
+execution selectors and legacycapture env absent across28 relevant processes;
+reviewed defaults1, no selector/config/Params changes.
+
+Fresh current PRE49 untracked entries/2011files/417266269bytes plus2205 ignored
+generated/native files/384872958bytes, model hashes/4540route metadata records,
+index/boot/process/source commitments. Original current48 overlay preserved;
+no historical digest substituted. Source/model binary never loaded or executed.
+
+Actual-byte disposable12checks/forward+reverse PASS. Private exclusive backups
+of3touched files outside source, SHA-verified. First apply6hashesPASS but private
+porcelain helper stripped leading column and falsely rejected expecteddiff;
+exactreverse restored PRE6/index. Local RED/GREEN parser fix then new fullPRE,
+disposable/backup/OFF window and second apply PASS. No HEAD drift or auto-retarget.
+Windows autocrlf was caught locally; LF preserved using per-command Git setting,
+no persistent config change. Helper ModelSpec future-annotation issue fixed before
+writes; no recorder/gate/source logic change.
+
+Final six hashes exact; touched3 only model.py/format.py/hook.py, index unchanged.
+Footer marker/hash exact, original a559 body unchanged, wrapper accepts None or
+callback and forwardsprepare/outputbuffer once. Actual no-ticket footer import
+tripwire PASS; modeld absent by OFF policy. Ticket namespace ABSENT,writer0,
+datasetNONE,frames0. arm_discovered NEVER called. Restart/capture NOT_RUN_BY_SCOPE;
+Jetson access/mutation NONE, updater untouched.
+
+New POSTe0bc1bb966785ddcc84593942916dd63c184426372df635611ebb7153857164a
+and all9 preservation checks PASS: original48/ignored/model/routes/index/boot/
+process identities stable; only approved package/model changes. Final read-only
+12s health and28process env checks PASS. Private backup/raw paths stay private.
+Fresh CPU627 uniquePASS/0FAIL/0SKIP (533project215.57s+94upstream7.68s), no new
+receipt pytest cases; diagnostics4 blocked/unrecounted; root blocker separate.
+
+Ready vehicle10 **YES_READINESS_ONLY**, no capture authority. M2NO,
+numericalPARITY_UNDETERMINED. **Next:** await separate explicit vehicle10 capture
+authorization; keep ticket absent and recorderOFF. Development start97fa34b
+clean/equal feature, protected refs unchanged; docs/evidence-only development
+changes. Result commit:
+`git log -1 --format=%H -- artifacts/m19c13_a559_actual_off_deployment_20261024.json`.
+
 ## Latest checkpoint: M19-C0.2 exact-a559 offline compatibility PASS
 
 Read `docs/M19C02_A559_EXECUTION_SWITCHES_20261024.md` and

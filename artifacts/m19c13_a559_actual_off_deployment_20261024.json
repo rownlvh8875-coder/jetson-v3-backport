@@ -1,0 +1,792 @@
+{
+  "schema": 1,
+  "stage": "M19-C1.3",
+  "date": "2026-10-24",
+  "created_utc": "2026-10-24T10:22:50.852068+00:00",
+  "status": "RECORDER_A559_EXECUTION_SWITCHES_V1_INSTALLED_OFF",
+  "development_branch": "feature/jetlink-multimodel-carrot",
+  "start_development_head": "97fa34b9050635cff19ee451699d2c7cbd06390e",
+  "start_local_remote_equal": true,
+  "start_working_tree": "CLEAN",
+  "result_commit_resolution": "git log -1 --format=%H -- artifacts/m19c13_a559_actual_off_deployment_20261024.json",
+  "profile": "RECORDER_A559_EXECUTION_SWITCHES_V1",
+  "actual": {
+    "branch": "carrot-nav",
+    "head": "a559fcd971ccaa5a87befb8ec080f59a2966325b",
+    "flags": {
+      "IsOffroad": "1",
+      "IsOnroad": "0"
+    },
+    "tracked_status": "model.py footer only; no index change",
+    "genuine_off": "PASS"
+  },
+  "first_gate": {
+    "commands": [
+      "cat /data/params/d/IsOffroad",
+      "cat /data/params/d/IsOnroad"
+    ],
+    "flags": {
+      "IsOffroad": "1",
+      "IsOnroad": "0"
+    },
+    "status": "PASS_OFFROAD",
+    "fresh_owned_terminal": true
+  },
+  "observation": {
+    "initial": {
+      "status": "GENUINE_OFF_PRECHECK_PASS",
+      "seconds": 12.000506392,
+      "flags": {
+        "IsOffroad": "1",
+        "IsOnroad": "0"
+      },
+      "fresh_summary": {
+        "deviceState": {
+          "samples": 22,
+          "seconds": 11.435903488
+        },
+        "managerState": {
+          "samples": 22,
+          "seconds": 11.438705348
+        },
+        "pandaStates": {
+          "samples": 111,
+          "seconds": 11.970603834
+        }
+      },
+      "device_started": [
+        false
+      ],
+      "thermal": [
+        "green"
+      ],
+      "pandas": [
+        {
+          "pandaType": "cuatro",
+          "ignitionLine": false,
+          "ignitionCan": false,
+          "harnessStatus": "notConnected",
+          "controlsAllowed": false,
+          "heartbeatLost": false
+        }
+      ],
+      "manager": [
+        {
+          "name": "camerad",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "modeld",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "jetlinkd",
+          "running": true,
+          "shouldBeRunning": true
+        },
+        {
+          "name": "controlsd",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "selfdrived",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "card",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "pandad",
+          "running": true,
+          "shouldBeRunning": true
+        },
+        {
+          "name": "hardwared",
+          "running": true,
+          "shouldBeRunning": true
+        }
+      ],
+      "final_message_age_seconds": {
+        "deviceState": 0.226697948,
+        "managerState": 0.204157283,
+        "pandaStates": 0.013029678
+      },
+      "ticket_namespace": "ABSENT",
+      "writer": 0,
+      "dataset": "NONE",
+      "checks": {
+        "CANARIES_INDEX_STABLE": true,
+        "DATASET_NONE": true,
+        "DEVICE_OFF": true,
+        "FLAGS": true,
+        "IDENTITY_STABLE": true,
+        "IGNITION_OFF": true,
+        "LEGACY_ENV_ABSENT": true,
+        "MANAGER_OFF": true,
+        "NO_TRACKED_DIFF": true,
+        "OS_OFF_end": true,
+        "OS_OFF_start": true,
+        "TICKET_ABSENT": true,
+        "WRITER0": true,
+        "deviceState_FRESH": true,
+        "managerState_FRESH": true,
+        "pandaStates_FRESH": true
+      }
+    },
+    "immediate_before": {
+      "status": "GENUINE_OFF_PRECHECK_PASS",
+      "seconds": 12.078543153,
+      "flags": {
+        "IsOffroad": "1",
+        "IsOnroad": "0"
+      },
+      "fresh_summary": {
+        "deviceState": {
+          "samples": 22,
+          "seconds": 11.338813027
+        },
+        "managerState": {
+          "samples": 22,
+          "seconds": 11.337365757
+        },
+        "pandaStates": {
+          "samples": 111,
+          "seconds": 11.879967707
+        }
+      },
+      "device_started": [
+        false
+      ],
+      "thermal": [
+        "green"
+      ],
+      "pandas": [
+        {
+          "pandaType": "cuatro",
+          "ignitionLine": false,
+          "ignitionCan": false,
+          "harnessStatus": "notConnected",
+          "controlsAllowed": false,
+          "heartbeatLost": false
+        }
+      ],
+      "manager": [
+        {
+          "name": "camerad",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "modeld",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "jetlinkd",
+          "running": true,
+          "shouldBeRunning": true
+        },
+        {
+          "name": "controlsd",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "selfdrived",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "card",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "pandad",
+          "running": true,
+          "shouldBeRunning": true
+        },
+        {
+          "name": "hardwared",
+          "running": true,
+          "shouldBeRunning": true
+        }
+      ],
+      "final_message_age_seconds": {
+        "deviceState": 0.311069077,
+        "managerState": 0.287325726,
+        "pandaStates": 0.11398813
+      },
+      "ticket_namespace": "ABSENT",
+      "writer": 0,
+      "dataset": "NONE",
+      "checks": {
+        "CANARIES_INDEX_STABLE": true,
+        "DATASET_NONE": true,
+        "DEVICE_OFF": true,
+        "FLAGS": true,
+        "IDENTITY_STABLE": true,
+        "IGNITION_OFF": true,
+        "LEGACY_ENV_ABSENT": true,
+        "MANAGER_OFF": true,
+        "NO_TRACKED_DIFF": true,
+        "OS_OFF_end": true,
+        "OS_OFF_start": true,
+        "TICKET_ABSENT": true,
+        "WRITER0": true,
+        "deviceState_FRESH": true,
+        "managerState_FRESH": true,
+        "pandaStates_FRESH": true
+      }
+    },
+    "after": {
+      "status": "GENUINE_OFF_PRECHECK_PASS",
+      "seconds": 12.063726641,
+      "flags": {
+        "IsOffroad": "1",
+        "IsOnroad": "0"
+      },
+      "fresh_summary": {
+        "deviceState": {
+          "samples": 22,
+          "seconds": 11.344303632
+        },
+        "managerState": {
+          "samples": 22,
+          "seconds": 11.34527341
+        },
+        "pandaStates": {
+          "samples": 111,
+          "seconds": 11.887797247
+        }
+      },
+      "device_started": [
+        false
+      ],
+      "thermal": [
+        "green"
+      ],
+      "pandas": [
+        {
+          "pandaType": "cuatro",
+          "ignitionLine": false,
+          "ignitionCan": false,
+          "harnessStatus": "notConnected",
+          "controlsAllowed": false,
+          "heartbeatLost": false
+        }
+      ],
+      "manager": [
+        {
+          "name": "camerad",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "modeld",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "jetlinkd",
+          "running": true,
+          "shouldBeRunning": true
+        },
+        {
+          "name": "controlsd",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "selfdrived",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "card",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "pandad",
+          "running": true,
+          "shouldBeRunning": true
+        },
+        {
+          "name": "hardwared",
+          "running": true,
+          "shouldBeRunning": true
+        }
+      ],
+      "final_message_age_seconds": {
+        "deviceState": 0.208405028,
+        "managerState": 0.188540021,
+        "pandaStates": 0.113320237
+      },
+      "ticket_namespace": "ABSENT",
+      "writer": 0,
+      "dataset": "NONE",
+      "checks": {
+        "CANARIES_INDEX_STABLE": true,
+        "DATASET_NONE": true,
+        "DEVICE_OFF": true,
+        "FLAGS": true,
+        "IDENTITY_STABLE": true,
+        "IGNITION_OFF": true,
+        "LEGACY_ENV_ABSENT": true,
+        "MANAGER_OFF": true,
+        "NO_TRACKED_DIFF": true,
+        "OS_OFF_end": true,
+        "OS_OFF_start": true,
+        "TICKET_ABSENT": true,
+        "WRITER0": true,
+        "deviceState_FRESH": true,
+        "managerState_FRESH": true,
+        "pandaStates_FRESH": true
+      }
+    },
+    "final": {
+      "status": "GENUINE_OFF_PRECHECK_PASS",
+      "seconds": 12.003369294,
+      "flags": {
+        "IsOffroad": "1",
+        "IsOnroad": "0"
+      },
+      "fresh_summary": {
+        "deviceState": {
+          "samples": 22,
+          "seconds": 11.340811557
+        },
+        "managerState": {
+          "samples": 22,
+          "seconds": 11.347330371
+        },
+        "pandaStates": {
+          "samples": 111,
+          "seconds": 11.890369655
+        }
+      },
+      "device_started": [
+        false
+      ],
+      "thermal": [
+        "green"
+      ],
+      "pandas": [
+        {
+          "pandaType": "cuatro",
+          "ignitionLine": false,
+          "ignitionCan": false,
+          "harnessStatus": "notConnected",
+          "controlsAllowed": false,
+          "heartbeatLost": false
+        }
+      ],
+      "manager": [
+        {
+          "name": "camerad",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "modeld",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "jetlinkd",
+          "running": true,
+          "shouldBeRunning": true
+        },
+        {
+          "name": "controlsd",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "selfdrived",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "card",
+          "running": false,
+          "shouldBeRunning": false
+        },
+        {
+          "name": "pandad",
+          "running": true,
+          "shouldBeRunning": true
+        },
+        {
+          "name": "hardwared",
+          "running": true,
+          "shouldBeRunning": true
+        }
+      ],
+      "final_message_age_seconds": {
+        "deviceState": 0.439951751,
+        "managerState": 0.413288537,
+        "pandaStates": 0.012354932
+      },
+      "ticket_namespace": "ABSENT",
+      "writer": 0,
+      "dataset": "NONE",
+      "checks": {
+        "CANARIES_INDEX_STABLE": true,
+        "DATASET_NONE": true,
+        "DEVICE_OFF": true,
+        "FLAGS": true,
+        "IDENTITY_STABLE": true,
+        "IGNITION_OFF": true,
+        "LEGACY_ENV_ABSENT": true,
+        "MANAGER_OFF": true,
+        "NO_TRACKED_DIFF": true,
+        "OS_OFF_end": true,
+        "OS_OFF_start": true,
+        "TICKET_ABSENT": true,
+        "WRITER0": true,
+        "deviceState_FRESH": true,
+        "managerState_FRESH": true,
+        "pandaStates_FRESH": true
+      }
+    }
+  },
+  "pre": {
+    "pure_a559_model": "PASS",
+    "surviving_old_package": "PASS_5_OF_5",
+    "before_profile": {
+      "openpilot/selfdrive/modeld/jetlink/model.py": "93c2858e5b981ed01ce39745002d7479d5362cb7265c11f2018ac7f7bb3c4554",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/__init__.py": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/format.py": "9deff26ba3ba9b66642f7a471b10c637272003029866ce47fe82f80ff702acdf",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/recorder.py": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/dataset.py": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py": "9e688299d4fcefeea3a5ebc1460ee8fd72afd1c15c9f2d1a1fd3f58b1a5ca7de"
+    },
+    "full30_source_pins": "PASS",
+    "fresh_overlay_attestation": "PASS",
+    "untracked_entries": 49,
+    "untracked_files": 2011,
+    "untracked_bytes": 417266269,
+    "inventory_commitment": "b3580bdf65ec6e9141984bcc5b6f448fe095c4d02c2385f97e24bb876d9726a4",
+    "ignored_generated_native_files": 2205,
+    "ignored_generated_native_bytes": 384872958,
+    "ignored_commitment": "2596a52410f387a1d31d0fd76fe384309263a766bd51ffc0b0ff2c3765270ead",
+    "route_metadata_files": 4540,
+    "route_metadata_commitment": "2dd1707a823dfa1de1d31dbd37e4e3dcfdcbc5e763e62a897e598f3542d9ca21",
+    "model_file_hash_commitment": "2cc3ae5fbcaaea657d4ba1f80eac3101d9e221336ab32fd0968dd144bc9d4f2a",
+    "index_commitment": "38b0a885adc6c8cff2eff023b3afb3670ba219e841ba208e4c65ba0d5a6a0db7",
+    "boot_id_commitment": "4d33c1c3686e4206d77220bbb5e6319c489bdab997c0fc0f591a5c4d1ac60f29",
+    "processes": 28,
+    "private_observation_commitment": "c53a6a90cd26c69082d96a6f487e69aa9b38bfd5195ff12461c766b3bc217e89",
+    "ticket_namespace": "CLEAN_ABSENT",
+    "writer": 0,
+    "legacy_capture_env": "ABSENT_IN_ALL_INSPECTED_RELEVANT_PROCESSES"
+  },
+  "source_contract": {
+    "source_pins": {
+      "openpilot/selfdrive/modeld/jetlink/model.py": "93c2858e5b981ed01ce39745002d7479d5362cb7265c11f2018ac7f7bb3c4554",
+      "openpilot/selfdrive/modeld/jetlink/link.py": "418e063bd10245bc1c26a858173d1488188afe3d062bca8ca898a34a36c0e253",
+      "openpilot/selfdrive/modeld/jetlink/shared_input.py": "dc36519c3dc6fad49047fe35a24c5b33f439364c2e4a2559d0f357dfb8e0921e",
+      "openpilot/selfdrive/modeld/jetlink/contracts.py": "100f92e154b9540ddfe8b8b5ca6c3e2973cce14428fb3442ad98701c976f9ca2",
+      "openpilot/selfdrive/modeld/jetlink/daemon.py": "b7fb4898bcf62cfc9d8e9fb4034b3fb342ee7468dba6371fc17a99509e2dc35d",
+      "openpilot/selfdrive/modeld/jetlink/inputs.py": "c737e30ff8c1b170ebc2179394ee0ce63180e257ddb64ce0967aae7161398f8e",
+      "openpilot/selfdrive/modeld/jetlink/prepare.py": "c6a9e9fc1fe122b655ea3a6fbbd3b0fff9ad7d3f918e720e9401fd19e0afb4e7",
+      "openpilot/selfdrive/modeld/jetlink/jetson_model.json": "ceb07d1a502966f10cb1afc33c6d686a418b3f204320685cf5e36bbf44c62f6d",
+      "openpilot/selfdrive/modeld/camera_gap.py": "7b959fa8bdd740c4bea150c07248a69ea33f08db327110601be3ee17d9bc938a",
+      "openpilot/selfdrive/modeld/camera_sync.py": "398980260825757393239796cb4dc10399ef1384f0fd9e23cdad0fd12d0cc0d2",
+      "openpilot/selfdrive/modeld/modeld.py": "008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594",
+      "openpilot/system/manager/process.py": "fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752",
+      "third_party/jetlink/jetlink/spec.py": "ec844ccaf13ffc1d7c03ad683b0e3f2ce6a1d78f4088067739aaa419af422170",
+      "third_party/jetlink/jetlink/server/session.py": "a4a5c08f917294806395b1e0fa9c359d747fbc6ced7842dbc3c32d924af2847d",
+      "third_party/jetlink/jetlink/queues.py": "c251eecc45e38704c15b2a10f0969c270cd9fa11603ebdaae88c1b1187112ea8",
+      "third_party/jetlink/jetlink/client.py": "05d500179dd3e49d8875d8cfc370a59dd692839eb6b1b939efee5fb72b9092b9",
+      "third_party/jetlink/jetlink/protocol.py": "27921d6cbac744f28db9f3c3487e42bdf405ac184db41322352f91aad9e3fb51",
+      "third_party/jetlink/jetlink/request_chunks.py": "a4ac4bcf467b09df3b703e05a59e757ce2ebb8e016898eb1808ad0031a1905e1",
+      "third_party/jetlink/jetlink/packed_codec.py": "8d67a94951e6188d811c8ad7072e5db1b40ff9ef24ec28049634b07cb26c9004",
+      "third_party/jetlink/jetlink/block_codec.py": "a42299bd1fccdf53022afd50066909caa5740f4790cec1a88eec9665f8e7ad5e",
+      "third_party/jetlink/jetlink/transport/base.py": "1861db5ec506b274f940797a6d2b181f075e94a928326d699c34cfd6b0c93a3b",
+      "third_party/jetlink/jetlink/transport/ffs.py": "41580e2d6ae5c4533e5c089375a1788920f3480f59b80fbb7d0eabe2f8b7fd50",
+      "third_party/jetlink/jetlink/transport/request_writer.py": "7d6846fdeebfafdffb849b17c7771f39ea6f352211ee879f61acdf3e71029d53",
+      "third_party/jetlink/jetlink/transport/request_writer.c": "a05f1c9bf1d875625cbb46c5c5d402537c22cb1c625f0aa413db906cbc882bc9",
+      "tools/jetlink/host_reader.py": "991b975dfb4c65c93f82711da25818981b71ef01281a65bc94a28946246b319a",
+      "tools/jetlink/host_usb.py": "49609ee4a4179369d6e6e3e048ff1669854de9ec42d92ac5f764eb23c50dcba4",
+      "tools/jetlink/server.py": "10298c588d517c6aad2c5223b1bc0506fb1a5b89c6f965f5d0b5a7a16b839e87",
+      "openpilot/selfdrive/modeld/jetlink/host_release.json": "c113776620f9644bd899bc719a3ded13be3ef851c501d0f323bede7c6181a242",
+      "openpilot/common/runtime_diagnostics.py": "f5e6c161a5d7c99aebfdfa89c132b86e519980abe6a5b6d787dc2dd8dd3ac1ea",
+      "third_party/jetlink/jetlink/output_projection.py": "d76547e3426c488c6f8ab341a2b1f0613c183a02c6b6710c9871af8a94d3a534"
+    },
+    "pins": 30,
+    "status": "PASS",
+    "model": "01effc679eb46d6036ce0302673a87fe2dcfcc95a679daeeb929679e53c3647a",
+    "spec": "63b2097c114bade03c5ec7ded978d73032a93bb525c03f9b78eddf49809f8b71",
+    "n16": "PASS_SOURCE_CONTRACT",
+    "stateful": true,
+    "server_owned_state_pairs": {
+      "state_desire_q": "next_state_desire_q",
+      "state_feat_q": "next_state_feat_q",
+      "state_img_q": "next_state_img_q",
+      "state_map_features_q": "next_state_map_features_q",
+      "state_navigation_features_q": "next_state_navigation_features_q"
+    },
+    "warped_shape": [
+      2,
+      6,
+      128,
+      256
+    ],
+    "packed_float_count": 65595,
+    "first12": [
+      "desire8",
+      "traffic_convention2",
+      "action_t2"
+    ],
+    "switch_profile": "PASS",
+    "switch_names": [
+      "JETLINK_CPU_OVERLAP",
+      "JETLINK_REQUEST_CHUNKS",
+      "JETLINK_COMPACT_REPLY"
+    ],
+    "execution_environment": "Selectors absent in all28 inspected relevant process environments; reviewed source defaults1. modeld inactive.",
+    "relevant_processes_inspected": 28,
+    "selector_mutations": "NONE",
+    "model_binary_download_or_execution": "NOT_RUN"
+  },
+  "migration": {
+    "layout": "surviving366",
+    "forward_sha256": "aa983f2bc477f011da46d55b0b3305c77c7540e1e0d0619e200bf26bdcb6164e",
+    "reverse_sha256": "147888f44973025c56d35bc9cdd6dd3f2c50a88d561b8270666ef0299b114230",
+    "forward_sha": "PASS",
+    "reverse_sha": "PASS",
+    "disposable_roundtrip": {
+      "forward_sha": true,
+      "reverse_sha": true,
+      "forward_check": true,
+      "forward_apply": true,
+      "after_six_hashes": true,
+      "syntax_compile": true,
+      "footer_hook_binding": true,
+      "warp_signature_and_single_forward": true,
+      "no_ticket_default_off": true,
+      "reverse_check": true,
+      "reverse_apply": true,
+      "exact_pre_restore": true
+    },
+    "backup": "PASS_EXCLUSIVE_PRIVATE_OUTSIDE_SOURCE_3_FILES_SHA_VERIFIED",
+    "backup_path_commitment": "eb7fb75206e8225697c67dd0503c88466d5871c9eb10d75e9f1507d64e939763",
+    "backup_hashes": {
+      "openpilot/selfdrive/modeld/jetlink/input_recording/format.py": "9deff26ba3ba9b66642f7a471b10c637272003029866ce47fe82f80ff702acdf",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py": "9e688299d4fcefeea3a5ebc1460ee8fd72afd1c15c9f2d1a1fd3f58b1a5ca7de",
+      "openpilot/selfdrive/modeld/jetlink/model.py": "93c2858e5b981ed01ce39745002d7479d5362cb7265c11f2018ac7f7bb3c4554"
+    },
+    "actual_apply": "PASS",
+    "touched_files": [
+      "openpilot/selfdrive/modeld/jetlink/input_recording/format.py",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py",
+      "openpilot/selfdrive/modeld/jetlink/model.py"
+    ],
+    "after_profile": {
+      "openpilot/selfdrive/modeld/jetlink/input_recording/__init__.py": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/dataset.py": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/format.py": "f0bf4d1abbbc8bc89e02213198743d507fd57a6546a85b48f54fd46ea346cd25",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py": "1e82abdfc93ab23f7add69c8f248677538ec2c20b47868b7bc06cb0195a18256",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/recorder.py": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada",
+      "openpilot/selfdrive/modeld/jetlink/model.py": "1e12806606823d09ff57bb65879810e73f50eb9dd45c85aec555d0b0777c74cb"
+    },
+    "after_six_exact": "PASS_6_OF_6",
+    "initial_attempt": {
+      "state": "ROLLED_BACK",
+      "after_six_exact": "PASS_6_OF_6",
+      "trigger": "Private status helper .strip() removed porcelain leading column, false-positive unexpected tracked diff",
+      "reverse": "PASS_EXACT_PRE_RESTORED",
+      "action": "Preserved leading Git columns with rstrip; local RED/GREEN regression; new full PRE attestation, disposable roundtrip, backup and OFF window before second authorized apply",
+      "head_drift": false
+    },
+    "final_rollback": "NOT_RUN",
+    "intermediate_rollback_preservation": {
+      "index": true,
+      "ignored_digest": true,
+      "model_hashes": true,
+      "routes_inventory": true,
+      "boot_id": true,
+      "source_hashes": true,
+      "original48": true,
+      "processes": true
+    },
+    "git_apply_options": "core.autocrlf=false per invocation only, no persistent Git config change; Windows disposable conversion was detected before actual write"
+  },
+  "wrapper": {
+    "shared_input": "PASS_STATIC_EXACT_INSTALLED_HOOK",
+    "cpu_overlap_none_callback": "PASS_STATIC",
+    "single_original_warp_forward": "PASS",
+    "strategy_b_footer": "PASS",
+    "marker": "RECORDER_A559_EXECUTION_SWITCHES_V1",
+    "hook_sha256": "1e82abdfc93ab23f7add69c8f248677538ec2c20b47868b7bc06cb0195a18256",
+    "no_environment_activation": true,
+    "original_a559_body_unchanged": true,
+    "exactly_one_footer": true
+  },
+  "recorder": {
+    "ticket": "NOT_CREATED",
+    "activation": "NOT_RUN",
+    "writer": 0,
+    "dataset": "NONE",
+    "frames": 0,
+    "default_off": "PASS",
+    "no_ticket_footer_import_tripwire": "PASS",
+    "normal_off_modeld_absent": true
+  },
+  "restart": "NOT_RUN_BY_SCOPE",
+  "capture": "NOT_RUN_BY_SCOPE",
+  "jetson_mutation": "NONE",
+  "jetson_access": "NOT_RUN",
+  "updater_manipulation": "NONE",
+  "post": {
+    "attestation": "PASS",
+    "commitment": "e0bc1bb966785ddcc84593942916dd63c184426372df635611ebb7153857164a",
+    "checks": {
+      "HEAD_BRANCH_FLAGS_BOOT_PARAMS_INDEX": true,
+      "IGNORED_GENERATED_NATIVE": true,
+      "MODELS_ROUTES": true,
+      "ONLY_EXPECTED_TRACKED_DIFF": true,
+      "ORIGINAL_CURRENT_OVERLAY": true,
+      "PACKAGE_NAMESPACE_AND_UNTOUCHED": true,
+      "PROCESS_IDENTITIES": true,
+      "SIX_AFTER_WRAPPER_FOOTER_DEFAULT_OFF": true,
+      "SOURCE_CANARIES_30": true
+    },
+    "operating_preservation": "PASS",
+    "source30_normalized_body": "PASS",
+    "untracked_entries": 49,
+    "ignored_files": 2205,
+    "index_unchanged": true,
+    "boot_unchanged": true,
+    "process_identity_unchanged": true,
+    "routes_models_unchanged": true,
+    "original_current_overlay_unchanged": true
+  },
+  "tests": {
+    "pass_count": 627,
+    "fail": 0,
+    "skip": 0,
+    "unique_case_id_sha256": "7bbbbc4297c913e7338d0251e4d3ec6312fb411c1a773f6810a7faa0ef0459cb",
+    "suites": [
+      {
+        "scope": "scoped",
+        "pass_count": 533,
+        "fail": 0,
+        "skip": 0,
+        "seconds": 215.557,
+        "command": [
+          "python",
+          "-B",
+          "-m",
+          "pytest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "tests/test_recorder_activation_v2.py",
+          "tests/test_recorder_activation_deployment.py",
+          "tests/test_u32_provenance.py",
+          "tests/test_comma_dirty_baseline.py",
+          "tests/test_comma_dirty_layout.py",
+          "tests/test_v3_input_format.py",
+          "tests/test_v3_input_recorder.py",
+          "tests/test_v3_input_dataset.py",
+          "tests/test_v3_input_hook.py",
+          "tests/test_recorder_810e.py",
+          "tests/test_recorder_810e_activation.py",
+          "tests/test_recorder_810e_dataset.py",
+          "tests/test_recorder_810e_shared.py",
+          "tests/test_recorder_810e_wire.py",
+          "tests/test_recorder_060de9.py",
+          "tests/test_recorder_060de9_gates.py",
+          "tests/test_recorder_060de9_wire.py",
+          "tests/test_recorder_a559.py",
+          "tests/test_recorder_a559_activation.py",
+          "tests/test_recorder_a559_gates.py",
+          "tests/test_recorder_a559_order.py",
+          "tests/test_recorder_a559_wire.py",
+          "--tb=short",
+          "--junitxml=.reports/m19c13-20261024/scoped.xml",
+          "--basetemp=/tmp/m19c13-final-scoped"
+        ],
+        "environment": {
+          "PYTHONPATH": ".:tests",
+          "OPENBLAS_NUM_THREADS": "1",
+          "PYTHONDONTWRITEBYTECODE": "1"
+        },
+        "log_sha256": "29b191089d9da1827b29e09f7343ddcc8325d99c6aaa78a7b471e1e9a14cfade",
+        "junit_sha256": "42dead9bf2f2eebf478b21f3eb141cf4ef3bca7494002618f259caeed33675c2"
+      },
+      {
+        "scope": "upstream",
+        "pass_count": 94,
+        "fail": 0,
+        "skip": 0,
+        "seconds": 7.674,
+        "command": [
+          "python",
+          "-B",
+          "-m",
+          "pytest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          ".reports/m19c13-20261024/source-upstream/tools/jetlink/test_request_chunks.py",
+          ".reports/m19c13-20261024/source-upstream/tools/jetlink/test_request_writer.py",
+          ".reports/m19c13-20261024/source-upstream/tools/jetlink/test_host_request_queue.py",
+          ".reports/m19c13-20261024/source-upstream/tools/jetlink/test_host_usb.py",
+          "--tb=short",
+          "--junitxml=.reports/m19c13-20261024/upstream.xml",
+          "--basetemp=/tmp/m19c13-final-upstream"
+        ],
+        "environment": {
+          "PYTHONPATH": ".reports/m19c13-20261024/source-upstream/tools/jetlink:.reports/m19c13-20261024/source-upstream/third_party/jetlink:.reports/m19c13-20261024/source-upstream",
+          "OPENBLAS_NUM_THREADS": "1",
+          "PYTHONDONTWRITEBYTECODE": "1"
+        },
+        "log_sha256": "a9e7272bbbf4a89decd685b5656a9751b8549d0646a1d3c7b0fe163f6944e3a3",
+        "junit_sha256": "ccb6182df65977b91b34990a9a3a6aeaece44fb96adfd07276ca3426fd776daf"
+      }
+    ],
+    "additional_deployment_receipt_tests": 0,
+    "diagnostics4": "DEPENDENCY_BLOCKED_SEPARATE_NOT_COUNTED",
+    "root_collection": "Known tests/test_backport.py:192 SystemExit(0)/pytest3 blocker; not rerun and no full-root PASS claimed"
+  },
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "m2_readiness": "NO",
+  "ready_for_vehicle10": "YES_READINESS_ONLY_NO_CAPTURE_AUTHORITY",
+  "next_action": "Separate explicitly authorized vehicle10 capture stage; keep ticket absent and recorder OFF until then",
+  "private_receipt_sha256": {
+    "first-flags-private.json": "0389b4eee8c3d65655308b5f3e9cb3b8266e7f73a33e52112fb016a65226985b",
+    "genuine-off-private.json": "50fb4376e21407f812061fa6166760f43cb16708fd123cbb11e6a4f4a65dbf46",
+    "pre-private.json": "faca71d71178847ce75b086919821296eaec6d15c1a1265e2c4b3bd4342be301",
+    "pre2-private.json": "9d74e6c79b0286538c380db7a910191b11ab6ac6c8340c7a4092f3bf40c77ec4",
+    "pre3-private.json": "c53a6a90cd26c69082d96a6f487e69aa9b38bfd5195ff12461c766b3bc217e89",
+    "disposable-private.json": "01af2fc5d6c501812c0abcb8c3523d2a974516710adf04a6f9375f68428f0de0",
+    "disposable2-private.json": "2006efc28d138dc9871c4469121a38bca91ab47fc85dbacf80a0784da3c7a9eb",
+    "transaction-private.json": "ffead7a23d63d5e0b46f8ad67f2015914649e8c5e6687dcf2f3a804dd4beba2a",
+    "transaction2-private.json": "2fea86e4651194c702e9c967a3465047679191f4721c859d1ef3ce47dd08d583",
+    "final-health-private.json": "0fc57f8d360699c04e01926e7405524d8bf3dc9503f5be3861ebe0840624a856"
+  },
+  "private_helper_sha256": {
+    "first_flags.cjs": "5c6bcecb915843b07c051c2495a49f16b94fd7a0b771f0bfc269300aa3e30acd",
+    "inventory_stream.cjs": "0a91676a3011c0cc1e0fd6517d09798cbdc655310e0ae67a0f8a4ec988d44bb1",
+    "apply_attempt1.py": "6f18e8ad95c6155449bf53bd4be6823726f485bbc405a8481af96a6f0c7fe8e8",
+    "apply_transaction.py": "02cf8f03458d04df918be3055840bb2a2eabc51f1dc31706fd4a66f18aeb913c",
+    "final_health.py": "f5498a60d7bba25382a4fe745702e7baa5eccdafb7fc61b263179f8bdbdcfcfe"
+  },
+  "helper_corrections": [
+    "Selected ModelSpec AST retained future annotations, local reproduction passed; source unchanged",
+    "Windows Git autocrlf conversion caught in local disposable, exact LF-preserving per-command apply used",
+    "Porcelain leading-space trimming reproduced and fixed only in private helpers; first actual attempt reverse restored exact PRE before fresh retry"
+  ],
+  "privacy": "Private paths/addresses/raw argv/full environments/route names/boot ID omitted; evidence commitments retained"
+}
