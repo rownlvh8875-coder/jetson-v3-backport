@@ -9,6 +9,12 @@
 
 **최신 작업 인계:** [CODEX_CONTINUATION.md](docs/CODEX_CONTINUATION.md).
 
+2026-10-24 [M19-C1.2 live 진단 재개](docs/M19C12_LIVE_ONROAD_DIAGNOSIS_20261024.md):
+집에서 fresh OFF/ON1/0, 12.09초 동안 device22/Panda112/manager22 samples를 확인했다.
+started=false·ignition=false/false·harness 미연결·onroad process inactive로 현재 정상 OFF다.
+과거 Onroad1 원인은 미확정이며, actual HEAD가a559fcd로 이동해 기존060 patch 설치는 금지다.
+실제 변경·ticket·capture·restart·Jetson 작업은 없다. 다음은 새HEAD의 오프라인 호환성 검토다.
+
 2026-10-24 [M19-C1.2 읽기 전용 Onroad 진단](docs/M19C12_PERSISTENT_ONROAD_DIAGNOSIS_20261024.md):
 알려진 장치 주소에 연결되지 않아 **BLOCKED_DEVICE_UNREACHABLE**다. 새 Params·live sample은
 읽지 못했으며 원인은 UNKNOWN이다. exact060 소스만 오프라인 검토했고 실제 변경은 없다.

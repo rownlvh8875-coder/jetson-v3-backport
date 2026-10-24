@@ -1,5 +1,48 @@
 # Codex continuation — 2026-10-24
 
+## Latest checkpoint: M19-C1.2 resumed live diagnosis — current OFF, HEAD drift
+
+Read `docs/M19C12_LIVE_ONROAD_DIAGNOSIS_20261024.md` and
+`artifacts/m19c12_live_onroad_diagnosis_20261024.json` first. User brought comma
+home and supplied its address. Fresh first flags1/0. Actual carrot-nav HEAD
+**a559fcd971ccaa5a87befb8ec080f59a2966325b**, tracked0/untracked short49; approved
+recorder target remains exact060de9. No migration; BLOCKED_HEAD_DRIFT for install.
+
+Successful simultaneous12.094330398s receive-only window: deviceState22,
+pandaStates112,managerState22 valid/fresh, each source span>10s. Device startedfalse,
+startedMonoTime0,thermalgreen throughout. One cuatro Panda, ignitionfalse/false,
+harnessnotConnected,controlsAllowedfalse,heartbeatLostfalse,faultnone,uptime424→436.
+No empty arrays/stale/default evidence. Card/camerad/modeld/controlsd/selfdrived
+inactive by policy; hardwared/pandad/jetlinkd active. Manager OS parent48300→child
+48304 matches source forkpty stdout proxy; no duplicate manager fault inferred.
+HardwaredPID48364/start46.57s sinceboot stable. No cumulative restart counter in schema.
+
+Current persistent Onroad1 NOT_REPRODUCED. Historical cause UNKNOWN: already OFF
+at first read, no observed natural transition/latency or contemporaneous old0/1
+Panda/device evidence. Seven diagnostic source blobs equal exact060; this validates
+the state-machine explanation only, not old recorder deployment against newHEAD.
+Bounded newest3swaglog tails64KiB each/196parsedrecords, no attributable keyword
+event; no complete-log absence proof. Only existence of cycle/driver-view Params
+checked; values not read.
+
+Ticket namespace absent,writer0,no capture memfd in inspected roles,no role capture
+env,output root absent. Source/Params/process/Panda/USB/Jetson changes NONE.
+No restart,ticket,activation,capture,inference. Before/afterHEAD/status/index,
+12source hashes and rolePID/start identities unchanged: scoped preservationPASS.
+Full route/model/overlay inventory NOT_RUN; original48 not freshly attested.
+
+Early private collection responses truncated; paced bounded transport fixed local
+receipt delivery. Observer context guard corrected for source-proven forkpty
+parent/child before fresh successful window. No runtime/recorder gate/code change.
+Local receipt/privacy/source checks only; prior543CPU PASS not recounted. Historical
+unreachable artifact preserved unchanged. Development start744e948ff96848b2ff3646f1ad81a5c415a34408
+clean/localremoteequal; feature docs/artifact only.
+
+**Next:** offline a559fcd versus060 recorder compatibility review before any new
+deployment proposal. Do not auto-retarget/pull/reset/checkout/install from this
+read-only diagnosis. Safe C1.1 retryNO, numericalPARITY_UNDETERMINED/M2NO unchanged.
+Result commit: `git log -1 --format=%H -- artifacts/m19c12_live_onroad_diagnosis_20261024.json`.
+
 ## Latest checkpoint: M19-C1.2 read-only diagnosis BLOCKED_DEVICE_UNREACHABLE
 
 Read `docs/M19C12_PERSISTENT_ONROAD_DIAGNOSIS_20261024.md` and

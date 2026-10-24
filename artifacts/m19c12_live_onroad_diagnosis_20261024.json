@@ -1,0 +1,408 @@
+{
+  "schema": 1,
+  "stage": "M19-C1.2 resumed live diagnosis",
+  "date": "2026-10-24",
+  "status": "LIVE_OBSERVATION_PASS_CURRENT_OFF_HISTORICAL_CAUSE_UNDETERMINED",
+  "classification": "COMMA_REAL_READ_ONLY",
+  "development_branch": "feature/jetlink-multimodel-carrot",
+  "validation_head": "744e948ff96848b2ff3646f1ad81a5c415a34408",
+  "result_commit_resolution": "git log -1 --format=%H -- artifacts/m19c12_live_onroad_diagnosis_20261024.json",
+  "historical_access_attempt": "artifacts/m19c12_persistent_onroad_diagnosis_20261024.json preserved without modification",
+  "actual": {
+    "branch": "carrot-nav",
+    "head": "a559fcd971ccaa5a87befb8ec080f59a2966325b",
+    "observed_local_time": "2026-10-24T17:59:45.337842+09:00",
+    "flags_first": {
+      "IsOffroad": "1",
+      "IsOnroad": "0"
+    },
+    "flags_window_start": {
+      "IsOffroad": "1",
+      "IsOnroad": "0"
+    },
+    "flags_window_end": {
+      "IsOffroad": "1",
+      "IsOnroad": "0"
+    },
+    "flag_transitions_observed": 0,
+    "tracked_short_entries": 0,
+    "untracked_short_entries": 49,
+    "required_install_head": "060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c",
+    "install_head_match": false
+  },
+  "window": {
+    "end_ns": 481053854508,
+    "seconds": 12.094330398,
+    "start_ns": 468959524110
+  },
+  "deviceState": {
+    "samples": 22,
+    "received_samples": 22,
+    "all_received_valid_and_fresh": true,
+    "source_span_seconds": 11.308724979,
+    "first_source_monotonic_ns": 469431105741,
+    "last_source_monotonic_ns": 480739830720,
+    "last_message_age_at_window_end_seconds": 0.314023788,
+    "max_receive_age_seconds": 0.023889492,
+    "expected_publisher_hz": 2.0,
+    "classification": "FALSE_STABLE",
+    "started_values": [
+      false
+    ],
+    "startedMonoTime_values": [
+      0
+    ],
+    "thermal_status_values": [
+      "green"
+    ]
+  },
+  "pandaStates": {
+    "samples": 112,
+    "received_samples": 112,
+    "all_received_valid_and_fresh": true,
+    "source_span_seconds": 11.960441807,
+    "first_source_monotonic_ns": 468979478629,
+    "last_source_monotonic_ns": 480939920436,
+    "last_message_age_at_window_end_seconds": 0.113934072,
+    "max_receive_age_seconds": 0.018712316,
+    "expected_publisher_hz": 10.0,
+    "ignition_source": "NONE",
+    "ignition_bits_changed": false,
+    "empty_panda_arrays": 0,
+    "connected_panda_count": 1,
+    "harness": "NOT_CONNECTED",
+    "pandas": [
+      {
+        "index": 0,
+        "type": "cuatro",
+        "ignitionLine": false,
+        "ignitionCan": false,
+        "harnessStatus": "notConnected",
+        "controlsAllowed": false,
+        "heartbeatLost": false,
+        "faultStatus": "none",
+        "uptime_start_seconds": 424,
+        "uptime_end_seconds": 436
+      }
+    ]
+  },
+  "managerState": {
+    "samples": 22,
+    "received_samples": 22,
+    "all_received_valid_and_fresh": true,
+    "source_span_seconds": 11.306676878,
+    "first_source_monotonic_ns": 469451905529,
+    "last_source_monotonic_ns": 480758582407,
+    "last_message_age_at_window_end_seconds": 0.295272101,
+    "max_receive_age_seconds": 0.02701992,
+    "expected_publisher_hz": 2.0,
+    "roles": {
+      "hardwared": {
+        "pid": [
+          48364
+        ],
+        "running": [
+          true
+        ],
+        "shouldBeRunning": [
+          true
+        ],
+        "exitCode": [
+          0
+        ]
+      },
+      "pandad": {
+        "pid": [
+          48362
+        ],
+        "running": [
+          true
+        ],
+        "shouldBeRunning": [
+          true
+        ],
+        "exitCode": [
+          0
+        ]
+      },
+      "card": {
+        "pid": [
+          0
+        ],
+        "running": [
+          false
+        ],
+        "shouldBeRunning": [
+          false
+        ],
+        "exitCode": [
+          0
+        ]
+      },
+      "camerad": {
+        "pid": [
+          0
+        ],
+        "running": [
+          false
+        ],
+        "shouldBeRunning": [
+          false
+        ],
+        "exitCode": [
+          0
+        ]
+      },
+      "modeld": {
+        "pid": [
+          0
+        ],
+        "running": [
+          false
+        ],
+        "shouldBeRunning": [
+          false
+        ],
+        "exitCode": [
+          0
+        ]
+      },
+      "controlsd": {
+        "pid": [
+          0
+        ],
+        "running": [
+          false
+        ],
+        "shouldBeRunning": [
+          false
+        ],
+        "exitCode": [
+          0
+        ]
+      },
+      "selfdrived": {
+        "pid": [
+          0
+        ],
+        "running": [
+          false
+        ],
+        "shouldBeRunning": [
+          false
+        ],
+        "exitCode": [
+          0
+        ]
+      },
+      "jetlinkd": {
+        "pid": [
+          48357
+        ],
+        "running": [
+          true
+        ],
+        "shouldBeRunning": [
+          true
+        ],
+        "exitCode": [
+          0
+        ]
+      }
+    },
+    "onroad_processes_running": "NO",
+    "restart_counter": "NOT_EXPOSED_BY_SCHEMA",
+    "hardwared_os": {
+      "pid": 48364,
+      "parent_pid": 48304,
+      "start_seconds_since_boot": 46.57,
+      "identity_unchanged_in_window": true,
+      "crash_loop": "NONE_OBSERVED_IN_WINDOW"
+    },
+    "manager_forkpty": {
+      "parent_pid": 48300,
+      "child_pid": 48304,
+      "source": "openpilot/system/manager/helpers.py:unblock_stdout",
+      "relationship": "OS parent/child chain with same source cwd/prefix; expected stdout proxy, not two independent manager loops."
+    }
+  },
+  "timeline": [
+    {
+      "service": "pandaStates",
+      "sample": "first",
+      "source_monotonic_ns": 468979478629,
+      "source_offset_seconds": 0.019954519,
+      "ignitionLine": false,
+      "ignitionCan": false
+    },
+    {
+      "service": "deviceState",
+      "sample": "first",
+      "source_monotonic_ns": 469431105741,
+      "source_offset_seconds": 0.471581631,
+      "started": false,
+      "startedMonoTime": 0
+    },
+    {
+      "service": "managerState",
+      "sample": "first",
+      "source_monotonic_ns": 469451905529,
+      "source_offset_seconds": 0.492381419,
+      "onroad_roles_running": false,
+      "hardwared_running": true
+    },
+    {
+      "service": "deviceState",
+      "sample": "last",
+      "source_monotonic_ns": 480739830720,
+      "source_offset_seconds": 11.78030661,
+      "started": false,
+      "startedMonoTime": 0
+    },
+    {
+      "service": "managerState",
+      "sample": "last",
+      "source_monotonic_ns": 480758582407,
+      "source_offset_seconds": 11.799058297,
+      "onroad_roles_running": false,
+      "hardwared_running": true
+    },
+    {
+      "service": "pandaStates",
+      "sample": "last",
+      "source_monotonic_ns": 480939920436,
+      "source_offset_seconds": 11.980396326,
+      "ignitionLine": false,
+      "ignitionCan": false
+    }
+  ],
+  "natural_transition": {
+    "observed": false,
+    "latency_seconds": null,
+    "reason": "All fresh samples already OFF; prior 0/1 interval was not recorded concurrently."
+  },
+  "source_comparison": {
+    "openpilot/system/hardware/hardwared.py": {
+      "actual_sha256": "50154ee703919cfaf7a188ea2b87d7298721b496633631599646c52bd313f8ac",
+      "exact060_sha256": "50154ee703919cfaf7a188ea2b87d7298721b496633631599646c52bd313f8ac",
+      "match": true
+    },
+    "openpilot/system/manager/manager.py": {
+      "actual_sha256": "d345dfc562125c4448f3986e30371294d66df8b0871142de714834b78efe0929",
+      "exact060_sha256": "d345dfc562125c4448f3986e30371294d66df8b0871142de714834b78efe0929",
+      "match": true
+    },
+    "openpilot/system/manager/helpers.py": {
+      "actual_sha256": "998d5e3c9aad96f7fd41b467958deba4722bd0b3c81b4e25ff2ba3f7d50aa398",
+      "exact060_sha256": "998d5e3c9aad96f7fd41b467958deba4722bd0b3c81b4e25ff2ba3f7d50aa398",
+      "match": true
+    },
+    "openpilot/system/manager/process_config.py": {
+      "actual_sha256": "2c055a88dcc9d09a5d1cda7364f4785697172e0a9169d06fd89700ec9ec7ac92",
+      "exact060_sha256": "2c055a88dcc9d09a5d1cda7364f4785697172e0a9169d06fd89700ec9ec7ac92",
+      "match": true
+    },
+    "openpilot/cereal/messaging/__init__.py": {
+      "actual_sha256": "bb10c4a88e694d7c4e2fa500b92c6d8a9474363297afda3cfba880eea146ad68",
+      "exact060_sha256": "bb10c4a88e694d7c4e2fa500b92c6d8a9474363297afda3cfba880eea146ad68",
+      "match": true
+    },
+    "openpilot/cereal/services.py": {
+      "actual_sha256": "2bb8305cce4070d7fba5caa00ec928bedf13a40da3424d8e16ce23ab632e4ab1",
+      "exact060_sha256": "2bb8305cce4070d7fba5caa00ec928bedf13a40da3424d8e16ce23ab632e4ab1",
+      "match": true
+    },
+    "openpilot/cereal/log.capnp": {
+      "actual_sha256": "676d82915a0f4f4455183ae263e5b7bf268e71a0f7772b5d0486457702347351",
+      "exact060_sha256": "676d82915a0f4f4455183ae263e5b7bf268e71a0f7772b5d0486457702347351",
+      "match": true
+    }
+  },
+  "source_semantics_reference": "artifacts/m19c12_persistent_onroad_diagnosis_20261024.json:source_review",
+  "params_existence_only": {
+    "IsDriverViewEnabled": true,
+    "OnroadCycleRequested": false
+  },
+  "other_params_values_read": false,
+  "bounded_logs": {
+    "files_read": 3,
+    "tail_limit_bytes_per_file": 65536,
+    "parsed_records": 196,
+    "matching_hardwared_manager_keyword_events": 0,
+    "formatter": "msg$s or dict msg.event$s recognized; only hardwared/manager events considered",
+    "scope_limit": "Newest three existing swaglog tails only; no historical-cause or full-log absence proof."
+  },
+  "root_cause": {
+    "classification": "UNKNOWN",
+    "current_persistent_onroad_reproduced": false,
+    "current_state": "NORMAL_OFF_WITH_FRESH_PANDA_AND_DEVICE_MESSAGES",
+    "evidence": "Panda false/false, fresh device.started=false, flags1/0 and inactive onroad roles agree. Previous Onroad interval and transition were not captured; no evidence proves a stuck Panda, stale publisher or manager delay."
+  },
+  "recorder": {
+    "ticket": "ABSENT",
+    "namespace": "ABSENT",
+    "writer_count": 0,
+    "capture_memfd_count": 0,
+    "capture_environment_role_count": 0,
+    "output_root": "ABSENT",
+    "migration": "NOT_RUN",
+    "activation": "NOT_RUN",
+    "capture": "NOT_RUN"
+  },
+  "preservation": {
+    "branch_head_unchanged": true,
+    "source_hashes_unchanged": true,
+    "source_canary_count": 12,
+    "index_sha_unchanged": true,
+    "git_status_unchanged": true,
+    "process_identity_unchanged": {
+      "camerad": true,
+      "card": true,
+      "controlsd": true,
+      "hardwared": true,
+      "jetlinkd": true,
+      "manager": true,
+      "modeld": true,
+      "pandad": true,
+      "selfdrived": true
+    },
+    "model_route_full_inventory": "NOT_RUN_THIS_DIAGNOSTIC"
+  },
+  "actual_modifications": "NONE",
+  "operating_preservation": "PASS_SCOPED_SOURCE_INDEX_STATUS_PROCESS_CANARIES; full model/route/overlay inventory not attested",
+  "forbidden_actions": {
+    "source_write": "NOT_RUN",
+    "params_write": "NOT_RUN",
+    "manager_restart": "NOT_RUN",
+    "onroad_process_restart": "NOT_RUN",
+    "panda_reset": "NOT_RUN",
+    "usb_reset": "NOT_RUN",
+    "jetlink_restart": "NOT_RUN",
+    "ignition_override": "NOT_RUN",
+    "ticket_create": "NOT_RUN",
+    "capture": "NOT_RUN",
+    "jetson_access": "NOT_RUN"
+  },
+  "safe_to_retry_m19c11": "NO",
+  "genuine_off_diagnostic": "PASS_IN_OBSERVED_WINDOW",
+  "retry_blocker": "BLOCKED_HEAD_DRIFT: actual a559fcd differs from approved exact060de9; old-package/full overlay/source deployment gates not run.",
+  "next_action": "Offline compare actual a559fcd against the reviewed060de9 recorder profile before proposing a distinct deployment candidate. Do not reset/checkout/update actual to fit old pins.",
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "m2_readiness": "NO",
+  "private_receipts_sha256": {
+    "first-flags-private.json": "dbbecd0bca26270baab60a0896012e51fae3863e5901fb02e9a0ddc133583647",
+    "observation4-private.json": "6fdc29a1ed3a3e3d6c24b4c33badad242b428286a5287bd37cc260b0188b2a3d",
+    "logs-private.json": "3cbd2e205e4c04970e9234d3fca378795df956fadc7b1c4be9c6824c4a32198c"
+  },
+  "collector_limitations": {
+    "initial_attempts": "Two early diagnostic receipts exceeded the screen transport capacity. A bounded paced reply then identified a read-only observer guard mismatch: forkpty yields parent and child manager processes. Source/OS chain reviewed, observer-only context selection corrected, complete fresh twelve-second receipt collected. No runtime source/gate change.",
+    "full_recorder_regression": "NOT_RUN_NO_PRODUCTION_CODE_CHANGE",
+    "previous_543_pass_not_recounted": true
+  },
+  "privacy": {
+    "network_addresses": false,
+    "raw_actual_paths_argv_env_route_names": false,
+    "raw_logs_or_device_source": false,
+    "credentials_or_recorded_tensors": false
+  }
+}
