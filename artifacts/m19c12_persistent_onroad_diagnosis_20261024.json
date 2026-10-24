@@ -1,0 +1,223 @@
+{
+  "schema": 1,
+  "stage": "M19-C1.2",
+  "date": "2026-10-24",
+  "receipt_created_utc": "2026-10-24T07:45:15.614693+00:00",
+  "status": "BLOCKED_DEVICE_UNREACHABLE",
+  "development_branch": "feature/jetlink-multimodel-carrot",
+  "validation_head": "3583ede600a1126cf6254c8f13578031c690a180",
+  "start_local_remote_equal": true,
+  "start_working_tree": "CLEAN",
+  "result_commit_resolution": "git log -1 --format=%H -- artifacts/m19c12_persistent_onroad_diagnosis_20261024.json",
+  "access": {
+    "terminal_status": "BLOCKED_ACCESS_ERROR",
+    "received_terminal_frames": 0,
+    "actual_shell_commands_delivered": false,
+    "first_flag_receipt_sha256": "e512c528e65b4d03eca67b4967f73f89128e20963e322d93aff039b5b5076757",
+    "known_addresses_checked": 2,
+    "known_endpoint_tcp_probes": 4,
+    "reachable_endpoints": 0,
+    "network_scan": "NOT_RUN",
+    "address_confirmation": "USER_REPORTED_DEVICE_LEFT_IN_VEHICLE_NO_NEW_ADDRESS",
+    "user_report": "Device left in vehicle; current power/network not independently verified. No immediate retrieval requested."
+  },
+  "actual": {
+    "branch": null,
+    "head": null,
+    "flags": {
+      "IsOffroad": null,
+      "IsOnroad": null
+    },
+    "flags_status": "NOT_OBSERVED_THIS_STAGE",
+    "historical_flags": {
+      "stage": "M19-C1.1",
+      "IsOffroad": "0",
+      "IsOnroad": "1",
+      "reused_as_current": false
+    }
+  },
+  "observation": {
+    "requested_seconds": 10,
+    "observed_seconds": 0,
+    "deviceState": {
+      "samples": 0,
+      "started": null,
+      "startedMonoTime": null,
+      "thermalStatus": null,
+      "fresh": false,
+      "classification": "NO_FRESH_DATA"
+    },
+    "pandaStates": {
+      "samples": 0,
+      "pandas": [],
+      "ignition_source": "UNKNOWN",
+      "harness": "UNKNOWN",
+      "fresh": false,
+      "last_fresh_age_seconds": null
+    },
+    "managerState": {
+      "samples": 0,
+      "roles": {
+        "hardwared": "NOT_OBSERVED",
+        "pandad": "NOT_OBSERVED",
+        "card": "NOT_OBSERVED",
+        "camerad": "NOT_OBSERVED",
+        "modeld": "NOT_OBSERVED",
+        "controlsd": "NOT_OBSERVED",
+        "selfdrived": "NOT_OBSERVED",
+        "jetlinkd": "NOT_OBSERVED"
+      },
+      "onroad_processes_running": "UNKNOWN"
+    },
+    "hardwared_os_identity": "NOT_OBSERVED",
+    "bounded_logs": "NOT_READ",
+    "timeline": [],
+    "transition_latency_seconds": null,
+    "reason": "No device connection; no live samples or actual shell commands were available."
+  },
+  "source_review": {
+    "classification": "OFFLINE_EXACT_PIN_SOURCE_REVIEW",
+    "base": "060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c",
+    "actual_source_match": "NOT_ATTESTED",
+    "sources": {
+      "openpilot/system/hardware/hardwared.py": {
+        "sha256": "50154ee703919cfaf7a188ea2b87d7298721b496633631599646c52bd313f8ac",
+        "bytes": 20098
+      },
+      "openpilot/system/manager/manager.py": {
+        "sha256": "d345dfc562125c4448f3986e30371294d66df8b0871142de714834b78efe0929",
+        "bytes": 10798
+      },
+      "openpilot/system/manager/helpers.py": {
+        "sha256": "998d5e3c9aad96f7fd41b467958deba4722bd0b3c81b4e25ff2ba3f7d50aa398",
+        "bytes": 2466
+      },
+      "openpilot/system/manager/process_config.py": {
+        "sha256": "2c055a88dcc9d09a5d1cda7364f4785697172e0a9169d06fd89700ec9ec7ac92",
+        "bytes": 10958
+      },
+      "openpilot/cereal/messaging/__init__.py": {
+        "sha256": "bb10c4a88e694d7c4e2fa500b92c6d8a9474363297afda3cfba880eea146ad68",
+        "bytes": 11909
+      },
+      "openpilot/cereal/services.py": {
+        "sha256": "2bb8305cce4070d7fba5caa00ec928bedf13a40da3424d8e16ce23ab632e4ab1",
+        "bytes": 5633
+      },
+      "openpilot/cereal/log.capnp": {
+        "sha256": "676d82915a0f4f4455183ae263e5b7bf268e71a0f7772b5d0486457702347351",
+        "bytes": 70588
+      }
+    },
+    "hardwared": {
+      "disconnect_timeout_seconds": 5.0,
+      "normal_loop_hz": 2,
+      "nonempty_updated_panda_ignition": "any ignitionLine OR ignitionCan among known Panda types",
+      "should_start": "all onroad conditions; also all startup conditions if not already started",
+      "device_started": "started_ts is not None",
+      "locations": {
+        "disconnect_timeout": [
+          37,
+          39
+        ],
+        "ignition_and_timeout": [
+          235,
+          250
+        ],
+        "should_start": [
+          344,
+          347
+        ],
+        "started_message": [
+          413,
+          414
+        ]
+      }
+    },
+    "manager": {
+      "initial_flags": "write_onroad_params(False) at manager thread startup",
+      "started_input": "deviceState.started",
+      "on_transition": "write_onroad_params(started)",
+      "helper": "IsOnroad=started, then IsOffroad=not started; two writes, not an atomic pair",
+      "locations": {
+        "initial": [
+          197,
+          198
+        ],
+        "started_and_transition": [
+          209,
+          229
+        ],
+        "flag_helper": [
+          56,
+          58
+        ]
+      }
+    },
+    "process_policy": {
+      "card": "only_onroad",
+      "modeld": "only_onroad",
+      "camerad": "started OR IsDriverViewEnabled",
+      "hardwared": "always_run",
+      "pandad": "always_run",
+      "jetlinkd": "always_run"
+    },
+    "other_params": {
+      "OnroadCycleRequested": "Requests a one-second offroad cycle; not itself a persistent true ignition source.",
+      "IsDriverViewEnabled": "May run camerad offroad; does not directly set hardwared should_start in reviewed source.",
+      "actual_values_or_existence_read": false
+    },
+    "unconfirmed_edge_case": {
+      "description": "Repeated fresh EMPTY pandaStates updates do not enter the nonempty ignition assignment and can keep recv_time fresh, preventing the 5-second disconnect branch from clearing a previous ignition value.",
+      "messaging_recv_time_lines": [
+        258,
+        271
+      ],
+      "observed_on_actual": false,
+      "not_a_root_cause_claim": true
+    }
+  },
+  "root_cause": {
+    "classification": "UNKNOWN",
+    "reason": "Fresh simultaneous device/Panda/manager evidence unavailable; source alone cannot identify the live cause."
+  },
+  "recorder": {
+    "ticket": "NOT_CHECKED",
+    "writer": "NOT_CHECKED",
+    "capture": "NOT_RUN",
+    "migration": "NOT_RUN"
+  },
+  "changes_performed_on_actual": "NONE",
+  "operating_preservation": "NOT_ATTESTED_NO_DEVICE_ACCESS",
+  "forbidden_actions": {
+    "source_write": "NOT_RUN",
+    "params_write": "NOT_RUN",
+    "manager_restart": "NOT_RUN",
+    "onroad_process_restart": "NOT_RUN",
+    "panda_reset": "NOT_RUN",
+    "usb_reset": "NOT_RUN",
+    "jetlink_restart": "NOT_RUN",
+    "ignition_override": "NOT_RUN",
+    "ticket_create": "NOT_RUN",
+    "recorder_activation": "NOT_RUN",
+    "capture": "NOT_RUN",
+    "jetson_access": "NOT_RUN"
+  },
+  "safe_to_retry_m19c11": false,
+  "retry_condition": "First restore an authenticated known-device connection and observe at least 10 seconds of fresh simultaneous messages. Installation remains a separate retry requiring IsOffroad=1, IsOnroad=0, device.started=false, both ignition bits false, normal onroad process termination, exact060de9 and every approved source/package/overlay gate.",
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "m2_readiness": "NO",
+  "validation": {
+    "source_python_ast_files": 6,
+    "source_blobs": 7,
+    "status": "PASS_LOCAL_SOURCE_RECEIPT",
+    "cpu_tests": "NOT_RUN_DOCS_ONLY",
+    "prior_543_pass_not_recounted": true
+  },
+  "privacy": {
+    "raw_paths_argv_env_route_data": false,
+    "network_addresses": false,
+    "credentials": false,
+    "device_source_contents": false
+  }
+}

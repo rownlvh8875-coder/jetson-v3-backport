@@ -9,6 +9,11 @@
 
 **최신 작업 인계:** [CODEX_CONTINUATION.md](docs/CODEX_CONTINUATION.md).
 
+2026-10-24 [M19-C1.2 읽기 전용 Onroad 진단](docs/M19C12_PERSISTENT_ONROAD_DIAGNOSIS_20261024.md):
+알려진 장치 주소에 연결되지 않아 **BLOCKED_DEVICE_UNREACHABLE**다. 새 Params·live sample은
+읽지 못했으며 원인은 UNKNOWN이다. exact060 소스만 오프라인 검토했고 실제 변경은 없다.
+연결 복구 후 10초 동시 telemetry 진단부터 이어간다. 설치·ticket·capture·restart는 하지 않았다.
+
 2026-10-24 [M19-C1.1 actual OFF 배포](docs/M19C11_060DE9_ACTUAL_OFF_DEPLOYMENT_20261024.md):
 새 첫 실제 상태값이 OFF/ON0/1이어서 **BLOCKED_NOT_OFFROAD**, 실제 설치는 하지 않았다.
 별도 fresh CPU543 PASS이며 ticket·capture·restart·Jetson 변경은 없다.

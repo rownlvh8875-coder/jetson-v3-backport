@@ -1,5 +1,41 @@
 # Codex continuation — 2026-10-24
 
+## Latest checkpoint: M19-C1.2 read-only diagnosis BLOCKED_DEVICE_UNREACHABLE
+
+Read `docs/M19C12_PERSISTENT_ONROAD_DIAGNOSIS_20261024.md` and
+`artifacts/m19c12_persistent_onroad_diagnosis_20261024.json` first.
+Known current and prior authorized addresses failed bounded SSH/web-terminal
+probes. First-command helper received zero frames: NO actual shell command was
+delivered. New flags/actual HEAD are UNKNOWN, not the historical C1.1 flags0/1.
+Ten-second simultaneous telemetry was requested but observed0seconds/0samples.
+Device NO_FRESH_DATA, Panda ignition/harness UNKNOWN, manager/hardwared/logs and
+ticket/writer NOT_CHECKED. Root cause UNKNOWN; no stale/default signal accepted.
+Current-address confirmation requested; no scan or trust bypass.
+User clarified comma was left in vehicle; current power/network not verified.
+No immediate retrieval requested. Continue when normally powered/reachable;
+read-only diagnosis itself permits observing0/1 and must not force OFF first.
+
+Exact060 immutable source reviewed off device: known-Panda line/can OR,5second
+disconnect timeout,2Hz+edges, hardwared started_ts -> device.started -> manager
+transition -> IsOnroad/IsOffroad two writes. Card/modeld only_onroad; driver view
+can explain camerad alone. Unconfirmed source edge: fresh EMPTY Panda arrays can
+refresh recv_time without updating retained ignition. No such stream observed;
+do not diagnose a stuck Panda from this static possibility.
+
+Actual source/Params/process/Panda/USB/Jetlink/Jetson changes NONE. Migration,
+ticket/activation/capture/restart NOT_RUN. Preservation NOT_ATTESTED because no
+device canaries read. No code/patch/test changes; no new543 CPU count. Seven exact
+source blob hashes/six AST parses and documentation/privacy consistency checked
+locally. Start3583ede600a1126cf6254c8f13578031c690a180 clean/localremoteequal.
+
+**Next:** restore the known-device connection and complete receive-only>=10s
+deviceState+pandaStates+managerState observation, even if flags remain0/1.
+Do not restart/write to repair Onroad. This diagnostic authorization does not
+authorize migration. Future C1.1 needs fresh1/0, startedfalse, both ignitionfalse,
+onroad process termination, exact060 and every source/package/overlay gate.
+Safe to retry install NO; numerical PARITY_UNDETERMINED/M2NO unchanged.
+Result commit resolves via `git log -1 --format=%H -- artifacts/m19c12_persistent_onroad_diagnosis_20261024.json`.
+
 ## Latest checkpoint: M19-C1.1 actual deployment BLOCKED_NOT_OFFROAD
 
 Read `docs/M19C11_060DE9_ACTUAL_OFF_DEPLOYMENT_20261024.md` and
