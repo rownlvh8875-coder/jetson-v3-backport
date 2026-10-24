@@ -1,5 +1,73 @@
 # Codex continuation — 2026-10-24
 
+## Current checkpoint: M19-B1 activation-v2 deployed, default OFF
+
+Read `docs/M19B1_ACTIVATION_V2_DEPLOYMENT_20261024.md` and
+`artifacts/m19b1_activation_v2_deployment_20261024.json` first. **PASS /
+PATCH_LEFT_INSTALLED_OFF_V2.** Actual carrot-nav remains exact
+`366d6eae9aa9962104391e1d997fe956dea8f64d`, OFF1/ON0, detached known Panda
+cuatro/ignitionLine=false/ignitionCan=false/harness=notConnected/device.started=false.
+Only the approved activation-v2 delta changed two already installed recorder files.
+Do NOT reapply M18 or the forward activation delta to this state. No actual Git
+commit, ticket, activation, capture, restart, Params/model/USB/control change,
+onroad producer, Jetson access, GPU execution or vehicle operation occurred.
+Numerical decision remains PARITY_UNDETERMINED; M2 NO.
+
+Fresh M19-A six-file PRE and original48 full commitments passed; disposable actual
+forward/reverse restored M19-A exact, private exclusive backup2 verified/fsynced,
+actual git apply --check/apply without index writes. New source profile:
+MODEL0fbcba80a84fa6ffd22a6463cb75f111c95cd939697ce357e44ec45909109c91;
+HOOK9e688299d4fcefeea3a5ebc1460ee8fd72afd1c15c9f2d1a1fd3f58b1a5ca7de.
+Other4 recorder sources unchanged. Context process.py fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752
+and modeld.py008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594 exact.
+Forwardea18f2c2849e09e577882599a6374c13d09779ebbef5909d2d73934ed41ad6cb;
+reverse0593e4a283d3ceec85c37367d0a3776ba0c80340ac857122bfe90f37ee36cf4a frozen.
+
+Original48 remain 2006 regular files/417208589 bytes/digest
+8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5.
+U32 remains U32_UNKNOWN_ACCEPTABLE_FOR_PATCH_ISOLATION/runtime-use UNKNOWN,
+not unused; U46 SAFE_GENERATED_LEGACY. None were moved/deleted/copied/ignored.
+M19-A historical POST6857b161fe10363ae9bb58b505195a40a031872e3ef1746917d7e7f89fba50ba
+remains immutable. Activation-v2 POST is a DISTINCT profile:
+49 collapsed untracked /2011 regular /417266269 bytes/digest
+a4980220b3fd14af9149c01d6643cdd2ee97388c1d90e4ccf65853b89d85304c.
+Verify original private paths, exact six/context pins and no unexpected entries;
+do not substitute aggregate alone or remap original U IDs from new Git order.
+
+Final three-window OFF health PASS: Panda29/28/28, manager6/6/6, device6/6/6,
+valid/fresh/deadlines retained. Source/model/route metadata/index/native/bytecode
+canaries and original31 process identities exact. Namespace/output absent,
+no activation env, writer0/memfd0. /dev/shm exact tmpfs/root1777/nonsymlink verified;
+discovery directory NOT created. No real modeld footer import tested: modeld absent
+by normal OFF policy. Timing/camera cadence NOT_AVAILABLE_OFFROAD. Detached proof
+is not a stationary assertion; receive-only native queue bookkeeping is not zero OS writes.
+
+One initial POST attempt overlapped the health helper and rejected process identity
+coverage. No gate weakening or further source mutation followed. The exact extra
+PID was not retained in its compact failed result. Identical isolated full read
+passed exact31 plus every other gate. Keep telemetry helpers and full process
+identity collection sequential in future; preserve rejected transcript privately.
+
+Fresh CPU339 PASS/0FAIL/0SKIP = existing310 B0 scope + new29 receipt fixtures,
+not summed with earlier historical runs. New pure offline receipt validator
+`tools/check_recorder_activation_deployment.py` only checks sanitized metadata
+consistency; private actual collection remains authoritative. No deployed core,
+M18/activation patch, M192 checker, protocol adapter or numerical tool changed.
+Ignored `.reports/m19b1-20261024/` retains source-bound generators, independent
+PRE/disposable/apply/POST/health receipts, exclusive backup location and two JUnits.
+All raw actual paths/argv/env/U32 contents remain private.
+
+Ready for M19-B vehicle10 = YES only as future execution readiness, not capture
+authorization. Next exact action: separately approved existing Nav/V2 Protocol2
+vehicle10 preflight, fresh activation-v2 POST and genuine OFF/source/spec checks,
+with a physically stopped vehicle and live stationary coverage across capture
+timestamps before accepting any dataset. No arm/restart/capture/road/Jetson action
+is inherited from this completed stage. 256/512 road capture and M2 remain unauthorized.
+
+Development start clean/localremoteequal7c38054aae7bead13fc9d4bf34453f5b985a78a9;
+resolve result HEAD with `git log -1 --format=%H -- artifacts/m19b1_activation_v2_deployment_20261024.json`.
+Main/old feature protected. Final review/Git disposition is recorded in result artifact.
+
 ## Current checkpoint: M19-B0 offline activation review, recommend B
 
 Read `docs/M19B0_ACTIVATION_CHOREOGRAPHY_20261024.md`,

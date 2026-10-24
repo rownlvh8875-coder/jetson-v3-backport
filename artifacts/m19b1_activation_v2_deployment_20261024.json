@@ -1,0 +1,371 @@
+{
+  "schema": 1,
+  "date": "2026-10-24",
+  "stage": "M19-B1",
+  "result": "PASS",
+  "final_source_state": "PATCH_LEFT_INSTALLED_OFF_V2",
+  "development_start_head": "7c38054aae7bead13fc9d4bf34453f5b985a78a9",
+  "result_commit_resolution": "git log -1 --format=%H -- artifacts/m19b1_activation_v2_deployment_20261024.json",
+  "classification": [
+    "COMMA_REAL_READ_ONLY",
+    "COMMA_REAL_SOURCE_DEPLOYMENT",
+    "CPU_FAKE",
+    "FIXTURE"
+  ],
+  "scope": {
+    "actual_two_file_delta": true,
+    "restart": "NOT_RUN_BY_SCOPE",
+    "ticket": "NOT_CREATED",
+    "activation": "NOT_RUN",
+    "capture": "NOT_RUN_BY_SCOPE",
+    "frames": 0,
+    "dataset": "NONE",
+    "Jetson": "NOT_RUN",
+    "USB_REAL": "NOT_RUN",
+    "TRT_REAL": "NOT_RUN_THIS_STAGE",
+    "COMMA_REAL_CAPTURE": "NOT_RUN",
+    "VEHICLE_PARKED": "NOT_RUN",
+    "ROAD_TEST": "NOT_RUN"
+  },
+  "receipt": {
+    "schema": 1,
+    "stage": "M19-B1",
+    "actual": {
+      "branch": "carrot-nav",
+      "head": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+      "flags": [
+        "1",
+        "0"
+      ]
+    },
+    "pre": {
+      "digest": "6857b161fe10363ae9bb58b505195a40a031872e3ef1746917d7e7f89fba50ba",
+      "entries": 49,
+      "files": 2011,
+      "bytes": 417259473,
+      "six_hashes": {
+        "openpilot/selfdrive/modeld/jetlink/model.py": "4813e215b13b447a234ca78839d4cac605f69a9ec2b1a6263ed9ffa063204f0d",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/__init__.py": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/format.py": "9deff26ba3ba9b66642f7a471b10c637272003029866ce47fe82f80ff702acdf",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/dataset.py": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py": "e8196e46df04a0ca99dd1ba4d009d5a683bd8e8a7a91b05a8b81bec3731f5bd1",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/recorder.py": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada"
+      }
+    },
+    "post": {
+      "entries": 49,
+      "files": 2011,
+      "bytes": 417266269,
+      "six_hashes": {
+        "openpilot/selfdrive/modeld/jetlink/model.py": "0fbcba80a84fa6ffd22a6463cb75f111c95cd939697ce357e44ec45909109c91",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/__init__.py": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/format.py": "9deff26ba3ba9b66642f7a471b10c637272003029866ce47fe82f80ff702acdf",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/recorder.py": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/dataset.py": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py": "9e688299d4fcefeea3a5ebc1460ee8fd72afd1c15c9f2d1a1fd3f58b1a5ca7de"
+      },
+      "context_pins": {
+        "openpilot/system/manager/process.py": "fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752",
+        "openpilot/selfdrive/modeld/modeld.py": "008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594"
+      },
+      "all_collector_checks": true,
+      "mode_owner_preserved": true,
+      "index_unchanged": true,
+      "unexpected_entries": 0
+    },
+    "original48": {
+      "digest": "8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5",
+      "files": 2006,
+      "bytes": 417208589,
+      "path_tree_checks": {
+        "U01": true,
+        "U02": true,
+        "U03": true,
+        "U04": true,
+        "U05": true,
+        "U06": true,
+        "U07": true,
+        "U08": true,
+        "U09": true,
+        "U10": true,
+        "U11": true,
+        "U12": true,
+        "U13": true,
+        "U14": true,
+        "U15": true,
+        "U16": true,
+        "U17": true,
+        "U18": true,
+        "U19": true,
+        "U20": true,
+        "U21": true,
+        "U22": true,
+        "U23": true,
+        "U24": true,
+        "U25": true,
+        "U26": true,
+        "U27": true,
+        "U28": true,
+        "U29": true,
+        "U30": true,
+        "U31": true,
+        "U32": true,
+        "U33": true,
+        "U34": true,
+        "U35": true,
+        "U36": true,
+        "U37": true,
+        "U38": true,
+        "U39": true,
+        "U40": true,
+        "U41": true,
+        "U42": true,
+        "U43": true,
+        "U44": true,
+        "U45": true,
+        "U46": true,
+        "U47": true,
+        "U48": true
+      }
+    },
+    "off": {
+      "detached_windows": 3,
+      "all_health_checks": true,
+      "namespace": "ABSENT",
+      "env_present": false,
+      "writer_count": 0,
+      "capture_memfds": 0,
+      "output_present": false,
+      "ticket_created": false,
+      "activation": false,
+      "restart": false,
+      "frames": 0
+    },
+    "preservation": {
+      "models": true,
+      "routes": true,
+      "processes": true,
+      "U32": true,
+      "U46": true
+    }
+  },
+  "receipt_validation": {
+    "status": "PASS",
+    "checks": {
+      "schema": true,
+      "identity": true,
+      "pre_M19A": true,
+      "post_v2": true,
+      "context": true,
+      "post_exact": true,
+      "original48": true,
+      "OFF": true,
+      "preservation": true
+    },
+    "scope": "OFFLINE_RECEIPT_VALIDATION_ONLY"
+  },
+  "patches": {
+    "forward_sha256": "ea18f2c2849e09e577882599a6374c13d09779ebbef5909d2d73934ed41ad6cb",
+    "reverse_sha256": "0593e4a283d3ceec85c37367d0a3776ba0c80340ac857122bfe90f37ee36cf4a",
+    "original_M18_reapplied": false,
+    "frozen_M18_sha256": "3a3e19430ab667d204f22fd1e40438a85e1ade1dbab2e6f9dd6e3dd32de4c1ee"
+  },
+  "attestation": {
+    "original48_digest": "8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5",
+    "M19A_POST_digest_preserved": "6857b161fe10363ae9bb58b505195a40a031872e3ef1746917d7e7f89fba50ba",
+    "activation_v2_POST_digest": "a4980220b3fd14af9149c01d6643cdd2ee97388c1d90e4ccf65853b89d85304c",
+    "post_full_observation_commitment": "a56823bd931556b5e73ffe6499c8ba1f9d86e5b8d1a909631db15cfbe6dd6dcb",
+    "identity_count": 31,
+    "private_original_paths_used": true,
+    "original_ids_not_remapped": true,
+    "no_unexpected_entry": true,
+    "source_model_route_process_checks": {
+      "SOURCE_PINS": true,
+      "MODELS": true,
+      "ROUTES_METADATA": true,
+      "PROCESS_IDENTITIES_NO_RESTART": true,
+      "ORIGINAL_AST_UNCHANGED": true
+    },
+    "context_pins_exact": true,
+    "git_index_unchanged": true,
+    "U32": {
+      "status": "U32_UNKNOWN_ACCEPTABLE_FOR_PATCH_ISOLATION",
+      "sha256": "07e2bd4cdac1479f85447c1f96182c8f24603a9184b11045086d7433b68e5b70",
+      "runtime_use": "UNKNOWN",
+      "unchanged": true
+    },
+    "U46": {
+      "status": "SAFE_GENERATED_LEGACY",
+      "sha256": "21ac37949a83dcb5b2799007c8ebc93909efaff7bf6d6481fb49a8eb2a43314e",
+      "unchanged": true
+    }
+  },
+  "capability": {
+    "discovery_parent": "exact tmpfs, root owner/group, mode1777, no symlink",
+    "discovery_namespace_created": false,
+    "private_development_root_created": true,
+    "private_exclusive_backup_files": 2,
+    "backup_hashes_match_M19A": true,
+    "backup_fsynced": true,
+    "packages_installed": false
+  },
+  "disposable": {
+    "result": "B1_DEVICE_DISPOSABLE_DELTA_PASS",
+    "six_after_hashes": true,
+    "reverse_delta_restored_M19A_exact": true,
+    "inference_AST_unchanged": true,
+    "missing_ticket_footer": true,
+    "syntax_files": 6,
+    "dependency_resolution_profiles": 2,
+    "overlay_precedence_unchanged": true,
+    "U48_copied_or_modified": false,
+    "U32_imported": false,
+    "live_child_sys_path_proven": false,
+    "full_vehicle_module_executed": false
+  },
+  "health": {
+    "status": "PATCHED_OFF_HEALTH_PASS",
+    "checks": {
+      "DETACHED_THREE_WINDOWS": true,
+      "SOURCE_SIX_HASHES": true,
+      "NO_CAPTURE_ENV": true,
+      "NO_WRITER": true,
+      "NO_CAPTURE_MEMFD_SELECTED": true,
+      "NO_OUTPUT_ROOT": true,
+      "PACKAGE_ONLY_FIVE_FILES": true,
+      "FLAGS_END": true,
+      "TICKET_NAMESPACE_ABSENT": true,
+      "EXTRA_CANARIES_UNCHANGED": true,
+      "CONTEXT_PINS": true
+    },
+    "pre_windows": 3,
+    "post_windows": 3,
+    "post_sample_counts": [
+      {
+        "pandaStates": 29,
+        "managerState": 6,
+        "deviceState": 6
+      },
+      {
+        "pandaStates": 28,
+        "managerState": 6,
+        "deviceState": 6
+      },
+      {
+        "pandaStates": 28,
+        "managerState": 6,
+        "deviceState": 6
+      }
+    ],
+    "panda": {
+      "type": "cuatro",
+      "ignitionLine": false,
+      "ignitionCan": false,
+      "harnessStatus": "notConnected"
+    },
+    "device_started": false,
+    "card_active": false,
+    "modeld_active": false,
+    "camerad_active": false,
+    "manager_healthy": true,
+    "jetlinkd_healthy": true,
+    "source_timestamp_and_validity_gates_retained": true,
+    "vehicle_stationary_asserted": false,
+    "modeld_timing": "NOT_AVAILABLE_OFFROAD",
+    "camera_cadence": "NOT_AVAILABLE_OFFROAD",
+    "full_activation_footer_in_real_modeld": "NOT_RUN_OFFROAD",
+    "no_ticket_footer_fixture": "PASS",
+    "receiver_only_note": "Existing queues only; no publisher, CAN reader or producer started. Native subscriber cursor/bookkeeping writes are not zero OS writes."
+  },
+  "observation_caveat": {
+    "first_POST_attempt": "REJECTED_PROCESS_IDENTITY_COMPARISON",
+    "overlapped_with_receive_only_health_helper": true,
+    "diagnosis": "Collector selects processes with source-root cwd; concurrent audit helper can enter coverage. First sample retained privately and not counted PASS; no activation or further source mutation followed.",
+    "exact_extra_PID_from_rejected_sample": "NOT_RETAINED",
+    "resolution": "Identical frozen identity gate rerun alone: exact original31 identities PASS. No PID allowlist exception, timeout increase or checker change.",
+    "rollback_required_by_final_evidence": false
+  },
+  "tests": {
+    "unique_pass": 339,
+    "fail": 0,
+    "skip": 0,
+    "scopes": {
+      "pytest-310.xml": {
+        "tests": 310,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "pytest-deployment.xml": {
+        "tests": 29,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "existing_baseline_pass": 310,
+    "new_metadata_isolation_pass": 29,
+    "RED": "New receipt checker missing before implementation: one expected collection error; not a final GREEN suite failure.",
+    "commands": [
+      "PYTHONPATH=. PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 python -m pytest -q -p no:cacheprovider tests/test_recorder_activation_v2.py tests/test_u32_provenance.py tests/test_comma_dirty_baseline.py tests/test_comma_dirty_layout.py tests/test_v3_input_format.py tests/test_v3_input_recorder.py tests/test_v3_input_dataset.py tests/test_v3_input_hook.py --tb=short",
+      "PYTHONPATH=. PYTHONDONTWRITEBYTECODE=1 python -m pytest -q -p no:cacheprovider tests/test_recorder_activation_deployment.py --tb=short"
+    ]
+  },
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "M2_readiness": "NO",
+  "ready_for_M19B_vehicle10": "YES",
+  "readiness_boundary": "Future execution readiness only; no ticket/capture authorization. Separate user approval and genuine OFF arming/source/spec checks, physically stopped vehicle and live stationary coverage across capture timestamps remain required.",
+  "next_action": "Separately approved M19-B vehicle10 preflight in existing Nav/V2 Protocol2 setup; fresh activation-v2 POST attestation and timestamp-covered stationary plan before any arm.",
+  "upstream_start": {
+    "carrot-nav": "810e14aaf51176f1a50a113939dc2e70907b394b",
+    "carrot-wip": "dfab65d03fcd7100f572fe9e6908f4c6d1e988f6",
+    "carrot-jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "zoompilot/jetlink": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc",
+    "external-review": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722"
+  },
+  "upstream_end": {
+    "carrot-nav": "810e14aaf51176f1a50a113939dc2e70907b394b",
+    "carrot-wip": "dfab65d03fcd7100f572fe9e6908f4c6d1e988f6",
+    "carrot-jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "zoompilot/jetlink": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc",
+    "external-review": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722"
+  },
+  "privacy": {
+    "raw_paths_argv_env_sources_private": true,
+    "U32_content_in_git": false,
+    "recorded_tensor_in_git": false,
+    "credentials_in_git": false,
+    "raw_route_names_GPS_in_git": false
+  },
+  "private_evidence_commitments": {
+    "pre-private.json": "19dc3acbd28fcf97598f1f497011867caaa6694eaec4dcd05062f7f7b99f17b4",
+    "pre-health-private.json": "05534a1534770fbbb597ecdefade8f96f5fa6eba97ff78650ce7fb8798528eaa",
+    "disposable-private.json": "9d7622da4e9a3c979ae59d0afcc62cdf5d5314705bbeb3d71d0286b1728f0cb4",
+    "apply-private.json": "9dd69da04f1f4c87629a635b9d55becf61f5b7af29144da32d51ceb841747457",
+    "post-isolated-private.json": "dfc7746d904c30e4d77ca3f4ad7b794c0477c2a195bb1881afdd94e4d0cd17a7",
+    "post-health-private.json": "379257c74255f9484e6005f4c986cfaad1fe40a5f9fea54ac721379c4cccf832",
+    "pytest-310.xml": "3828aecf8d31e6bd68f40f8cb805e18169a73a1146421fde40bd774851420a08",
+    "pytest-deployment.xml": "bc73d9ce5a34463e8fbf041b0bd6c81d7ebef6615c1ade6eceed7c392fa1911a"
+  },
+  "independent_review": {
+    "verdict": "APPROVE",
+    "critical": 0,
+    "important": 0,
+    "minor": 0,
+    "declined_to_judge": [],
+    "scope": "One fresh local read-only final review of five publication files and retained private receipt/JUnit commitments; no device/network/test execution or mutation",
+    "evidence_commitments_verified": 8,
+    "unique_tests_verified": 339
+  },
+  "git_publication": {
+    "branch": "feature/jetlink-multimodel-carrot",
+    "method": "normal non-force push after result commit",
+    "verification": "Final response reports commit and fresh local/remote equality; resolve result commit using result_commit_resolution"
+  },
+  "protected_remote_refs": {
+    "main": "2519ad0bdbf6e796fa590063fc90d4d6461b6b8d",
+    "feature/cinque-v3-jetson": "26c9c06a5e51ff0e8d3a1e8575eece548e87f3b5",
+    "unchanged_at_final_read": true
+  },
+  "development_validation_code_head": "6cab5b5227c4676397478b61524bae6c0956d414"
+}
