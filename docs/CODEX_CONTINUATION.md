@@ -1,5 +1,47 @@
 # Codex continuation — 2026-10-24
 
+## Latest checkpoint: M19-C2.0 read-only diagnosis PASS — newer5bbbe160
+
+Read `docs/M19C20_SOURCE_PROFILE_DRIFT_DIAGNOSIS_20261024.md` and
+`artifacts/m19c20_source_profile_drift_diagnosis_20261024.json` first.
+**PASS_DIAGNOSIS / MULTIPLE_DRIFT**. Actual carrot-nav now
+**5bbbe160822c7cae4245d7a8e96b40d158941ff7**, a559 ancestorYES/10commits later.
+Fresh first four Git reads retained branch/HEAD/status/cached paths before any
+comparison. Tracked0/untracked-short49/indexdiff0. No context discarded on drift.
+
+Model SHA6e04d29bca6b1802ecc012f8f8ea154f28ec7854961dbf4fd4b6b963328eccee,
+FOOTER_REMOVED/marker0/hook-lineabsent/nooldfooter. Pure body differs froma559;
+underlying tracked model AND footer changed. Surviving untracked a559 package5/5
+exact, installed six5/6. Sourcepins20/30match: model/link, daemon, client,
+request_chunks, ffs, request_writer.py/.c, server.py, host_release.json changed.
+All30 actual tracked files equal currentHEAD Git blobs; additional9 C2.1 boundary
+pins exact. No tracked/index anomaly. No new-HEAD compatibility claim/candidate.
+
+N16 source model/spec unchanged, stateful5pairs/image2x6x128x256/packed65595/
+first12PASS. Fresh3.0479s receive-only device6/Panda28,OFF1/ON0/startedfalse/
+ignitionfalse-false/thermalgreen/harnessnotConnected. Short diagnosis window,
+not10s capture-arm proof. TicketnamespaceABSENT/claims0/writer0/capturefalse/
+datasetNONE; `/data/v3_input_capture` ABSENT, historical output root absent too.
+
+Reflog20:02:54+0900 a559reset→5bbbe160fast-forward; earlier identical pairs.
+Consistent with updater-style tracked replacement/footer loss/untracked survival;
+exact initiating process/person UNKNOWN. Primary MULTIPLE_DRIFT(B+C+D), branch
+matches and index/worktree anomaly absent. Historical C2.1 missing values remain
+historical; this current diagnosis does not fabricate them retroactively.
+
+Scoped preservationPASS:49 selectedsource/package/native/boundary files+metadata,
+HEAD/status/index/readflags/ticket/outputroots/process identities stable before/
+after and follow-up Gitblob proof. Actual mutationsNONE, no Params/source/Git/
+storage/ticket/capture/restart/updater control/Jetson access. Prior627historical,
+not rerun/recounted; local7footer+1continuation fixture checks PASS.
+
+**Decision/next:** OFFLINE_COMPATIBILITY_REVIEW_REQUIRED_FOR_NEW_HEAD. Pin exact
+5bbbe160 and separately review a559..5bbbe160 input/execution compatibility before
+any candidate/deployment. No auto footer repair/storage/arming. PARITY_UNDETERMINED/
+M2NO, retryC2.1NO. Development start48e2894 clean/equal; historical evidence unchanged.
+Result commit:
+`git log -1 --format=%H -- artifacts/m19c20_source_profile_drift_diagnosis_20261024.json`.
+
 ## Latest checkpoint: M19-C2.1 storage BLOCKED at source/profile gate
 
 Read `docs/M19C21_PRIVATE_CAPTURE_STORAGE_20261024.md` and
