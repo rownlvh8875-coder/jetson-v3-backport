@@ -231,7 +231,8 @@ replay fixture were corrected without changing upstream transport or gates.
 Independent final review found no blocking issue; a minor reader bad-reference
 traceback was reproduced with2RED cases and changed to JSON FAIL, then verified.
 
-During work public Nav was710da0d285cd21c25c2ea143450de94196690884; WIP moved
+During work public Nav was710da0d285cd21c25c2ea143450de94196690884; final public
+check foundc3e8be79ad69744b88b653b43c9045434cd6a6d3. WIP moved
 from9fa59128bdff6b6c0b9501aec2898205492b389f to
 deb63e276d95d3e0fc2234ad4b312b4c4d075269. The GitHub compare adds UI/EGL shutdown
 changes and extends the Jetlink CI workflow trigger/test list; no Jetlink runtime

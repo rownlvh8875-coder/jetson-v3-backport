@@ -49,7 +49,7 @@ Separate-clean layout6paths also roundtrips to exact absence. Both6-path profile
 and rollback hashes in artifact. New reader `tools/v3_input_dataset_060de9.py`;
 old readers reject newHEAD provenance. Fresh destination only, no auto-repatch.
 
-Public upstream first Nav710da0.../WIP9fa591..., end Nav710da0d285cd21c25c2ea143450de94196690884/
+Public upstream first Nav710da0.../WIP9fa591..., final Navc3e8be79ad69744b88b653b43c9045434cd6a6d3/
 WIPdeb63e276d95d3e0fc2234ad4b312b4c4d075269. WIP increment UI/EGL+CI trigger/test
 changes, no Jetlink runtime path changed; full primary compare URL/files in
 artifact. Hostd0dc96..., zoomd24328..., reviewa890f6... unchanged. No latest retarget.
