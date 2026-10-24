@@ -1,5 +1,46 @@
 # Codex continuation — 2026-10-24
 
+## Latest checkpoint: M19-C1.4 exact5bb actual deployment OFF — PASS
+
+Read docs/M19C14_5BB_ACTUAL_OFF_DEPLOYMENT_20261024.md and
+artifacts/m19c14_5bb_actual_off_deployment_20261024.json first.
+RECORDER_5BB_DEFERRED_NAV_V1_INSTALLED_OFF on actual carrot-nav at
+5bbbe160822c7cae4245d7a8e96b40d158941ff7. One actual surviving-a559 migration,
+exactly model/format/hook, no rollback. Actual HEAD/index unchanged;33pins and
+PRE6/AFTER6 exact. Pure body+one bound footer, explicit nav_metadata once, shared
+Warp callback/None/output forwarding retained. FOUR_INPUT_SUFFICIENT frozen.
+
+First actual commands cat OFF/ON returned1/0. Four fresh simultaneous12s OFF
+windows passed; final12.0384s22device/110Panda/22manager, startedfalse/ignition
+falsefalse, normal OFF roles/policy. The28runtime process identities stayed stable; the6 observed core roleenvs
+lacked legacy activation/selectors. No forced restart/import, ticket, activation
+or capture.
+
+Fresh overlay49entries/2011files/417271762bytes;2206ignored/native files;
+15model files/4542route metadata entries/28process identities/index/boot committed.
+Latest PRE36650d1fb96f28d17b790664cf59717ad195b9b1e96d6f8792e5a7a83f8532e1
+POSTc533303c7ee31582823b7f1241efc9344ba928ddd40f3fc9d497448af673d530
+All10POST preservation checks PASS, original overlay and untouched package/native/
+model/route/index/processes preserved. Final read-only health33/33 and6/6 PASS;
+final source guard also PASS; updater drift NONE. Three private exclusive
+fsynced backups outside source;
+exact reviewed patches streamed on stdin, no actual index/config write.
+
+TicketNOT_CREATED/namespaceABSENT, activationNOT_RUN, writer0, frames0,
+datasetNONE. /data/v3_input_capture remainsABSENT; storage mutationNONE.
+Restart/captureNOT_RUN_BY_SCOPE; Jetson access/mutationNONE; no Params/updater/
+V3/P3/model-switch action. Ready for storage preparationYES (separate approval),
+Vehicle10NO, PARITY_UNDETERMINED/M2NO. No capture authority.
+
+Fresh uniqueCPU/POSIX1165PASS/0FAIL/0SKIP; exactC04IDs, no duplicate counting.
+Separate disposable18 and privateguard/recovery/runner49 not added to1165.
+Diagnostics4 missingzstandard and known root collection blockers remain separate.
+Helper selector-location/rollback-race/receipt-budget issues fixed before actual
+writes; unknown source footprint stops safely instead of overwriting unknown edits.
+Historical evidence and protected refs unchanged. Development started36caf8b CLEAN/
+equal. Next: separately authorize M19-C2.1 private capture storage preparation.
+Result commit: git log -1 --format=%H -- artifacts/m19c14_5bb_actual_off_deployment_20261024.json
+
 ## Latest checkpoint: M19-C0.4 exact5bb wrapper fix — offline candidate PASS
 
 Read docs/M19C04_5BB_NAV_METADATA_WRAPPER_20261024.md and
