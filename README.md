@@ -9,6 +9,12 @@
 
 **최신 작업 인계:** [CODEX_CONTINUATION.md](docs/CODEX_CONTINUATION.md).
 
+2026-10-24 [M19-C0 exact810e recorder](docs/M19C0_810E_SHARED_INPUT_REBASE_20261024.md):
+사용자 보고 actual810e의 shared-input/N16 계약에 맞춘 **별도 오프라인 후보**를 준비했다.
+기존366 recorder는 현재 API와 **호환되지 않는다**. CPU415 PASS이며 실제 comma·Jetson에
+접근하거나 배포·ticket·capture·restart를 수행하지 않았다. 다음은 별도 승인된 OFF 배포
+preflight다. 이전366 설치/준비 상태를810e의 현재 검증으로 재사용하지 않는다.
+
 2026-10-24 [M19-B0 activation 검토](docs/M19B0_ACTIVATION_CHOREOGRAPHY_20261024.md):
 **B 권고**, 기본 OFF/1회성 volatile ticket 후보를 오프라인 검증했다.
 준비용 subprocess의 잘못된 소비를 막는 modeld/launcher guard와 2파일 delta·reverse를 준비했고
