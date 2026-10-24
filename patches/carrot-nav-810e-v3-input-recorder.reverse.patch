@@ -1,0 +1,261 @@
+--- a/openpilot/selfdrive/modeld/jetlink/input_recording/format.py
++++ b/openpilot/selfdrive/modeld/jetlink/input_recording/format.py
+@@ -7,7 +7,7 @@
+ import struct
+ import numpy as np
+ 
+-BASE_SHA='810e14aaf51176f1a50a113939dc2e70907b394b'
++BASE_SHA='366d6eae9aa9962104391e1d997fe956dea8f64d'
+ TARGET_SHA='404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4'
+ SPEC_DIGEST='6905b3d4efd18caf3df8c02898e9f3003a5adb11813a277f627b1decea8304e0'
+ INPUTS={'new_img':((2,6,128,256),'|u1'),'desire':((8,),'<f4'),
+@@ -29,9 +29,7 @@
+ 
+ def validate_provenance(value):
+     if not isinstance(value,dict) or set(value)!=PROVENANCE_KEYS:raise ValueError('provenance allowlist')
+-    if value['carrot_head']!=BASE_SHA or value['source_kind']!='existing_jetlink_n16_nonstate_payload':raise ValueError('source pin/kind')
+-    if value['source_model_sha']!='01effc679eb46d6036ce0302673a87fe2dcfcc95a679daeeb929679e53c3647a' or value['source_spec_sha']!='63b2097c114bade03c5ec7ded978d73032a93bb525c03f9b78eddf49809f8b71':
+-        raise ValueError('exact N16 source provenance required')
++    if value['carrot_head']!=BASE_SHA or value['source_kind']!='existing_jetlink_nonstate':raise ValueError('source pin/kind')
+     for n in ('recorder_source_sha','source_model_sha','source_spec_sha'):
+         if not isinstance(value[n],str) or re.fullmatch('[0-9a-f]{64}',value[n]) is None:raise ValueError('source SHA')
+     if not isinstance(value['capture_id'],str) or re.fullmatch('[0-9a-f]{32}',value['capture_id']) is None:raise ValueError('anonymous capture ID')
+--- a/openpilot/selfdrive/modeld/jetlink/input_recording/hook.py
++++ b/openpilot/selfdrive/modeld/jetlink/input_recording/hook.py
+@@ -1,6 +1,10 @@
+-"""Exact810e N16 input observer; fixed volatile discovery, default OFF.
+-Server-owned recurrence and ram_input_v1 ownership are never modified.
+-No module-import activation, Params or persistent environment settings.
++"""Enabled-only exact-input observer for the pinned actual366 nonstate client.
++
++This module has no activation side effects. The model footer imports it only
++after the activation-v2 footer discovers the fixed volatile one-shot ticket.
++The legacy explicit environment API remains available for offline regression.
++Arming is a future separately authorized offroad action; it does not select a
++model, write Params, or create the capture output directory.
+ """
+ from __future__ import annotations
+ 
+@@ -21,7 +25,13 @@
+ from .format import BASE_SHA, canonical, validate_provenance
+ 
+ MODEL = 'openpilot/selfdrive/modeld/jetlink/model.py'
+-SOURCE_PINS = {'openpilot/selfdrive/modeld/jetlink/model.py': '103dc0c7eb1b4998ddbf0a498be55ffd02fd51b195ce20cb7ea44ba3dbce6c42', 'openpilot/selfdrive/modeld/jetlink/link.py': '3143bc6788132435d6dbeb108f1c68582f702df7913e76f262569f099316ca35', 'openpilot/selfdrive/modeld/jetlink/shared_input.py': 'dc36519c3dc6fad49047fe35a24c5b33f439364c2e4a2559d0f357dfb8e0921e', 'openpilot/selfdrive/modeld/jetlink/contracts.py': '100f92e154b9540ddfe8b8b5ca6c3e2973cce14428fb3442ad98701c976f9ca2', 'openpilot/selfdrive/modeld/jetlink/daemon.py': 'd95e7f44597f150f642f70432143ee9cba8c395bb0513a9e475bc4f597859980', 'openpilot/selfdrive/modeld/jetlink/inputs.py': 'c737e30ff8c1b170ebc2179394ee0ce63180e257ddb64ce0967aae7161398f8e', 'openpilot/selfdrive/modeld/jetlink/prepare.py': 'c6a9e9fc1fe122b655ea3a6fbbd3b0fff9ad7d3f918e720e9401fd19e0afb4e7', 'openpilot/selfdrive/modeld/jetlink/jetson_model.json': 'ceb07d1a502966f10cb1afc33c6d686a418b3f204320685cf5e36bbf44c62f6d', 'openpilot/selfdrive/modeld/camera_gap.py': '7b959fa8bdd740c4bea150c07248a69ea33f08db327110601be3ee17d9bc938a', 'openpilot/selfdrive/modeld/camera_sync.py': '398980260825757393239796cb4dc10399ef1384f0fd9e23cdad0fd12d0cc0d2', 'openpilot/selfdrive/modeld/modeld.py': '008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594', 'openpilot/system/manager/process.py': 'fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752', 'third_party/jetlink/jetlink/spec.py': 'ec844ccaf13ffc1d7c03ad683b0e3f2ce6a1d78f4088067739aaa419af422170', 'third_party/jetlink/jetlink/server/session.py': 'a4a5c08f917294806395b1e0fa9c359d747fbc6ced7842dbc3c32d924af2847d', 'third_party/jetlink/jetlink/queues.py': 'c251eecc45e38704c15b2a10f0969c270cd9fa11603ebdaae88c1b1187112ea8'}
++SOURCE_PINS = {
++    MODEL: 'c627644ff2f986883325aaca1b8410f216f45447c6595a123d8c1e53ef8c83da',
++    'openpilot/selfdrive/modeld/jetlink/link.py': '9bdb6fb3b9c669fefd0e065e144ceea76068f839cd53eb9d5ccaf3c34c3908c4',
++    'openpilot/selfdrive/modeld/camera_gap.py': '7b959fa8bdd740c4bea150c07248a69ea33f08db327110601be3ee17d9bc938a',
++    'openpilot/selfdrive/modeld/camera_sync.py': '398980260825757393239796cb4dc10399ef1384f0fd9e23cdad0fd12d0cc0d2',
++    'third_party/jetlink/jetlink/spec.py': 'ec844ccaf13ffc1d7c03ad683b0e3f2ce6a1d78f4088067739aaa419af422170',
++}
+ SCALARS = (('desire', (8,)), ('traffic_convention', (1, 2)), ('action_t', (1, 2)))
+ TICKET_KEYS = {'schema', 'capture_id', 'output_root', 'output', 'frames', 'depth', 'carrot_head',
+                'source_model_sha', 'source_spec_sha', 'ticket_path', 'boot_id', 'armed_monotonic_ns',
+@@ -56,8 +66,6 @@
+         raise ValueError('arm ticket schema/allowlist')
+     if value['carrot_head'] != BASE_SHA or value['offroad_armed'] is not True:
+         raise ValueError('source pin/offroad arming proof')
+-    if value['source_model_sha'] != NAV_MODEL_SHA or value['source_spec_sha'] != NAV_SPEC_SHA:
+-        raise ValueError('exact N16 ticket model/spec required')
+     for key, size in (('capture_id', 32), ('source_model_sha', 64), ('source_spec_sha', 64)):
+         if not isinstance(value[key], str) or re.fullmatch('[0-9a-f]{%d}' % size, value[key]) is None:
+             raise ValueError('invalid ticket identity')
+@@ -86,7 +94,6 @@
+     """
+     if offroad is not True or type(expires_seconds) is not int or not 1 <= expires_seconds <= 300:
+         raise ValueError('offroad arming and bounded expiry required')
+-    _verify_source({'__file__': str(Path(__file__).parents[1] / 'model.py')})
+     path = _no_symlinks(path)
+     root = _no_symlinks(output_root)
+     now = time.monotonic_ns() if monotonic_ns is None else monotonic_ns
+@@ -137,70 +144,58 @@
+     return value
+ 
+ 
+-
+ def _verify_source(namespace):
+-    """Startup/arming only: exact HEAD and full patched profile, no footer stripping."""
+-    model = Path(namespace['__file__']).absolute()
++    """Startup only: exact tracked HEAD and source bytes, allowing our footer."""
++    model = Path(namespace['__file__']).resolve()
+     root = model.parents[4]
+-    _no_symlinks(model)
+     head = subprocess.check_output(['git', '-C', str(root), 'rev-parse', 'HEAD'], timeout=5).decode().strip()
+     if head != BASE_SHA:
+-        raise ValueError('reviewed810e HEAD required')
+-    package = model.parent / 'input_recording'
+-    for name, expected in PACKAGE_PINS.items():
+-        path = _no_symlinks(package / name)
+-        if not stat.S_ISREG(path.lstat().st_mode) or hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+-            raise ValueError('810e recorder package drift: ' + name)
+-    hook = _no_symlinks(package / 'hook.py')
+-    if not stat.S_ISREG(hook.lstat().st_mode):
+-        raise ValueError('regular reviewed hook required')
+-    hook_sha = hashlib.sha256(hook.read_bytes()).hexdigest()
+-    footer = FOOTER_TEMPLATE.replace('@HOOK_SHA256@', hook_sha).encode()
++        raise ValueError('actual carrot HEAD differs from reviewed366')
+     for name, expected in SOURCE_PINS.items():
+-        path = _no_symlinks(root / name)
+-        if not stat.S_ISREG(path.lstat().st_mode):
+-            raise ValueError('regular source required')
+-        raw = path.read_bytes()
++        raw = (root / name).read_bytes()
+         if name == MODEL:
+-            if not raw.endswith(footer):
+-                raise ValueError('reviewed recorder footer/hook binding changed')
+-            raw = raw[:-len(footer)]
++            # The one generated footer starts immediately after the pinned
++            # original bytes; no original function body may be modified.
++            marker = b'\n\n# M18 exact-input observer; default OFF.\n'
++            if raw.count(marker) != 1:
++                raise ValueError('recorder footer missing/ambiguous')
++            raw = raw.split(marker)[0]
+         if hashlib.sha256(raw).hexdigest() != expected:
+-            raise ValueError('810e source/profile drift: ' + name)
++            raise ValueError('actual source hash changed: ' + name)
+ 
+ 
+ def _provenance(value):
+     files = {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
+              for name in ('__init__.py', 'format.py', 'recorder.py', 'dataset.py', 'hook.py')}
+-    return validate_provenance(dict(carrot_head=BASE_SHA, source_kind='existing_jetlink_n16_nonstate_payload',
++    return validate_provenance(dict(carrot_head=BASE_SHA, source_kind='existing_jetlink_nonstate',
+         source_model_sha=value['source_model_sha'], source_spec_sha=value['source_spec_sha'],
+         capture_id=value['capture_id'], source_files=files,
+         recorder_source_sha=hashlib.sha256(canonical(files)).hexdigest()))
+ 
+ 
+-
+ def _contract(spec, ticket):
+-    """Exact N16 server-owned five-pair recurrence, not the old V2 prev_feat gate.
+-
+-    Only the nonstate payload's first12 floats belong to the V3 dataset.
+-    nav_map/navigation and every recurrent tensor remain outside the dataset.
+-    """
+-    if (not spec.stateful or spec.sha256 != NAV_MODEL_SHA
+-            or ticket['source_model_sha'] != NAV_MODEL_SHA
+-            or ticket['source_spec_sha'] != NAV_SPEC_SHA
+-            or hashlib.sha256(canonical(spec.to_dict())).hexdigest() != NAV_SPEC_SHA
+-            or tuple(spec.warped_shape) != (2, 6, 128, 256)):
+-        raise ValueError('exact810e N16 model/spec required')
++    # ClientConnection invokes Client.__init__ on its existing non-realtime
++    # connection worker. All digest/layout preparation happens here, never infer.
++    if (spec.sha256 != ticket['source_model_sha'] or spec.stateful
++            or tuple(spec.warped_shape) != (2, 6, 128, 256)
++            or hashlib.sha256(canonical(spec.to_dict())).hexdigest() != ticket['source_spec_sha']):
++        raise ValueError('actual nonstate source model/spec mismatch')
+     fields = tuple(spec.packed_shapes.items())
+-    expected = SCALARS + (('nav_map', (1, 1, 256, 256)), ('navigation', (1, 47)))
+-    pairs = tuple(spec.state_pairs.items())
+-    if (fields != expected or spec.packed_nelem != 65595 or len(pairs) != 5
+-            or {a: b for a, b in pairs} != EXPECTED_STATE_PAIRS):
+-        raise ValueError('N16 nonstate payload or server recurrence contract changed')
+-    snapshots = tuple((name, dict(getattr(spec, name))) for name in
+-                      ('input_shapes', 'output_shapes', 'output_slices', 'packed_shapes'))
+-    return spec, ((0, 8, (8,)), (8, 10, (1, 2)), (10, 12, (1, 2))), 65595, snapshots, (
+-        spec.sha256, spec.nbytes, spec.frame_skip, spec.checkpoint)
++    if fields[:3] != SCALARS or not fields or fields[-1][0] != 'prev_feat':
++        raise ValueError('actual packed scalar layout mismatch')
++    offsets = []
++    position = 0
++    for name, shape in fields:
++        size = math.prod(shape)
++        if position < 12:
++            offsets.append((position, position + size, shape))
++        position += size
++    if position != spec.packed_nelem or len(offsets) != 3:
++        raise ValueError('actual packed size mismatch')
++    snapshots = []
++    for name in ('input_shapes', 'output_shapes', 'output_slices'):
++        snapshots.append((name, dict(getattr(spec, name))))
++    return spec, tuple(offsets), position, tuple(snapshots), (spec.sha256, spec.nbytes, spec.frame_skip, spec.checkpoint)
+ 
+ 
+ def _unchanged(spec, contract):
+@@ -211,7 +206,7 @@
+         current = getattr(spec, name)
+         if len(current) != len(expected) or any(current.get(key) != value for key, value in expected.items()):
+             return False
+-    return tuple(spec.packed_shapes.items()) == tuple(contract[3][-1][1].items())
++    return True
+ 
+ 
+ class _Capture:
+@@ -224,7 +219,6 @@
+         self.transforms = None
+ 
+     def stop(self, reason):
+-        self.warped = self.pair = self.transforms = None
+         if not self.disabled:
+             self.disabled = True
+             try:
+@@ -273,7 +267,7 @@
+     openpilot, creating a process, or weakening production source checks.
+     Original methods run exactly once with unchanged arguments and exceptions.
+     """
+-    arm = arm_path
++    arm = os.getenv('CARROT_V3_INPUT_CAPTURE') if arm_path is None else arm_path
+     if not arm:
+         return None
+     capture = None
+@@ -320,9 +314,9 @@
+             return result
+ 
+         @functools.wraps(original_warp)
+-        def warp(self, bufs, transforms, *, prepare=None, output_buffer=None):
++        def warp(self, bufs, transforms, *, prepare=None):
+             try:
+-                result = original_warp(self, bufs, transforms, prepare=prepare, output_buffer=output_buffer)
++                result = original_warp(self, bufs, transforms, prepare=prepare)
+             except Exception:
+                 capture.stop('existing warp failed')
+                 raise
+@@ -365,15 +359,8 @@
+             capture.stop('capture setup failed')
+         return None
+ 
+-NAV_MODEL_SHA = '01effc679eb46d6036ce0302673a87fe2dcfcc95a679daeeb929679e53c3647a'
+-NAV_SPEC_SHA = '63b2097c114bade03c5ec7ded978d73032a93bb525c03f9b78eddf49809f8b71'
+-EXPECTED_STATE_PAIRS = {'state_img_q': 'next_state_img_q', 'state_desire_q': 'next_state_desire_q', 'state_feat_q': 'next_state_feat_q', 'state_map_features_q': 'next_state_map_features_q', 'state_navigation_features_q': 'next_state_navigation_features_q'}
+-
+-PACKAGE_PINS = {'__init__.py': 'e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca', 'format.py': '5f27a2c6eda726a93bfc714a9cf7f2d00d637bfb54b34ade0a81cf738d290c42', 'recorder.py': 'd6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada', 'dataset.py': '25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7'}
+-FOOTER_TEMPLATE = "\n\n# RECORDER_810E_SHARED_INPUT_V1; default OFF.\n# Reviewed hook SHA256: @HOOK_SHA256@\n# One volatile ticket check at lazy import; no environment activation.\ntry:\n  os.lstat('/dev/shm/carrot-v3-input-capture/arm.ticket')\nexcept Exception:\n  pass\nelse:\n  try:\n    from openpilot.selfdrive.modeld.jetlink.input_recording.hook import install_discovered as _install_input_capture\n    _m18_input_capture = _install_input_capture(globals())\n  except Exception:\n    pass  # Recorder setup must never disable existing inference or fallback.\n"
+-
+-
+-# M19-B0 activation-v2: /dev/shm is the exact810e Paths.shm_path convention.
++
++# M19-B0 activation-v2: /dev/shm is the exact366 Paths.shm_path convention.
+ DISCOVERY_DIRECTORY = Path('/dev/shm/carrot-v3-input-capture')
+ CONTEXT_SOURCE_PINS = {
+     'openpilot.selfdrive.modeld.modeld': ('main', 'openpilot/selfdrive/modeld/modeld.py',
+@@ -463,9 +450,6 @@
+     """
+     if offroad is not True or type(expires_seconds) is not int or not 1 <= expires_seconds <= 300:
+         raise ValueError('fresh offroad arming and bounded expiry required')
+-    _verify_source({'__file__': str(Path(__file__).parents[1] / 'model.py')})
+-    if source_model_sha != NAV_MODEL_SHA or source_spec_sha != NAV_SPEC_SHA:
+-        raise ValueError('exact N16 model/spec arming required')
+     directory = _discovery_directory(create=True)
+     path = directory / 'arm.ticket'
+     if os.path.lexists(directory / 'arm.ticket.consumed'):
+--- a/openpilot/selfdrive/modeld/jetlink/model.py
++++ b/openpilot/selfdrive/modeld/jetlink/model.py
+@@ -286,18 +286,3 @@
+       # Execute the native fallback before allowing an external-model join.
+       self.small_runs += 1
+     return result
+-
+-
+-# RECORDER_810E_SHARED_INPUT_V1; default OFF.
+-# Reviewed hook SHA256: 67efb65f6c1b7a8a1537d76a7ffdfa394a272778a1052e7ad744668baf18be68
+-# One volatile ticket check at lazy import; no environment activation.
+-try:
+-  os.lstat('/dev/shm/carrot-v3-input-capture/arm.ticket')
+-except Exception:
+-  pass
+-else:
+-  try:
+-    from openpilot.selfdrive.modeld.jetlink.input_recording.hook import install_discovered as _install_input_capture
+-    _m18_input_capture = _install_input_capture(globals())
+-  except Exception:
+-    pass  # Recorder setup must never disable existing inference or fallback.
