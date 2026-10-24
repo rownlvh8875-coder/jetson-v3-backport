@@ -1,5 +1,43 @@
 # Codex continuation — 2026-10-24
 
+## Latest checkpoint: M19-C2 vehicle10 BLOCKED before arming
+
+Read `docs/M19C2_VEHICLE10_CAPTURE_20261024.md` and
+`artifacts/m19c2_vehicle10_capture_20261024.json` first. User explicitly authorized
+vehicle10, but actual **BLOCKED_OUTPUT_ROOT_UNRESOLVED**: the reviewed proposed
+private root is absent. C2 requires an existing directory and does not authorize
+root creation. Do not guess another root or create one under this capture scope.
+
+Fresh first actual commands were the requested two cat reads1/0. New12.016936835s
+receive-only OFF window PASS, device22/Panda111/manager22 fresh valid samples,
+startedfalse/ignitionfalse-false/thermalgreen/harnessnotConnected. Normal OFF
+roles verified in telemetry+OS; ticket namespace absent/writer0/legacyenvabsent.
+GENUINE_OFF_CAPTURE_ARM_PRECHECK_PASS. Actual carrot-nav exacta559 and installed
+RECORDER_A559_EXECUTION_SWITCHES_V1 six hashes/full30pins/N16 source+spec PASS.
+HEAD/six/pins/index/OFFflags stable across this read-only pre-arm window. Root
+parents existing non-symlink directories, candidate root freshly confirmed absent.
+
+Actual mutationNONE. Ticket NOT_CREATED, arm_discovered/arm_ticket never called,
+activationNOT_RUN/writerNOT_STARTED/frames0/datasetNONE. No user ignition action
+requested or OFF→ON observed. Stationary speed/gear NOT_ASSESSED. Jetson live
+READY/protocol/model preflight NOT_RUN after storage stop; current operational
+identity UNKNOWN, not inferred from source contract. Jetson access/mutationNONE.
+No restart/Params/source/Git index/updater/USB/model/V3/P3 changes. Final namespace
+ABSENT; no cleanup/rearm. Existing strict a559 reader unchanged; dataset validation
+NOT_RUN, no dataset digest/per-frame hashes. Historical evidence unchanged.
+
+Fresh CPU627 uniquePASS/0FAIL/0SKIP (533project+94upstream), no new reader/tool
+pytest cases; diagnostics4 blocked/unrecounted and root collection blocker remain
+separate. Private first read-only helper initialization error corrected locally,
+then fresh accepted window; no actual write in either attempt.
+
+Vehicle10 FAIL_NOT_RUN_STORAGE_GATE, PARITY_UNDETERMINED/M2NO/parity readinessNO.
+**Next:** separately authorize/prepare/verify reviewed private capture root,
+then repeat all fresh C2 gates before one ticket. Current capture approval does
+not waive the existing-root requirement. Development start3695540 clean/equal
+feature; docs/sanitized artifact only. Result commit:
+`git log -1 --format=%H -- artifacts/m19c2_vehicle10_capture_20261024.json`.
+
 ## Latest checkpoint: M19-C1.3 exact-a559 INSTALLED_OFF
 
 Read `docs/M19C13_A559_ACTUAL_OFF_DEPLOYMENT_20261024.md` and
