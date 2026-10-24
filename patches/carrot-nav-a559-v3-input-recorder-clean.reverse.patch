@@ -1,0 +1,1241 @@
+--- a/openpilot/selfdrive/modeld/jetlink/input_recording/__init__.py
++++ /dev/null
+@@ -1 +0,0 @@
+-"""Offline exact-input observer candidate. Importing this package starts nothing."""
+--- a/openpilot/selfdrive/modeld/jetlink/input_recording/dataset.py
++++ /dev/null
+@@ -1,315 +0,0 @@
+-"""Strict offline reader for complete logical inputs, without model/device imports.
+-
+-Construction validates every record before exposing any inputs. The Linux reader
+-opens each path component without following symlinks, keeps a read-only mapping,
+-and checks file identity on access. Returned records own immutable byte snapshots.
+-Recurrent state is always owned by the caller's independent replay harness.
+-"""
+-from __future__ import annotations
+-
+-import copy
+-import hashlib
+-import json
+-import mmap
+-import os
+-from pathlib import Path
+-import re
+-import stat
+-
+-import numpy as np
+-
+-from . import format as f
+-
+-
+-_FILES = {'frames.bin', 'manifest.json', 'COMPLETE'}
+-_MANIFEST_KEYS = {
+-    'schema', 'kind', 'status', 'expected_frames', 'frames', 'continuity',
+-    'spec_digest', 'target_sha256', 'provenance', 'inputs', 'files',
+-    'capture_start_ns', 'capture_end_ns', 'interval_diagnostic',
+-    'no_gps_raw_camera', 'state_tensors_stored', 'dataset_digest',
+-}
+-_DIAGNOSTIC_KEYS = {'expected_ns', 'min_ns', 'max_ns', 'p50_ns', 'p95_ns', 'p99_ns'}
+-
+-
+-def _json_object(pairs):
+-    result = {}
+-    for key, value in pairs:
+-        if key in result:
+-            raise ValueError('duplicate JSON key')
+-        result[key] = value
+-    return result
+-
+-
+-def _reject_constant(_value):
+-    raise ValueError('nonfinite JSON constant')
+-
+-
+-def _json(raw):
+-    try:
+-        value = json.loads(raw, object_pairs_hook=_json_object, parse_constant=_reject_constant)
+-    except (UnicodeError, json.JSONDecodeError, RecursionError) as exc:
+-        raise ValueError('invalid JSON') from exc
+-    if type(value) is not dict:
+-        raise ValueError('expected JSON object')
+-    return value
+-
+-
+-def _signature(info):
+-    return (info.st_dev, info.st_ino, info.st_mode, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+-
+-
+-def _open_directory(path):
+-    # dir_fd + O_NOFOLLOW prevents a component replacement from redirecting an
+-    # open between lstat and open. Refuse platforms lacking this guarantee.
+-    if os.open not in os.supports_dir_fd or not hasattr(os, 'O_NOFOLLOW'):
+-        raise ValueError('safe directory-relative opens require a supported POSIX platform')
+-    path = Path(path).expanduser()
+-    if not path.is_absolute():
+-        path = Path.cwd() / path
+-    if '..' in path.parts:
+-        raise ValueError('parent traversal is not a dataset path')
+-    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | getattr(os, 'O_CLOEXEC', 0)
+-    directory = os.open(path.anchor, flags)
+-    try:
+-        for name in path.parts[1:]:
+-            child = os.open(name, flags, dir_fd=directory)
+-            os.close(directory)
+-            directory = child
+-        return directory
+-    except BaseException:
+-        os.close(directory)
+-        raise
+-
+-
+-def _integer(value, name, minimum=0):
+-    if type(value) is not int or value < minimum:
+-        raise ValueError('invalid integer: ' + name)
+-
+-
+-def _sha(value):
+-    return type(value) is str and re.fullmatch('[0-9a-f]{64}', value) is not None
+-
+-
+-class Dataset:
+-    """Validated, read-only random access. This class does not execute a model.
+-
+-    ``spec`` is optional and used only by ``trt_into``. It must be the complete
+-    authoritative spec dictionary, or an exactly round-tripping ModelSpec.
+-    When omitted the repository's pinned Cinque spec is read lazily.
+-    """
+-
+-    def __init__(self, path, spec=None):
+-        self.path = Path(path).expanduser().absolute()
+-        self._spec_source = spec
+-        self._directory = None
+-        self._fds = {}
+-        self._snapshots = {}
+-        self._mapping = None
+-        self._validated = False
+-        try:
+-            self._directory = _open_directory(self.path)
+-            if set(os.listdir(self._directory)) != _FILES:
+-                raise ValueError('complete dataset must contain exactly frames.bin, manifest.json, COMPLETE')
+-            self._directory_snapshot = _signature(os.fstat(self._directory))
+-            for name in sorted(_FILES):
+-                descriptor = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK
+-                                     | getattr(os, 'O_CLOEXEC', 0), dir_fd=self._directory)
+-                self._fds[name] = descriptor
+-                info = os.fstat(descriptor)
+-                if not stat.S_ISREG(info.st_mode):
+-                    raise ValueError('dataset member is not a regular file')
+-                self._snapshots[name] = _signature(info)
+-            manifest_raw = self._small_file('manifest.json')
+-            if self._small_file('COMPLETE') != manifest_raw:
+-                raise ValueError('COMPLETE must exactly match manifest bytes')
+-            self._manifest = _json(manifest_raw)
+-            self._validate_manifest()
+-            self._mapping = mmap.mmap(self._fds['frames.bin'], 0, access=mmap.ACCESS_READ)
+-            self._validate_frames()
+-            self._check_unchanged()
+-            self._validated = True
+-        except BaseException as exc:
+-            self.close()
+-            if isinstance(exc, (OSError, KeyError, TypeError, OverflowError)):
+-                raise ValueError('invalid or inaccessible dataset') from exc
+-            raise
+-
+-    def _small_file(self, name):
+-        descriptor = self._fds[name]
+-        size = os.fstat(descriptor).st_size
+-        if not 0 < size <= 65_536:
+-            raise ValueError('invalid manifest/marker size')
+-        with os.fdopen(os.dup(descriptor), 'rb') as stream:
+-            raw = stream.read(size + 1)
+-        if len(raw) != size:
+-            raise ValueError('manifest/marker changed while reading')
+-        return raw
+-
+-    def _validate_manifest(self):
+-        manifest = self._manifest
+-        if set(manifest) != _MANIFEST_KEYS:
+-            raise ValueError('manifest allowlist')
+-        constants = {'schema': 1, 'kind': 'v3-logical-input-dataset', 'status': 'COMPLETE',
+-                     'continuity': 'CONTIGUOUS', 'spec_digest': f.SPEC_DIGEST,
+-                     'target_sha256': f.TARGET_SHA, 'no_gps_raw_camera': True,
+-                     'state_tensors_stored': False}
+-        for key, expected in constants.items():
+-            if type(manifest[key]) is not type(expected) or manifest[key] != expected:
+-                raise ValueError('manifest contract: ' + key)
+-        _integer(manifest['expected_frames'], 'expected_frames', 1)
+-        _integer(manifest['frames'], 'frames', 1)
+-        self._count = manifest['frames']
+-        size = f.expected_size(manifest['expected_frames'])
+-        if self._count != manifest['expected_frames']:
+-            raise ValueError('incomplete frame count')
+-        f.validate_provenance(manifest['provenance'])
+-        inputs = {name: {'shape': list(shape), 'dtype': dtype} for name, (shape, dtype) in f.INPUTS.items()}
+-        if f.canonical(manifest['inputs']) != f.canonical(inputs):
+-            raise ValueError('logical input contract')
+-        files = manifest['files']
+-        if type(files) is not dict or set(files) != {'frames.bin'}:
+-            raise ValueError('file allowlist')
+-        item = files['frames.bin']
+-        if type(item) is not dict or set(item) != {'bytes', 'sha256'}:
+-            raise ValueError('file metadata allowlist')
+-        _integer(item['bytes'], 'frames.bin bytes', 1)
+-        if item['bytes'] != size or self._snapshots['frames.bin'][3] != size or not _sha(item['sha256']):
+-            raise ValueError('frames size/hash contract')
+-        for key in ('capture_start_ns', 'capture_end_ns'):
+-            _integer(manifest[key], key, 1)
+-        diagnostic = manifest['interval_diagnostic']
+-        if type(diagnostic) is not dict or set(diagnostic) != _DIAGNOSTIC_KEYS:
+-            raise ValueError('interval diagnostic allowlist')
+-        for key in ('expected_ns', 'min_ns', 'max_ns'):
+-            _integer(diagnostic[key], key)
+-        for key in ('p50_ns', 'p95_ns', 'p99_ns'):
+-            if type(diagnostic[key]) is not float or not np.isfinite(diagnostic[key]) or diagnostic[key] < 0:
+-                raise ValueError('invalid interval percentile')
+-        if diagnostic['expected_ns'] != f.EXPECTED_INTERVAL_NS:
+-            raise ValueError('expected interval')
+-        if not _sha(manifest['dataset_digest']) or manifest['dataset_digest'] != f.dataset_digest(manifest):
+-            raise ValueError('dataset digest')
+-
+-    def _validate_frames(self):
+-        manifest = self._manifest
+-        header = f.parse_header(self._mapping[:f.HEADER_BYTES])
+-        if header['capacity'] != self._count or header['provenance'] != manifest['provenance']:
+-            raise ValueError('header/manifest mismatch')
+-        if hashlib.sha256(self._mapping).hexdigest() != manifest['files']['frames.bin']['sha256']:
+-            raise ValueError('frames SHA mismatch')
+-        values = np.ndarray((self._count,), f.RECORD_DTYPE, buffer=self._mapping, offset=f.HEADER_BYTES)
+-        previous = None
+-        intervals = []
+-        for value in values:
+-            f.validate_record(value, previous)
+-            if previous is not None:
+-                intervals.append(int(value['model_timestamp_ns']) - int(previous['model_timestamp_ns']))
+-            previous = value
+-        if (manifest['capture_start_ns'] != int(values[0]['monotonic_ns'])
+-                or manifest['capture_end_ns'] != int(values[-1]['monotonic_ns'])):
+-            raise ValueError('capture timestamps mismatch')
+-        actual = {'expected_ns': f.EXPECTED_INTERVAL_NS,
+-                  'min_ns': min(intervals, default=0), 'max_ns': max(intervals, default=0)}
+-        for percentile in (50, 95, 99):
+-            actual[f'p{percentile}_ns'] = float(np.percentile(intervals, percentile)) if intervals else 0.0
+-        if manifest['interval_diagnostic'] != actual:
+-            raise ValueError('interval diagnostics mismatch')
+-
+-    def _check_unchanged(self):
+-        try:
+-            directory = _open_directory(self.path)
+-            try:
+-                if (_signature(os.fstat(directory)) != self._directory_snapshot
+-                        or set(os.listdir(directory)) != _FILES):
+-                    raise ValueError('dataset directory changed after validation')
+-                for name, expected in self._snapshots.items():
+-                    if (_signature(os.stat(name, dir_fd=directory, follow_symlinks=False)) != expected
+-                            or _signature(os.fstat(self._fds[name])) != expected):
+-                        raise ValueError('dataset member changed after validation')
+-            finally:
+-                os.close(directory)
+-        except OSError as exc:
+-            raise ValueError('dataset path changed after validation') from exc
+-
+-    @property
+-    def manifest(self):
+-        return copy.deepcopy(self._manifest)
+-
+-    def __len__(self):
+-        return self._count
+-
+-    def record(self, index):
+-        if not self._validated:
+-            raise ValueError('dataset is not open and validated')
+-        if type(index) is not int:
+-            raise TypeError('frame index must be an integer')
+-        if not 0 <= index < self._count:
+-            raise IndexError('frame index outside dataset')
+-        self._check_unchanged()
+-        offset = f.HEADER_BYTES + index * f.RECORD_BYTES
+-        raw = self._mapping[offset:offset + f.RECORD_BYTES]
+-        self._check_unchanged()
+-        return np.frombuffer(raw, dtype=f.RECORD_DTYPE, count=1)[0]
+-
+-    def __iter__(self):
+-        for index in range(len(self)):
+-            yield self.record(index)
+-
+-    def ort_feeds(self, index):
+-        """Only four logical arrays; caller supplies and advances its ORT state."""
+-        value = self.record(index)
+-        return {name: value[name] for name in f.INPUTS}
+-
+-    def trt_into(self, index, dest):
+-        """Fill caller buffers via the existing conversion; never create state."""
+-        value = self.record(index)
+-        source = self._spec_source
+-        if source is None:
+-            source = _json((Path(__file__).resolve().parents[1] / 'artifacts/cinque_v3.json').read_bytes())
+-        elif not isinstance(source, dict):
+-            source = source.to_dict()
+-        if hashlib.sha256(f.canonical(source)).hexdigest() != f.SPEC_DIGEST:
+-            raise ValueError('replay spec identity mismatch')
+-        from jetlink.spec import ModelSpec
+-        from jetlink.queues import StatefulState
+-        spec = ModelSpec.from_dict(source)
+-        if type(dest) is not dict or set(dest) != set(spec.input_shapes):
+-            raise ValueError('complete caller-owned TRT inputs required')
+-        for name, shape in spec.input_shapes.items():
+-            array = dest[name]
+-            expected_dtype = np.dtype('float16' if name in ('new_img', 'state_img_q') else 'float32')
+-            if (not isinstance(array, np.ndarray) or array.shape != shape or array.dtype != expected_dtype
+-                    or not array.flags.c_contiguous):
+-                raise ValueError('TRT destination shape/dtype/layout: ' + name)
+-            if name in f.INPUTS and not array.flags.writeable:
+-                raise ValueError('TRT destination is read-only: ' + name)
+-        for name in f.INPUTS:
+-            for other in dest:
+-                if name != other and np.shares_memory(dest[name], dest[other]):
+-                    raise ValueError('TRT logical/state destinations must not alias')
+-        packed = np.concatenate([value[name].reshape(-1) for name in ('desire', 'traffic_convention', 'action_t')])
+-        StatefulState(spec).step_into(value['new_img'], packed, dest)
+-
+-    def close(self):
+-        self._validated = False
+-        if self._mapping is not None:
+-            self._mapping.close()
+-            self._mapping = None
+-        for descriptor in self._fds.values():
+-            os.close(descriptor)
+-        self._fds.clear()
+-        if self._directory is not None:
+-            os.close(self._directory)
+-            self._directory = None
+-
+-    def __enter__(self):
+-        return self
+-
+-    def __exit__(self, *_args):
+-        self.close()
+-
+-    def __del__(self):
+-        try:
+-            self.close()
+-        except Exception:
+-            pass
+--- a/openpilot/selfdrive/modeld/jetlink/input_recording/format.py
++++ /dev/null
+@@ -1,98 +0,0 @@
+-"""Fixed little-endian V3 nonstate capture format; no model/device imports."""
+-from __future__ import annotations
+-import hashlib
+-import json
+-from pathlib import Path
+-import re
+-import struct
+-import numpy as np
+-
+-BASE_SHA = 'a559fcd971ccaa5a87befb8ec080f59a2966325b'
+-TARGET_SHA='404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4'
+-SPEC_DIGEST='6905b3d4efd18caf3df8c02898e9f3003a5adb11813a277f627b1decea8304e0'
+-INPUTS={'new_img':((2,6,128,256),'|u1'),'desire':((8,),'<f4'),
+-        'traffic_convention':((1,2),'<f4'),'action_t':((1,2),'<f4')}
+-RECORD_DTYPE=np.dtype([(n,'<u8') for n in ('index','main_frame_id','extra_frame_id','model_timestamp_ns','monotonic_ns','main_sof_ns','extra_sof_ns')]+
+-    [('flags','<u4'),('selection','u1',(2,)),('reserved','<u2'),('transforms','<f4',(2,3,3)),('expected_interval_ns','<u8')]+
+-    [(n,d,s) for n,(s,d) in INPUTS.items()],align=False)
+-RECORD_BYTES=RECORD_DTYPE.itemsize
+-HEADER_BYTES=4096
+-MAGIC=b'JLV3CAP1'
+-MAX_FRAMES=1024
+-EXPECTED_INTERVAL_NS=50_000_000
+-PROVENANCE_KEYS={'carrot_head','recorder_source_sha','source_model_sha','source_spec_sha','source_kind','capture_id','source_files'}
+-
+-
+-def canonical(value):
+-    return json.dumps(value,sort_keys=True,separators=(',',':'),allow_nan=False).encode('utf-8')
+-
+-
+-def validate_provenance(value):
+-    if not isinstance(value,dict) or set(value)!=PROVENANCE_KEYS:raise ValueError('provenance allowlist')
+-    if value['carrot_head']!=BASE_SHA or value['source_kind']!='existing_jetlink_n16_nonstate_payload':raise ValueError('source pin/kind')
+-    if value['source_model_sha']!='01effc679eb46d6036ce0302673a87fe2dcfcc95a679daeeb929679e53c3647a' or value['source_spec_sha']!='63b2097c114bade03c5ec7ded978d73032a93bb525c03f9b78eddf49809f8b71':
+-        raise ValueError('exact N16 source provenance required')
+-    for n in ('recorder_source_sha','source_model_sha','source_spec_sha'):
+-        if not isinstance(value[n],str) or re.fullmatch('[0-9a-f]{64}',value[n]) is None:raise ValueError('source SHA')
+-    if not isinstance(value['capture_id'],str) or re.fullmatch('[0-9a-f]{32}',value['capture_id']) is None:raise ValueError('anonymous capture ID')
+-    if not isinstance(value['source_files'],dict) or not value['source_files']:raise ValueError('source files')
+-    for name,sha in value['source_files'].items():
+-        if name not in ('__init__.py','format.py','recorder.py','dataset.py','hook.py') or not isinstance(sha,str) or re.fullmatch('[0-9a-f]{64}',sha) is None:
+-            raise ValueError('source file identity')
+-    if hashlib.sha256(canonical(value['source_files'])).hexdigest()!=value['recorder_source_sha']:
+-        raise ValueError('recorder source digest mismatch')
+-    return value
+-
+-
+-def expected_size(capacity):
+-    if type(capacity) is not int or not 1<=capacity<=MAX_FRAMES:raise ValueError('frame cap')
+-    return HEADER_BYTES+RECORD_BYTES*capacity
+-
+-
+-def header_bytes(provenance,capacity):
+-    expected_size(capacity);validate_provenance(provenance)
+-    body=canonical({'schema':1,'format':'jetlink-v3-input-v1','capacity':capacity,'record_bytes':RECORD_BYTES,
+-                    'spec_digest':SPEC_DIGEST,'target_sha256':TARGET_SHA,'provenance':provenance})
+-    prefix=MAGIC+struct.pack('<I',len(body))
+-    if len(prefix)+len(body)>HEADER_BYTES:raise ValueError('oversized header')
+-    return prefix+body+bytes(HEADER_BYTES-len(prefix)-len(body))
+-
+-
+-def parse_header(raw):
+-    if len(raw)!=HEADER_BYTES or raw[:8]!=MAGIC:raise ValueError('header magic/length')
+-    size=struct.unpack('<I',raw[8:12])[0]
+-    if not 0<size<=HEADER_BYTES-12 or any(raw[12+size:]):raise ValueError('header size/padding')
+-    value=json.loads(raw[12:12+size]);expected=header_bytes(value['provenance'],value['capacity'])
+-    if expected!=raw:raise ValueError('header contract/canonical mismatch')
+-    return value
+-
+-
+-def validate_record(record,previous=None):
+-    if record.dtype!=RECORD_DTYPE or record.shape not in ((),):raise ValueError('record dtype/shape')
+-    if int(record['reserved']) or int(record['flags']) & ~1:raise ValueError('invalid/gap flags')
+-    if list(record['selection']) not in ([0,0],[0,1]):raise ValueError('camera roles')
+-    if int(record['expected_interval_ns'])!=EXPECTED_INTERVAL_NS:raise ValueError('expected cadence')
+-    for name in ('model_timestamp_ns','monotonic_ns','main_sof_ns','extra_sof_ns'):
+-        if int(record[name])<=0:raise ValueError('missing timestamp')
+-    for name in ('desire','traffic_convention','action_t','transforms'):
+-        if not np.all(np.isfinite(record[name])):raise ValueError('nonfinite '+name)
+-    if previous is None:
+-        if int(record['index'])!=0:raise ValueError('initial frame index')
+-    else:
+-        if int(record['flags']) & 1:raise ValueError('CONTINUITY reset')
+-        for name in ('index','main_frame_id','extra_frame_id'):
+-            if int(record[name])!=int(previous[name])+1:raise ValueError('CONTINUITY '+name)
+-        for name in ('model_timestamp_ns','monotonic_ns','main_sof_ns','extra_sof_ns'):
+-            if int(record[name])<=int(previous[name]):raise ValueError('CONTINUITY timestamp')
+-        if not np.array_equal(record['selection'],previous['selection']):raise ValueError('CONTINUITY camera selection')
+-
+-
+-def file_sha(path):
+-    h=hashlib.sha256()
+-    with Path(path).open('rb') as stream:
+-        for block in iter(lambda:stream.read(1<<20),b''):h.update(block)
+-    return h.hexdigest()
+-
+-
+-def dataset_digest(manifest):
+-    return hashlib.sha256(canonical({k:v for k,v in manifest.items() if k!='dataset_digest'})).hexdigest()
+--- a/openpilot/selfdrive/modeld/jetlink/input_recording/hook.py
++++ /dev/null
+@@ -1,526 +0,0 @@
+-"""Exact810e N16 input observer; fixed volatile discovery, default OFF.
+-Server-owned recurrence and ram_input_v1 ownership are never modified.
+-No module-import activation, Params or persistent environment settings.
+-"""
+-from __future__ import annotations
+-
+-import functools
+-import hashlib
+-import json
+-import math
+-import os
+-from pathlib import Path
+-import re
+-import secrets
+-import stat
+-import subprocess
+-import time
+-
+-import numpy as np
+-
+-from .format import BASE_SHA, canonical, validate_provenance
+-
+-MODEL = 'openpilot/selfdrive/modeld/jetlink/model.py'
+-SOURCE_PINS = {'openpilot/selfdrive/modeld/jetlink/model.py': '93c2858e5b981ed01ce39745002d7479d5362cb7265c11f2018ac7f7bb3c4554', 'openpilot/selfdrive/modeld/jetlink/link.py': '418e063bd10245bc1c26a858173d1488188afe3d062bca8ca898a34a36c0e253', 'openpilot/selfdrive/modeld/jetlink/shared_input.py': 'dc36519c3dc6fad49047fe35a24c5b33f439364c2e4a2559d0f357dfb8e0921e', 'openpilot/selfdrive/modeld/jetlink/contracts.py': '100f92e154b9540ddfe8b8b5ca6c3e2973cce14428fb3442ad98701c976f9ca2', 'openpilot/selfdrive/modeld/jetlink/daemon.py': 'b7fb4898bcf62cfc9d8e9fb4034b3fb342ee7468dba6371fc17a99509e2dc35d', 'openpilot/selfdrive/modeld/jetlink/inputs.py': 'c737e30ff8c1b170ebc2179394ee0ce63180e257ddb64ce0967aae7161398f8e', 'openpilot/selfdrive/modeld/jetlink/prepare.py': 'c6a9e9fc1fe122b655ea3a6fbbd3b0fff9ad7d3f918e720e9401fd19e0afb4e7', 'openpilot/selfdrive/modeld/jetlink/jetson_model.json': 'ceb07d1a502966f10cb1afc33c6d686a418b3f204320685cf5e36bbf44c62f6d', 'openpilot/selfdrive/modeld/camera_gap.py': '7b959fa8bdd740c4bea150c07248a69ea33f08db327110601be3ee17d9bc938a', 'openpilot/selfdrive/modeld/camera_sync.py': '398980260825757393239796cb4dc10399ef1384f0fd9e23cdad0fd12d0cc0d2', 'openpilot/selfdrive/modeld/modeld.py': '008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594', 'openpilot/system/manager/process.py': 'fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752', 'third_party/jetlink/jetlink/spec.py': 'ec844ccaf13ffc1d7c03ad683b0e3f2ce6a1d78f4088067739aaa419af422170', 'third_party/jetlink/jetlink/server/session.py': 'a4a5c08f917294806395b1e0fa9c359d747fbc6ced7842dbc3c32d924af2847d', 'third_party/jetlink/jetlink/queues.py': 'c251eecc45e38704c15b2a10f0969c270cd9fa11603ebdaae88c1b1187112ea8', 'third_party/jetlink/jetlink/client.py': '05d500179dd3e49d8875d8cfc370a59dd692839eb6b1b939efee5fb72b9092b9', 'third_party/jetlink/jetlink/protocol.py': '27921d6cbac744f28db9f3c3487e42bdf405ac184db41322352f91aad9e3fb51', 'third_party/jetlink/jetlink/request_chunks.py': 'a4ac4bcf467b09df3b703e05a59e757ce2ebb8e016898eb1808ad0031a1905e1', 'third_party/jetlink/jetlink/packed_codec.py': '8d67a94951e6188d811c8ad7072e5db1b40ff9ef24ec28049634b07cb26c9004', 'third_party/jetlink/jetlink/block_codec.py': 'a42299bd1fccdf53022afd50066909caa5740f4790cec1a88eec9665f8e7ad5e', 'third_party/jetlink/jetlink/transport/base.py': '1861db5ec506b274f940797a6d2b181f075e94a928326d699c34cfd6b0c93a3b', 'third_party/jetlink/jetlink/transport/ffs.py': '41580e2d6ae5c4533e5c089375a1788920f3480f59b80fbb7d0eabe2f8b7fd50', 'third_party/jetlink/jetlink/transport/request_writer.py': '7d6846fdeebfafdffb849b17c7771f39ea6f352211ee879f61acdf3e71029d53', 'third_party/jetlink/jetlink/transport/request_writer.c': 'a05f1c9bf1d875625cbb46c5c5d402537c22cb1c625f0aa413db906cbc882bc9', 'tools/jetlink/host_reader.py': '991b975dfb4c65c93f82711da25818981b71ef01281a65bc94a28946246b319a', 'tools/jetlink/host_usb.py': '49609ee4a4179369d6e6e3e048ff1669854de9ec42d92ac5f764eb23c50dcba4', 'tools/jetlink/server.py': '10298c588d517c6aad2c5223b1bc0506fb1a5b89c6f965f5d0b5a7a16b839e87', 'openpilot/selfdrive/modeld/jetlink/host_release.json': 'c113776620f9644bd899bc719a3ded13be3ef851c501d0f323bede7c6181a242', 'openpilot/common/runtime_diagnostics.py': 'f5e6c161a5d7c99aebfdfa89c132b86e519980abe6a5b6d787dc2dd8dd3ac1ea', 'third_party/jetlink/jetlink/output_projection.py': 'd76547e3426c488c6f8ab341a2b1f0613c183a02c6b6710c9871af8a94d3a534'}
+-SCALARS = (('desire', (8,)), ('traffic_convention', (1, 2)), ('action_t', (1, 2)))
+-TICKET_KEYS = {'schema', 'capture_id', 'output_root', 'output', 'frames', 'depth', 'carrot_head',
+-               'source_model_sha', 'source_spec_sha', 'ticket_path', 'boot_id', 'armed_monotonic_ns',
+-               'expires_monotonic_ns', 'offroad_armed'}
+-
+-
+-def _boot_id():
+-    return Path('/proc/sys/kernel/random/boot_id').read_text().strip()
+-
+-
+-def _no_symlinks(path):
+-    path = Path(path)
+-    if not path.is_absolute() or '..' in path.parts:
+-        raise ValueError('absolute canonical path required')
+-    for node in (path, *path.parents):
+-        if node.is_symlink():
+-            raise ValueError('symlink path forbidden')
+-    return path
+-
+-
+-def _output_paths(value):
+-    root = _no_symlinks(value['output_root'])
+-    output = _no_symlinks(value['output'])
+-    if ('realdata' in [part.casefold() for part in output.parts] or not root.is_dir()
+-            or output.parent != root or output.name != value['capture_id'] or output.exists()):
+-        raise ValueError('fresh capture directory outside operating routes required')
+-    return output
+-
+-
+-def _ticket_contract(value):
+-    if not isinstance(value, dict) or set(value) != TICKET_KEYS or value['schema'] != 1:
+-        raise ValueError('arm ticket schema/allowlist')
+-    if value['carrot_head'] != BASE_SHA or value['offroad_armed'] is not True:
+-        raise ValueError('source pin/offroad arming proof')
+-    if value['source_model_sha'] != NAV_MODEL_SHA or value['source_spec_sha'] != NAV_SPEC_SHA:
+-        raise ValueError('exact N16 ticket model/spec required')
+-    for key, size in (('capture_id', 32), ('source_model_sha', 64), ('source_spec_sha', 64)):
+-        if not isinstance(value[key], str) or re.fullmatch('[0-9a-f]{%d}' % size, value[key]) is None:
+-            raise ValueError('invalid ticket identity')
+-    if type(value['frames']) is not int or not 1 <= value['frames'] <= 1024:
+-        raise ValueError('frame cap')
+-    if type(value['depth']) is not int or value['depth'] not in (4, 8, 16):
+-        raise ValueError('ring depth')
+-    for key in ('armed_monotonic_ns', 'expires_monotonic_ns'):
+-        if type(value[key]) is not int or value[key] < 0:
+-            raise ValueError('ticket monotonic timestamp')
+-    if not 0 < value['expires_monotonic_ns'] - value['armed_monotonic_ns'] <= 300_000_000_000:
+-        raise ValueError('ticket expiry window')
+-    if not isinstance(value['boot_id'], str) or not value['boot_id']:
+-        raise ValueError('ticket boot identity')
+-    _output_paths(value)
+-    return value
+-
+-
+-def arm_ticket(path, *, output_root, source_model_sha, source_spec_sha, offroad,
+-               frames=256, depth=4, expires_seconds=60, boot_id=None, monotonic_ns=None):
+-    """Prepare, never activate, a future capture after the caller checks offroad.
+-
+-    The caller must obtain ``offroad`` from a fresh trusted device state during
+-    the separately approved arming action. This helper does not query or mutate
+-    Params and is never called by install(). Tests use explicit clock/boot IDs.
+-    """
+-    if offroad is not True or type(expires_seconds) is not int or not 1 <= expires_seconds <= 300:
+-        raise ValueError('offroad arming and bounded expiry required')
+-    _verify_source({'__file__': str(Path(__file__).parents[1] / 'model.py')})
+-    path = _no_symlinks(path)
+-    root = _no_symlinks(output_root)
+-    now = time.monotonic_ns() if monotonic_ns is None else monotonic_ns
+-    capture_id = secrets.token_hex(16)
+-    value = dict(schema=1, capture_id=capture_id, output_root=str(root), output=str(root / capture_id),
+-                 frames=frames, depth=depth, carrot_head=BASE_SHA, source_model_sha=source_model_sha,
+-                 source_spec_sha=source_spec_sha, ticket_path=str(path), boot_id=boot_id or _boot_id(),
+-                 armed_monotonic_ns=now, expires_monotonic_ns=now + expires_seconds * 1_000_000_000,
+-                 offroad_armed=True)
+-    _ticket_contract(value)
+-    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+-    with os.fdopen(fd, 'wb') as stream:
+-        stream.write(canonical(value)); stream.flush(); os.fsync(stream.fileno())
+-    return value
+-
+-
+-def consume_ticket(path, *, boot_id=None, monotonic_ns=None):
+-    """Atomically consume once before validating; invalid tickets cannot retry.
+-
+-    The retained hard link and exclusive ID claim prevent reusing the same
+-    ticket path/content after a modeld restart. Boot and monotonic expiry deny
+-    reboot reuse. No current onroad check is made during an authorized capture.
+-    """
+-    path = _no_symlinks(path)
+-    consumed = path.with_name(path.name + '.consumed')
+-    os.link(path, consumed, follow_symlinks=False)
+-    path.unlink()
+-    # O_NONBLOCK is required before fstat: a FIFO can otherwise stall startup
+-    # indefinitely before we get a chance to reject its non-regular type.
+-    fd = os.open(consumed, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+-    with os.fdopen(fd, 'rb') as stream:
+-        info = os.fstat(stream.fileno())
+-        if not stat.S_ISREG(info.st_mode) or info.st_size > 8192:
+-            raise ValueError('regular bounded ticket required')
+-        raw = stream.read(8193)
+-        value = json.loads(raw)
+-    if canonical(value) != raw:
+-        raise ValueError('noncanonical/duplicate arm ticket JSON')
+-    _ticket_contract(value)
+-    if value['ticket_path'] != str(path):
+-        raise ValueError('ticket moved')
+-    now = time.monotonic_ns() if monotonic_ns is None else monotonic_ns
+-    if value['boot_id'] != (boot_id or _boot_id()) or not value['armed_monotonic_ns'] <= now < value['expires_monotonic_ns']:
+-        raise ValueError('ticket boot/expiry mismatch')
+-    claim = path.parent / ('.capture-' + value['capture_id'] + '.consumed')
+-    claim_fd = os.open(claim, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+-    os.close(claim_fd)
+-    return value
+-
+-
+-
+-def _verify_source(namespace):
+-    """Startup/arming only: exact HEAD and full patched profile, no footer stripping."""
+-    model = Path(namespace['__file__']).absolute()
+-    root = model.parents[4]
+-    _no_symlinks(model)
+-    head = subprocess.check_output(['git', '-C', str(root), 'rev-parse', 'HEAD'], timeout=5).decode().strip()
+-    if head != BASE_SHA:
+-        raise ValueError('reviewed810e HEAD required')
+-    package = model.parent / 'input_recording'
+-    for name, expected in PACKAGE_PINS.items():
+-        path = _no_symlinks(package / name)
+-        if not stat.S_ISREG(path.lstat().st_mode) or hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+-            raise ValueError('810e recorder package drift: ' + name)
+-    hook = _no_symlinks(package / 'hook.py')
+-    if not stat.S_ISREG(hook.lstat().st_mode):
+-        raise ValueError('regular reviewed hook required')
+-    hook_sha = hashlib.sha256(hook.read_bytes()).hexdigest()
+-    footer = FOOTER_TEMPLATE.replace('@HOOK_SHA256@', hook_sha).encode()
+-    for name, expected in SOURCE_PINS.items():
+-        path = _no_symlinks(root / name)
+-        if not stat.S_ISREG(path.lstat().st_mode):
+-            raise ValueError('regular source required')
+-        raw = path.read_bytes()
+-        if name == MODEL:
+-            if not raw.endswith(footer):
+-                raise ValueError('reviewed recorder footer/hook binding changed')
+-            raw = raw[:-len(footer)]
+-        if hashlib.sha256(raw).hexdigest() != expected:
+-            raise ValueError('810e source/profile drift: ' + name)
+-
+-
+-def _provenance(value):
+-    files = {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
+-             for name in ('__init__.py', 'format.py', 'recorder.py', 'dataset.py', 'hook.py')}
+-    return validate_provenance(dict(carrot_head=BASE_SHA, source_kind='existing_jetlink_n16_nonstate_payload',
+-        source_model_sha=value['source_model_sha'], source_spec_sha=value['source_spec_sha'],
+-        capture_id=value['capture_id'], source_files=files,
+-        recorder_source_sha=hashlib.sha256(canonical(files)).hexdigest()))
+-
+-
+-
+-def _contract(spec, ticket):
+-    """Exact N16 server-owned five-pair recurrence, not the old V2 prev_feat gate.
+-
+-    Only the nonstate payload's first12 floats belong to the V3 dataset.
+-    nav_map/navigation and every recurrent tensor remain outside the dataset.
+-    """
+-    if (not spec.stateful or spec.sha256 != NAV_MODEL_SHA
+-            or ticket['source_model_sha'] != NAV_MODEL_SHA
+-            or ticket['source_spec_sha'] != NAV_SPEC_SHA
+-            or hashlib.sha256(canonical(spec.to_dict())).hexdigest() != NAV_SPEC_SHA
+-            or tuple(spec.warped_shape) != (2, 6, 128, 256)):
+-        raise ValueError('exact810e N16 model/spec required')
+-    fields = tuple(spec.packed_shapes.items())
+-    expected = SCALARS + (('nav_map', (1, 1, 256, 256)), ('navigation', (1, 47)))
+-    pairs = tuple(spec.state_pairs.items())
+-    if (fields != expected or spec.packed_nelem != 65595 or len(pairs) != 5
+-            or {a: b for a, b in pairs} != EXPECTED_STATE_PAIRS):
+-        raise ValueError('N16 nonstate payload or server recurrence contract changed')
+-    snapshots = tuple((name, dict(getattr(spec, name))) for name in
+-                      ('input_shapes', 'output_shapes', 'output_slices', 'packed_shapes'))
+-    return spec, ((0, 8, (8,)), (8, 10, (1, 2)), (10, 12, (1, 2))), 65595, snapshots, (
+-        spec.sha256, spec.nbytes, spec.frame_skip, spec.checkpoint)
+-
+-
+-def _unchanged(spec, contract):
+-    original, offsets, size, snapshots, scalars = contract
+-    if spec is not original or (spec.sha256, spec.nbytes, spec.frame_skip, spec.checkpoint) != scalars:
+-        return False
+-    for name, expected in snapshots:
+-        current = getattr(spec, name)
+-        if len(current) != len(expected) or any(current.get(key) != value for key, value in expected.items()):
+-            return False
+-    return tuple(spec.packed_shapes.items()) == tuple(contract[3][-1][1].items())
+-
+-
+-class _Capture:
+-    def __init__(self, recorder, ticket):
+-        self.recorder = recorder
+-        self.ticket = ticket
+-        self.disabled = False
+-        self.pair = None
+-        self.warped = None
+-        self.transforms = None
+-
+-    def stop(self, reason):
+-        self.warped = self.pair = self.transforms = None
+-        if not self.disabled:
+-            self.disabled = True
+-            try:
+-                self.recorder.stop(reason)
+-            except Exception:
+-                pass
+-
+-    def observe(self, client, image, packed, reset):
+-        if self.disabled:
+-            return
+-        try:
+-            contract = client._v3_capture_contract
+-            if not _unchanged(client.spec, contract):
+-                raise ValueError('source identity/spec changed')
+-            if (not isinstance(image, np.ndarray) or image.dtype != np.uint8 or image.shape != (2, 6, 128, 256)
+-                    or not image.flags.c_contiguous or image is not self.warped or self.pair is None):
+-                raise ValueError('exact warped pair missing or layout changed')
+-            if (not isinstance(packed, np.ndarray) or packed.dtype != np.float32 or packed.shape != (contract[2],)
+-                    or not packed.flags.c_contiguous):
+-                raise ValueError('exact packed scalar layout changed')
+-            main, extra, selection = self.pair
+-            transforms = self.transforms
+-            if transforms is None or any(not isinstance(a, np.ndarray) or a.dtype != np.float32 or a.shape != (3, 3) for a in transforms):
+-                raise ValueError('actual transforms missing/layout changed')
+-            metadata = dict(main_frame_id=main.frame_id, extra_frame_id=extra.frame_id,
+-                model_timestamp_ns=main.timestamp_sof, monotonic_ns=time.monotonic_ns(),
+-                main_sof_ns=main.timestamp_sof, extra_sof_ns=extra.timestamp_sof,
+-                selection=selection, transforms=transforms, flags=int(bool(reset)))
+-            desire, traffic, action = (packed[start:end].reshape(shape) for start, end, shape in contract[1])
+-            self.recorder.observe(image, desire, traffic, action, metadata)
+-            # A borrowed warp result belongs to exactly one inference attempt.
+-            self.warped = None
+-            if getattr(self.recorder, 'count', 0) >= self.ticket['frames'] or getattr(self.recorder, 'reason', None) is not None:
+-                # Completed captures must be allowed to finish their private
+-                # fsync even if a subsequent source transition occurs. A writer
+-                # failure is already terminal and also needs no further copies.
+-                self.disabled = True
+-        except Exception:
+-            self.stop('exact input observation failed')
+-
+-
+-def install(namespace, *, recorder_factory=None, ticket_loader=None, source_verifier=None, arm_path=None):
+-    """Install enabled-only wrappers, isolating every setup/observer exception.
+-
+-    Factory/loader/verifier injection supports CPU fixtures without importing
+-    openpilot, creating a process, or weakening production source checks.
+-    Original methods run exactly once with unchanged arguments and exceptions.
+-    """
+-    arm = arm_path
+-    if not arm:
+-        return None
+-    capture = None
+-    try:
+-        ticket = (ticket_loader or consume_ticket)(arm)
+-        (source_verifier or _verify_source)(namespace)
+-        Client = namespace.get('Client')
+-        CameraGapTrace = namespace.get('CameraGapTrace')
+-        if Client is None:
+-            from openpilot.selfdrive.modeld.jetlink.link import Client
+-        if CameraGapTrace is None:
+-            from openpilot.selfdrive.modeld.camera_gap import CameraGapTrace
+-        Warp = namespace['Warp']
+-        if any(getattr(cls, '_m18_input_capture_installed', False) for cls in (Client, CameraGapTrace, Warp)):
+-            raise ValueError('capture hook already installed')
+-        if recorder_factory is None:
+-            from .recorder import Recorder
+-            recorder_factory = Recorder
+-        # Tests may inject a sink before the rest of the package exists. Real
+-        # provenance is always complete, strict, and derived at startup.
+-        provenance = _provenance(ticket)
+-        recorder = recorder_factory(ticket['output'], provenance, frames=ticket['frames'], depth=ticket['depth'])
+-        capture = _Capture(recorder, ticket)
+-        original_receive, original_warp = CameraGapTrace.receive, Warp.__call__
+-        original_init, original_infer = Client.__init__, Client.infer
+-
+-        @functools.wraps(original_receive)
+-        def receive(self, main, extra=None):
+-            try:
+-                result = original_receive(self, main, extra)
+-            except Exception:
+-                capture.stop('camera receive failed')
+-                raise
+-            if not capture.disabled:
+-                try:
+-                    capture.pair = None
+-                    capture.warped = None
+-                    capture.transforms = None
+-                    if result is not None:
+-                        _, main_meta, _, extra_meta = result
+-                        capture.pair = (main_meta, extra_meta, (0, 0 if extra is None else 1))
+-                except Exception:
+-                    capture.stop('camera metadata failed')
+-            return result
+-
+-        @functools.wraps(original_warp)
+-        def warp(self, bufs, transforms, *, prepare=None, output_buffer=None):
+-            try:
+-                result = original_warp(self, bufs, transforms, prepare=prepare, output_buffer=output_buffer)
+-            except Exception:
+-                capture.stop('existing warp failed')
+-                raise
+-            if not capture.disabled:
+-                try:
+-                    capture.warped = result
+-                    # These float32 matrices are the actual Tinygrad NPY
+-                    # inputs populated by the original Warp, including its
+-                    # conversion from any higher-precision caller matrices.
+-                    capture.transforms = (self.transforms['tfm'], self.transforms['big_tfm'])
+-                except Exception:
+-                    capture.stop('warp metadata failed')
+-            return result
+-
+-        @functools.wraps(original_init)
+-        def init(self, *args, **kwargs):
+-            try:
+-                original_init(self, *args, **kwargs)
+-            except Exception:
+-                capture.stop('existing client setup failed')
+-                raise
+-            if not capture.disabled:
+-                try:
+-                    self._v3_capture_contract = _contract(self.spec, ticket)
+-                except Exception:
+-                    capture.stop('source model/spec/layout mismatch')
+-
+-        @functools.wraps(original_infer)
+-        def infer(self, image, packed, frame, reset=False, source_sof=0):
+-            capture.observe(self, image, packed, reset)
+-            return original_infer(self, image, packed, frame, reset, source_sof=source_sof)
+-
+-        CameraGapTrace.receive, Warp.__call__ = receive, warp
+-        Client.__init__, Client.infer = init, infer
+-        for cls in (Client, CameraGapTrace, Warp):
+-            cls._m18_input_capture_installed = True
+-        return capture
+-    except Exception:
+-        if capture is not None:
+-            capture.stop('capture setup failed')
+-        return None
+-
+-NAV_MODEL_SHA = '01effc679eb46d6036ce0302673a87fe2dcfcc95a679daeeb929679e53c3647a'
+-NAV_SPEC_SHA = '63b2097c114bade03c5ec7ded978d73032a93bb525c03f9b78eddf49809f8b71'
+-EXPECTED_STATE_PAIRS = {'state_img_q': 'next_state_img_q', 'state_desire_q': 'next_state_desire_q', 'state_feat_q': 'next_state_feat_q', 'state_map_features_q': 'next_state_map_features_q', 'state_navigation_features_q': 'next_state_navigation_features_q'}
+-
+-PACKAGE_PINS = {'__init__.py': 'e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca', 'format.py': 'f0bf4d1abbbc8bc89e02213198743d507fd57a6546a85b48f54fd46ea346cd25', 'recorder.py': 'd6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada', 'dataset.py': '25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7'}
+-FOOTER_TEMPLATE = "\n\n# RECORDER_A559_EXECUTION_SWITCHES_V1; default OFF.\n# Reviewed hook SHA256: @HOOK_SHA256@\n# One volatile ticket check at lazy import; no environment activation.\ntry:\n  os.lstat('/dev/shm/carrot-v3-input-capture/arm.ticket')\nexcept Exception:\n  pass\nelse:\n  try:\n    from openpilot.selfdrive.modeld.jetlink.input_recording.hook import install_discovered as _install_input_capture\n    _m18_input_capture = _install_input_capture(globals())\n  except Exception:\n    pass  # Recorder setup must never disable existing inference or fallback.\n"
+-
+-
+-# M19-B0 activation-v2: /dev/shm is the exact810e Paths.shm_path convention.
+-DISCOVERY_DIRECTORY = Path('/dev/shm/carrot-v3-input-capture')
+-CONTEXT_SOURCE_PINS = {
+-    'openpilot.selfdrive.modeld.modeld': ('main', 'openpilot/selfdrive/modeld/modeld.py',
+-        '008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594'),
+-    'openpilot.system.manager.process': ('launcher', 'openpilot/system/manager/process.py',
+-        'fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752'),
+-}
+-
+-
+-def _modeld_import_context(namespace):
+-    """Require the normal pinned launcher -> modeld.main active call chain.
+-
+-    jetlink.prepare.main also imports Warp from this module in another
+-    interpreter. It must never consume the modeld ticket. Process titles,
+-    environment labels and module presence alone are not authority.
+-    """
+-    import sys
+-    frame = sys._getframe(1)
+-    matched = set()
+-    try:
+-        root = Path(namespace['__file__']).resolve().parents[4]
+-        for _ in range(64):
+-            if frame is None:
+-                break
+-            name = frame.f_globals.get('__name__')
+-            if name in CONTEXT_SOURCE_PINS:
+-                function, relative, expected = CONTEXT_SOURCE_PINS[name]
+-                method = frame.f_globals.get(function)
+-                source = root / relative
+-                if (getattr(method, '__code__', None) is frame.f_code
+-                        and Path(frame.f_code.co_filename).resolve() == source
+-                        and Path(frame.f_globals.get('__file__', '')).resolve() == source
+-                        and not source.is_symlink()
+-                        and hashlib.sha256(source.read_bytes()).hexdigest() == expected):
+-                    matched.add(name)
+-            frame = frame.f_back
+-        return matched == set(CONTEXT_SOURCE_PINS)
+-    except (KeyError, IndexError, OSError, TypeError, ValueError):
+-        return False
+-    finally:
+-        del frame
+-
+-
+-def _require_volatile_parent():
+-    parent = DISCOVERY_DIRECTORY.parent
+-    if parent != Path('/dev/shm'):
+-        raise ValueError('fixed volatile parent required')
+-    _no_symlinks(parent)
+-    info = parent.lstat()
+-    if (not stat.S_ISDIR(info.st_mode) or info.st_uid != 0
+-            or stat.S_IMODE(info.st_mode) != 0o1777):
+-        raise ValueError('root-owned sticky shared-memory parent required')
+-    mounts = Path('/proc/self/mountinfo').read_text().splitlines()
+-    matches = []
+-    for row in mounts:
+-        left, separator, right = row.partition(' - ')
+-        fields, fs = left.split(), right.split()
+-        if separator and len(fields) >= 6 and fields[4] == str(parent):
+-            matches.append(fs[0] if fs else None)
+-    if matches != ['tmpfs']:
+-        raise ValueError('exact boot-local tmpfs mount required')
+-
+-
+-def _discovery_directory(*, create=False):
+-    _require_volatile_parent()
+-    directory = _no_symlinks(DISCOVERY_DIRECTORY)
+-    if create:
+-        try:
+-            directory.mkdir(mode=0o700)
+-        except FileExistsError:
+-            pass
+-    info = directory.lstat()
+-    if (not stat.S_ISDIR(info.st_mode) or info.st_uid != os.geteuid()
+-            or info.st_gid != os.getegid() or stat.S_IMODE(info.st_mode) != 0o700):
+-        raise ValueError('private owner/group/mode700 directory required')
+-    return directory
+-
+-
+-def arm_discovered(*, output_root, source_model_sha, source_spec_sha, offroad,
+-                   frames=10, depth=4, expires_seconds=60):
+-    """Explicit future OFF-only action, never called by modeld import.
+-
+-    Caller supplies a freshly verified genuine OFF assertion exactly as for
+-    arm_ticket. The import-time consumer intentionally does not query OFF.
+-    Prior consumption requires separate explicit safe-state cleanup; this
+-    helper never deletes a ticket, marker, output or claim to make arming pass.
+-    """
+-    if offroad is not True or type(expires_seconds) is not int or not 1 <= expires_seconds <= 300:
+-        raise ValueError('fresh offroad arming and bounded expiry required')
+-    _verify_source({'__file__': str(Path(__file__).parents[1] / 'model.py')})
+-    if source_model_sha != NAV_MODEL_SHA or source_spec_sha != NAV_SPEC_SHA:
+-        raise ValueError('exact N16 model/spec arming required')
+-    directory = _discovery_directory(create=True)
+-    path = directory / 'arm.ticket'
+-    if os.path.lexists(directory / 'arm.ticket.consumed'):
+-        raise FileExistsError('previous capture marker requires explicit offroad review')
+-    value = arm_ticket(path, output_root=output_root, source_model_sha=source_model_sha,
+-                       source_spec_sha=source_spec_sha, offroad=offroad, frames=frames,
+-                       depth=depth, expires_seconds=expires_seconds)
+-    fd = os.open(directory, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+-    try:
+-        os.fsync(fd)
+-    finally:
+-        os.close(fd)
+-    return value
+-
+-
+-def _consume_discovered(path):
+-    directory = _discovery_directory()
+-    expected = directory / 'arm.ticket'
+-    if Path(path) != expected:
+-        raise ValueError('fixed discovery path required')
+-    _no_symlinks(expected)
+-    fd = os.open(expected, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+-    try:
+-        info = os.fstat(fd)
+-        if (not stat.S_ISREG(info.st_mode) or info.st_uid != os.geteuid()
+-                or info.st_gid != os.getegid() or stat.S_IMODE(info.st_mode) != 0o600
+-                or info.st_nlink != 1):
+-            raise ValueError('private single-link regular owner/group/mode600 ticket required')
+-    finally:
+-        os.close(fd)
+-    # Existing consume first removes the original name, retains .consumed,
+-    # validates canonical schema/boot/expiry/path, and creates the exclusive ID
+-    # claim. Invalid owned regular tickets are terminal, not retried on restart.
+-    value = consume_ticket(expected)
+-    consumed = expected.with_name('arm.ticket.consumed').lstat()
+-    identity = lambda s: (s.st_dev, s.st_ino, s.st_uid, s.st_gid,
+-                          stat.S_IMODE(s.st_mode), s.st_size, s.st_mtime_ns)
+-    if identity(info) != identity(consumed):
+-        raise ValueError('ticket identity changed while consuming')
+-    return value
+-
+-
+-def install_discovered(namespace, *, recorder_factory=None, source_verifier=None):
+-    """Consume the fixed ticket once, ignoring any old environment selector.
+-
+-    Unsafe symlinks/FIFOs/foreign ownership are left untouched and cannot arm.
+-    Any setup error disables only recording. No loop, retry, rearm or process
+-    startup policy is introduced here.
+-    """
+-    try:
+-        if not _modeld_import_context(namespace):
+-            return None
+-        path = _discovery_directory() / 'arm.ticket'
+-        return install(namespace, recorder_factory=recorder_factory,
+-                       source_verifier=source_verifier, ticket_loader=_consume_discovered,
+-                       arm_path=str(path))
+-    except Exception:
+-        return None
+--- a/openpilot/selfdrive/modeld/jetlink/input_recording/recorder.py
++++ /dev/null
+@@ -1,265 +0,0 @@
+-"""Opt-in observer: bounded memfd slots and an isolated, non-realtime writer.
+-
+-Construction/close are startup/shutdown operations. observe never waits for disk,
+-writer progress or a slot. The caller must still shield the observer boundary.
+-This module imports no inference, camera, CUDA or vehicle code.
+-"""
+-from __future__ import annotations
+-from collections import deque
+-import mmap
+-import os
+-from pathlib import Path
+-import shutil
+-import socket
+-import struct
+-import subprocess
+-import sys
+-import time
+-import numpy as np
+-from . import format as f
+-
+-CONTROL_BYTES=4096
+-RESERVE_BYTES=64*1024*1024
+-DEPTHS=(4,8,16)
+-
+-
+-class Recorder:
+-    def __init__(self,output,provenance,frames=256,depth=4,fault=None,measure=False):
+-        self.count=0;self.frames=frames;self.ready=False;self.reason=None
+-        self.high_water=0;self.depth=depth;self.process=None;self.sock=None
+-        self.mapping=None;self.slots=None;self.fd=None;self.free=deque()
+-        self.measure=measure;self.copy_ns=[];self.put_ns=[]
+-        try:
+-            f.expected_size(frames);f.validate_provenance(provenance)
+-            if type(depth) is not int or depth not in DEPTHS:raise ValueError('queue depth')
+-            config=f.canonical(dict(output=str(Path(output).absolute()),provenance=provenance,
+-                                    frames=frames,depth=depth,fault=fault or {}))
+-            if len(config)>CONTROL_BYTES-8:raise ValueError('config length')
+-            self.fd=os.memfd_create('v3-input-observer',flags=0)
+-            os.ftruncate(self.fd,CONTROL_BYTES+depth*f.RECORD_BYTES)
+-            self.mapping=mmap.mmap(self.fd,0)
+-            # Touch every allocated page outside the observer path.
+-            self.mapping[:]=bytes(len(self.mapping))
+-            self.mapping[4:8]=struct.pack('<I',len(config));self.mapping[8:8+len(config)]=config
+-            self.slots=np.ndarray((depth,),f.RECORD_DTYPE,buffer=self.mapping,offset=CONTROL_BYTES)
+-            self.free=deque(range(depth))
+-            self.sock,child=socket.socketpair(socket.AF_UNIX,socket.SOCK_DGRAM)
+-            self.sock.setblocking(False)
+-            try:
+-                environment=dict(os.environ,OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1',MKL_NUM_THREADS='1')
+-                environment['PYTHONPATH']=os.pathsep.join(str(Path(p or os.getcwd()).absolute()) for p in sys.path)
+-                # -S avoids site hooks and NumPy import while still inheriting
+-                # modeld's realtime policy. Demote before importing either.
+-                bootstrap=("import os; os.sched_setscheduler(0,os.SCHED_OTHER,os.sched_param(0)); "
+-                           "os.setpriority(os.PRIO_PROCESS,0,10); import site; site.main(); "
+-                           "import runpy; runpy.run_module("+repr(__name__)+",run_name='__main__')")
+-                self.process=subprocess.Popen([sys.executable,'-S','-c',bootstrap,'--writer',str(self.fd),str(child.fileno())],
+-                    pass_fds=(self.fd,child.fileno()),stdin=subprocess.DEVNULL,
+-                    stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,close_fds=True,env=environment)
+-            finally:child.close()
+-        except Exception:self.stop('SETUP_ERROR')
+-
+-    def stop(self,reason='STOPPED'):
+-        """Nonblocking cancellation. Never cleans up/rebinds a live writer's memory."""
+-        if self.reason is None:self.reason=reason
+-        self.ready=False
+-        try:
+-            if self.mapping is not None:self.mapping[0]=1
+-        except Exception:pass
+-
+-    def poll(self):
+-        try:
+-            if self.reason is not None:return
+-            for _ in range(self.depth+2):
+-                try:packet=self.sock.recv(128)
+-                except BlockingIOError:break
+-                if packet==b'R':self.ready=True
+-                elif len(packet)==3 and packet[:1]==b'A':
+-                    slot=struct.unpack('<H',packet[1:])[0]
+-                    if slot>=self.depth or slot in self.free:raise ValueError('bad credit')
+-                    self.free.append(slot)
+-                elif packet.startswith(b'E'):
+-                    self.stop('WRITER_'+packet[1:].decode('ascii'));return
+-                else:raise ValueError('bad writer packet')
+-            if self.process is not None and self.process.poll() is not None:
+-                if self.process.returncode!=0 or self.count<self.frames:self.stop('WRITER_EXIT')
+-        except Exception:self.stop('WRITER_PROTOCOL')
+-
+-    def observe(self,new_img,desire,traffic_convention,action_t,metadata):
+-        """Copy borrowed logical inputs exactly once; all failures disable only capture.
+-
+-        False before READY is explicit pre-roll (no recording has started). False
+-        after a failure is terminal, never a silent gap in a COMPLETE sequence.
+-        """
+-        try:
+-            if self.reason is not None or self.count>=self.frames:return False
+-            self.poll()
+-            if not self.ready or self.reason is not None:return False
+-            values=(new_img,desire,traffic_convention,action_t)
+-            for (name,(shape,dtype)),value in zip(f.INPUTS.items(),values):
+-                if not isinstance(value,np.ndarray) or value.shape!=shape or value.dtype!=np.dtype(dtype) or not value.flags.c_contiguous:
+-                    self.stop('INPUT_CONTRACT');return False
+-            if not self.free:self.stop('QUEUE_FULL');return False
+-            slot=self.free.popleft();record=self.slots[slot]
+-            start=time.perf_counter_ns() if self.measure else 0
+-            record['index']=self.count
+-            for key in ('main_frame_id','extra_frame_id','model_timestamp_ns','monotonic_ns','main_sof_ns','extra_sof_ns'):
+-                value=metadata[key]
+-                if type(value) is not int or not 0<=value<2**64:raise ValueError('metadata integer')
+-                record[key]=value
+-            flags,selection=metadata['flags'],metadata['selection']
+-            if type(flags) is not int or flags not in (0,1) or selection not in ((0,0),(0,1)):
+-                raise ValueError('flags/camera roles')
+-            record['flags']=flags;record['reserved']=0
+-            record['selection']=selection
+-            record['expected_interval_ns']=f.EXPECTED_INTERVAL_NS
+-            transforms=metadata['transforms']
+-            if len(transforms)!=2:raise ValueError('transform count')
+-            for index,value in enumerate(transforms):
+-                if not isinstance(value,np.ndarray) or value.shape!=(3,3) or value.dtype!=np.dtype('<f4'):raise ValueError('transform contract')
+-                np.copyto(record['transforms'][index],value,casting='no')
+-            for name,value in zip(f.INPUTS,values):np.copyto(record[name],value,casting='no')
+-            copied=time.perf_counter_ns() if self.measure else 0
+-            self.sock.send(struct.pack('<H',slot))
+-            if self.measure:
+-                self.copy_ns.append(copied-start);self.put_ns.append(time.perf_counter_ns()-copied)
+-            self.count+=1;self.high_water=max(self.high_water,self.depth-len(self.free))
+-            return True
+-        except BlockingIOError:self.stop('QUEUE_SEND_FULL');return False
+-        except Exception:self.stop('OBSERVER_ERROR');return False
+-
+-    def close(self,timeout=10):
+-        """Off-hot-path shutdown; only reaps the private recorder child."""
+-        if self.count!=self.frames and self.reason is None:self.stop('INCOMPLETE')
+-        try:
+-            if self.process is not None:
+-                try:self.process.wait(timeout=timeout)
+-                except subprocess.TimeoutExpired:
+-                    self.stop('WRITER_TIMEOUT');self.process.terminate()
+-                    try:self.process.wait(timeout=2)
+-                    except subprocess.TimeoutExpired:self.process.kill();self.process.wait(timeout=2)
+-                self.poll()
+-        except Exception:self.stop('CLOSE_ERROR')
+-        self.slots=None
+-        for name in ('mapping','sock'):
+-            try:
+-                obj=getattr(self,name)
+-                if obj is not None:obj.close()
+-            except Exception:pass
+-            setattr(self,name,None)
+-        try:
+-            if self.fd is not None:os.close(self.fd)
+-        except Exception:pass
+-        self.fd=None
+-
+-
+-def _directory(output,required):
+-    # No symlink ancestors, no operating-route output, no recursive creation.
+-    output=Path(output)
+-    if not output.is_absolute() or '..' in output.parts:raise ValueError('output path')
+-    if '/data/media/0/realdata' in str(output):raise ValueError('route output forbidden')
+-    for ancestor in (output.parent,*output.parent.parents):
+-        if ancestor.is_symlink():raise ValueError('symlink parent')
+-    if not output.parent.is_dir():raise ValueError('output parent missing')
+-    if shutil.disk_usage(output.parent).free<required:raise OSError('space gate')
+-    output.mkdir(mode=0o700)  # exclusive: never reuse or remove an existing output
+-    return output
+-
+-
+-def _put(fd,data,offset,fault):
+-    if fault.get('short_write') and offset>=f.HEADER_BYTES:
+-        os.pwrite(fd,data[:-1],offset);raise OSError('short write injection')
+-    if os.pwrite(fd,data,offset)!=len(data):raise OSError('short write')
+-
+-
+-def _fsync(fd,fault):
+-    if fault.get('fsync'):raise OSError('fsync injection')
+-    os.fsync(fd)
+-
+-
+-def _manifest(config,first,last,intervals,data):
+-    diagnostic=dict(expected_ns=f.EXPECTED_INTERVAL_NS,min_ns=int(min(intervals)) if intervals else 0,
+-                    max_ns=int(max(intervals)) if intervals else 0)
+-    diagnostic.update({f'p{p}_ns':float(np.percentile(intervals,p)) if intervals else 0.0 for p in (50,95,99)})
+-    value=dict(schema=1,kind='v3-logical-input-dataset',status='COMPLETE',expected_frames=config['frames'],
+-               frames=config['frames'],continuity='CONTIGUOUS',spec_digest=f.SPEC_DIGEST,target_sha256=f.TARGET_SHA,
+-               provenance=config['provenance'],inputs={n:dict(shape=list(s),dtype=d) for n,(s,d) in f.INPUTS.items()},
+-               files={'frames.bin':dict(bytes=data.stat().st_size,sha256=f.file_sha(data))},
+-               capture_start_ns=first,capture_end_ns=last,interval_diagnostic=diagnostic,
+-               no_gps_raw_camera=True,state_tensors_stored=False)
+-    value['dataset_digest']=f.dataset_digest(value)
+-    return value
+-
+-
+-def _writer(memfd,sockfd):
+-    import json
+-    channel=socket.socket(fileno=sockfd);channel.settimeout(.1)
+-    memory=mmap.mmap(memfd,0);data_fd=None;directory_fd=None
+-    try:
+-        # modeld is realtime; only this exec child drops to ordinary scheduling.
+-        os.sched_setscheduler(0,os.SCHED_OTHER,os.sched_param(0));os.setpriority(os.PRIO_PROCESS,0,10)
+-        length=struct.unpack('<I',memory[4:8])[0]
+-        config=json.loads(memory[8:8+length]);fault=config['fault']
+-        total=f.expected_size(config['frames']);f.validate_provenance(config['provenance'])
+-        if fault.get('low_space'):raise OSError('space gate injection')
+-        directory=_directory(config['output'],total+RESERVE_BYTES)
+-        data=directory/'frames.bin.partial'
+-        data_fd=os.open(data,os.O_CREAT|os.O_EXCL|os.O_RDWR|os.O_NOFOLLOW,0o600)
+-        os.posix_fallocate(data_fd,0,total)
+-        _put(data_fd,f.header_bytes(config['provenance'],config['frames']),0,fault)
+-        (directory/'status.partial').write_bytes(b'INCOMPLETE\n')
+-        channel.send(b'R')
+-        previous=None;intervals=[];first=last=0;count=0
+-        deadline=time.monotonic()+30
+-        while count<config['frames']:
+-            if memory[0]:raise RuntimeError('observer stopped')
+-            if time.monotonic()>deadline:raise TimeoutError('capture deadline')
+-            try:packet=channel.recv(16)
+-            except socket.timeout:continue
+-            if len(packet)!=2:raise ValueError('slot packet')
+-            slot=struct.unpack('<H',packet)[0]
+-            if slot>=config['depth']:raise ValueError('slot index')
+-            if fault.get('delay'):time.sleep(fault['delay'])
+-            if fault.get('exception'):raise RuntimeError('writer injection')
+-            if fault.get('crash'):os._exit(31)
+-            record=np.ndarray((),f.RECORD_DTYPE,buffer=memory,offset=CONTROL_BYTES+slot*f.RECORD_BYTES)
+-            f.validate_record(record,previous)
+-            if int(record['index'])!=count:raise ValueError('record order')
+-            if count==0:first=int(record['monotonic_ns']);deadline=time.monotonic()+config['frames']*.05+10
+-            else:intervals.append(int(record['model_timestamp_ns'])-int(previous['model_timestamp_ns']))
+-            last=int(record['monotonic_ns'])
+-            _put(data_fd,record.tobytes(),f.HEADER_BYTES+count*f.RECORD_BYTES,fault)
+-            previous=record.copy();del record
+-            count+=1;channel.send(b'A'+packet)
+-        if memory[0]:raise RuntimeError('observer stopped')
+-        _fsync(data_fd,fault);os.close(data_fd);data_fd=None
+-        manifest=_manifest(config,first,last,intervals,data)
+-        if fault.get('manifest'):raise OSError('manifest injection')
+-        temp=directory/'manifest.json.partial'
+-        with temp.open('xb') as stream:
+-            stream.write(f.canonical(manifest));stream.flush();_fsync(stream.fileno(),fault)
+-        if memory[0]:raise RuntimeError('observer stopped')
+-        # Hard links are no-overwrite publication. COMPLETE is the final operation.
+-        os.link(data,directory/'frames.bin');data.unlink()
+-        os.link(temp,directory/'manifest.json');temp.unlink()
+-        (directory/'status.partial').unlink()
+-        directory_fd=os.open(directory,os.O_DIRECTORY|os.O_RDONLY);_fsync(directory_fd,fault)
+-        os.close(directory_fd);directory_fd=None
+-        if memory[0]:raise RuntimeError('observer stopped')
+-        os.link(directory/'manifest.json',directory/'COMPLETE')
+-        return 0
+-    except Exception as exc:
+-        try:channel.send(b'E'+type(exc).__name__.encode('ascii'))
+-        except Exception:pass
+-        return 1
+-    finally:
+-        for descriptor in (data_fd,directory_fd):
+-            if descriptor is not None:
+-                try:os.close(descriptor)
+-                except Exception:pass
+-        channel.close();memory.close()
+-
+-
+-if __name__=='__main__':
+-    if len(sys.argv)!=4 or sys.argv[1]!='--writer':raise SystemExit(2)
+-    raise SystemExit(_writer(int(sys.argv[2]),int(sys.argv[3])))
+--- a/openpilot/selfdrive/modeld/jetlink/model.py
++++ b/openpilot/selfdrive/modeld/jetlink/model.py
+@@ -293,18 +293,3 @@
+       # Execute the native fallback before allowing an external-model join.
+       self.small_runs += 1
+     return result
+-
+-
+-# RECORDER_A559_EXECUTION_SWITCHES_V1; default OFF.
+-# Reviewed hook SHA256: 1e82abdfc93ab23f7add69c8f248677538ec2c20b47868b7bc06cb0195a18256
+-# One volatile ticket check at lazy import; no environment activation.
+-try:
+-  os.lstat('/dev/shm/carrot-v3-input-capture/arm.ticket')
+-except Exception:
+-  pass
+-else:
+-  try:
+-    from openpilot.selfdrive.modeld.jetlink.input_recording.hook import install_discovered as _install_input_capture
+-    _m18_input_capture = _install_input_capture(globals())
+-  except Exception:
+-    pass  # Recorder setup must never disable existing inference or fallback.
