@@ -8,6 +8,14 @@
 > SSD에 설치된 R2 runtime/service/TensorRT 경로를 먼저 확인한다.
 
 **최신 작업 인계:** [CODEX_CONTINUATION.md](docs/CODEX_CONTINUATION.md).
+
+2026-10-24 [M19-A detached 설치 결과](docs/M19A_DETACHED_INSTALL_RESULT_20261024.md):
+actual366의 원래48 overlay를 보존하고 exact recorder patch를 설치했다.
+**PATCH_LEFT_INSTALLED_OFF**, 재시작·ticket·활성화·capture는 하지 않았다.
+Panda/harness detached evidence, OFF health와 별도 POST attestation PASS다.
+M19-B는 offroad arming/일시적 launch 환경 전달 순서를 먼저 검토해야 하므로 **아직 NO**다.
+수치 판정은 PARITY_UNDETERMINED, M2는 NO다.
+
 현재 source adapter, 검증 결과와 원복 절차는
 [current candidate 검증 안내](docs/CURRENT_CARROT_VALIDATION_20261019.md)에 있다.
 최신 upstream 확인과 분리된 CPU 검증은

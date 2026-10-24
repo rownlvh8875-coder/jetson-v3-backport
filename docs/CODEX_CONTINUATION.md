@@ -1,5 +1,101 @@
 # Codex continuation — 2026-10-24
 
+## Current checkpoint: M19-A actual recorder installed, default OFF
+
+Read `docs/M19A_DETACHED_INSTALL_RESULT_20261024.md` and
+`artifacts/m19a_detached_install_20261024.json` first. **M19-A PASS /
+PATCH_LEFT_INSTALLED_OFF.** Actual source HAS NOW BEEN PATCHED; do not repeat
+an install or apply the PRE tracked0 gate to the POST state. Explicit human
+M19-A authority covered detached installation/OFF only. No activation, ticket,
+capture, restart, onroad producer, Params/model selection/USB change, Jetson,
+GPU/model execution or vehicle operation occurred. PARITY_UNDETERMINED / M2 NO.
+
+Actual branch/head carrot-nav366d6eae9aa9962104391e1d997fe956dea8f64d remains;
+flags1/0. Detached Panda ignitionLine/ignitionCan false and harness notConnected,
+known Panda type, fresh manager/device evidence. Final3windows: each Panda28,
+manager5, device5, about3s each. Card/modeld/camerad absent matches OFF policy;
+jetlinkd active. DEVICE_DETACHED_EVIDENCE_PASS is not a vehicle-stationary claim.
+Native subscriber does ordinary writable queue reader/cursor bookkeeping; no
+publisher/CAN reader/producer and no blanket zero-OS-write assertion.
+
+PRE M193_ATTESTED_BASELINE_PASS preserved original48/2006/417208589, digest
+8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5. Frozen
+M192 checker/private policy unchanged, legacy PARTIAL onlyU32 retained. Fresh
+M193 reviewed proof canonical68131e852441aabd71c04874233bd45fec448e447fd1fb9b3ff345ddcac25125,
+bundle1ffbfb730bdd5eaed93bdcd84902ccaf4c418c680128204db2a815771c650514.
+U32 stays UNKNOWN_ACCEPTABLE_FOR_PATCH_ISOLATION, current useUNKNOWN; U46 legacy
+generated. None of original48 moved/deleted/copied/ignored. Policy26runtime+
+20generated/backup preserved, do not try to make Git clean on actual comma.
+
+Exact M18 patch3a3e19430ab667d204f22fd1e40438a85e1ade1dbab2e6f9dd6e3dd32de4c1ee
+applied after private disposable9file forward/reverse validation, two actual CPU
+import contexts, OFF fixture and exclusive verified private backup. Actual modified
+tracked target1, newmodules5. Six after hashes in resultdoc/artifact. Existing
+source beforec627644f… now4813e215…. Target owner/group/mode retained, files0644,
+new package0755. Backup retained outside source, no output/capture directory.
+
+POST profile: original48 BY PRIVATE PATH exactly unchanged + exact recorder6 +
+no unexpected entries. Current actual collapsed untracked49, regular2011,
+bytes417259473; new aggregate6857b161fe10363ae9bb58b505195a40a031872e3ef1746917d7e7f89fba50ba.
+Original48 still8b0c…; do not remap originalU IDs from current status order.
+Two independent read-only POST receipts agree. Model15 hashes, route4497 metadata
+(digest4bf474e52edc1b6ad250ed125b23a87a34ecd781799fa47040247aebef499c24),
+other source7, process31+resolutionenv, boot/flags/Params binding and extra3
+index/native/U32cache canaries unchanged. Routefullcontent not rehashed, atime
+excluded, observations are not atomic whole-device images.
+
+Recorder OFF: activation env absent in31 inspected processes; writer0, capture
+memfd matches0 in selected FD/maps, proposed output root absent, installedpackage
+only5files/no newpycache. Ticket/activationNOT_CREATED, not an invalidation test.
+Actual installed originalAST and OFF footer importtrap PASS_FIXTURE. No fullmodeld
+import/onroad health/camera/model timing/hotpath overhead certification. Restart
+NOT_NEEDED: target JoiningModel import is lazy in modeld.main; OFF modeld absent,
+manager prepare does not reach that path. Current OFF roles/identities stable;
+restarting manager would not validate the lazy hook. No unsupported start/restart.
+
+**Ready for M19-B: NO pending offline activation-order review**, not an M19-A
+install failure. Proposed ignitionON thenarm conflicts with arm_ticket's real
+OFF proof requirement. Footer activation is read at module import, so late env in
+another shell cannot activate it. Next exact action: review a source-backed,
+temporary supported normal-launch inheritance procedure with genuine OFF arming
+before ignition/lazy import. Separate M19-B execution authority still required.
+Never fake proof/Params/ignition, start card/modeld/camerad manually or activate now.
+10frames future proof would not resolve parity; no road/USB continuation.
+
+Fresh CPU258PASS/0FAIL/0SKIP30.31s = recorder131+checker68+layout1+provenance58.
+Command in M19-A resultdoc. Private POST metadata fixtures9PASS separately,
+plus timestamp-window boundary fixture. No frozen recorder/core/patch/checker
+edits. Five disposable harness stops were resolved through recorded phase evidence,
+not one uninterrupted run; full details in resultdoc. One auxiliary detachedguard
+UNCONFIRMED had no retained detailed subchecks; exact cause unknown, no actual
+source write then. Later fully retained diagnostics/fresh independent installgate
+passed. Install receipt transfer deadline after apply did NOT trigger reapply;
+two new read-only receipts proved exact current state and backup. No hidden failure
+counts folded into pytest. No packages upgraded or validation gates weakened.
+
+Ignored `.reports/m19a-20261024/` retains plan/ledger, raw before snapshot, policy
+proof/bundle, detached samples, device disposable phase receipts, dev-location and
+backup mapping, installer source/terminal progress, compact recovery/final POST
+receipts, OFFhealth, pure POST fixture verifier/tests and public-result builder.
+`post_final.py` is read-only and compares fresh frozen full collection with exact
+original tree commitments plus new6; private `post_profile.py`/9fixtures preserve
+full-metadata comparison behavior. Original installer receipt exceeded transfer
+deadline and is incomplete; don't treat its terminal tail as full JSON or rerun it.
+Do not commit private raw paths/argv/env/source mappings or copy actual48 to Git.
+
+One independent final read-only local review PASS/no findings; no device/network
+actions, private-script execution or test reruns by reviewer. No second review.
+
+Development started clean/remoteequal3aa545d83154e8bc0e489321c5cd6ebb10f40ae2;
+result commit resolves via `git log -1 --format=%H -- artifacts/m19a_detached_install_20261024.json`.
+Upstream start/end: Nav810e14aaf51176f1a50a113939dc2e70907b394b;
+WIPdfab65d03fcd7100f572fe9e6908f4c6d1e988f6;
+hostd0dc96fa32410403dfb2fefff3e2909c11ec109b;
+zoompilotd24328d849b0e5154b55f149dc18c5dfe8bd79cc;
+externalreviewa890f6df1bd3eb0478754c68d8b5f92f15e8b722. No actualupdate.
+Protected remote main2519ad0bdbf6e796fa590063fc90d4d6461b6b8d /
+oldfeature26c9c06a5e51ff0e8d3a1e8575eece548e87f3b5 stay unchanged.
+
 ## Latest checkpoint: M19 retry blocked at live stationary gate
 
 Read `docs/M19_PARKED_CAPTURE_RESULT_20261024.md` and

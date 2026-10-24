@@ -1,0 +1,281 @@
+{
+  "schema": 1,
+  "stage": "M19-A_DETACHED_INSTALL_OFF",
+  "date": "2026-10-24",
+  "status": "M19A_DETACHED_INSTALL_OFF_PASS",
+  "development": {
+    "branch": "feature/jetlink-multimodel-carrot",
+    "start_head": "3aa545d83154e8bc0e489321c5cd6ebb10f40ae2",
+    "start_remote_equal": true,
+    "start_working_tree_clean": true,
+    "result_commit_resolution": "git log -1 --format=%H -- artifacts/m19a_detached_install_20261024.json"
+  },
+  "actual": {
+    "branch": "carrot-nav",
+    "head": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+    "flags": {
+      "IsOffroad": "1",
+      "IsOnroad": "0"
+    },
+    "detached_evidence": "DEVICE_DETACHED_EVIDENCE_PASS",
+    "stationary_claim": false,
+    "health_windows": [
+      {
+        "status": "DEVICE_DETACHED_EVIDENCE_PASS",
+        "observation_s": 3.057204014,
+        "panda_samples": 28,
+        "manager_samples": 5,
+        "device_samples": 5,
+        "all_ignitionLine_false": true,
+        "all_ignitionCan_false": true,
+        "all_harness_notConnected": true,
+        "expected_offroad_process_roles": true
+      },
+      {
+        "status": "DEVICE_DETACHED_EVIDENCE_PASS",
+        "observation_s": 3.055786995,
+        "panda_samples": 28,
+        "manager_samples": 5,
+        "device_samples": 5,
+        "all_ignitionLine_false": true,
+        "all_ignitionCan_false": true,
+        "all_harness_notConnected": true,
+        "expected_offroad_process_roles": true
+      },
+      {
+        "status": "DEVICE_DETACHED_EVIDENCE_PASS",
+        "observation_s": 3.037552748,
+        "panda_samples": 28,
+        "manager_samples": 5,
+        "device_samples": 5,
+        "all_ignitionLine_false": true,
+        "all_ignitionCan_false": true,
+        "all_harness_notConnected": true,
+        "expected_offroad_process_roles": true
+      }
+    ]
+  },
+  "pre_attestation": {
+    "status": "M193_ATTESTED_BASELINE_PASS",
+    "original_entries": 48,
+    "regular_files": 2006,
+    "bytes": 417208589,
+    "digest": "8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5",
+    "tracked_modifications": 0,
+    "runtime_required_entries": 26,
+    "generated_or_backup_preserved": 20,
+    "U46": "SAFE_GENERATED_LEGACY",
+    "U32": "U32_UNKNOWN_ACCEPTABLE_FOR_PATCH_ISOLATION",
+    "U32_current_runtime_use": "UNKNOWN",
+    "U32_sha256": "07e2bd4cdac1479f85447c1f96182c8f24603a9184b11045086d7433b68e5b70",
+    "U46_sha256": "21ac37949a83dcb5b2799007c8ebc93909efaff7bf6d6481fb49a8eb2a43314e",
+    "legacy_status_retained": "ATTESTED_DIRTY_BASELINE_PARTIAL",
+    "scoped_policy": "M193_SCOPED_ISOLATION_V1",
+    "reviewed_proof_sha256": "68131e852441aabd71c04874233bd45fec448e447fd1fb9b3ff345ddcac25125",
+    "evidence_bundle_sha256": "1ffbfb730bdd5eaed93bdcd84902ccaf4c418c680128204db2a815771c650514",
+    "recorder_conflict": "NO",
+    "separate_user_execution_authority": true
+  },
+  "patch": {
+    "status": "APPLIED",
+    "sha256": "3a3e19430ab667d204f22fd1e40438a85e1ade1dbab2e6f9dd6e3dd32de4c1ee",
+    "base": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+    "existing_files_modified": 1,
+    "new_modules": 5,
+    "six_after_hashes": {
+      "MODEL_TARGET": "4813e215b13b447a234ca78839d4cac605f69a9ec2b1a6263ed9ffa063204f0d",
+      "RECORDER_INIT": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca",
+      "RECORDER_FORMAT": "9deff26ba3ba9b66642f7a471b10c637272003029866ce47fe82f80ff702acdf",
+      "RECORDER_DATASET": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7",
+      "RECORDER_HOOK": "e8196e46df04a0ca99dd1ba4d009d5a683bd8e8a7a91b05a8b81bec3731f5bd1",
+      "RECORDER_WORKER": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada"
+    },
+    "six_after_hashes_status": "PASS",
+    "private_backup": "EXCLUSIVE_ORIGINAL_VERIFIED",
+    "target_owner_mode_preserved": true
+  },
+  "disposable": {
+    "status": "DEVICE_DISPOSABLE_PATCH_PASS",
+    "single_uninterrupted_run": false,
+    "controlled_contexts": 2,
+    "module_imports_per_context": 5,
+    "dependency_precedence_preserved_in_each": true,
+    "positive_U48_context": true,
+    "original_nine_files_restored": true,
+    "new_package_absent_after_reverse": true,
+    "U32_not_imported": true,
+    "operating_overlay_copied_or_changed": false
+  },
+  "off_validation": {
+    "status": "PATCHED_OFF_HEALTH_PASS",
+    "restart": "NOT_NEEDED",
+    "restart_performed": false,
+    "reason": "The patched JoiningModel module is lazily imported in modeld.main; offroad modeld is absent. A manager restart would not exercise that path. Current OFF runtime and installed footer fixture were verified.",
+    "full_modeld_module_import": "NOT_RUN",
+    "patched_manager_boot": "NOT_RUN",
+    "installed_source_AST_unchanged_except_footer": true,
+    "installed_OFF_footer_import_trap": "PASS_FIXTURE",
+    "modeld_timing": "NOT_AVAILABLE_OFFROAD",
+    "capture_env_absent_selected_processes": 31,
+    "writer_processes": 0,
+    "capture_memfd_hits_selected_processes": 0,
+    "capture_output_root_exists": false,
+    "package_files_only": 5,
+    "ticket": "NOT_CREATED",
+    "activation": "NOT_CREATED",
+    "dataset": "NONE"
+  },
+  "post_attestation": {
+    "status": "POST_RECORDER_PROFILE_PASS",
+    "checks": {
+      "BRANCH_HEAD_FLAGS": true,
+      "ONLY_EXPECTED_TRACKED_CHANGE": true,
+      "ORIGINAL48_TREE_COMMITMENTS": true,
+      "ONLY_ONE_NEW_PACKAGE": true,
+      "ORIGINAL_DIGEST": true,
+      "ORIGINAL_COUNTS": true,
+      "SOURCE_PINS": true,
+      "MODELS": true,
+      "ROUTES_METADATA": true,
+      "PROCESS_IDENTITIES_NO_RESTART": true,
+      "EXACT_NEW_PACKAGE_NODE_SET": true,
+      "NEW_PACKAGE_MODE": true,
+      "SIX_AFTER_HASHES": true,
+      "FIVE_MODE_OWNER": true,
+      "TARGET_MODE_OWNER": true,
+      "PRIVATE_BACKUP": true,
+      "ORIGINAL_AST_UNCHANGED": true,
+      "OFF_FOOTER_FIXTURE": true,
+      "POST_COUNTS": true,
+      "POST_NAMESPACE": true
+    },
+    "original48_digest": "8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5",
+    "original_ids_not_remapped": true,
+    "post_untracked_short_entries": 49,
+    "post_untracked_regular_files": 2011,
+    "post_untracked_bytes": 417259473,
+    "post_inventory_digest": "6857b161fe10363ae9bb58b505195a40a031872e3ef1746917d7e7f89fba50ba",
+    "post_observation_sha256": "7d654c07a73c9e69be8b1a7b288e7b0b432f3e86378ef39269ad5036b5e9c35b",
+    "original_path_tree_checks_pass": 48,
+    "fresh_nonce_bound": true,
+    "same_recovery_and_final_inventory": true
+  },
+  "preservation": {
+    "status": "PASS_WITH_EXPECTED_RECORDER_SOURCE_CHANGE",
+    "original48": "UNCHANGED",
+    "U32_U46": "UNCHANGED",
+    "models_hashed": 15,
+    "models": "UNCHANGED",
+    "routes_metadata_files": 4497,
+    "routes_metadata_digest": "4bf474e52edc1b6ad250ed125b23a87a34ecd781799fa47040247aebef499c24",
+    "routes": "METADATA_UNCHANGED",
+    "route_full_content_rehash": "NOT_RUN",
+    "process_identities_and_resolution_env": 31,
+    "processes": "UNCHANGED_NO_RESTART",
+    "extra_index_native_cache_canaries": 3,
+    "extra_canaries": "UNCHANGED",
+    "atime_excluded": true,
+    "baseline_observation_atomic": false
+  },
+  "final_source_state": "PATCH_LEFT_INSTALLED_OFF",
+  "test_results": {
+    "classification": [
+      "CPU_FAKE",
+      "FIXTURE"
+    ],
+    "pytest_unique": {
+      "pass": 258,
+      "fail": 0,
+      "skip": 0,
+      "seconds": 30.31,
+      "breakdown": {
+        "M18_recorder": 131,
+        "M192_checker": 68,
+        "layout": 1,
+        "M193_provenance": 58
+      }
+    },
+    "private_post_metadata_fixtures": {
+      "pass": 9,
+      "fail": 0,
+      "scope": "Separate from pytest258; private metadata, no device mutation"
+    },
+    "timestamp_window_boundary_fixture": "PASS",
+    "actual_device_CPU_fixture_scope": "Disposable package imports and installed OFF footer; no modeld inference/capture performance claim"
+  },
+  "resolved_harness_issues": {
+    "device_disposable_harness_stops": 5,
+    "single_device_roundtrip_pass_claim": false,
+    "causes": [
+      "Unequal observed manager-lineage environments",
+      "Rewritten process argv0 is not an executable",
+      "Canonical Python binary lost existing venv context",
+      "Operator originally used venv dependency origins, not U48",
+      "Reverse patch had already pruned the empty new directory"
+    ],
+    "auxiliary_guard_hold": "DETACHED_STATE_UNCONFIRMED; detailed failed-window subchecks were not retained; no actual source write in that invocation. Later retained diagnostics and a fresh independent preinstall gate passed.",
+    "local_generator_syntax_error": "Caught off-device before execution; corrected Name-only payload binding",
+    "install_receipt_transport": "Deadline after verified apply/POST progress; no reapply. Two fresh read-only hash-verified POST receipts independently confirm installed state and backup.",
+    "health_window_correction": "Observation starts before subscriber constructor; accepts constructor-time publications, rejects older source timestamps. Existing validity/age/ignition/harness gates unchanged."
+  },
+  "scope": {
+    "COMMA_REAL_READ_ONLY": "PASS",
+    "COMMA_REAL_SOURCE_INSTALL_OFF": "PASS",
+    "COMMA_REAL_CAPTURE": "NOT_RUN",
+    "VEHICLE_PARKED": "NOT_RUN",
+    "ROAD_TEST": "NOT_RUN",
+    "Jetson": "NOT_RUN",
+    "USB_REAL": "NOT_RUN",
+    "TRT_REAL": "NOT_RUN_THIS_STAGE",
+    "ORT_REAL_MODEL": "NOT_RUN",
+    "CAN_control_action": "NOT_RUN",
+    "Params_write": false,
+    "model_selection_change": false,
+    "ticket_created": false,
+    "activation": false
+  },
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "M2_readiness": "NO",
+  "ready_for_M19B_parked_onroad_10_frames": "NO",
+  "M19B_remaining_gate": {
+    "status": "ACTIVATION_ORDER_REVIEW_REQUIRED",
+    "offroad_arming_required": true,
+    "startup_env_required_before_lazy_import": true,
+    "late_environment_change_supported": false,
+    "reason": "The proposed ignition-on then arm order conflicts with arm_ticket(offroad=True). An already imported OFF footer cannot be activated by changing another shell environment. Review an offroad-arm / temporary normal-launch inheritance procedure before separate M19-B execution approval."
+  },
+  "next_action": "Offline review of the M19-B offroad arming and temporary supported launch-environment ordering; keep installed recorder OFF.",
+  "upstreams_start_end_equal": {
+    "carrot_nav": "810e14aaf51176f1a50a113939dc2e70907b394b",
+    "carrot_wip": "dfab65d03fcd7100f572fe9e6908f4c6d1e988f6",
+    "carrot_jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "zoompilot_jetlink": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc",
+    "external_review": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722"
+  },
+  "protected_remote_refs": {
+    "main": "2519ad0bdbf6e796fa590063fc90d4d6461b6b8d",
+    "feature_cinque_v3_jetson": "26c9c06a5e51ff0e8d3a1e8575eece548e87f3b5"
+  },
+  "private_receipt_sha256": {
+    "pre-attestation-private.json": "d8f0dde393f40018d03f73e700529caeffdb3e33e37b78bf60f70b57f6183acd",
+    "disposable-completion-private.json": "0c8a8e0c970d2a91ebea6f2f67a474da538481475ccf1f641e6dd49f0a3a8e4f",
+    "post-recovery-private.json": "f22bfde2484aa3c77fd9cd086378b57019af1c76d4f1b16a4ad8f3f8338f05d5",
+    "off-health-private.json": "a45000743bf791123fffb66e97f6989bb6cfd47b78cfe418c25cb3ef1365477b",
+    "post-final-private.json": "3dbb43a4984be860c47d37e320bbe9646e336e69ea140b584a3e8d4e312783b4"
+  },
+  "frozen_checker_sha256": "3b8f77a388caeb380e78980ba13c02c8e24e8ce4017326f01fbbb7cbf3a90904",
+  "private_expected_manifest_unchanged_sha256": "59d952de8a7b4f6530473c5fda392238bc500f25d490d71044b53f9bc2c2f328",
+  "privacy": {
+    "anonymous_entries_only": true,
+    "raw_source_mapping_in_git": false,
+    "raw_paths_argv_env_in_git": false,
+    "network_address_in_git": false,
+    "GPS_routes_or_tensor_data_in_git": false,
+    "recorded_binary_created": false
+  },
+  "independent_final_review": {
+    "status": "PASS_NO_FINDINGS",
+    "scope": "Four public files and local private receipt/POST comparator consistency; no device/network actions, private script execution or test reruns",
+    "reviewer_claims_limited_to_local_evidence": true
+  }
+}
