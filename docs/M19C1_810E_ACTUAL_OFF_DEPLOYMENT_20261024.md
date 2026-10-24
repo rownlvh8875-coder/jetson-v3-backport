@@ -1,6 +1,49 @@
-# M19-C1 — OFF deployment blocked before migration
+# M19-C1 — deployment attempts; current actual HEAD drift
 
-**BLOCKED_NOT_OFFROAD. No actual migration was performed.**
+**BLOCKED_HEAD_DRIFT. No actual migration was performed.**
+
+## Latest retry: separately powered comma, OFF flags PASS, HEAD mismatch
+
+After the user powered comma separately, a new private terminal's first two
+commands returned **IsOffroad=1 / IsOnroad=0**. A subsequent read-only identity
+probe found branch `carrot-nav`, actual HEAD
+`060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c`, tracked short-status entries0 and
+untracked short-status entries49. Required810e and observed060de9 differ.
+Deployment stopped at this identity guard, without resetting or retargeting.
+Git optional locks and Python bytecode writes were disabled for the probe.
+
+Fresh flags were1/0 both in the first terminal and the identity probe. However,
+the probe stopped **before** native telemetry subscription, source hashing or
+process inspection. deviceState.started, Panda ignition, normal onroad producer
+termination and recorder OFF/writer0 were **not freshly verified**. Genuine-OFF
+proof is therefore partial, not PASS. Full package/overlay/model/route/index/
+process preservation, original48 identity and N16 status remain NOT_ATTESTED.
+49 short entries do not prove correspondence with any historical private layout.
+
+An intervening connection attempt after normal ignition OFF had no terminal
+frames/no command delivery; the user then clarified that comma was powered down
+with the vehicle. This is recorded as access failure, not another0/1 observation.
+The user then supplied the newly powered device address. Private terminal data,
+paths, raw status and metadata remain ignored; no public device address is stored.
+
+Development started clean/equal origin at
+`95c4f5312aa2ef9bb70b820493d2c7f6164bfd9b`. Approved migration patch identities
+were checked again unchanged. Public upstream Nav is now
+`c62f35c5c64fe5dcbeb359d13676b0f77542a4b2`; other refs below remain unchanged.
+This is distinct from observed actual060de9 and required810e. No actual updater
+action/provenance was inspected in this retry; only HEAD movement is proven.
+
+There was no source backup, disposable device copy, migration, rollback, ticket,
+activation, capture, restart, Params write, forced producer or Jetson access.
+No production/patch/test change; the earlier415/0/0 scoped result is prior evidence
+and was not repeated. Local validation checks fresh receipts/digests, all preserved
+attempts, patch identity, sanitized artifact and diff. Numerical status remains
+PARITY_UNDETERMINED / M2 NO / M19-B2 readiness NO.
+
+Next is an **offline compatibility review against observed actual060de9**, before
+any new source profile or deployment authorization. Do not apply the810e patch,
+reset/checkout/pull to810e, disable the updater or automatically rebase/repatch.
+No further device power manipulation is needed to explain the current blocker.
 
 ## Retry after user-reported normal ignition OFF
 

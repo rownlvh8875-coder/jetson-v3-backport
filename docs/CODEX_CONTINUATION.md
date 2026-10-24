@@ -1,5 +1,41 @@
 # Codex continuation — 2026-10-24
 
+## Latest checkpoint: M19-C1 powered OFF retry BLOCKED_HEAD_DRIFT
+
+User powered comma separately and supplied its current address. Fresh first
+commands returned **IsOffroad1/IsOnroad0**. Next read-only Git identity probe:
+branch carrot-nav, actual HEAD **060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c**,
+tracked short entries0, untracked short entries49. Required810e mismatch STOPPED
+the probe before source/package hashing, native telemetry or process inspection.
+Do not claim device.started=false, ignition false/false, onroad process termination,
+writer0, exact old package, original48 or recorder POST from this attempt. Flags
+PASS alone are not full genuine-OFF proof. Historical original48 commitments
+cannot be reassigned from the49 status entries. Source-preservation hashes were
+not collected. No requested source/config/Params/model/USB/Jetson mutation occurred.
+
+Between the two successful connections an ignition-OFF attempt had no terminal
+frames/no command delivery because device access was unavailable; user clarified
+comma powers down with the vehicle. That attempt has no current flag observation.
+Powered private receipts are under ignored `.reports/m19c1-powered-20261024/`;
+access-failure evidence under `.reports/m19c1-off-diagnosis-20261024/`. No private
+paths/addresses/raw status/source content in public artifact. Existing terminal
+method only; Git optional locks and Python bytecode writes disabled.
+
+Development start95c4f5312aa2ef9bb70b820493d2c7f6164bfd9b clean/localremoteequal
+feature. Approved810e patch hashes unchanged. No code/patch/test changes, so prior
+scoped415/0/0 remains prior, NOT_RERUN_CURRENT_ATTEMPT. Fresh local receipt/history/
+privacy/diff verification only. Public upstream Nav nowc62f35c5c64fe5dcbeb359d13676b0f77542a4b2;
+WIP9fa591..., hostd0dc96..., zoomd24328..., reviewa890f6... unchanged. Do not confuse
+actual060de9 with latestc62f35 or required810e. No updater logs/provenance were read;
+the current observation proves HEAD drift, not its exact cause.
+
+**Next:** offline compatibility review at actual060de9 before any new candidate
+or deployment approval. User explicitly forbids automatic rebase/repatch on HEAD
+drift. Do not pull/reset/checkout to810e, apply its patch, disable updater, arm,
+capture, restart or access Jetson. Actual migration NOT_RUN, finalBLOCKED,
+M19-B2 readiness NO, PARITY_UNDETERMINED /M2 NO. Earlier attempts below are history.
+Result commit resolves via `git log -1 --format=%H -- artifacts/m19c1_810e_actual_off_deployment_20261024.json`.
+
 ## Latest checkpoint: M19-C1 retry BLOCKED_NOT_OFFROAD; actual source untouched
 
 User reported normal ignition OFF, keeping comma/Jetson connected. Fresh new

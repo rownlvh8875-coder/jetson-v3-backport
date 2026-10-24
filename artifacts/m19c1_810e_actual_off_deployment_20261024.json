@@ -2,9 +2,9 @@
   "schema": 2,
   "stage": "M19-C1",
   "date": "2026-10-24",
-  "status": "BLOCKED_NOT_OFFROAD",
+  "status": "BLOCKED_HEAD_DRIFT",
   "development_branch": "feature/jetlink-multimodel-carrot",
-  "validation_head": "a6e0f719726b031767ac2d9253865cc1120ba561",
+  "validation_head": "95c4f5312aa2ef9bb70b820493d2c7f6164bfd9b",
   "start_working_tree": "CLEAN",
   "start_local_remote_equal": true,
   "result_commit_resolution": "git log -1 --format=%H -- artifacts/m19c1_810e_actual_off_deployment_20261024.json",
@@ -18,39 +18,45 @@
     "classification": "COMMA_REAL_READ_ONLY",
     "first_commands": "ONLY_TWO_PARAM_READS",
     "flags": {
-      "IsOffroad": "0",
-      "IsOnroad": "1"
+      "IsOffroad": "1",
+      "IsOnroad": "0"
     },
-    "genuine_off": "FAIL",
-    "observed_branch": null,
-    "observed_head": null,
+    "genuine_off": "PARTIAL_FLAGS_PASS_TELEMETRY_NOT_CHECKED",
+    "observed_branch": "carrot-nav",
+    "observed_head": "060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c",
     "device_state_started": null,
-    "note": "Git identity, source and runtime not inspected after first OFF gate failed",
-    "flag_receipt_sha256": "b04f2fbea3561ec8bdb8c12abf57f6978c6b0fe36d961b11a3eb7b26fead6630",
-    "local_terminal_created_at": "2026-10-24T14:48:17.028000+09:00",
-    "freshness": "NEW_TERMINAL_CREATED_TRUE; first two flag reads; prior transcript not reused",
+    "note": "Read-only Git identity after fresh first flags1/0; HEAD guard stopped before source/package hashes, telemetry or process inspection",
+    "flag_receipt_sha256": "2ab91450fba6b113817d2f2ebfb091e82ef8935055f389f3e89767950023d66c",
+    "local_terminal_created_at": "2026-10-24T15:45:49.430000+09:00",
+    "freshness": "NEW_TERMINALS; first flags and separate identity probe both1/0; no old transcript reused",
     "ignition_line": null,
     "ignition_can": null,
-    "onroad_processes_terminated": "NOT_CHECKED_THIS_RETRY",
-    "transition_cause": "NOT_DIAGNOSED_AFTER_STOP"
+    "onroad_processes_terminated": "NOT_CHECKED_AFTER_HEAD_DRIFT",
+    "transition_cause": "OFF_FLAGS_OBSERVED; ignition/device/process cause not inspected",
+    "tracked_short_entries": 0,
+    "untracked_short_entries": 49,
+    "identity_receipt_sha256": "362008c54aeb3c1f0d344989e84250208ab04097ead617421a1bbe4585167db4"
   },
   "access": {
-    "previous_endpoint": "NOT_RETRIED",
+    "previous_endpoint": "USER_SUPPLIED_CURRENT_ADDRESS",
     "user_supplied_new_address_used": true,
     "network_scan": "NOT_RUN",
     "new_private_terminal_created": true,
-    "terminal_cleanup": "EXIT_SENT_AND_WEBSOCKET_CLOSED",
-    "user_reported_normal_ignition_off_before_retry": true
+    "terminal_cleanup": "FIRST_FLAG_HELPER_EXIT_SENT; identity probe command includes unset/sleep/exit; websocket closed",
+    "user_reported_normal_ignition_off_before_retry": true,
+    "intervening_powered_down_attempt": "BLOCKED_ACCESS_ERROR_NO_TERMINAL_FRAMES_NO_COMMAND_DELIVERY",
+    "device_power": "USER_REPORTED_SEPARATE_POWER_CONNECTION"
   },
   "pre": {
-    "pure810_model": "NOT_RUN",
+    "pure810_model": "BLOCKED_HEAD_MISMATCH_HASH_NOT_READ",
     "surviving_old_package": "NOT_RUN",
     "fresh_runtime_overlay": "NOT_RUN",
     "ticket_namespace": "NOT_CHECKED",
     "writer_count": null,
     "source_pins": "NOT_RUN",
     "n16_model": "NOT_RUN",
-    "n16_spec": "NOT_RUN"
+    "n16_spec": "NOT_RUN",
+    "git_identity": "BRANCH_MATCH_HEAD_MISMATCH_TRACKED0"
   },
   "migration": {
     "forward_sha256": "8e0260c8ef25661d4e49bace1671d2095734cdd87a68a1926dd55391f44db19d",
@@ -104,9 +110,9 @@
     "requested_operating_mutations": "NONE",
     "actual_source_patch": false,
     "params_write": false,
-    "source_overlay_model_route_process_hash_comparison": "NOT_RUN_AFTER_OFF_GATE_FAILURE",
+    "source_overlay_model_route_process_hash_comparison": "NOT_RUN_AFTER_HEAD_DRIFT",
     "result": "NOT_ATTESTED",
-    "reason": "No deployment writes performed, but no fresh before/after content proof collected"
+    "reason": "No source/config/Params write performed; HEAD drift found before preservation snapshot"
   },
   "final_source_state": "BLOCKED",
   "ready_for_m19b2_vehicle10": "NO",
@@ -128,20 +134,22 @@
     "bare_pytest": "NOT_RERUN; historical collection SystemExit0 blocker remains documented",
     "environment": "WSL2 Linux x86_64 / Python3.12.3 / NumPy2.5.4",
     "rerun_this_retry": false,
-    "result_scope": "PRECEDING_C1_ATTEMPT_ONLY; no code/patch/test changes on retry",
+    "result_scope": "PRECEDING_C1_INITIAL_ATTEMPT_ONLY; no code/patch/test changes",
     "validation_head": "0d1c6bd811c5d7d798a26d2b08ee964d4297f84d",
-    "retry_validation": "Fresh receipt parsing/digest, artifact history, patch identities, protected refs and sanitized docs diff"
+    "retry_validation": "Fresh first flags and identity receipt/digests, access-failure separation, preserved attempt history, patch hashes, privacy and diff"
   },
   "upstream": {
-    "carrot_nav": "060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c",
+    "carrot_nav": "c62f35c5c64fe5dcbeb359d13676b0f77542a4b2",
     "carrot_wip": "9fa59128bdff6b6c0b9501aec2898205492b389f",
     "carrot_jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
     "zoompilot": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc",
     "review": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722",
-    "actual_head": "NOT_CHECKED",
-    "retargeted": false
+    "actual_head": "060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c",
+    "retargeted": false,
+    "cause_of_actual_head_movement": "NOT_INSPECTED",
+    "relevant_diff_analysis": "NOT_RUN; stop on exact target mismatch, no automatic retarget"
   },
-  "next_action": "Fresh read-only first-flag preflight after device naturally reports 1/0, then fresh started/ignition/process evidence; do not force Params/process state",
+  "next_action": "Offline compatibility review against observed actual060de9 before new candidate/deployment approval; do not reset, checkout, pull or automatically rebase/repatch",
   "authorization": "Existing C1 scope retained; failed gate grants no bypass, no ticket/capture/restart authority",
   "attempts": [
     {
@@ -202,6 +210,48 @@
       },
       "flag_receipt_sha256": "b04f2fbea3561ec8bdb8c12abf57f6978c6b0fe36d961b11a3eb7b26fead6630",
       "remaining_actual_preflight": "NOT_RUN_AFTER_FIRST_OFF_GATE_FAILURE",
+      "actual_apply": "NOT_RUN",
+      "ticket": "NOT_CREATED",
+      "capture": "NOT_RUN",
+      "restart": "NOT_RUN",
+      "jetson_access": "NOT_RUN",
+      "cpu_suite": "NOT_RERUN_UNCHANGED_CODE"
+    },
+    {
+      "id": "C1_IGNITION_OFF_ACCESS_UNAVAILABLE",
+      "development_start_head": "95c4f5312aa2ef9bb70b820493d2c7f6164bfd9b",
+      "status": "BLOCKED_ACCESS_ERROR",
+      "flags": null,
+      "terminal_frames": 0,
+      "command_delivery": "NONE",
+      "flag_receipt_sha256": "7a7ec5e6b8188f4c9d0388dc72038fcdb91e4e01dca1f4998453cac6c08e44aa",
+      "local_terminal_created_at": "2026-10-24T14:56:41.833000+09:00",
+      "source_write": false,
+      "jetson_access": "NOT_RUN",
+      "note": "User later confirmed comma powers down when ignition is off"
+    },
+    {
+      "id": "C1_SEPARATE_POWER_HEAD_DRIFT",
+      "development_start_head": "95c4f5312aa2ef9bb70b820493d2c7f6164bfd9b",
+      "start_working_tree": "CLEAN",
+      "start_local_remote_equal": true,
+      "status": "BLOCKED_HEAD_DRIFT",
+      "classification": "COMMA_REAL_READ_ONLY",
+      "flags": {
+        "IsOffroad": "1",
+        "IsOnroad": "0"
+      },
+      "observed_branch": "carrot-nav",
+      "observed_head": "060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c",
+      "required_head": "810e14aaf51176f1a50a113939dc2e70907b394b",
+      "tracked_short_entries": 0,
+      "untracked_short_entries": 49,
+      "local_terminal_created_at": "2026-10-24T15:45:49.430000+09:00",
+      "flag_receipt_sha256": "2ab91450fba6b113817d2f2ebfb091e82ef8935055f389f3e89767950023d66c",
+      "identity_receipt_sha256": "362008c54aeb3c1f0d344989e84250208ab04097ead617421a1bbe4585167db4",
+      "source_pins": "NOT_RUN",
+      "genuine_off": "PARTIAL_FLAGS_ONLY",
+      "remaining_preflight": "NOT_RUN_AFTER_HEAD_MISMATCH",
       "actual_apply": "NOT_RUN",
       "ticket": "NOT_CREATED",
       "capture": "NOT_RUN",

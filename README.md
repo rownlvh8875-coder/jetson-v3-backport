@@ -10,10 +10,10 @@
 **최신 작업 인계:** [CODEX_CONTINUATION.md](docs/CODEX_CONTINUATION.md).
 
 2026-10-24 [M19-C1 OFF 배포 시도](docs/M19C1_810E_ACTUAL_OFF_DEPLOYMENT_20261024.md):
-정상 시동 OFF 보고 후 재시도에서도 새 실제 값은 OFF/ON0/1이어서
-**BLOCKED_NOT_OFFROAD**로 중단했다. migration·ticket·capture·restart는 하지 않았다.
-CPU415 PASS는 앞선 시도의 기록이며 코드 변경 없는 이번 재시도에서는 반복하지 않았다.
-장치가 자연적으로 OFF/ON1/0을 보고한 뒤 새 preflight부터 재개해야 한다.
+별도 전원 연결 후 새 실제 값은 OFF/ON1/0이나, 실제 HEAD가 승인된810e에서
+`060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c`로 이동해 **BLOCKED_HEAD_DRIFT**다.
+tracked 수정0이며 migration·ticket·capture·restart는 하지 않았다. 다음은 actual060de9
+기준 오프라인 호환성 검토다. CPU415 PASS는 앞선 시도의 기록이며 이번에는 반복하지 않았다.
 
 2026-10-24 [M19-C0 exact810e recorder](docs/M19C0_810E_SHARED_INPUT_REBASE_20261024.md):
 사용자 보고 actual810e의 shared-input/N16 계약에 맞춘 **별도 오프라인 후보**를 준비했다.
