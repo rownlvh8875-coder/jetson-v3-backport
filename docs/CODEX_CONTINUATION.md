@@ -1,5 +1,35 @@
 # Codex continuation — 2026-10-24
 
+## Latest checkpoint: M19-C2.1 storage BLOCKED at source/profile gate
+
+Read `docs/M19C21_PRIVATE_CAPTURE_STORAGE_20261024.md` and
+`artifacts/m19c21_private_capture_storage_20261024.json` first.
+**BLOCKED_SOURCE_OR_PROFILE_DRIFT**, actual mutationNONE. User approved one
+dedicated root `/data/v3_input_capture` and minimal private fsync probe only;
+ticket/capture/restart/Jetson/Params/source/Git/updater operations excluded.
+
+Initial known-device web/SSH timeouts delivered no shell command. User confirmed
+the same address; fresh owned terminal connected and executed read-only source
+guard. First Git reads branch/HEAD, then exact6/footer/30pins/additional9 boundary
+sources/tracked-status predicates. Generic AssertionError ended the operation.
+Observed values and particular failing predicate NOT_RETAINED because helper
+returns its identity/hash map only on complete success. Do not claim HEAD drift
+specifically or assert current a559/profile/ticket/writer values from history.
+No further actual read after STOP; no storage/ticket/process inventory ran.
+
+Root NOT_CREATED; probeNOT_RUN; ticketNOT_CREATED_BY_WORKFLOW/namespaceNOT_CHECKED;
+activationNOT_RUN/writerNOT_STARTED_BY_WORKFLOW/currentcountNOT_CHECKED/frames0/
+datasetNONE_CREATED. Mount/owner/mode/space/path separation and source/index
+stability NOT_ATTESTED. Jetson access/mutationNONE; no auto-retarget/repair/restart.
+Local fixture normal guardPASS/47deliberate drifts rejected/read-onlyAST PASS;
+not actual storage evidence. Prior C2 CPU627 historical, not rerun/recounted.
+Historical evidence unchanged; development docs/artifact only fromdf705b4 clean/equal.
+
+Ready retryC2NO, PARITY_UNDETERMINED/M2NO. **Next:** separate read-only source/profile
+diagnosis retaining first failing predicate and observed identity before storage
+retry. No mkdir or ticket based on historical a559. Result commit:
+`git log -1 --format=%H -- artifacts/m19c21_private_capture_storage_20261024.json`.
+
 ## Latest checkpoint: M19-C2 vehicle10 BLOCKED before arming
 
 Read `docs/M19C2_VEHICLE10_CAPTURE_20261024.md` and

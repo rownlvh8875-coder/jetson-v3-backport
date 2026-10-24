@@ -1,0 +1,149 @@
+{
+  "schema": 1,
+  "stage": "M19-C2.1",
+  "date": "2026-10-24",
+  "created_utc": "2026-10-24T11:17:35.297559+00:00",
+  "status": "BLOCKED_SOURCE_OR_PROFILE_DRIFT",
+  "development_branch": "feature/jetlink-multimodel-carrot",
+  "start_development_head": "df705b42ecf0818c4c796999b9bf221430c0a369",
+  "start_working_tree": "CLEAN",
+  "start_local_remote_equal": true,
+  "result_commit_resolution": "git log -1 --format=%H -- artifacts/m19c21_private_capture_storage_20261024.json",
+  "authorization": {
+    "scope": "One dedicated private capture root and minimal exclusive fsync probe only",
+    "capture": false,
+    "ticket": false,
+    "jetson_access": false,
+    "approved_root": "/data/v3_input_capture"
+  },
+  "access": {
+    "initial_connection": "UNREACHABLE: prior web terminal and known SSH bounded timeouts; no shell commands delivered",
+    "user_address_reconfirmed": true,
+    "retry": "CONNECTED_FRESH_OWNED_TERMINAL",
+    "actual_read_only_guard_executed": true
+  },
+  "actual_source": {
+    "required_branch": "carrot-nav",
+    "required_head": "a559fcd971ccaa5a87befb8ec080f59a2966325b",
+    "required_profile": "RECORDER_A559_EXECUTION_SWITCHES_V1",
+    "observed_branch": "NOT_RETAINED",
+    "observed_head": "NOT_RETAINED",
+    "six_file_profile": "NOT_ATTESTED",
+    "source_pins_30": "NOT_ATTESTED",
+    "guard_result": "BLOCKED_SOURCE_OR_PROFILE_DRIFT",
+    "stop_on_first_failed_assertion": true,
+    "limitation": "The guard returns branch/HEAD/hash maps only on success. This failure receipt retains the generic assertion, not its internal failing predicate or observed values. No claim identifies HEAD, six hashes,30 pins, extra source boundaries or tracked status as the specific cause.",
+    "guard_predicates": [
+      "branch/HEAD exact",
+      "six installed hashes exact",
+      "bound footer exact",
+      "30 normalized source pins exact",
+      "9 additional owner/uploader/storage boundary source hashes exact",
+      "only installed model footer tracked diff"
+    ],
+    "actual_after_failure_reads": "NONE"
+  },
+  "storage": {
+    "root": "/data/v3_input_capture",
+    "created": "NO",
+    "type": "NOT_CHECKED",
+    "symlink": "NOT_CHECKED",
+    "owner": "UNRESOLVED",
+    "mode": null,
+    "empty": "NOT_RUN",
+    "writable": "NOT_RUN",
+    "fsync_probe": "NOT_RUN",
+    "probe_created": false,
+    "probe_removed": false,
+    "total_bytes": null,
+    "available_bytes": null,
+    "available_mib": null,
+    "available_percent": null,
+    "parent_validation": "NOT_RUN",
+    "route_storage_overlap": "UNKNOWN",
+    "git_worktree_overlap": "UNKNOWN",
+    "uploader_integration": "UNKNOWN",
+    "installed_hook_dry_check": "NOT_RUN"
+  },
+  "recorder": {
+    "ticket": "NOT_CHECKED",
+    "ticket_created": false,
+    "arm_discovered_calls": 0,
+    "arm_ticket_calls": 0,
+    "activation": "NOT_RUN",
+    "writer_started_by_workflow": false,
+    "observed_writer_count": null,
+    "frames_by_workflow": 0,
+    "dataset_by_workflow": "NONE",
+    "vehicle_transition": "NOT_RUN"
+  },
+  "source_preservation": {
+    "head_stable": "NOT_ATTESTED",
+    "six_hashes_stable": "NOT_ATTESTED",
+    "source_pins_stable": "NOT_ATTESTED",
+    "index_stable": "NOT_ATTESTED",
+    "updater_drift": "NOT_DETERMINED",
+    "source_changes_by_workflow": "NONE",
+    "git_changes_on_comma_by_workflow": "NONE",
+    "params_changes_by_workflow": "NONE",
+    "updater_changes_by_workflow": "NONE",
+    "restart": "NOT_RUN",
+    "scope": "Actual helper was read-only; no successful before/after identity attestation exists in this failed precheck"
+  },
+  "actual_mutation": "NONE",
+  "jetson_access": "NONE",
+  "jetson_mutation": "NONE",
+  "ready_to_retry_m19c2": "NO",
+  "capture": "NOT_RUN",
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "m2_readiness": "NO",
+  "local_verification": {
+    "status": "PASS_LOCAL_FIXTURE_ONLY",
+    "normal_profile_pass": true,
+    "rejected_drift_cases": 47,
+    "actual_helper_read_only_ast": true,
+    "actual_execution": "NOT_RUN_BY_THIS_VERIFIER",
+    "source_sha256": "8882d7ac161faa2ac71900ff98567a7b83465cacfed14bafef92bcd8c08e9605",
+    "remote_failure_detail": "NOT_RETAINED_IN_RECEIPT"
+  },
+  "regression": {
+    "new_production_reader_or_tool_changes": false,
+    "new_pytest_tests": 0,
+    "fresh_627_run": "NOT_RUN_DOCS_ONLY_STAGE",
+    "previous_m19c2_authoritative_result": {
+      "passed": 627,
+      "failed": 0,
+      "skipped": 0,
+      "fresh_this_stage": false,
+      "artifact": "artifacts/m19c2_vehicle10_capture_20261024.json"
+    },
+    "supplemental_diagnostics": "4 dependency-blocked cases remain separate and uncounted",
+    "full_root": "Known tests/test_backport.py:192 collection blocker remains separate; not rerun"
+  },
+  "historical_evidence": "UNCHANGED",
+  "private_receipt_sha256": {
+    "connectivity2-private.json": "6b3fe08fab5dff389f5d1e3e2e0ef28c4a029e02d5293adfc90cc4e3b1da8ce5",
+    "inventory-private.json.terminal-private.json": "0209ba361116a1dcbf55992880973a2b97d3892fa15ba7bce04171865b963921",
+    "inventory2-private.json": "20f592186b19dd03d307194e3fb10f0e64faa7956fd421cd110f26df5cb094a5",
+    "inventory2-private.json.live-private.json": "282cdd84983a953976d22c6177fbd95a28959943fe8a37b848a4ac9d716dbcb7",
+    "inventory2-private.json.terminal-private.json": "7dabeb6a06d2b276c0a5a9abb5cc8dff17aa5712c6e0f841bd9205e6daa7775b"
+  },
+  "private_helper_sha256": {
+    "prepare_inventory.py": "307dcdab18e14fd30866aa6dea6fbda5c6650a3693773d4b81e119cec2787b32",
+    "inventory.py": "8882d7ac161faa2ac71900ff98567a7b83465cacfed14bafef92bcd8c08e9605",
+    "common.py": "5edbb5e7da7f89366cfc018f59bd31c1c3267166affdbd330a61ca40518c7624",
+    "device_stream.cjs": "b4622ce074a33f6bc00c81fc87c30ad303158beb21cb589b1023e09fa17d3f4a",
+    "verify_readonly_guard.py": "185c8e1f8d067f45fc9ad6227f190928168e775f047d894e2886538e58bcdc39"
+  },
+  "privacy": {
+    "address_published": false,
+    "private_terminal_or_process_details_published": false,
+    "raw_capture_created": false,
+    "temporary_probe_name_created": false
+  },
+  "protected_refs": {
+    "main": "2519ad0bdbf6e796fa590063fc90d4d6461b6b8d",
+    "old_feature": "26c9c06a5e51ff0e8d3a1e8575eece548e87f3b5"
+  },
+  "next_action": "Separate read-only diagnosis that retains the failing source/profile predicate and observed identity before any storage retry; no auto-retarget, patch or arming"
+}
