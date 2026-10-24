@@ -1,5 +1,78 @@
 # Codex continuation — 2026-10-24
 
+## Current checkpoint: M19-B1.5 detached comma + Jetson readiness PASS
+
+Read `docs/M19B15_DETACHED_JETSON_PREFLIGHT_20261024.md` and
+`artifacts/m19b15_detached_jetson_preflight_20261024.json` first.
+**DETACHED_JETSON_PREFLIGHT_PASS / Ready for M19-B2 vehicle10 YES** as future
+readiness only, not execution authorization. Actual comma remains carrot-nav
+366d6eae9aa9962104391e1d997fe956dea8f64d /PATCH_LEFT_INSTALLED_OFF_V2 /OFF1ON0.
+No actual source/config/Param/selection/package/USB change, restart, ticket,
+activation, capture, forced producer, ignition transition, inference or GPU init
+occurred. M1 V3 plan was not accessed. PARITY_UNDETERMINED / M2 NO unchanged.
+
+Fresh first actual flags1/0. PRE and final full POST exact: original48/2006files/
+417208589bytes/digest8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5;
+V2 POST49/2011/417266269/digesta4980220b3fd14af9149c01d6643cdd2ee97388c1d90e4ccf65853b89d85304c.
+Six recorder/context pins, source/model/route metadata/index/native/pyc canaries
+and original31 process identities unchanged. U32 still accepted-unknown/runtime
+use UNKNOWN, U46 generated legacy. Do not reapply any installed patch.
+RecorderOFF, namespace/output absent, writer0/memfd0, no activation env.
+Known Panda cuatro ignition false/false/harness notConnected, device.startedfalse,
+card/modeld/camerad absent by normal OFF policy. Final3windows Panda28/28/29,
+manager6/6/6/device6/6/6 passed unchanged freshness gates. One earlier window's
+initial cached deviceState timestamp preceded windowstart and was rejected;
+identical new3window read passed. No freshness/timeout relaxation. Detached proof
+is not stationary proof. Modeld timing/camera cadence NOT_AVAILABLE_OFFROAD.
+
+Jetson existing pinned-key/host SSH only, no trust bypass/scan; temporary own
+signing agent/master/SSH relay closed BEFORE final comma process attestation.
+L4T36.4.7/kernel5.15.148/Python3.10.12/MAXN_SUPER2/NVMe protectedrootRO.
+Runtime active/running backendtrt/transportusb/TRT10.3.0/NRestarts0, currentrelease
+54e706fa0573e91dc3b4a0d4f625b9d81a6b68cc. Control socket listening; service
+PID/start/argv/cwd/exe/unit/drop-ins/source hashes/packages exact before/after.
+Four V2/Nav ONNX/plans match required fullSHA, all8 operating cache files incl
+sidecars/timing/last-loaded and five releases preserved. Last-loaded/live loaded
+is Nav01effc.../frameskip4/trt, not V3. No experimental env flag observed.
+No TRT/CUDA imports by audit. Historical existing Nav device-state/CUDA-graph
+startup log is not audit-enabled V3 optimization. CPU/GPU/TJ~55C/live thermalOK,
+RAMavailable~5.76GB, swapused~0.46GB, rootfree~5.47GB/cachepartitionfree~6.57GB.
+Three other thermal zones unavailable; first collector failed on sysfs TypeError,
+local collector corrected to retain unavailable values explicitly, freshfullreads
+passed. No performance/stress/thermal acceptance or fabricated temperatures.
+
+USB peer1209:0001 jetlink5000M, usbfs+cdc_ncm. Comma UDCa600000.dwc3 configured/
+super-speed, ffs.jetlink+ncm.jetlink, ADB0. g1 is ABSENT (not a fabricated blank
+UDC); no competing gadget bound. Exact before/after USB state, no USB2fallback.
+P2_SERVER_READY from existing published HELLO/liveSTATE: protocol2/Nav/engineready/
+healthok across3passive reads. Historical server counter10 remained10, NOT new
+capture/inference. Audit opened noJetlink client/control socket/INFER request.
+HELLO peer snapshot has old engine-none/frames0/unknown_message error; current
+root telemetry is fresh engine-ready/frames10/healthok. Source daemon.py:249–280
+separates those views. P3 code support exists but current P3/V3 not enabled.
+Bounded read-only sudo-n logs after unprivileged denial: recent15min/80lines no
+entries; boot60tail includes old wait interruption, one unknown type16387/USB
+transfer5/reconnect and plan portability warning followed by engine-ready/HELLO.
+No current repeat fault/crashloop/memory error; no service restart or error clear.
+
+Jetson14comparisonchecks PASS; preservation schema digest
+02c247700e66e674764ff2a21c7e1f5e762fecedcfa1cb9caeb062b64b82d3f2
+includes freshmetadata, not replacement for historic M1/M16 digest schemas.
+Read-only commands can create normal OS auth logs/native subscriber bookkeeping;
+no protected operational content/config changed. Private evidence retained under
+ignored `.reports/m19b15-20261024/`, including source-bound commands, exact receipts,
+bounded raw logs and new29-case JUnit. No private payload/credentials in public Git.
+Fresh CPU29PASS/0FAIL/0SKIP covers unchanged receipt tests only; prior339 not rerun
+or added. No new production code or patch this stage. USB_REAL_INFERENCE and
+COMMA_REAL_CAPTURE NOT_RUN_BY_SCOPE, capturedframes0/datasetNONE, no road operation.
+
+Next: separately approved vehicle-mounted M19-B2 genuine OFF/source/USB preflight
+and continuously stationary coverage plan BEFORE any one-shot10 arm. Existing
+Nav/V2 Protocol2 only. Readiness YES is not authorization for ticket/onroad/capture;
+no 256/512road capture or M2 inherited. Development start540fbcad790ebc7572a993f8b2269a72b4f9132c
+clean/localremoteequal; result HEAD resolves with
+`git log -1 --format=%H -- artifacts/m19b15_detached_jetson_preflight_20261024.json`.
+
 ## Current checkpoint: M19-B1 activation-v2 deployed, default OFF
 
 Read `docs/M19B1_ACTIVATION_V2_DEPLOYMENT_20261024.md` and

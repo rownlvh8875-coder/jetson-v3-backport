@@ -1,0 +1,526 @@
+{
+  "schema": 1,
+  "date": "2026-10-24",
+  "stage": "M19-B1.5",
+  "result": "DETACHED_JETSON_PREFLIGHT_PASS",
+  "development_start_head": "540fbcad790ebc7572a993f8b2269a72b4f9132c",
+  "result_commit_resolution": "git log -1 --format=%H -- artifacts/m19b15_detached_jetson_preflight_20261024.json",
+  "classification": [
+    "COMMA_REAL_READ_ONLY",
+    "JETSON_REAL_READ_ONLY",
+    "USB_LINK_READ_ONLY",
+    "CPU_FAKE",
+    "FIXTURE"
+  ],
+  "scope": {
+    "ticket": "NOT_CREATED",
+    "recorder_activation": "NOT_RUN",
+    "capture": "NOT_RUN_BY_SCOPE",
+    "frames_captured": 0,
+    "dataset": "NONE",
+    "COMMA_REAL_CAPTURE": "NOT_RUN",
+    "USB_REAL_INFERENCE": "NOT_RUN_BY_SCOPE",
+    "TRT_REAL": "NOT_RUN_THIS_STAGE",
+    "GPU_initialized_by_audit": false,
+    "M1_V3_plan_accessed": false,
+    "restart": "NOT_RUN",
+    "ROAD_TEST": "NOT_RUN",
+    "VEHICLE_PARKED": "NOT_RUN",
+    "source_config_Param_package_writes": false
+  },
+  "gates": {
+    "comma_exact_pre_post": true,
+    "comma_all_attestation_checks": true,
+    "detached_pre_post": true,
+    "recorder_OFF": true,
+    "original48_and_U32_U46": true,
+    "jetson_preservation": true,
+    "assets_and_service": true,
+    "usb_comma": true,
+    "USB_no_ADB_owner": true,
+    "P2_ready": true,
+    "idle_counter_unchanged": true,
+    "ticket_absent": true,
+    "owned_access_closed": true
+  },
+  "comma": {
+    "branch": "carrot-nav",
+    "head": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+    "flags": {
+      "IsOffroad": "1",
+      "IsOnroad": "0"
+    },
+    "detached": "DEVICE_DETACHED_EVIDENCE_PASS",
+    "stationary_assertion": false,
+    "activation_v2_POST": "PASS",
+    "source_state": "PATCH_LEFT_INSTALLED_OFF_V2",
+    "original48_digest": "8b0cbfc9df6194fa1607ce8bdc02bc06158b1bd3496a0a4f8de20fdffacfd9d5",
+    "activation_v2_digest": "a4980220b3fd14af9149c01d6643cdd2ee97388c1d90e4ccf65853b89d85304c",
+    "untracked_entries": 49,
+    "regular_untracked_files": 2011,
+    "untracked_bytes": 417266269,
+    "original_path_commitments": {
+      "U01": true,
+      "U02": true,
+      "U03": true,
+      "U04": true,
+      "U05": true,
+      "U06": true,
+      "U07": true,
+      "U08": true,
+      "U09": true,
+      "U10": true,
+      "U11": true,
+      "U12": true,
+      "U13": true,
+      "U14": true,
+      "U15": true,
+      "U16": true,
+      "U17": true,
+      "U18": true,
+      "U19": true,
+      "U20": true,
+      "U21": true,
+      "U22": true,
+      "U23": true,
+      "U24": true,
+      "U25": true,
+      "U26": true,
+      "U27": true,
+      "U28": true,
+      "U29": true,
+      "U30": true,
+      "U31": true,
+      "U32": true,
+      "U33": true,
+      "U34": true,
+      "U35": true,
+      "U36": true,
+      "U37": true,
+      "U38": true,
+      "U39": true,
+      "U40": true,
+      "U41": true,
+      "U42": true,
+      "U43": true,
+      "U44": true,
+      "U45": true,
+      "U46": true,
+      "U47": true,
+      "U48": true
+    },
+    "six_recorder_hashes": {
+      "openpilot/selfdrive/modeld/jetlink/model.py": "0fbcba80a84fa6ffd22a6463cb75f111c95cd939697ce357e44ec45909109c91",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/__init__.py": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/format.py": "9deff26ba3ba9b66642f7a471b10c637272003029866ce47fe82f80ff702acdf",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/recorder.py": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/dataset.py": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7",
+      "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py": "9e688299d4fcefeea3a5ebc1460ee8fd72afd1c15c9f2d1a1fd3f58b1a5ca7de"
+    },
+    "context_pins": {
+      "openpilot/system/manager/process.py": "fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752",
+      "openpilot/selfdrive/modeld/modeld.py": "008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594"
+    },
+    "U32_status": "U32_UNKNOWN_ACCEPTABLE_FOR_PATCH_ISOLATION",
+    "U32_runtime_use": "UNKNOWN",
+    "U32_U46": "UNCHANGED",
+    "original_process_identities_preserved": 31,
+    "source_model_route_process_before_after_exact": true,
+    "routes_inventory_class": "metadata only; no new full route content hash",
+    "recorder": "OFF",
+    "writer_count": 0,
+    "capture_memfd_hits": 0,
+    "activation_env_present": false,
+    "ticket_namespace": "ABSENT",
+    "discovery_directory_created": false,
+    "detached_panda": {
+      "type": "cuatro",
+      "ignitionLine": false,
+      "ignitionCan": false,
+      "harnessStatus": "notConnected"
+    },
+    "device_started": false,
+    "card_active": false,
+    "modeld_active": false,
+    "camerad_active": false,
+    "final_detached_window_samples": [
+      {
+        "pandaStates": 28,
+        "managerState": 6,
+        "deviceState": 6
+      },
+      {
+        "pandaStates": 28,
+        "managerState": 6,
+        "deviceState": 6
+      },
+      {
+        "pandaStates": 29,
+        "managerState": 6,
+        "deviceState": 6
+      }
+    ],
+    "modeld_timing": "NOT_AVAILABLE_OFFROAD",
+    "camera_cadence": "NOT_AVAILABLE_OFFROAD",
+    "full_onroad_recorder_import": "NOT_RUN"
+  },
+  "jetson": {
+    "reachable": true,
+    "device": "NVIDIA Jetson Orin Nano Super",
+    "l4t": "36.4.7",
+    "kernel": "5.15.148-tegra",
+    "python": "3.10.12",
+    "power_mode": "MAXN_SUPER",
+    "power_mode_id": 2,
+    "NVMe_root": true,
+    "root_mount_readonly": true,
+    "runtime_service": "RUNNING",
+    "backend": "trt",
+    "transport": "usb",
+    "runtime_version": "10.3.0",
+    "service_NRestarts": 0,
+    "service_pid_start_argv_cwd_exe_unchanged": true,
+    "control_socket_present_and_listening": true,
+    "current_release": "54e706fa0573e91dc3b4a0d4f625b9d81a6b68cc",
+    "release_count": 5,
+    "assets": {
+      "V2_ONNX": {
+        "status": "PASS",
+        "sha256": "09d080f36965bb2a0790500452bd328aa03c484d0222aa79d1ad9f021a522aec",
+        "bytes": 766040736,
+        "stable_read": true
+      },
+      "V2_plan": {
+        "status": "PASS",
+        "sha256": "5d7a4a40ad3830fb4406694dddc1b13f1c05a8d47360586c6891bfce8f1f3ca2",
+        "bytes": 771100700,
+        "stable_read": true
+      },
+      "Nav_ONNX": {
+        "status": "PASS",
+        "sha256": "01effc679eb46d6036ce0302673a87fe2dcfcc95a679daeeb929679e53c3647a",
+        "bytes": 814591107,
+        "stable_read": true
+      },
+      "Nav_plan": {
+        "status": "PASS",
+        "sha256": "2c5c5a5e0c736b4d60a6c56569539df219c9e5b32aee8fde26be6d446c96caa2",
+        "bytes": 795042044,
+        "stable_read": true
+      }
+    },
+    "operating_cache_files": 8,
+    "cache_sidecars_timing_last_loaded_unchanged": true,
+    "unit_dropins_unchanged": true,
+    "system_package_inventory_sha256": "b6601342fec326c09db1414c4762821cae93fedc4a8c8c093e761862b3fb86d4",
+    "system_packages_unchanged": true,
+    "package_versions": [
+      "cuda-toolkit-12-6\t12.6.11-1",
+      "libnvinfer10\t10.3.0.30-1+cuda12.5",
+      "nvidia-l4t-core\t36.4.7-20250918154033"
+    ],
+    "operating_preservation_digest": "02c247700e66e674764ff2a21c7e1f5e762fecedcfa1cb9caeb062b64b82d3f2",
+    "preservation_checks": {
+      "complete_operating_preservation": true,
+      "eight_cache_files": true,
+      "all_four_exact_asset_hashes": true,
+      "stable_files": true,
+      "cache_namespace": true,
+      "packages": true,
+      "unit_and_dropins": true,
+      "service_identity_and_state": true,
+      "source_pins": true,
+      "no_experimental_env": true,
+      "process_identity": true,
+      "control_socket": true,
+      "usb_peer_5000": true,
+      "sudo_bounded_logs_accessible": true
+    },
+    "memory_before": {
+      "MemTotal": 7990013952,
+      "MemAvailable": 5760679936,
+      "SwapTotal": 3995000832,
+      "SwapFree": 3534675968
+    },
+    "memory_after": {
+      "MemTotal": 7990013952,
+      "MemAvailable": 5757009920,
+      "SwapTotal": 3995000832,
+      "SwapFree": 3529695232
+    },
+    "thermal_before": [
+      {
+        "type": "cpu-thermal",
+        "millidegrees": 54875
+      },
+      {
+        "type": "gpu-thermal",
+        "millidegrees": 55031
+      },
+      {
+        "zone": "thermal_zone2",
+        "error": "TypeError"
+      },
+      {
+        "zone": "thermal_zone3",
+        "error": "TypeError"
+      },
+      {
+        "zone": "thermal_zone4",
+        "error": "TypeError"
+      },
+      {
+        "type": "soc0-thermal",
+        "millidegrees": 53531
+      },
+      {
+        "type": "soc1-thermal",
+        "millidegrees": 55125
+      },
+      {
+        "type": "soc2-thermal",
+        "millidegrees": 54062
+      },
+      {
+        "type": "tj-thermal",
+        "millidegrees": 55250
+      }
+    ],
+    "thermal_after": [
+      {
+        "type": "cpu-thermal",
+        "millidegrees": 55312
+      },
+      {
+        "type": "gpu-thermal",
+        "millidegrees": 55250
+      },
+      {
+        "zone": "thermal_zone2",
+        "error": "TypeError"
+      },
+      {
+        "zone": "thermal_zone3",
+        "error": "TypeError"
+      },
+      {
+        "zone": "thermal_zone4",
+        "error": "TypeError"
+      },
+      {
+        "type": "soc0-thermal",
+        "millidegrees": 53875
+      },
+      {
+        "type": "soc1-thermal",
+        "millidegrees": 55500
+      },
+      {
+        "type": "soc2-thermal",
+        "millidegrees": 54562
+      },
+      {
+        "type": "tj-thermal",
+        "millidegrees": 55500
+      }
+    ],
+    "thermal_unavailable_zones": 3,
+    "thermal_result": "CPU/GPU/SoC/TJ readable and current host thermal health OK; three other zones return no usable temperature, no fabricated value",
+    "storage_free_before_bytes": {
+      "root": 5471490048,
+      "operating_partition": 6570823680
+    },
+    "benchmark": "NOT_RUN",
+    "experimental_env": {}
+  },
+  "usb": {
+    "link": "PASS",
+    "speed_mbps": 5000,
+    "comma_udc": "a600000.dwc3",
+    "comma_state": "configured",
+    "comma_speed": "super-speed",
+    "AdbEnabled": 0,
+    "g1_state": "ABSENT, not bound; no blank UDC value fabricated",
+    "jetlink_functions": [
+      "ffs.jetlink",
+      "ncm.jetlink"
+    ],
+    "host_peer_vendor": "1209",
+    "host_peer_product": "0001",
+    "host_peer_product_name": "jetlink",
+    "host_vendor_interface_driver": "usbfs",
+    "host_network_interface_driver": "cdc_ncm",
+    "before_after_same": true,
+    "USB2_fallback_observed": false
+  },
+  "P2_server": {
+    "result": "P2_SERVER_READY",
+    "basis": "Existing daemon status/HELLO plus live STATE telemetry and runtime/source/FD/socket metadata; audit opened no Jetlink client",
+    "existing_protocol": 2,
+    "source_protocol_VERSION": 2,
+    "source_supported_versions": [
+      2,
+      3
+    ],
+    "P3_active": false,
+    "V3_selected": false,
+    "selected_model": "N16 Nav",
+    "selected_sha256": "01effc679eb46d6036ce0302673a87fe2dcfcc95a679daeeb929679e53c3647a",
+    "last_loaded_frame_skip": 4,
+    "last_loaded_backend": "trt",
+    "stateful_v2": true,
+    "carrot_nav_u8_v1": true,
+    "V2_and_Nav_cached": true,
+    "live_engine_state": "ready",
+    "live_health": "ok",
+    "idle_samples": [
+      {
+        "state": "ready",
+        "protocol": 2,
+        "engine": "ready",
+        "health": "ok",
+        "frames_served": 10,
+        "status_age_s": 0.17721201600215863,
+        "telemetry_age_s": 0.44715828000335023
+      },
+      {
+        "state": "ready",
+        "protocol": 2,
+        "engine": "ready",
+        "health": "ok",
+        "frames_served": 10,
+        "status_age_s": 0.25630685400392395,
+        "telemetry_age_s": 0.5243976289930288
+      },
+      {
+        "state": "ready",
+        "protocol": 2,
+        "engine": "ready",
+        "health": "ok",
+        "frames_served": 10,
+        "status_age_s": 0.33406004900461994,
+        "telemetry_age_s": 0.6016247910010861
+      }
+    ],
+    "historical_server_counter": 10,
+    "server_counter_delta_in_observed_idle_samples": 0,
+    "historical_counter_is_not_capture_count": true,
+    "HELLO_snapshot_caveat": "Peer HELLO retains startup engine_state none/frames0 and an old unknown_message error. Fresh root telemetry is engine ready/frames10/health ok; exact366 daemon publishes peer snapshot separately from periodically refreshed client.last_state."
+  },
+  "bounded_logs": {
+    "access": "sudo -n read-only journal query after unprivileged denial; no credential prompt or permission change",
+    "limits": {
+      "recent_minutes": 15,
+      "recent_max_lines": 80,
+      "boot_tail_max_lines": 60
+    },
+    "recent": "NO_ENTRIES",
+    "current_crash_loop_observed": false,
+    "current_TRT_load_or_memory_error_observed": false,
+    "retained_historical_events": [
+      "Earlier boot-update wait KeyboardInterrupt before current successful start",
+      "One startup unknown_message type16387 and one USB reader transfer-status5 disconnect; successful reconnect/HELLO followed",
+      "Existing TRT engine-device portability warning and subsequent Nav engine-ready"
+    ],
+    "new_faults_in_repeat_query": false,
+    "raw_logs_in_git": false
+  },
+  "operating_preservation": "PASS",
+  "scope_notes": [
+    "Receive-only existing telemetry queues involve normal native cursor bookkeeping, not zero OS writes.",
+    "Authenticated SSH/sudo can generate normal OS audit logs; no source, Params, packages, services, selection, cache or device configuration was written.",
+    "Historical Nav device-state/CUDA-graph startup message belongs to the existing operating release, not audit-enabled V3 optimization."
+  ],
+  "preparation_failures": [
+    {
+      "stage": "local SSH helper preparation",
+      "result": "Quoting SyntaxError before bridge creation; corrected locally, no device change"
+    },
+    {
+      "stage": "first Jetson collector",
+      "result": "Optional thermal sysfs TypeError stopped receipt output; corrected collector to record unavailability, fresh full read succeeded"
+    },
+    {
+      "stage": "first final comma health window",
+      "result": "Initial deviceState source timestamp preceded window start; rejected, despite started=false. Identical unchanged three-window query then passed. No timeout/freshness gate relaxed."
+    }
+  ],
+  "access_cleanup": {
+    "temporary_signing_agent_stopped": true,
+    "master_socket_absent": true,
+    "personal_key_changed": false,
+    "remote_service_stopped": false
+  },
+  "signing_key_or_passphrase_in_git": false,
+  "host_key_verification": "StrictHostKeyChecking=yes / existing pinned alias+known-host file / UpdateHostKeys=no; no new trust accepted",
+  "CPU_tests": {
+    "pass": 29,
+    "fail": 0,
+    "skip": 0,
+    "scope": "Existing offline deployment receipt consistency regressions only; not a new 339-case suite or hardware inference test",
+    "command": "PYTHONPATH=. PYTHONDONTWRITEBYTECODE=1 python -m pytest -q -p no:cacheprovider tests/test_recorder_activation_deployment.py --tb=short"
+  },
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "M2_readiness": "NO",
+  "ready_for_M19B2_vehicle10": "YES",
+  "readiness_boundary": "Future vehicle10 preflight readiness only. Separate user authorization, genuine OFF arming and continuously stationary coverage across capture timestamps required. No automatic ticket, onroad transition, inference or road capture.",
+  "next_action": "Separately approved vehicle-mounted M19-B2 read-only OFF/source/USB preflight and live stationary coverage plan before any one-shot10 arm.",
+  "upstream_observed": {
+    "carrot-nav": "810e14aaf51176f1a50a113939dc2e70907b394b",
+    "carrot-wip": "dfab65d03fcd7100f572fe9e6908f4c6d1e988f6",
+    "carrot-jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "zoompilot/jetlink": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc",
+    "external-review": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722"
+  },
+  "upstream_end": {
+    "carrot-nav": "810e14aaf51176f1a50a113939dc2e70907b394b",
+    "carrot-wip": "dfab65d03fcd7100f572fe9e6908f4c6d1e988f6",
+    "carrot-jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "zoompilot/jetlink": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc",
+    "external-review": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722"
+  },
+  "actual_source_advanced": false,
+  "independent_review": {
+    "verdict": "PASS_FOR_PUBLICATION",
+    "critical": 0,
+    "important": 0,
+    "minor": 0,
+    "declined_to_judge": [],
+    "evidence_commitments_verified": 15,
+    "CPU_tests_verified": 29,
+    "scope": "One fresh local read-only review of the three publication files and retained private receipts; no tests/scripts/network/device operations or mutations"
+  },
+  "private_evidence_commitments": {
+    "first-flags-private.json": "5cd1486a678eec832e411d548314a3a90a25f6bb3c4f53d67d45888ae13fd57d",
+    "comma-before-private.json": "0f7cdb677808405b41887c8197ed056ece30af33662aca8528d10a77b52115cd",
+    "comma-after-private.json": "4fc2d547eba8ce60ed4922a4dc11bbb190789108e76c045effffd172e46f218b",
+    "comma-health-before-private.json": "dc145e8f6ca2b9ed7031fccb7d2268e4f0f5d15ce1d44ad19e9dc3460302e1fa",
+    "comma-health-after-isolated-private.json": "29822e37ad48e3dacec8436118d7e228f9f5967f8f2ab7baf9fd87847edb664f",
+    "comma-usb-before-private.json": "20f8b6cf82013560982148737ca51f8a143bbbd846726f73d459cb7dd670af6d",
+    "comma-usb-after-private.json": "2ea3f466d22568aec8cb07d6ea96c235b76f81ab789b8c7f9bf81d72b5779590",
+    "comma-idle-samples-private.json": "b5a1751c2b7bfbfcac1a95a65622d246e08bb99ecc70e12e10add7ef9377ca16",
+    "jetson-before-private.json": "6feea7c28f78d58b88a9d1418b366eda245aef66dc01a3d2fa24bc40f1dab436",
+    "jetson-after-private.json": "f10f336fda280c5adbe597a11b6c8c6b4c694270d363492bc087d93f570c90c0",
+    "jetson-source-private.json": "2f7683899267daab7f33e4310826b0b905cb253db617297abc0dd02d7b0090a6",
+    "jetson-source-after-private.json": "2f7683899267daab7f33e4310826b0b905cb253db617297abc0dd02d7b0090a6",
+    "jetson-comparison-private.json": "290925af9b9b116920af567af0d983880aed0dcdd03b923a60a11533b154b2aa",
+    "access-cleanup-private.json": "94077739b5c755354c2b0baa142fd9fb19e5189644a16344742421f0f464a015",
+    "pytest-receipt.xml": "96120edbb74dbb3b44ffb6f48f60d57e13c6f66723716361942a6bd4df7d8c94"
+  },
+  "privacy": {
+    "private_paths_argv_env_network_raw_logs": false,
+    "credentials": false,
+    "route_names_GPS": false,
+    "tensor_binaries": false,
+    "anonymous_original_ids_only": true
+  },
+  "protected_remote_refs": {
+    "main": "2519ad0bdbf6e796fa590063fc90d4d6461b6b8d",
+    "feature/cinque-v3-jetson": "26c9c06a5e51ff0e8d3a1e8575eece548e87f3b5"
+  },
+  "git_publication": {
+    "branch": "feature/jetlink-multimodel-carrot",
+    "method": "normal non-force push",
+    "verification": "Final response reports new result HEAD, clean tree and fresh local/remote equality"
+  }
+}
