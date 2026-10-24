@@ -13,6 +13,20 @@
   "target_base": "a559fcd971ccaa5a87befb8ec080f59a2966325b",
   "profile": "RECORDER_A559_EXECUTION_SWITCHES_V1",
   "classification": "RECORDER_LOGIC_REUSABLE",
+  "independent_review": {
+    "range_base": "2744d6ffbf784cee6892594566f41fe33be03f67",
+    "range_head": "0665c3a845a1af4412f6a9108afaff7fb9791535",
+    "status": "PASS_OFFLINE_CANDIDATE_ONLY",
+    "critical": 0,
+    "important": 0,
+    "minor": 0,
+    "read_only": true,
+    "device_or_network_access": false,
+    "full_suite_rerun": false,
+    "verified": ["30 immutable source pins", "canonical N16 spec", "frozen observer AST and writer/dataset/init bytes", "public migration forward/reverse bytes", "16 receipt digests and cross-case input hashes", "533+94 unique JUnit IDs/log digests"],
+    "declined_to_judge": ["real QCOM/GPU", "physical USB", "actual deployment state", "numerical parity", "latency", "vehicle readiness"],
+    "disposition": "Remain NOT_RUN/undetermined as required by offline-only scope; no deployment or vehicle readiness approval"
+  },
   "source_comparison": {
     "commits": [
       {

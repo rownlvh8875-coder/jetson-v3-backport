@@ -208,3 +208,16 @@ auto-retarget, restart, create a ticket or capture in this stage.
 Status: offline candidate PASS; actual install NOT_RUN. Ready for vehicle10 NO;
 M2 readiness NO; numerical decision PARITY_UNDETERMINED. Result commit resolves
 with `git log -1 --format=%H -- artifacts/m19c02_a559_execution_switches_20261024.json`.
+
+Independent read-only final review of2744d6f..0665c3a: PASS, zero critical,
+important or minor findings. Source pins, canonical spec, frozen behavior,
+migration bytes,16 receipts and627 unique test/log evidence were independently
+checked. Real QCOM/GPU/USB, actual deployment, numerical parity, latency and
+vehicle readiness were deliberately left unjudged within the offline-only scope.
+
+Decisions carried forward: use the explicitly requested feature checkout (any
+unexpected shared development change would require isolation/reconciliation);
+use only exact-source canonical spec hash for the malformed supplied text
+(a mismatch would block the profile); retain previous OFF as historical only
+(fresh actual gates are still required); leave the review's real-device and
+numerical exclusions NOT_RUN (vehicle readiness cannot follow from this review).
