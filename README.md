@@ -9,6 +9,11 @@
 
 **최신 작업 인계:** [CODEX_CONTINUATION.md](docs/CODEX_CONTINUATION.md).
 
+2026-10-24 [M19-C1 OFF 배포 시도](docs/M19C1_810E_ACTUAL_OFF_DEPLOYMENT_20261024.md):
+첫 실제 값이 OFF/ON0/1이어서 **BLOCKED_NOT_OFFROAD**로 중단했다.
+migration·ticket·capture·restart는 하지 않았으며 fresh CPU415 PASS다.
+정상 OFF 전환 후 새 preflight부터 재개해야 한다.
+
 2026-10-24 [M19-C0 exact810e recorder](docs/M19C0_810E_SHARED_INPUT_REBASE_20261024.md):
 사용자 보고 actual810e의 shared-input/N16 계약에 맞춘 **별도 오프라인 후보**를 준비했다.
 기존366 recorder는 현재 API와 **호환되지 않는다**. CPU415 PASS이며 실제 comma·Jetson에

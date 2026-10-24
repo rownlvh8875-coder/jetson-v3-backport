@@ -1,5 +1,46 @@
 # Codex continuation — 2026-10-24
 
+## Current checkpoint: M19-C1 BLOCKED_NOT_OFFROAD; migration NOT_RUN
+
+Read `docs/M19C1_810E_ACTUAL_OFF_DEPLOYMENT_20261024.md` and
+`artifacts/m19c1_810e_actual_off_deployment_20261024.json` first. **First actual
+commands returned OFF/ON0/1**, so the required genuine-OFF gate failed and all
+later actual work STOPPED. No patch, backup, disposable device copy, ticket,
+activation, capture, restart, ignition/Params/source/config/model/USB/Jetson
+change or actual Git commit occurred. No fresh branch/HEAD, device.started,
+source/package/overlay/model/route/index/process or namespace/writer observation
+was made after this failed gate. Do not invent a current810e attestation or
+writer0/default-OFF/operating-hash PASS from this attempt.
+
+Development start exactfeature0d1c6bd811c5d7d798a26d2b08ee964d4297f84d clean/
+localremoteequal. Previous endpoint unreachable/no command; user supplied current
+address privately. Fresh existing-method Carrot terminal ran only the first two
+flag reads; exit sent and websocket closed. No scan or SSH trust bypass. Private
+terminal evidence under ignored `.reports/m19c1-20261024/`; no addresses/argv/raw
+frames/credentials in public artifact. C0 design/artifact and forward/reverse
+SHA checks PASS locally; **these are not actual source/profile checks**.
+
+Fresh full authoritative scoped suite415 unique PASS/0FAIL/0SKIP in103.98s,
+CPU_FAKE/FIXTURE. No prior totals added, no new receipt tests or production/test
+changes. Public C1 artifact contains exact command/JUnit SHA and expected C0
+profiles marked expected-only. Historical bare-pytest collection blocker remains
+documented; no rerun. Stage-requested operational mutations NONE, but operating
+content preservation is NOT_ATTESTED without fresh before/after evidence.
+
+**Next:** normal ignition OFF/natural manager transition, then fresh firstcat
+OFF/ON1/0 and genuine-OFF telemetry/process proof before any exact810e/source/
+old-package/private-overlay audit. Existing C1 approval persists within its gates;
+no need to re-approve the same migration, but it does not waive failed safety or
+identity checks. If actual HEAD/source/profile moved, STOP; no auto-rebase/repatch.
+Use only `surviving366` migration after all fresh gates. No ticket/capture/restart
+is authorized. Ready for M19-B2 NO; PARITY_UNDETERMINED /M2 NO unchanged.
+
+Required target is810e14aaf51176f1a50a113939dc2e70907b394b, not a fresh actual
+HEAD observation here. Public upstream refs unchanged from C0 end: Nav060de9...
+/WIP9fa591.../hostd0dc96.../zoomd24328.../reviewa890f6...; full SHAs in artifact.
+C1 result commit resolves via
+`git log -1 --format=%H -- artifacts/m19c1_810e_actual_off_deployment_20261024.json`.
+
 ## Current checkpoint: M19-C0 exact810e shared-input recorder candidate PASS
 
 Read `docs/M19C0_810E_SHARED_INPUT_REBASE_20261024.md` and
