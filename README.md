@@ -9,6 +9,12 @@
 
 **최신 작업 인계:** [CODEX_CONTINUATION.md](docs/CODEX_CONTINUATION.md).
 
+2026-10-24 [M19-C0.1 exact060de9 transport 검토](docs/M19C01_060DE9_REQUEST_CHUNKS_20261024.md):
+810e recorder 동작 재사용과 Protocol2 chunk/reassembly 입력 byte identity를 오프라인 검증했다.
+**CPU543 PASS**, 별도060 프로필·surviving366 migration/reverse·strict reader 준비 완료다.
+실제 comma/Jetson 접근·배포·ticket·capture는 하지 않았다. 다음은 별도 승인된 exact060 OFF
+preflight이며, actual HEAD가 다르면 중단한다. M19-B2 capture와 M2는 아직 NO다.
+
 2026-10-24 [M19-C1 OFF 배포 시도](docs/M19C1_810E_ACTUAL_OFF_DEPLOYMENT_20261024.md):
 별도 전원 연결 후 새 실제 값은 OFF/ON1/0이나, 실제 HEAD가 승인된810e에서
 `060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c`로 이동해 **BLOCKED_HEAD_DRIFT**다.

@@ -1,5 +1,68 @@
 # Codex continuation — 2026-10-24
 
+## Latest checkpoint: M19-C0.1 exact060de9 request-chunk candidate PASS, OFFLINE ONLY
+
+Read `docs/M19C01_060DE9_REQUEST_CHUNKS_20261024.md` and
+`artifacts/m19c01_060de9_request_chunks_20261024.json` first. Distinct profile
+**RECORDER_060DE9_REQUEST_CHUNKS_V1**, base060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c.
+Start ec09d61952e29ad3725ac9947a324eaad61e7e42 clean/localremoteequal feature;
+implementation commit9722b3702cf0bde6b2866416c236674c8c0b4a34. Historical366/810
+code/patch/evidence frozen. No actual comma/Jetson access, device write, ticket,
+capture, restart, USB or GPU work. Actual060/OFF1/ON0/tracked0 supplied by earlier
+preflight is historical, not refreshed. Numerical PARITY_UNDETERMINED/M2 NO unchanged.
+
+Exact810e→060 range12commits/13files; all15 old recorder pins byte-identical,
+including model/link/shared-input/daemon/spec/actor/server state. N16 SHA01effc...
+and spec63b209... unchanged, server-owned five-pair recurrence, packed65595 with
+desire/traffic/action first12. Logical recorder inputs and function/class AST are
+unchanged. New binding changes formatBASE_SHA, hook source/package/footer constants
+and profile footer digest; writer/dataset/__init__ unchanged.28source pins include
+13 transport/host pins. Inherited810 diagnostic strings do not define BASE_SHA.
+
+Protocol2 still2. Strict carrot_request_chunks_v1 negotiation requires jetson
+identity/P2/descriptor and writer prepare; unsupported peers keep old framing.
+Whole logical request formed before chunking, CRC32+offset/total checked before
+the host's two-logical-message queue. Same-session seq replay never re-executes
+inference; HELLO resets this scope. No cross-session/cryptographic replay claim.
+Native depth16 writer tests use actual Linux file AIO plus syscall fault fixtures;
+these are not FunctionFS/USB/Jetson tests. Repository expected host moved54e706...
+to69c464..., bundle f254316c..., runtime aarch64/L4T36.4.7/TRT10.3 unchanged;
+actual installed Jetson host remains NOT_RUN/UNKNOWN.
+
+Fresh authoritative449PASS/0FAIL/0SKIP144.48s includes old415 once +new34;
+separate exact060 upstream94PASS/0FAIL/0SKIP7.25s.543 unique total, disjoint case IDs
+verified, no prior totals added. Eight separate-process shared/socket × chunks/old
+× compact/full-float cases3attempts each: dataset/Client/Session/EngineHost image,
+scalar, full packed and request hashes equal. Each chunk and completed whole
+request replayed, engine executions remain3/case. Only physical IO, native
+diagnostics, QCOM/GPU and unrelated handler initialization are fixture boundaries.
+Root collection still blocked by tests/test_backport.py:192 SystemExit0/pytest3;
+not a full-repository PASS. Private RED/setup failures distinguished from final
+GREEN. Independent review no blocking issue; minor bad-reference CLI traceback
+fixed via2RED→2GREEN, then authoritative449 rerun. JUnit SHA/commands in artifact.
+
+Main migration/reverse `patches/carrot-nav-060de9-v3-input-recorder{,.reverse}.patch`:
+forward2b09f9753d5cf3e717b126898445ed2e33a44ad6871c0b64062aa2a24044e099,
+reversecd07d062c5fbd06e49d5581b908ea5108b633b69442cb15f548079daaa88d473.
+Targets pure060 model + exact surviving366/B1 package;3touched files only.
+Separate-clean layout6paths also roundtrips to exact absence. Both6-path profiles
+and rollback hashes in artifact. New reader `tools/v3_input_dataset_060de9.py`;
+old readers reject newHEAD provenance. Fresh destination only, no auto-repatch.
+
+Public upstream first Nav710da0.../WIP9fa591..., end Nav710da0d285cd21c25c2ea143450de94196690884/
+WIPdeb63e276d95d3e0fc2234ad4b312b4c4d075269. WIP increment UI/EGL+CI trigger/test
+changes, no Jetlink runtime path changed; full primary compare URL/files in
+artifact. Hostd0dc96..., zoomd24328..., reviewa890f6... unchanged. No latest retarget.
+Reference HEAD366 and its existing submodule status unchanged, protected refs
+untouched. Private plan/logs/source extraction under ignored `.reports/m19c01-20261024/`.
+
+**Next:** separately approved fresh exact060 genuine-OFF/source/package/private
+overlay preflight, then only the new060 surviving366 migration. HEAD drift STOP;
+do not apply810 patch, pull/reset/checkout, disable updater or automatically rebase.
+No source deployment/arm/capture is authorized by this offline result. Candidate
+ready for exact060 OFF deployment YES; ready for M19-B2 capture NO. Result commit
+resolves with `git log -1 --format=%H -- artifacts/m19c01_060de9_request_chunks_20261024.json`.
+
 ## Latest checkpoint: M19-C1 powered OFF retry BLOCKED_HEAD_DRIFT
 
 User powered comma separately and supplied its current address. Fresh first

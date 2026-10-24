@@ -1,0 +1,1437 @@
+{
+  "schema": 1,
+  "stage": "M19-C0.1",
+  "date": "2026-10-24",
+  "status": "PASS_CPU_FAKE_FIXTURE",
+  "development_branch": "feature/jetlink-multimodel-carrot",
+  "start_head": "ec09d61952e29ad3725ac9947a324eaad61e7e42",
+  "implementation_commit": "9722b3702cf0bde6b2866416c236674c8c0b4a34",
+  "start_working_tree": "CLEAN",
+  "start_local_remote_equal": true,
+  "result_commit_resolution": "git log -1 --format=%H -- artifacts/m19c01_060de9_request_chunks_20261024.json",
+  "target_base": "060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c",
+  "previous_base": "810e14aaf51176f1a50a113939dc2e70907b394b",
+  "profile": "RECORDER_060DE9_REQUEST_CHUNKS_V1",
+  "source_comparison": {
+    "base": "810e14aaf51176f1a50a113939dc2e70907b394b",
+    "target": "060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c",
+    "commits": [
+      {
+        "sha": "83e2d8d8ed01613eb726f7db253d46a0692bdf9f",
+        "subject": "fix(jetlink): negotiate bounded replay-safe USB request envelopes",
+        "changed_files": [
+          "third_party/jetlink/jetlink/client.py",
+          "third_party/jetlink/jetlink/request_chunks.py",
+          "third_party/jetlink/jetlink/transport/ffs.py",
+          "tools/jetlink/server.py",
+          "tools/jetlink/test_request_chunks.py"
+        ]
+      },
+      {
+        "sha": "c95a92e2d4054e1e8377f06642f7177b450c62c2",
+        "subject": "release(jetlink): select signed bounded-request runtime",
+        "changed_files": [
+          "openpilot/selfdrive/modeld/jetlink/host_release.json"
+        ]
+      },
+      {
+        "sha": "4f02cb40b3975a41f6e5acaf5240ba9a4591b382",
+        "subject": "fix(jetlink): preserve raw signal masks without per-write enum conversion",
+        "changed_files": [
+          "third_party/jetlink/jetlink/transport/ffs.py",
+          "tools/jetlink/test_request_chunks.py"
+        ]
+      },
+      {
+        "sha": "cb4df37d2092e6d3aaeda320e70df8c533c5ee73",
+        "subject": "fix(jetlink): queue bounded writes within one inference request",
+        "changed_files": [
+          "third_party/jetlink/jetlink/client.py",
+          "third_party/jetlink/jetlink/transport/ffs.py",
+          "third_party/jetlink/jetlink/transport/request_writer.c",
+          "third_party/jetlink/jetlink/transport/request_writer.py",
+          "tools/jetlink/test_request_chunks.py",
+          "tools/jetlink/test_request_writer.py"
+        ]
+      },
+      {
+        "sha": "6e51d136131b4537b0f003236eab1dd1d32c3529",
+        "subject": "fix(jetlink): accept FunctionFS mirrored AIO completion lengths",
+        "changed_files": [
+          "third_party/jetlink/jetlink/transport/request_writer.c",
+          "tools/jetlink/test_request_writer.py"
+        ]
+      },
+      {
+        "sha": "58fc9d41aa78327fa6624782fe3d253b6b60dfa6",
+        "subject": "Prefetch bounded USB envelopes within one logical request",
+        "changed_files": [
+          "tools/jetlink/host_reader.py",
+          "tools/jetlink/host_usb.py",
+          "tools/jetlink/test_host_usb.py"
+        ]
+      },
+      {
+        "sha": "f62f0edae3fbc92df2ea425cf609f549136395ee",
+        "subject": "Deploy bounded request prefetch runtime for Jetson",
+        "changed_files": [
+          "openpilot/selfdrive/modeld/jetlink/host_release.json"
+        ]
+      },
+      {
+        "sha": "234d167db3cafc78e0fd9bbbd2391508010e4d4c",
+        "subject": "Prepare exact bounded frames once and keep request queue filled",
+        "changed_files": [
+          "third_party/jetlink/jetlink/request_chunks.py",
+          "third_party/jetlink/jetlink/transport/ffs.py",
+          "third_party/jetlink/jetlink/transport/request_writer.c",
+          "tools/jetlink/test_request_chunks.py",
+          "tools/jetlink/test_request_writer.py"
+        ]
+      },
+      {
+        "sha": "99888e4a77554ca46fee6422810cb370a328d14e",
+        "subject": "Check request cleanup after removing temporary packet collector",
+        "changed_files": [
+          "tools/jetlink/test_request_chunks.py"
+        ]
+      },
+      {
+        "sha": "69c46427892e0fd2279ce37e8a35ceeefd379b0d",
+        "subject": "Assemble bounded requests before the inference-window queue",
+        "changed_files": [
+          "tools/jetlink/host_reader.py",
+          "tools/jetlink/test_host_request_queue.py"
+        ]
+      },
+      {
+        "sha": "61622ebee853ec9094a76eb8b49b9b38883059fa",
+        "subject": "Deploy logical request queue for Jetson USB overlap",
+        "changed_files": [
+          "openpilot/selfdrive/modeld/jetlink/host_release.json"
+        ]
+      },
+      {
+        "sha": "060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c",
+        "subject": "Verify full display window fits the logical request queue",
+        "changed_files": [
+          "tools/jetlink/test_host_request_queue.py"
+        ]
+      }
+    ],
+    "changed": [
+      {
+        "path": "openpilot/selfdrive/modeld/jetlink/host_release.json",
+        "before_sha256": "41f3d7d5d8163c6bcecdcfa80e603a1104ddf344727eb96a56167e08fe11262e",
+        "after_sha256": "c113776620f9644bd899bc719a3ded13be3ef851c501d0f323bede7c6181a242"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/client.py",
+        "before_sha256": "d368289224bda351e6695b81c4de91fc0201143a5a7148402376b662586bdc30",
+        "after_sha256": "05d500179dd3e49d8875d8cfc370a59dd692839eb6b1b939efee5fb72b9092b9"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/request_chunks.py",
+        "before_sha256": null,
+        "after_sha256": "a4ac4bcf467b09df3b703e05a59e757ce2ebb8e016898eb1808ad0031a1905e1"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/transport/ffs.py",
+        "before_sha256": "b14a74a39b06094c08a4f9e31e3d4b4d190ed9162aaefd44b3d729e324ded781",
+        "after_sha256": "41580e2d6ae5c4533e5c089375a1788920f3480f59b80fbb7d0eabe2f8b7fd50"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/transport/request_writer.c",
+        "before_sha256": null,
+        "after_sha256": "a05f1c9bf1d875625cbb46c5c5d402537c22cb1c625f0aa413db906cbc882bc9"
+      },
+      {
+        "path": "third_party/jetlink/jetlink/transport/request_writer.py",
+        "before_sha256": null,
+        "after_sha256": "7d6846fdeebfafdffb849b17c7771f39ea6f352211ee879f61acdf3e71029d53"
+      },
+      {
+        "path": "tools/jetlink/host_reader.py",
+        "before_sha256": "0ce8930fc83809152b74476e533e2a62dd03ab29b2efef031206222b06ea5fc0",
+        "after_sha256": "991b975dfb4c65c93f82711da25818981b71ef01281a65bc94a28946246b319a"
+      },
+      {
+        "path": "tools/jetlink/host_usb.py",
+        "before_sha256": "a7706ca397085f10395c2eea9dbf1a6e8de6a2dad2978160ffb6554da5600ce6",
+        "after_sha256": "49609ee4a4179369d6e6e3e048ff1669854de9ec42d92ac5f764eb23c50dcba4"
+      },
+      {
+        "path": "tools/jetlink/server.py",
+        "before_sha256": "d70f390fa22b2123206b72eaacf7f8526cc89fc6c7fcee0e140d290663e212f7",
+        "after_sha256": "10298c588d517c6aad2c5223b1bc0506fb1a5b89c6f965f5d0b5a7a16b839e87"
+      },
+      {
+        "path": "tools/jetlink/test_host_request_queue.py",
+        "before_sha256": null,
+        "after_sha256": "9073a8fa2c4105682ae6c38ca4405fd3a1cc11cd6d4fee29bc429336e8d7a873"
+      },
+      {
+        "path": "tools/jetlink/test_host_usb.py",
+        "before_sha256": "8855a774b8683669e3accef1b83622eba045305cf6e40727a57962e307706729",
+        "after_sha256": "145d0183591481bafe2f48d8e249fc75a9429bd6b708d6b0b6c0a691cb792c77"
+      },
+      {
+        "path": "tools/jetlink/test_request_chunks.py",
+        "before_sha256": null,
+        "after_sha256": "1bd4620ab6bc2e088adbc4971bd8815d99f7a768c63ab4c8ec2282ccda89fa03"
+      },
+      {
+        "path": "tools/jetlink/test_request_writer.py",
+        "before_sha256": null,
+        "after_sha256": "ec60473ae1305896a79bedeb4f99a2e864cea235cec5d009f15f1d42fc0902a5"
+      }
+    ]
+  },
+  "hot_path": "UNCHANGED",
+  "recorder_logic": "RECORDER_810E_LOGIC_REUSABLE",
+  "unchanged_source_pins": {
+    "openpilot/selfdrive/modeld/jetlink/model.py": "103dc0c7eb1b4998ddbf0a498be55ffd02fd51b195ce20cb7ea44ba3dbce6c42",
+    "openpilot/selfdrive/modeld/jetlink/link.py": "3143bc6788132435d6dbeb108f1c68582f702df7913e76f262569f099316ca35",
+    "openpilot/selfdrive/modeld/jetlink/shared_input.py": "dc36519c3dc6fad49047fe35a24c5b33f439364c2e4a2559d0f357dfb8e0921e",
+    "openpilot/selfdrive/modeld/jetlink/contracts.py": "100f92e154b9540ddfe8b8b5ca6c3e2973cce14428fb3442ad98701c976f9ca2",
+    "openpilot/selfdrive/modeld/jetlink/daemon.py": "d95e7f44597f150f642f70432143ee9cba8c395bb0513a9e475bc4f597859980",
+    "openpilot/selfdrive/modeld/jetlink/inputs.py": "c737e30ff8c1b170ebc2179394ee0ce63180e257ddb64ce0967aae7161398f8e",
+    "openpilot/selfdrive/modeld/jetlink/prepare.py": "c6a9e9fc1fe122b655ea3a6fbbd3b0fff9ad7d3f918e720e9401fd19e0afb4e7",
+    "openpilot/selfdrive/modeld/jetlink/jetson_model.json": "ceb07d1a502966f10cb1afc33c6d686a418b3f204320685cf5e36bbf44c62f6d",
+    "openpilot/selfdrive/modeld/camera_gap.py": "7b959fa8bdd740c4bea150c07248a69ea33f08db327110601be3ee17d9bc938a",
+    "openpilot/selfdrive/modeld/camera_sync.py": "398980260825757393239796cb4dc10399ef1384f0fd9e23cdad0fd12d0cc0d2",
+    "openpilot/selfdrive/modeld/modeld.py": "008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594",
+    "openpilot/system/manager/process.py": "fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752",
+    "third_party/jetlink/jetlink/spec.py": "ec844ccaf13ffc1d7c03ad683b0e3f2ce6a1d78f4088067739aaa419af422170",
+    "third_party/jetlink/jetlink/server/session.py": "a4a5c08f917294806395b1e0fa9c359d747fbc6ced7842dbc3c32d924af2847d",
+    "third_party/jetlink/jetlink/queues.py": "c251eecc45e38704c15b2a10f0969c270cd9fa11603ebdaae88c1b1187112ea8"
+  },
+  "transport_source_pins": {
+    "third_party/jetlink/jetlink/client.py": "05d500179dd3e49d8875d8cfc370a59dd692839eb6b1b939efee5fb72b9092b9",
+    "third_party/jetlink/jetlink/protocol.py": "27921d6cbac744f28db9f3c3487e42bdf405ac184db41322352f91aad9e3fb51",
+    "third_party/jetlink/jetlink/request_chunks.py": "a4ac4bcf467b09df3b703e05a59e757ce2ebb8e016898eb1808ad0031a1905e1",
+    "third_party/jetlink/jetlink/packed_codec.py": "8d67a94951e6188d811c8ad7072e5db1b40ff9ef24ec28049634b07cb26c9004",
+    "third_party/jetlink/jetlink/block_codec.py": "a42299bd1fccdf53022afd50066909caa5740f4790cec1a88eec9665f8e7ad5e",
+    "third_party/jetlink/jetlink/transport/base.py": "1861db5ec506b274f940797a6d2b181f075e94a928326d699c34cfd6b0c93a3b",
+    "third_party/jetlink/jetlink/transport/ffs.py": "41580e2d6ae5c4533e5c089375a1788920f3480f59b80fbb7d0eabe2f8b7fd50",
+    "third_party/jetlink/jetlink/transport/request_writer.py": "7d6846fdeebfafdffb849b17c7771f39ea6f352211ee879f61acdf3e71029d53",
+    "third_party/jetlink/jetlink/transport/request_writer.c": "a05f1c9bf1d875625cbb46c5c5d402537c22cb1c625f0aa413db906cbc882bc9",
+    "tools/jetlink/host_reader.py": "991b975dfb4c65c93f82711da25818981b71ef01281a65bc94a28946246b319a",
+    "tools/jetlink/host_usb.py": "49609ee4a4179369d6e6e3e048ff1669854de9ec42d92ac5f764eb23c50dcba4",
+    "tools/jetlink/server.py": "10298c588d517c6aad2c5223b1bc0506fb1a5b89c6f965f5d0b5a7a16b839e87",
+    "openpilot/selfdrive/modeld/jetlink/host_release.json": "c113776620f9644bd899bc719a3ded13be3ef851c501d0f323bede7c6181a242"
+  },
+  "source_pins": {
+    "openpilot/selfdrive/modeld/jetlink/model.py": "103dc0c7eb1b4998ddbf0a498be55ffd02fd51b195ce20cb7ea44ba3dbce6c42",
+    "openpilot/selfdrive/modeld/jetlink/link.py": "3143bc6788132435d6dbeb108f1c68582f702df7913e76f262569f099316ca35",
+    "openpilot/selfdrive/modeld/jetlink/shared_input.py": "dc36519c3dc6fad49047fe35a24c5b33f439364c2e4a2559d0f357dfb8e0921e",
+    "openpilot/selfdrive/modeld/jetlink/contracts.py": "100f92e154b9540ddfe8b8b5ca6c3e2973cce14428fb3442ad98701c976f9ca2",
+    "openpilot/selfdrive/modeld/jetlink/daemon.py": "d95e7f44597f150f642f70432143ee9cba8c395bb0513a9e475bc4f597859980",
+    "openpilot/selfdrive/modeld/jetlink/inputs.py": "c737e30ff8c1b170ebc2179394ee0ce63180e257ddb64ce0967aae7161398f8e",
+    "openpilot/selfdrive/modeld/jetlink/prepare.py": "c6a9e9fc1fe122b655ea3a6fbbd3b0fff9ad7d3f918e720e9401fd19e0afb4e7",
+    "openpilot/selfdrive/modeld/jetlink/jetson_model.json": "ceb07d1a502966f10cb1afc33c6d686a418b3f204320685cf5e36bbf44c62f6d",
+    "openpilot/selfdrive/modeld/camera_gap.py": "7b959fa8bdd740c4bea150c07248a69ea33f08db327110601be3ee17d9bc938a",
+    "openpilot/selfdrive/modeld/camera_sync.py": "398980260825757393239796cb4dc10399ef1384f0fd9e23cdad0fd12d0cc0d2",
+    "openpilot/selfdrive/modeld/modeld.py": "008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594",
+    "openpilot/system/manager/process.py": "fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752",
+    "third_party/jetlink/jetlink/spec.py": "ec844ccaf13ffc1d7c03ad683b0e3f2ce6a1d78f4088067739aaa419af422170",
+    "third_party/jetlink/jetlink/server/session.py": "a4a5c08f917294806395b1e0fa9c359d747fbc6ced7842dbc3c32d924af2847d",
+    "third_party/jetlink/jetlink/queues.py": "c251eecc45e38704c15b2a10f0969c270cd9fa11603ebdaae88c1b1187112ea8",
+    "third_party/jetlink/jetlink/client.py": "05d500179dd3e49d8875d8cfc370a59dd692839eb6b1b939efee5fb72b9092b9",
+    "third_party/jetlink/jetlink/protocol.py": "27921d6cbac744f28db9f3c3487e42bdf405ac184db41322352f91aad9e3fb51",
+    "third_party/jetlink/jetlink/request_chunks.py": "a4ac4bcf467b09df3b703e05a59e757ce2ebb8e016898eb1808ad0031a1905e1",
+    "third_party/jetlink/jetlink/packed_codec.py": "8d67a94951e6188d811c8ad7072e5db1b40ff9ef24ec28049634b07cb26c9004",
+    "third_party/jetlink/jetlink/block_codec.py": "a42299bd1fccdf53022afd50066909caa5740f4790cec1a88eec9665f8e7ad5e",
+    "third_party/jetlink/jetlink/transport/base.py": "1861db5ec506b274f940797a6d2b181f075e94a928326d699c34cfd6b0c93a3b",
+    "third_party/jetlink/jetlink/transport/ffs.py": "41580e2d6ae5c4533e5c089375a1788920f3480f59b80fbb7d0eabe2f8b7fd50",
+    "third_party/jetlink/jetlink/transport/request_writer.py": "7d6846fdeebfafdffb849b17c7771f39ea6f352211ee879f61acdf3e71029d53",
+    "third_party/jetlink/jetlink/transport/request_writer.c": "a05f1c9bf1d875625cbb46c5c5d402537c22cb1c625f0aa413db906cbc882bc9",
+    "tools/jetlink/host_reader.py": "991b975dfb4c65c93f82711da25818981b71ef01281a65bc94a28946246b319a",
+    "tools/jetlink/host_usb.py": "49609ee4a4179369d6e6e3e048ff1669854de9ec42d92ac5f764eb23c50dcba4",
+    "tools/jetlink/server.py": "10298c588d517c6aad2c5223b1bc0506fb1a5b89c6f965f5d0b5a7a16b839e87",
+    "openpilot/selfdrive/modeld/jetlink/host_release.json": "c113776620f9644bd899bc719a3ded13be3ef851c501d0f323bede7c6181a242"
+  },
+  "n16": {
+    "model_sha256": "01effc679eb46d6036ce0302673a87fe2dcfcc95a679daeeb929679e53c3647a",
+    "model_bytes": 814591107,
+    "spec_sha256": "63b2097c114bade03c5ec7ded978d73032a93bb525c03f9b78eddf49809f8b71",
+    "stateful": true,
+    "state_pairs": 5,
+    "warped_shape": [
+      2,
+      6,
+      128,
+      256
+    ],
+    "packed_nelem": 65595,
+    "packed_fields": [
+      "desire",
+      "traffic_convention",
+      "action_t",
+      "nav_map",
+      "navigation"
+    ],
+    "recurrent_ownership": "SERVER",
+    "model_and_spec": "UNCHANGED"
+  },
+  "transport": {
+    "status": "COMPATIBLE",
+    "protocol": 2,
+    "protocol_status": "PRESERVED",
+    "capability": "carrot_request_chunks_v1",
+    "descriptor": {
+      "version": 1,
+      "wire_bytes": 32768,
+      "max_bytes": 1048576
+    },
+    "envelope_data_bytes": 32720,
+    "max_age_seconds": 0.5,
+    "CRC": "CRC32",
+    "CRC_is_authentication": false,
+    "sequence_scope": "SAME_SESSION; HELLO resets state; no cross-session/cryptographic replay claim",
+    "no_timeout_increase": true,
+    "exact_logical_input_identity": "PASS",
+    "reassembly_byte_identity": "PASS",
+    "replay_safety": "PASS_SAME_SESSION",
+    "incomplete_input": "NO_INFERENCE; bounded state retained until checked arrival/HELLO/close",
+    "native_writer": {
+      "depth": 16,
+      "packet_max_bytes": 32768,
+      "request_packet_max": 34,
+      "regular_file_actual_C_test": "PASS",
+      "kernel_fault_fixtures": "PASS",
+      "actual_FunctionFS": "NOT_RUN"
+    }
+  },
+  "host_release": {
+    "status": "CHANGED",
+    "repository_expected_before": {
+      "format": 1,
+      "source_commit": "54e706fa0573e91dc3b4a0d4f625b9d81a6b68cc",
+      "runtime": {
+        "arch": "aarch64",
+        "l4t": "36.4.7",
+        "tensorrt": "10.3.0"
+      },
+      "bundle": {
+        "url": "https://upload.shind0.synology.me/models/jetlink-host-54e706fa0573e91dc3b4a0d4f625b9d81a6b68cc/precompiled-runtime.tar.gz",
+        "sha256": "42c2951e92bd47029ff22fb058f577a0a3d334eeca62c92aa7b6ef479227787c",
+        "size": 64707580
+      },
+      "model": {
+        "url": "https://upload.shind0.synology.me/models/comma4-big-nav-n16-96244b1f/big_driving_supercombo.onnx",
+        "sha256": "01effc679eb46d6036ce0302673a87fe2dcfcc95a679daeeb929679e53c3647a",
+        "size": 814591107
+      },
+      "storage_format": 1,
+      "signature": "NvaAE5Q7nSkm+VlCIOwonVFIjyXSK33BFhFhlteWOJny5bk6DeM7UaXcC/r/lAmb7EsabQFJ96IB+hAYQOexCQ=="
+    },
+    "repository_expected_after": {
+      "format": 1,
+      "source_commit": "69c46427892e0fd2279ce37e8a35ceeefd379b0d",
+      "runtime": {
+        "arch": "aarch64",
+        "l4t": "36.4.7",
+        "tensorrt": "10.3.0"
+      },
+      "bundle": {
+        "url": "https://upload.shind0.synology.me/models/jetlink-host-69c46427892e0fd2279ce37e8a35ceeefd379b0d/precompiled-runtime.tar.gz",
+        "sha256": "f254316cf1b347cf561712f9018079ff7ad4b540e803f8a7ff27120ad4540d63",
+        "size": 64733965
+      },
+      "model": {
+        "url": "https://upload.shind0.synology.me/models/comma4-big-nav-n16-96244b1f/big_driving_supercombo.onnx",
+        "sha256": "01effc679eb46d6036ce0302673a87fe2dcfcc95a679daeeb929679e53c3647a",
+        "size": 814591107
+      },
+      "storage_format": 1,
+      "signature": "hCBBIvTc6KSXXk6YCZSZ0ufHwaFcbAEHIrrAnyxEd4EZ6YqXIx/7IKbEOR3mz37IA1AWix9+tUuNmCU6fGW1Bg=="
+    },
+    "actual_jetson_host": "NOT_RUN",
+    "bundle_download": "NOT_RUN",
+    "signature_verification": "NOT_RUN",
+    "standalone_runtime_version": "NOT_DECLARED; source_commit and bundle identity distinguish releases",
+    "runtime_source_69c464_to_060de9_changes": [
+      "openpilot/selfdrive/modeld/jetlink/host_release.json",
+      "tools/jetlink/test_host_request_queue.py"
+    ]
+  },
+  "byte_identity_matrix": [
+    {
+      "chunks": true,
+      "client": {
+        "chunked_requests": 3,
+        "compact_requests": 3,
+        "dataset_digest": "fc68c91e033b787401c92453648395d8bda06290831ca6384d339ad8a8c94fed",
+        "frames": 3,
+        "logical_request_hashes": [
+          "d5882ba787ddd1ee774bcbbe8aa63f183bf7408c7995cdc9c7fe7d372e4bf94b",
+          "2322a20e211602288740682686060605eee65552907c4f08535bd7963c15c070",
+          "0b58f7e7766b1c4432d0551f0f9acd28e80239b507f9e66170d068c0803a0b67"
+        ],
+        "native_writes": 3,
+        "negotiated_chunks": true,
+        "packed_hashes": [
+          "d21610304a0ff5d1bcb679c535c94dcecc1fdc00e4c36e56251627dc5df1bd20",
+          "ec27aae42cf744f650f50bad88f3fa8537f6fc7bbbfc7ca6538b3f091afe3164",
+          "d5aaebdb3c6956bee7af2bfb9b79b2ef19a2beb6eb8f3c7344992928deeebac7"
+        ],
+        "protocol": 2,
+        "recorded_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ],
+        "submitted_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ]
+      },
+      "compact": true,
+      "server": {
+        "engine_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ],
+        "engine_packed_hashes": [
+          "d21610304a0ff5d1bcb679c535c94dcecc1fdc00e4c36e56251627dc5df1bd20",
+          "ec27aae42cf744f650f50bad88f3fa8537f6fc7bbbfc7ca6538b3f091afe3164",
+          "d5aaebdb3c6956bee7af2bfb9b79b2ef19a2beb6eb8f3c7344992928deeebac7"
+        ],
+        "executions": 3,
+        "openpilot_loaded": false,
+        "protocol": 2,
+        "session_request_hashes": [
+          "d5882ba787ddd1ee774bcbbe8aa63f183bf7408c7995cdc9c7fe7d372e4bf94b",
+          "2322a20e211602288740682686060605eee65552907c4f08535bd7963c15c070",
+          "0b58f7e7766b1c4432d0551f0f9acd28e80239b507f9e66170d068c0803a0b67"
+        ]
+      },
+      "shared": true
+    },
+    {
+      "chunks": true,
+      "client": {
+        "chunked_requests": 3,
+        "compact_requests": 3,
+        "dataset_digest": "dc29f1a60b102fe845dfe5bd288bbd64025fb6b67f14d0adad1345492f703cba",
+        "frames": 3,
+        "logical_request_hashes": [
+          "d5882ba787ddd1ee774bcbbe8aa63f183bf7408c7995cdc9c7fe7d372e4bf94b",
+          "2322a20e211602288740682686060605eee65552907c4f08535bd7963c15c070",
+          "0b58f7e7766b1c4432d0551f0f9acd28e80239b507f9e66170d068c0803a0b67"
+        ],
+        "native_writes": 3,
+        "negotiated_chunks": true,
+        "packed_hashes": [
+          "d21610304a0ff5d1bcb679c535c94dcecc1fdc00e4c36e56251627dc5df1bd20",
+          "ec27aae42cf744f650f50bad88f3fa8537f6fc7bbbfc7ca6538b3f091afe3164",
+          "d5aaebdb3c6956bee7af2bfb9b79b2ef19a2beb6eb8f3c7344992928deeebac7"
+        ],
+        "protocol": 2,
+        "recorded_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ],
+        "submitted_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ]
+      },
+      "compact": true,
+      "server": {
+        "engine_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ],
+        "engine_packed_hashes": [
+          "d21610304a0ff5d1bcb679c535c94dcecc1fdc00e4c36e56251627dc5df1bd20",
+          "ec27aae42cf744f650f50bad88f3fa8537f6fc7bbbfc7ca6538b3f091afe3164",
+          "d5aaebdb3c6956bee7af2bfb9b79b2ef19a2beb6eb8f3c7344992928deeebac7"
+        ],
+        "executions": 3,
+        "openpilot_loaded": false,
+        "protocol": 2,
+        "session_request_hashes": [
+          "d5882ba787ddd1ee774bcbbe8aa63f183bf7408c7995cdc9c7fe7d372e4bf94b",
+          "2322a20e211602288740682686060605eee65552907c4f08535bd7963c15c070",
+          "0b58f7e7766b1c4432d0551f0f9acd28e80239b507f9e66170d068c0803a0b67"
+        ]
+      },
+      "shared": false
+    },
+    {
+      "chunks": false,
+      "client": {
+        "chunked_requests": 0,
+        "compact_requests": 3,
+        "dataset_digest": "0fa771c89931f86feee313d5ff73c877f7915aabae5466bc43d27858f09e1e27",
+        "frames": 3,
+        "logical_request_hashes": [
+          "d5882ba787ddd1ee774bcbbe8aa63f183bf7408c7995cdc9c7fe7d372e4bf94b",
+          "2322a20e211602288740682686060605eee65552907c4f08535bd7963c15c070",
+          "0b58f7e7766b1c4432d0551f0f9acd28e80239b507f9e66170d068c0803a0b67"
+        ],
+        "native_writes": 0,
+        "negotiated_chunks": false,
+        "packed_hashes": [
+          "d21610304a0ff5d1bcb679c535c94dcecc1fdc00e4c36e56251627dc5df1bd20",
+          "ec27aae42cf744f650f50bad88f3fa8537f6fc7bbbfc7ca6538b3f091afe3164",
+          "d5aaebdb3c6956bee7af2bfb9b79b2ef19a2beb6eb8f3c7344992928deeebac7"
+        ],
+        "protocol": 2,
+        "recorded_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ],
+        "submitted_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ]
+      },
+      "compact": true,
+      "server": {
+        "engine_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ],
+        "engine_packed_hashes": [
+          "d21610304a0ff5d1bcb679c535c94dcecc1fdc00e4c36e56251627dc5df1bd20",
+          "ec27aae42cf744f650f50bad88f3fa8537f6fc7bbbfc7ca6538b3f091afe3164",
+          "d5aaebdb3c6956bee7af2bfb9b79b2ef19a2beb6eb8f3c7344992928deeebac7"
+        ],
+        "executions": 3,
+        "openpilot_loaded": false,
+        "protocol": 2,
+        "session_request_hashes": [
+          "d5882ba787ddd1ee774bcbbe8aa63f183bf7408c7995cdc9c7fe7d372e4bf94b",
+          "2322a20e211602288740682686060605eee65552907c4f08535bd7963c15c070",
+          "0b58f7e7766b1c4432d0551f0f9acd28e80239b507f9e66170d068c0803a0b67"
+        ]
+      },
+      "shared": true
+    },
+    {
+      "chunks": false,
+      "client": {
+        "chunked_requests": 0,
+        "compact_requests": 3,
+        "dataset_digest": "8b03de0f56461e51eacad51efab1ccb8629084629bf8c573822a5a7e19900bf8",
+        "frames": 3,
+        "logical_request_hashes": [
+          "d5882ba787ddd1ee774bcbbe8aa63f183bf7408c7995cdc9c7fe7d372e4bf94b",
+          "2322a20e211602288740682686060605eee65552907c4f08535bd7963c15c070",
+          "0b58f7e7766b1c4432d0551f0f9acd28e80239b507f9e66170d068c0803a0b67"
+        ],
+        "native_writes": 0,
+        "negotiated_chunks": false,
+        "packed_hashes": [
+          "d21610304a0ff5d1bcb679c535c94dcecc1fdc00e4c36e56251627dc5df1bd20",
+          "ec27aae42cf744f650f50bad88f3fa8537f6fc7bbbfc7ca6538b3f091afe3164",
+          "d5aaebdb3c6956bee7af2bfb9b79b2ef19a2beb6eb8f3c7344992928deeebac7"
+        ],
+        "protocol": 2,
+        "recorded_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ],
+        "submitted_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ]
+      },
+      "compact": true,
+      "server": {
+        "engine_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ],
+        "engine_packed_hashes": [
+          "d21610304a0ff5d1bcb679c535c94dcecc1fdc00e4c36e56251627dc5df1bd20",
+          "ec27aae42cf744f650f50bad88f3fa8537f6fc7bbbfc7ca6538b3f091afe3164",
+          "d5aaebdb3c6956bee7af2bfb9b79b2ef19a2beb6eb8f3c7344992928deeebac7"
+        ],
+        "executions": 3,
+        "openpilot_loaded": false,
+        "protocol": 2,
+        "session_request_hashes": [
+          "d5882ba787ddd1ee774bcbbe8aa63f183bf7408c7995cdc9c7fe7d372e4bf94b",
+          "2322a20e211602288740682686060605eee65552907c4f08535bd7963c15c070",
+          "0b58f7e7766b1c4432d0551f0f9acd28e80239b507f9e66170d068c0803a0b67"
+        ]
+      },
+      "shared": false
+    },
+    {
+      "chunks": true,
+      "client": {
+        "chunked_requests": 3,
+        "compact_requests": 0,
+        "dataset_digest": "b8b28593f698829ccc284e30872b0d1c8c25458f081a1d57b7ab5c1598042989",
+        "frames": 3,
+        "logical_request_hashes": [
+          "3d2eea41e35b9635192d27598177d21e5b01a389fb5660a74a275dad523b166d",
+          "a7716fa5ebcff9574f7267274e43741b8581385b7749bbdceedf560620a934eb",
+          "7f887052f4e6bb8095ea54fdde99ca0f2de7653d94f4c34ab8a63c45560b97a2"
+        ],
+        "native_writes": 3,
+        "negotiated_chunks": true,
+        "packed_hashes": [
+          "65d88a61e0447a44aadd7a9260caf92179450a7f64547c0ea5438cd335e2d123",
+          "938c2efb4bd4274b43a888e3b9ba88a7bd2fd8c22db16eca4aad1aafb8e96443",
+          "bd360842fd2fef1879b111fe8795777c570924d6ccbecc6eb679e45266a5d536"
+        ],
+        "protocol": 2,
+        "recorded_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ],
+        "submitted_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ]
+      },
+      "compact": false,
+      "server": {
+        "engine_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ],
+        "engine_packed_hashes": [
+          "65d88a61e0447a44aadd7a9260caf92179450a7f64547c0ea5438cd335e2d123",
+          "938c2efb4bd4274b43a888e3b9ba88a7bd2fd8c22db16eca4aad1aafb8e96443",
+          "bd360842fd2fef1879b111fe8795777c570924d6ccbecc6eb679e45266a5d536"
+        ],
+        "executions": 3,
+        "openpilot_loaded": false,
+        "protocol": 2,
+        "session_request_hashes": [
+          "3d2eea41e35b9635192d27598177d21e5b01a389fb5660a74a275dad523b166d",
+          "a7716fa5ebcff9574f7267274e43741b8581385b7749bbdceedf560620a934eb",
+          "7f887052f4e6bb8095ea54fdde99ca0f2de7653d94f4c34ab8a63c45560b97a2"
+        ]
+      },
+      "shared": true
+    },
+    {
+      "chunks": true,
+      "client": {
+        "chunked_requests": 3,
+        "compact_requests": 0,
+        "dataset_digest": "2ae2d094bd4ebe54efba830e9a3992c554daba09f0db95487bdc51a4844ef600",
+        "frames": 3,
+        "logical_request_hashes": [
+          "3d2eea41e35b9635192d27598177d21e5b01a389fb5660a74a275dad523b166d",
+          "a7716fa5ebcff9574f7267274e43741b8581385b7749bbdceedf560620a934eb",
+          "7f887052f4e6bb8095ea54fdde99ca0f2de7653d94f4c34ab8a63c45560b97a2"
+        ],
+        "native_writes": 3,
+        "negotiated_chunks": true,
+        "packed_hashes": [
+          "65d88a61e0447a44aadd7a9260caf92179450a7f64547c0ea5438cd335e2d123",
+          "938c2efb4bd4274b43a888e3b9ba88a7bd2fd8c22db16eca4aad1aafb8e96443",
+          "bd360842fd2fef1879b111fe8795777c570924d6ccbecc6eb679e45266a5d536"
+        ],
+        "protocol": 2,
+        "recorded_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ],
+        "submitted_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ]
+      },
+      "compact": false,
+      "server": {
+        "engine_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ],
+        "engine_packed_hashes": [
+          "65d88a61e0447a44aadd7a9260caf92179450a7f64547c0ea5438cd335e2d123",
+          "938c2efb4bd4274b43a888e3b9ba88a7bd2fd8c22db16eca4aad1aafb8e96443",
+          "bd360842fd2fef1879b111fe8795777c570924d6ccbecc6eb679e45266a5d536"
+        ],
+        "executions": 3,
+        "openpilot_loaded": false,
+        "protocol": 2,
+        "session_request_hashes": [
+          "3d2eea41e35b9635192d27598177d21e5b01a389fb5660a74a275dad523b166d",
+          "a7716fa5ebcff9574f7267274e43741b8581385b7749bbdceedf560620a934eb",
+          "7f887052f4e6bb8095ea54fdde99ca0f2de7653d94f4c34ab8a63c45560b97a2"
+        ]
+      },
+      "shared": false
+    },
+    {
+      "chunks": false,
+      "client": {
+        "chunked_requests": 0,
+        "compact_requests": 0,
+        "dataset_digest": "6c22fc4cd7415f232bc1a326ceee0dc8c0486d2e0dd3d04331f27640526a9564",
+        "frames": 3,
+        "logical_request_hashes": [
+          "3d2eea41e35b9635192d27598177d21e5b01a389fb5660a74a275dad523b166d",
+          "a7716fa5ebcff9574f7267274e43741b8581385b7749bbdceedf560620a934eb",
+          "7f887052f4e6bb8095ea54fdde99ca0f2de7653d94f4c34ab8a63c45560b97a2"
+        ],
+        "native_writes": 0,
+        "negotiated_chunks": false,
+        "packed_hashes": [
+          "65d88a61e0447a44aadd7a9260caf92179450a7f64547c0ea5438cd335e2d123",
+          "938c2efb4bd4274b43a888e3b9ba88a7bd2fd8c22db16eca4aad1aafb8e96443",
+          "bd360842fd2fef1879b111fe8795777c570924d6ccbecc6eb679e45266a5d536"
+        ],
+        "protocol": 2,
+        "recorded_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ],
+        "submitted_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ]
+      },
+      "compact": false,
+      "server": {
+        "engine_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ],
+        "engine_packed_hashes": [
+          "65d88a61e0447a44aadd7a9260caf92179450a7f64547c0ea5438cd335e2d123",
+          "938c2efb4bd4274b43a888e3b9ba88a7bd2fd8c22db16eca4aad1aafb8e96443",
+          "bd360842fd2fef1879b111fe8795777c570924d6ccbecc6eb679e45266a5d536"
+        ],
+        "executions": 3,
+        "openpilot_loaded": false,
+        "protocol": 2,
+        "session_request_hashes": [
+          "3d2eea41e35b9635192d27598177d21e5b01a389fb5660a74a275dad523b166d",
+          "a7716fa5ebcff9574f7267274e43741b8581385b7749bbdceedf560620a934eb",
+          "7f887052f4e6bb8095ea54fdde99ca0f2de7653d94f4c34ab8a63c45560b97a2"
+        ]
+      },
+      "shared": true
+    },
+    {
+      "chunks": false,
+      "client": {
+        "chunked_requests": 0,
+        "compact_requests": 0,
+        "dataset_digest": "117ac938d53a046b3bb16239bef7c292ac7c46e90fce566d8aa8621c65ad7913",
+        "frames": 3,
+        "logical_request_hashes": [
+          "3d2eea41e35b9635192d27598177d21e5b01a389fb5660a74a275dad523b166d",
+          "a7716fa5ebcff9574f7267274e43741b8581385b7749bbdceedf560620a934eb",
+          "7f887052f4e6bb8095ea54fdde99ca0f2de7653d94f4c34ab8a63c45560b97a2"
+        ],
+        "native_writes": 0,
+        "negotiated_chunks": false,
+        "packed_hashes": [
+          "65d88a61e0447a44aadd7a9260caf92179450a7f64547c0ea5438cd335e2d123",
+          "938c2efb4bd4274b43a888e3b9ba88a7bd2fd8c22db16eca4aad1aafb8e96443",
+          "bd360842fd2fef1879b111fe8795777c570924d6ccbecc6eb679e45266a5d536"
+        ],
+        "protocol": 2,
+        "recorded_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ],
+        "submitted_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ]
+      },
+      "compact": false,
+      "server": {
+        "engine_hashes": [
+          {
+            "action_t": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9",
+            "desire": "9b88b9190161546ded45568e5cef5d97d22136f0f9f0b10903a319b9e3780a95",
+            "new_img": "51d5d3740668f519c3256da5aae565c7604d5b5679437e4b46c552be283d5c9a",
+            "traffic_convention": "3d49a32ed51365ac53028587041583ac872def8d463ec269773e196bf0e3aafe"
+          },
+          {
+            "action_t": "e33aea9640e9350eff4bd426108c65fba75755b6be03483c513cf0832ea80854",
+            "desire": "c419aac76f14444d36caec35a90124764a1466d993ed9d0e30dcadd65b5245b1",
+            "new_img": "36544efb1bf5a43347cd073d91268c619265d38fe0b3fecce1982d43c004edb2",
+            "traffic_convention": "55134ad57a5396f7e885f1242634528fc111d6d4154cfcab0c3ee5c7727e17c8"
+          },
+          {
+            "action_t": "5a97e1d2f0151f5041140395ca57931dcd267660e4b3c184b00bce6da665d2b3",
+            "desire": "dfaf74a78b2e5e9e0416cb6c25fde6d002d0f3b55a2049f7c5bfcecc2fe10589",
+            "new_img": "56a1671638b0813bed3f0df1a6537ae55896f3abc368c62d590a8b6e8adfcbd7",
+            "traffic_convention": "06d196bd4974cd575f27c0f5fcb4755a06755fa776ab3b71cf11786fdc09fda9"
+          }
+        ],
+        "engine_packed_hashes": [
+          "65d88a61e0447a44aadd7a9260caf92179450a7f64547c0ea5438cd335e2d123",
+          "938c2efb4bd4274b43a888e3b9ba88a7bd2fd8c22db16eca4aad1aafb8e96443",
+          "bd360842fd2fef1879b111fe8795777c570924d6ccbecc6eb679e45266a5d536"
+        ],
+        "executions": 3,
+        "openpilot_loaded": false,
+        "protocol": 2,
+        "session_request_hashes": [
+          "3d2eea41e35b9635192d27598177d21e5b01a389fb5660a74a275dad523b166d",
+          "a7716fa5ebcff9574f7267274e43741b8581385b7749bbdceedf560620a934eb",
+          "7f887052f4e6bb8095ea54fdde99ca0f2de7653d94f4c34ab8a63c45560b97a2"
+        ]
+      },
+      "shared": false
+    }
+  ],
+  "synthetic_attempts": 24,
+  "recorded_input_frames": 0,
+  "migrations": {
+    "surviving366": {
+      "schema": 1,
+      "profile": "RECORDER_060DE9_REQUEST_CHUNKS_V1",
+      "base_sha": "060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c",
+      "layout": "surviving366",
+      "actual_deployment": "NOT_RUN",
+      "source_pins": {
+        "openpilot/selfdrive/modeld/jetlink/model.py": "103dc0c7eb1b4998ddbf0a498be55ffd02fd51b195ce20cb7ea44ba3dbce6c42",
+        "openpilot/selfdrive/modeld/jetlink/link.py": "3143bc6788132435d6dbeb108f1c68582f702df7913e76f262569f099316ca35",
+        "openpilot/selfdrive/modeld/jetlink/shared_input.py": "dc36519c3dc6fad49047fe35a24c5b33f439364c2e4a2559d0f357dfb8e0921e",
+        "openpilot/selfdrive/modeld/jetlink/contracts.py": "100f92e154b9540ddfe8b8b5ca6c3e2973cce14428fb3442ad98701c976f9ca2",
+        "openpilot/selfdrive/modeld/jetlink/daemon.py": "d95e7f44597f150f642f70432143ee9cba8c395bb0513a9e475bc4f597859980",
+        "openpilot/selfdrive/modeld/jetlink/inputs.py": "c737e30ff8c1b170ebc2179394ee0ce63180e257ddb64ce0967aae7161398f8e",
+        "openpilot/selfdrive/modeld/jetlink/prepare.py": "c6a9e9fc1fe122b655ea3a6fbbd3b0fff9ad7d3f918e720e9401fd19e0afb4e7",
+        "openpilot/selfdrive/modeld/jetlink/jetson_model.json": "ceb07d1a502966f10cb1afc33c6d686a418b3f204320685cf5e36bbf44c62f6d",
+        "openpilot/selfdrive/modeld/camera_gap.py": "7b959fa8bdd740c4bea150c07248a69ea33f08db327110601be3ee17d9bc938a",
+        "openpilot/selfdrive/modeld/camera_sync.py": "398980260825757393239796cb4dc10399ef1384f0fd9e23cdad0fd12d0cc0d2",
+        "openpilot/selfdrive/modeld/modeld.py": "008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594",
+        "openpilot/system/manager/process.py": "fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752",
+        "third_party/jetlink/jetlink/spec.py": "ec844ccaf13ffc1d7c03ad683b0e3f2ce6a1d78f4088067739aaa419af422170",
+        "third_party/jetlink/jetlink/server/session.py": "a4a5c08f917294806395b1e0fa9c359d747fbc6ced7842dbc3c32d924af2847d",
+        "third_party/jetlink/jetlink/queues.py": "c251eecc45e38704c15b2a10f0969c270cd9fa11603ebdaae88c1b1187112ea8",
+        "third_party/jetlink/jetlink/client.py": "05d500179dd3e49d8875d8cfc370a59dd692839eb6b1b939efee5fb72b9092b9",
+        "third_party/jetlink/jetlink/protocol.py": "27921d6cbac744f28db9f3c3487e42bdf405ac184db41322352f91aad9e3fb51",
+        "third_party/jetlink/jetlink/request_chunks.py": "a4ac4bcf467b09df3b703e05a59e757ce2ebb8e016898eb1808ad0031a1905e1",
+        "third_party/jetlink/jetlink/packed_codec.py": "8d67a94951e6188d811c8ad7072e5db1b40ff9ef24ec28049634b07cb26c9004",
+        "third_party/jetlink/jetlink/block_codec.py": "a42299bd1fccdf53022afd50066909caa5740f4790cec1a88eec9665f8e7ad5e",
+        "third_party/jetlink/jetlink/transport/base.py": "1861db5ec506b274f940797a6d2b181f075e94a928326d699c34cfd6b0c93a3b",
+        "third_party/jetlink/jetlink/transport/ffs.py": "41580e2d6ae5c4533e5c089375a1788920f3480f59b80fbb7d0eabe2f8b7fd50",
+        "third_party/jetlink/jetlink/transport/request_writer.py": "7d6846fdeebfafdffb849b17c7771f39ea6f352211ee879f61acdf3e71029d53",
+        "third_party/jetlink/jetlink/transport/request_writer.c": "a05f1c9bf1d875625cbb46c5c5d402537c22cb1c625f0aa413db906cbc882bc9",
+        "tools/jetlink/host_reader.py": "991b975dfb4c65c93f82711da25818981b71ef01281a65bc94a28946246b319a",
+        "tools/jetlink/host_usb.py": "49609ee4a4179369d6e6e3e048ff1669854de9ec42d92ac5f764eb23c50dcba4",
+        "tools/jetlink/server.py": "10298c588d517c6aad2c5223b1bc0506fb1a5b89c6f965f5d0b5a7a16b839e87",
+        "openpilot/selfdrive/modeld/jetlink/host_release.json": "c113776620f9644bd899bc719a3ded13be3ef851c501d0f323bede7c6181a242"
+      },
+      "nav_model_sha": "01effc679eb46d6036ce0302673a87fe2dcfcc95a679daeeb929679e53c3647a",
+      "nav_spec_sha": "63b2097c114bade03c5ec7ded978d73032a93bb525c03f9b78eddf49809f8b71",
+      "before_profile": {
+        "openpilot/selfdrive/modeld/jetlink/model.py": "103dc0c7eb1b4998ddbf0a498be55ffd02fd51b195ce20cb7ea44ba3dbce6c42",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/__init__.py": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/format.py": "9deff26ba3ba9b66642f7a471b10c637272003029866ce47fe82f80ff702acdf",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/recorder.py": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/dataset.py": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py": "9e688299d4fcefeea3a5ebc1460ee8fd72afd1c15c9f2d1a1fd3f58b1a5ca7de"
+      },
+      "after_profile": {
+        "openpilot/selfdrive/modeld/jetlink/model.py": "329125177e2372eb006a55035ef13c08bbcb41fcf63981fdc8cdd0e567edac29",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/__init__.py": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/format.py": "b37ee019febbc56ead607147134a7b5ac4ffbc4380df72697f22111723d4eb12",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/recorder.py": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/dataset.py": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py": "88a1e296b6bdb538174e8de0aba99f4733ec16b94480ae44e3a591962f8cfceb"
+      },
+      "touched_files": [
+        {
+          "path": "openpilot/selfdrive/modeld/jetlink/input_recording/format.py",
+          "before_sha256": "9deff26ba3ba9b66642f7a471b10c637272003029866ce47fe82f80ff702acdf",
+          "after_sha256": "b37ee019febbc56ead607147134a7b5ac4ffbc4380df72697f22111723d4eb12"
+        },
+        {
+          "path": "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py",
+          "before_sha256": "9e688299d4fcefeea3a5ebc1460ee8fd72afd1c15c9f2d1a1fd3f58b1a5ca7de",
+          "after_sha256": "88a1e296b6bdb538174e8de0aba99f4733ec16b94480ae44e3a591962f8cfceb"
+        },
+        {
+          "path": "openpilot/selfdrive/modeld/jetlink/model.py",
+          "before_sha256": "103dc0c7eb1b4998ddbf0a498be55ffd02fd51b195ce20cb7ea44ba3dbce6c42",
+          "after_sha256": "329125177e2372eb006a55035ef13c08bbcb41fcf63981fdc8cdd0e567edac29"
+        }
+      ],
+      "forward_sha256": "2b09f9753d5cf3e717b126898445ed2e33a44ad6871c0b64062aa2a24044e099",
+      "reverse_sha256": "cd07d062c5fbd06e49d5581b908ea5108b633b69442cb15f548079daaa88d473"
+    },
+    "clean060de9": {
+      "schema": 1,
+      "profile": "RECORDER_060DE9_REQUEST_CHUNKS_V1",
+      "base_sha": "060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c",
+      "layout": "clean060de9",
+      "actual_deployment": "NOT_RUN",
+      "source_pins": {
+        "openpilot/selfdrive/modeld/jetlink/model.py": "103dc0c7eb1b4998ddbf0a498be55ffd02fd51b195ce20cb7ea44ba3dbce6c42",
+        "openpilot/selfdrive/modeld/jetlink/link.py": "3143bc6788132435d6dbeb108f1c68582f702df7913e76f262569f099316ca35",
+        "openpilot/selfdrive/modeld/jetlink/shared_input.py": "dc36519c3dc6fad49047fe35a24c5b33f439364c2e4a2559d0f357dfb8e0921e",
+        "openpilot/selfdrive/modeld/jetlink/contracts.py": "100f92e154b9540ddfe8b8b5ca6c3e2973cce14428fb3442ad98701c976f9ca2",
+        "openpilot/selfdrive/modeld/jetlink/daemon.py": "d95e7f44597f150f642f70432143ee9cba8c395bb0513a9e475bc4f597859980",
+        "openpilot/selfdrive/modeld/jetlink/inputs.py": "c737e30ff8c1b170ebc2179394ee0ce63180e257ddb64ce0967aae7161398f8e",
+        "openpilot/selfdrive/modeld/jetlink/prepare.py": "c6a9e9fc1fe122b655ea3a6fbbd3b0fff9ad7d3f918e720e9401fd19e0afb4e7",
+        "openpilot/selfdrive/modeld/jetlink/jetson_model.json": "ceb07d1a502966f10cb1afc33c6d686a418b3f204320685cf5e36bbf44c62f6d",
+        "openpilot/selfdrive/modeld/camera_gap.py": "7b959fa8bdd740c4bea150c07248a69ea33f08db327110601be3ee17d9bc938a",
+        "openpilot/selfdrive/modeld/camera_sync.py": "398980260825757393239796cb4dc10399ef1384f0fd9e23cdad0fd12d0cc0d2",
+        "openpilot/selfdrive/modeld/modeld.py": "008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594",
+        "openpilot/system/manager/process.py": "fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752",
+        "third_party/jetlink/jetlink/spec.py": "ec844ccaf13ffc1d7c03ad683b0e3f2ce6a1d78f4088067739aaa419af422170",
+        "third_party/jetlink/jetlink/server/session.py": "a4a5c08f917294806395b1e0fa9c359d747fbc6ced7842dbc3c32d924af2847d",
+        "third_party/jetlink/jetlink/queues.py": "c251eecc45e38704c15b2a10f0969c270cd9fa11603ebdaae88c1b1187112ea8",
+        "third_party/jetlink/jetlink/client.py": "05d500179dd3e49d8875d8cfc370a59dd692839eb6b1b939efee5fb72b9092b9",
+        "third_party/jetlink/jetlink/protocol.py": "27921d6cbac744f28db9f3c3487e42bdf405ac184db41322352f91aad9e3fb51",
+        "third_party/jetlink/jetlink/request_chunks.py": "a4ac4bcf467b09df3b703e05a59e757ce2ebb8e016898eb1808ad0031a1905e1",
+        "third_party/jetlink/jetlink/packed_codec.py": "8d67a94951e6188d811c8ad7072e5db1b40ff9ef24ec28049634b07cb26c9004",
+        "third_party/jetlink/jetlink/block_codec.py": "a42299bd1fccdf53022afd50066909caa5740f4790cec1a88eec9665f8e7ad5e",
+        "third_party/jetlink/jetlink/transport/base.py": "1861db5ec506b274f940797a6d2b181f075e94a928326d699c34cfd6b0c93a3b",
+        "third_party/jetlink/jetlink/transport/ffs.py": "41580e2d6ae5c4533e5c089375a1788920f3480f59b80fbb7d0eabe2f8b7fd50",
+        "third_party/jetlink/jetlink/transport/request_writer.py": "7d6846fdeebfafdffb849b17c7771f39ea6f352211ee879f61acdf3e71029d53",
+        "third_party/jetlink/jetlink/transport/request_writer.c": "a05f1c9bf1d875625cbb46c5c5d402537c22cb1c625f0aa413db906cbc882bc9",
+        "tools/jetlink/host_reader.py": "991b975dfb4c65c93f82711da25818981b71ef01281a65bc94a28946246b319a",
+        "tools/jetlink/host_usb.py": "49609ee4a4179369d6e6e3e048ff1669854de9ec42d92ac5f764eb23c50dcba4",
+        "tools/jetlink/server.py": "10298c588d517c6aad2c5223b1bc0506fb1a5b89c6f965f5d0b5a7a16b839e87",
+        "openpilot/selfdrive/modeld/jetlink/host_release.json": "c113776620f9644bd899bc719a3ded13be3ef851c501d0f323bede7c6181a242"
+      },
+      "nav_model_sha": "01effc679eb46d6036ce0302673a87fe2dcfcc95a679daeeb929679e53c3647a",
+      "nav_spec_sha": "63b2097c114bade03c5ec7ded978d73032a93bb525c03f9b78eddf49809f8b71",
+      "before_profile": {
+        "openpilot/selfdrive/modeld/jetlink/model.py": "103dc0c7eb1b4998ddbf0a498be55ffd02fd51b195ce20cb7ea44ba3dbce6c42"
+      },
+      "after_profile": {
+        "openpilot/selfdrive/modeld/jetlink/model.py": "329125177e2372eb006a55035ef13c08bbcb41fcf63981fdc8cdd0e567edac29",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/__init__.py": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/format.py": "b37ee019febbc56ead607147134a7b5ac4ffbc4380df72697f22111723d4eb12",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/recorder.py": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/dataset.py": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7",
+        "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py": "88a1e296b6bdb538174e8de0aba99f4733ec16b94480ae44e3a591962f8cfceb"
+      },
+      "touched_files": [
+        {
+          "path": "openpilot/selfdrive/modeld/jetlink/input_recording/__init__.py",
+          "before_sha256": null,
+          "after_sha256": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca"
+        },
+        {
+          "path": "openpilot/selfdrive/modeld/jetlink/input_recording/dataset.py",
+          "before_sha256": null,
+          "after_sha256": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7"
+        },
+        {
+          "path": "openpilot/selfdrive/modeld/jetlink/input_recording/format.py",
+          "before_sha256": null,
+          "after_sha256": "b37ee019febbc56ead607147134a7b5ac4ffbc4380df72697f22111723d4eb12"
+        },
+        {
+          "path": "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py",
+          "before_sha256": null,
+          "after_sha256": "88a1e296b6bdb538174e8de0aba99f4733ec16b94480ae44e3a591962f8cfceb"
+        },
+        {
+          "path": "openpilot/selfdrive/modeld/jetlink/input_recording/recorder.py",
+          "before_sha256": null,
+          "after_sha256": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada"
+        },
+        {
+          "path": "openpilot/selfdrive/modeld/jetlink/model.py",
+          "before_sha256": "103dc0c7eb1b4998ddbf0a498be55ffd02fd51b195ce20cb7ea44ba3dbce6c42",
+          "after_sha256": "329125177e2372eb006a55035ef13c08bbcb41fcf63981fdc8cdd0e567edac29"
+        }
+      ],
+      "forward_sha256": "e63591a2f40c680873c2b578635124e26de699292128d17300c790ede3673a61",
+      "reverse_sha256": "8872acedb662d73b293d44fada872ab6fa9c1648e310dadac9434041afbba0e9"
+    }
+  },
+  "updater_footer_loss": "FAIL_CLOSED",
+  "automatic_repatch": false,
+  "behavior": {
+    "hook_function_class_AST": "IDENTICAL_TO_810E",
+    "unchanged_modules": [
+      "__init__.py",
+      "recorder.py",
+      "dataset.py"
+    ],
+    "rebound": [
+      "format.BASE_SHA",
+      "hook.SOURCE_PINS",
+      "hook.PACKAGE_PINS",
+      "hook.FOOTER_TEMPLATE",
+      "model.footer_profile_and_hook_digest"
+    ],
+    "source_kind": "existing_jetlink_n16_nonstate_payload",
+    "source_kind_unchanged": true,
+    "legacy_error_labels": "810e inherited strings; BASE_SHA acceptance is060de9"
+  },
+  "tests": {
+    "classification": [
+      "CPU_FAKE",
+      "FIXTURE"
+    ],
+    "pass_count": 543,
+    "fail_count": 0,
+    "skip_count": 0,
+    "scoped": {
+      "pass_count": 449,
+      "fail_count": 0,
+      "skip_count": 0,
+      "unique_cases": 449,
+      "junit_sha256": "48e363f6768ba13c2d1a769969d3f8c7d2a167ba497759657116d3c5825ef2f7",
+      "elapsed_seconds": 144.468
+    },
+    "upstream": {
+      "pass_count": 94,
+      "fail_count": 0,
+      "skip_count": 0,
+      "unique_cases": 94,
+      "junit_sha256": "88b8212c13addcff463c6b2131129a303f350920cfad661aad757f5b13472915",
+      "elapsed_seconds": 7.244
+    },
+    "historical_cases_within_scoped": 415,
+    "new_060_cases_within_scoped": 34,
+    "unique_count_policy": "449 scoped includes old415 once +34 new;94 upstream separate case IDs, no prior counts added",
+    "scoped_command": "PYTHONPATH=.:tests PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 python -B -m pytest -q -p no:cacheprovider tests/test_recorder_activation_v2.py tests/test_recorder_activation_deployment.py tests/test_u32_provenance.py tests/test_comma_dirty_baseline.py tests/test_comma_dirty_layout.py tests/test_v3_input_format.py tests/test_v3_input_recorder.py tests/test_v3_input_dataset.py tests/test_v3_input_hook.py tests/test_recorder_810e*.py tests/test_recorder_060de9*.py --tb=short",
+    "upstream_source_materialization": "git -C LOCAL_OBJECT_STORE archive --format=tar 060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c third_party/jetlink/jetlink tools/jetlink | tar -x -C FRESH_OFFLINE_SOURCE; executed equivalent regular-file-only Python extraction, no checkout",
+    "upstream_command": "PYTHONPATH=OFFLINE_SOURCE/tools/jetlink:OFFLINE_SOURCE/third_party/jetlink PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 python -B -m pytest -q -p no:cacheprovider OFFLINE_SOURCE/tools/jetlink/test_request_chunks.py OFFLINE_SOURCE/tools/jetlink/test_request_writer.py OFFLINE_SOURCE/tools/jetlink/test_host_request_queue.py OFFLINE_SOURCE/tools/jetlink/test_host_usb.py --tb=short",
+    "root_collection": {
+      "status": "BLOCKED_LEGACY_SYSTEM_EXIT",
+      "exit_status": 3,
+      "culprit": "tests/test_backport.py:192",
+      "command": "python -B -m pytest --collect-only -q -p no:cacheprovider",
+      "no_tests_collected": true
+    },
+    "nonfinal_failures": [
+      "expected missing-profile RED",
+      "expected missing-reader RED",
+      "fixture namespace/class/backend setup failures",
+      "partial old-wire replay fixture corrected to whole-request replay",
+      "review minor bad-reference2RED then2GREEN"
+    ],
+    "review": {
+      "blocking_issues": 0,
+      "minor_bad_reference_cli": "FIXED_WITH_2_RED_GREEN_TESTS",
+      "final_regression": "PASS"
+    },
+    "environment": "WSL2 Linux x86_64 / Python3.12.3 / NumPy2.5.4 / native Linux AIO regular files"
+  },
+  "preservation": {
+    "actual_comma_access": "NOT_RUN",
+    "actual_comma_modified": "NO",
+    "ticket": "NOT_CREATED",
+    "activation": "NOT_RUN",
+    "capture": "NOT_RUN",
+    "restart": "NOT_RUN",
+    "jetson": "NOT_RUN",
+    "usb_real": "NOT_RUN",
+    "trt_real": "NOT_RUN",
+    "historical_assets": "UNCHANGED",
+    "reference_head": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+    "reference_existing_submodule_status": "UNCHANGED"
+  },
+  "upstream": {
+    "first_observed": {
+      "carrot_nav": "710da0d285cd21c25c2ea143450de94196690884",
+      "carrot_wip": "9fa59128bdff6b6c0b9501aec2898205492b389f"
+    },
+    "end": {
+      "carrot_nav": "710da0d285cd21c25c2ea143450de94196690884",
+      "carrot_wip": "deb63e276d95d3e0fc2234ad4b312b4c4d075269",
+      "carrot_jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+      "zoompilot": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc",
+      "review": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722"
+    },
+    "rolling_wip_diff": {
+      "base": "9fa59128bdff6b6c0b9501aec2898205492b389f",
+      "head": "deb63e276d95d3e0fc2234ad4b312b4c4d075269",
+      "status": "ahead",
+      "total_commits": 1,
+      "files": [
+        ".github/workflows/jetlink-checks.yaml",
+        "docs/jetson_regression_isolation_20261024.md",
+        "openpilot/selfdrive/ui/tests/test_egl_shutdown.py",
+        "openpilot/system/ui/lib/application.py",
+        "openpilot/system/ui/lib/egl.py"
+      ],
+      "relevant_files": [],
+      "source": "https://api.github.com/repos/ajouatom/openpilot/compare/9fa59128bdff6b6c0b9501aec2898205492b389f...deb63e276d95d3e0fc2234ad4b312b4c4d075269",
+      "retargeted": false
+    },
+    "rolling_wip_ci_note": "Adds EGL/application/test trigger paths and EGL shutdown test; no Jetlink runtime path changed",
+    "actual_current_head": "NOT_QUERIED_OFFLINE",
+    "target_rebound_to_latest": false
+  },
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "m2_readiness": "NO",
+  "ready_for_actual_off_deployment": "YES_EXACT060DE9_ONLY",
+  "ready_for_m19b2_capture": "NO",
+  "next_action": "Separately approved fresh exact060de9 genuine-OFF/source/package/private-overlay preflight before using new surviving366 migration; STOP if HEAD differs"
+}
