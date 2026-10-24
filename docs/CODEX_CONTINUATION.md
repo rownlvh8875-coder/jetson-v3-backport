@@ -1,5 +1,34 @@
 # Codex continuation — 2026-10-24
 
+## Latest checkpoint: M19-C2.1 exact5bb private storage — PASS_STORAGE_READY
+
+Read docs/M19C21_5BB_PRIVATE_CAPTURE_STORAGE_20261024.md and
+artifacts/m19c21_5bb_private_capture_storage_20261024.json first.
+Actual carrot-nav remains5bbbe160822c7cae4245d7a8e96b40d158941ff7;
+RECORDER_5BB_DEFERRED_NAV_V1_INSTALLED_OFF, six hashes/33pins exact.
+Fresh first cat OFF/ON1/0 and immediate identity passed; original echo-parser
+misclassification was corrected against executed prompts, no actual drift.
+
+/data/v3_input_capture created once: real canonical empty0700 directory,
+UID/GID1000:1000 compatible with inherited normal modeld/writer credentials.
+Internal UFS ext4 /data, removable0, no route/Git/uploader overlap. Probe32bytes
+exclusive/no-follow/write/read/fsync PASS, only own probe removed; child count0.
+Final available 28407676928bytes/27091.671875MiB/
+30.053217%, above100MiB. Pure installed output-path rules
+PASS with synthetic future ID; no hook import, ticket helper or child creation.
+
+Final read-only storage/source guard PASS; HEAD/six/33/index/core roles/boot
+stable, updater driftNONE. Ticket/consumedABSENT, claims0, activationNOT_RUN,
+writer0, frames0, datasetNONE. Storage root is the only persistent actual change.
+No source/Git/Params/updater change, restart/reboot, vehicle transition or Jetson
+access/mutation. Local POSIX4PASS separate from actual one probe; historical
+C14 1165 not rerun/recounted. Historical evidence/protected refs unchanged.
+
+PRIVATE_CAPTURE_STORAGE_READY. Vehicle10YES_READINESS_ONLY;
+PARITY_UNDETERMINED/M2NO. Next: separately authorized M19-C2, fresh OFF/source/
+profile gates before any one-shot10-frame ticket. No capture was armed here.
+Result commit: git log -1 --format=%H -- artifacts/m19c21_5bb_private_capture_storage_20261024.json
+
 ## Latest checkpoint: M19-C1.4 exact5bb actual deployment OFF — PASS
 
 Read docs/M19C14_5BB_ACTUAL_OFF_DEPLOYMENT_20261024.md and
