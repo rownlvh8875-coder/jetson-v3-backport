@@ -1,5 +1,44 @@
 # Codex continuation — 2026-10-24
 
+## Latest checkpoint: M19-C0.4 exact5bb wrapper fix — offline candidate PASS
+
+Read docs/M19C04_5BB_NAV_METADATA_WRAPPER_20261024.md and
+artifacts/m19c04_5bb_nav_metadata_wrapper_20261024.json first.
+Blocking nav_metadata API issue RESOLVED. Explicit argument and single unchanged
+forwarding are the sole behavior AST change; no generic kwargs or dataset change.
+RECORDER_5BB_DEFERRED_NAV_V1 is ready as an offline exact5bb candidate.
+FOUR_INPUT_SUFFICIENT remains frozen for V3 ONNX404a18cf..., with matched initial/
+reset recurrent state, feedback and continuity. No numerical parity judgment.
+
+Exact base 5bbbe160822c7cae4245d7a8e96b40d158941ff7;33 pins. Fixed-hook32-switch matrix plus4
+writer partitions: five distinct same-frame scalar hashes and exact image/first12,
+actual generated hook throughout. Paired25 wrapped/unwrapped source traces match
+map/cache/expiry/route/reset/gap/None/flush and error semantics. Metadata tuple
+identity preserved. Current navigation; host full packed intentionally differs
+only at a deferred map hit. No physical USB/GPU/vehicle claim.
+
+Expected future PRE: pure5bb model without footer plus surviving a559 package.
+Surviving forward/reverse touch only model/format/hook and restore exact PRE.
+Forward SHA 8840e15e873526774d9c6f0ce1b2442dc1a3ee91cbf77326371bf643d79c6217
+Reverse SHA 96e2232d00fcecdfc2fd9a7adfaa646d9719903bf69315c4a42355b28173aee3
+AFTER model 65b9006aba819376344e72114b2de55330aa76cd358f30c7e80488f0dd9e799a
+AFTER format 838cbb11d254132f55ff808ef59e3010a18f0f0a0d157e7a215635229950810a
+AFTER hook 1b0331426cc13c3f1ec27910f69eea4c4bc210af339acdf63bebf5098e041f83
+Init/recorder/dataset unchanged. Distinct clean5bb alternative and strict5bb
+reader delivered; wrong layout/profile rejected. Roundtrip/default-OFF PASS.
+No ticket means no package import, tensor copy, writer/process/dataset.
+HEAD/pins/footer/package binding fail closed; no automatic updater repair.
+
+Fresh unique CPU_FAKE/FIXTURE1165 PASS/0FAIL/0SKIP =1021 baseline+119new+25paired,
+no repeated-case counting. API20/privatepaired/preliminary runs excluded.
+Diagnostics4 missing-zstandard and known root collection blockers separate.
+Historical evidence/protected refs unchanged. Actual comma/Jetson access NO;
+device/source/Params/updater/ticket/storage/capture/restart mutations NONE.
+Exact5bb OFF deployment candidate YES; storage NO; Vehicle10 NO;
+PARITY_UNDETERMINED/M2NO. Next: separately authorize exact5bb OFF deployment with
+fresh actual identity, genuine-OFF, surviving-package and overlay gates.
+Result commit: git log -1 --format=%H -- artifacts/m19c04_5bb_nav_metadata_wrapper_20261024.json
+
 ## Latest checkpoint: M19-C0.3 exact5bb review — recorder API incompatible
 
 Read docs/M19C03_5BB_DEFERRED_NAV_20261024.md and

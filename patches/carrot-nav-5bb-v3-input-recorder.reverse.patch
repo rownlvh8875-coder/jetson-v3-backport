@@ -1,0 +1,66 @@
+--- a/openpilot/selfdrive/modeld/jetlink/input_recording/format.py
++++ b/openpilot/selfdrive/modeld/jetlink/input_recording/format.py
+@@ -7,7 +7,7 @@
+ import struct
+ import numpy as np
+ 
+-BASE_SHA = '5bbbe160822c7cae4245d7a8e96b40d158941ff7'
++BASE_SHA = 'a559fcd971ccaa5a87befb8ec080f59a2966325b'
+ TARGET_SHA='404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4'
+ SPEC_DIGEST='6905b3d4efd18caf3df8c02898e9f3003a5adb11813a277f627b1decea8304e0'
+ INPUTS={'new_img':((2,6,128,256),'|u1'),'desire':((8,),'<f4'),
+--- a/openpilot/selfdrive/modeld/jetlink/input_recording/hook.py
++++ b/openpilot/selfdrive/modeld/jetlink/input_recording/hook.py
+@@ -21,7 +21,7 @@
+ from .format import BASE_SHA, canonical, validate_provenance
+ 
+ MODEL = 'openpilot/selfdrive/modeld/jetlink/model.py'
+-SOURCE_PINS = {'openpilot/selfdrive/modeld/jetlink/model.py': '6e04d29bca6b1802ecc012f8f8ea154f28ec7854961dbf4fd4b6b963328eccee', 'openpilot/selfdrive/modeld/jetlink/link.py': '3be648e18f899ffbcbba08d0cf10de318f5b57a140157d3ceba1cddd96dc7df5', 'openpilot/selfdrive/modeld/jetlink/shared_input.py': 'dc36519c3dc6fad49047fe35a24c5b33f439364c2e4a2559d0f357dfb8e0921e', 'openpilot/selfdrive/modeld/jetlink/contracts.py': '100f92e154b9540ddfe8b8b5ca6c3e2973cce14428fb3442ad98701c976f9ca2', 'openpilot/selfdrive/modeld/jetlink/daemon.py': 'f7038e4f417fdc093c4bd086c0d8184d6e8f2b235c11b519215a7aab4cad0670', 'openpilot/selfdrive/modeld/jetlink/inputs.py': 'c737e30ff8c1b170ebc2179394ee0ce63180e257ddb64ce0967aae7161398f8e', 'openpilot/selfdrive/modeld/jetlink/prepare.py': 'c6a9e9fc1fe122b655ea3a6fbbd3b0fff9ad7d3f918e720e9401fd19e0afb4e7', 'openpilot/selfdrive/modeld/jetlink/jetson_model.json': 'ceb07d1a502966f10cb1afc33c6d686a418b3f204320685cf5e36bbf44c62f6d', 'openpilot/selfdrive/modeld/camera_gap.py': '7b959fa8bdd740c4bea150c07248a69ea33f08db327110601be3ee17d9bc938a', 'openpilot/selfdrive/modeld/camera_sync.py': '398980260825757393239796cb4dc10399ef1384f0fd9e23cdad0fd12d0cc0d2', 'openpilot/selfdrive/modeld/modeld.py': '008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594', 'openpilot/system/manager/process.py': 'fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752', 'third_party/jetlink/jetlink/spec.py': 'ec844ccaf13ffc1d7c03ad683b0e3f2ce6a1d78f4088067739aaa419af422170', 'third_party/jetlink/jetlink/server/session.py': 'a4a5c08f917294806395b1e0fa9c359d747fbc6ced7842dbc3c32d924af2847d', 'third_party/jetlink/jetlink/queues.py': 'c251eecc45e38704c15b2a10f0969c270cd9fa11603ebdaae88c1b1187112ea8', 'third_party/jetlink/jetlink/client.py': 'cda14a04353f87a99b143c5e16ba9c8db69e6bd80a89143e845fde6ffe33ea1c', 'third_party/jetlink/jetlink/protocol.py': '27921d6cbac744f28db9f3c3487e42bdf405ac184db41322352f91aad9e3fb51', 'third_party/jetlink/jetlink/request_chunks.py': 'f97d2b3310e2e049d20c2c2526ffb93068cb1b17aa5214a826ebe95bed670a73', 'third_party/jetlink/jetlink/packed_codec.py': '8d67a94951e6188d811c8ad7072e5db1b40ff9ef24ec28049634b07cb26c9004', 'third_party/jetlink/jetlink/block_codec.py': 'a42299bd1fccdf53022afd50066909caa5740f4790cec1a88eec9665f8e7ad5e', 'third_party/jetlink/jetlink/transport/base.py': '1861db5ec506b274f940797a6d2b181f075e94a928326d699c34cfd6b0c93a3b', 'third_party/jetlink/jetlink/transport/ffs.py': '01a7561451a7194b8ac840a29c78784d8a63731860d146299d43cbf97c852dbd', 'third_party/jetlink/jetlink/transport/request_writer.py': '1fd5ba1a4e446187e41b8c6c73aaff6436ba0b33d6a159c1d6aa1b497ffe1e1e', 'third_party/jetlink/jetlink/transport/request_writer.c': '1161ddd29a8ac6852e14832dd94af0bd2c7c1d8fe009a74d83f423fb57d58b89', 'tools/jetlink/host_reader.py': '991b975dfb4c65c93f82711da25818981b71ef01281a65bc94a28946246b319a', 'tools/jetlink/host_usb.py': '49609ee4a4179369d6e6e3e048ff1669854de9ec42d92ac5f764eb23c50dcba4', 'tools/jetlink/server.py': '4fedc5455adccf09c45980ff4de132d6027249dcffaf622fa6353d69452bd0c7', 'openpilot/selfdrive/modeld/jetlink/host_release.json': '2f36e9a081ea0591e937b8631208652365eadf3dca559157d7a4c8e03a639516', 'openpilot/common/runtime_diagnostics.py': 'f5e6c161a5d7c99aebfdfa89c132b86e519980abe6a5b6d787dc2dd8dd3ac1ea', 'third_party/jetlink/jetlink/output_projection.py': 'd76547e3426c488c6f8ab341a2b1f0613c183a02c6b6710c9871af8a94d3a534', 'third_party/jetlink/jetlink/deferred_map.py': '69e47a2a26b4c71a64d9b4de8fd4dd9f38ad2c92c4bc6e7a1c7f760573c38c86', 'openpilot/selfdrive/navigation/map_client.py': '6fb6e19701ecd22c3dd2cec2de00bb0c8748daedeea5183847c4ea151b0e1cfc', 'tools/jetlink/host_lpm.py': '36d2d2de86cb6fe585c80fe262802bb1e31aedddca37c0ff9d98621ab5aa1139'}
++SOURCE_PINS = {'openpilot/selfdrive/modeld/jetlink/model.py': '93c2858e5b981ed01ce39745002d7479d5362cb7265c11f2018ac7f7bb3c4554', 'openpilot/selfdrive/modeld/jetlink/link.py': '418e063bd10245bc1c26a858173d1488188afe3d062bca8ca898a34a36c0e253', 'openpilot/selfdrive/modeld/jetlink/shared_input.py': 'dc36519c3dc6fad49047fe35a24c5b33f439364c2e4a2559d0f357dfb8e0921e', 'openpilot/selfdrive/modeld/jetlink/contracts.py': '100f92e154b9540ddfe8b8b5ca6c3e2973cce14428fb3442ad98701c976f9ca2', 'openpilot/selfdrive/modeld/jetlink/daemon.py': 'b7fb4898bcf62cfc9d8e9fb4034b3fb342ee7468dba6371fc17a99509e2dc35d', 'openpilot/selfdrive/modeld/jetlink/inputs.py': 'c737e30ff8c1b170ebc2179394ee0ce63180e257ddb64ce0967aae7161398f8e', 'openpilot/selfdrive/modeld/jetlink/prepare.py': 'c6a9e9fc1fe122b655ea3a6fbbd3b0fff9ad7d3f918e720e9401fd19e0afb4e7', 'openpilot/selfdrive/modeld/jetlink/jetson_model.json': 'ceb07d1a502966f10cb1afc33c6d686a418b3f204320685cf5e36bbf44c62f6d', 'openpilot/selfdrive/modeld/camera_gap.py': '7b959fa8bdd740c4bea150c07248a69ea33f08db327110601be3ee17d9bc938a', 'openpilot/selfdrive/modeld/camera_sync.py': '398980260825757393239796cb4dc10399ef1384f0fd9e23cdad0fd12d0cc0d2', 'openpilot/selfdrive/modeld/modeld.py': '008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594', 'openpilot/system/manager/process.py': 'fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752', 'third_party/jetlink/jetlink/spec.py': 'ec844ccaf13ffc1d7c03ad683b0e3f2ce6a1d78f4088067739aaa419af422170', 'third_party/jetlink/jetlink/server/session.py': 'a4a5c08f917294806395b1e0fa9c359d747fbc6ced7842dbc3c32d924af2847d', 'third_party/jetlink/jetlink/queues.py': 'c251eecc45e38704c15b2a10f0969c270cd9fa11603ebdaae88c1b1187112ea8', 'third_party/jetlink/jetlink/client.py': '05d500179dd3e49d8875d8cfc370a59dd692839eb6b1b939efee5fb72b9092b9', 'third_party/jetlink/jetlink/protocol.py': '27921d6cbac744f28db9f3c3487e42bdf405ac184db41322352f91aad9e3fb51', 'third_party/jetlink/jetlink/request_chunks.py': 'a4ac4bcf467b09df3b703e05a59e757ce2ebb8e016898eb1808ad0031a1905e1', 'third_party/jetlink/jetlink/packed_codec.py': '8d67a94951e6188d811c8ad7072e5db1b40ff9ef24ec28049634b07cb26c9004', 'third_party/jetlink/jetlink/block_codec.py': 'a42299bd1fccdf53022afd50066909caa5740f4790cec1a88eec9665f8e7ad5e', 'third_party/jetlink/jetlink/transport/base.py': '1861db5ec506b274f940797a6d2b181f075e94a928326d699c34cfd6b0c93a3b', 'third_party/jetlink/jetlink/transport/ffs.py': '41580e2d6ae5c4533e5c089375a1788920f3480f59b80fbb7d0eabe2f8b7fd50', 'third_party/jetlink/jetlink/transport/request_writer.py': '7d6846fdeebfafdffb849b17c7771f39ea6f352211ee879f61acdf3e71029d53', 'third_party/jetlink/jetlink/transport/request_writer.c': 'a05f1c9bf1d875625cbb46c5c5d402537c22cb1c625f0aa413db906cbc882bc9', 'tools/jetlink/host_reader.py': '991b975dfb4c65c93f82711da25818981b71ef01281a65bc94a28946246b319a', 'tools/jetlink/host_usb.py': '49609ee4a4179369d6e6e3e048ff1669854de9ec42d92ac5f764eb23c50dcba4', 'tools/jetlink/server.py': '10298c588d517c6aad2c5223b1bc0506fb1a5b89c6f965f5d0b5a7a16b839e87', 'openpilot/selfdrive/modeld/jetlink/host_release.json': 'c113776620f9644bd899bc719a3ded13be3ef851c501d0f323bede7c6181a242', 'openpilot/common/runtime_diagnostics.py': 'f5e6c161a5d7c99aebfdfa89c132b86e519980abe6a5b6d787dc2dd8dd3ac1ea', 'third_party/jetlink/jetlink/output_projection.py': 'd76547e3426c488c6f8ab341a2b1f0613c183a02c6b6710c9871af8a94d3a534'}
+ SCALARS = (('desire', (8,)), ('traffic_convention', (1, 2)), ('action_t', (1, 2)))
+ TICKET_KEYS = {'schema', 'capture_id', 'output_root', 'output', 'frames', 'depth', 'carrot_head',
+                'source_model_sha', 'source_spec_sha', 'ticket_path', 'boot_id', 'armed_monotonic_ns',
+@@ -351,9 +351,9 @@
+                     capture.stop('source model/spec/layout mismatch')
+ 
+         @functools.wraps(original_infer)
+-        def infer(self, image, packed, frame, reset=False, source_sof=0, nav_metadata=None):
++        def infer(self, image, packed, frame, reset=False, source_sof=0):
+             capture.observe(self, image, packed, reset)
+-            return original_infer(self, image, packed, frame, reset, source_sof=source_sof, nav_metadata=nav_metadata)
++            return original_infer(self, image, packed, frame, reset, source_sof=source_sof)
+ 
+         CameraGapTrace.receive, Warp.__call__ = receive, warp
+         Client.__init__, Client.infer = init, infer
+@@ -369,8 +369,8 @@
+ NAV_SPEC_SHA = '63b2097c114bade03c5ec7ded978d73032a93bb525c03f9b78eddf49809f8b71'
+ EXPECTED_STATE_PAIRS = {'state_img_q': 'next_state_img_q', 'state_desire_q': 'next_state_desire_q', 'state_feat_q': 'next_state_feat_q', 'state_map_features_q': 'next_state_map_features_q', 'state_navigation_features_q': 'next_state_navigation_features_q'}
+ 
+-PACKAGE_PINS = {'__init__.py': 'e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca', 'format.py': '838cbb11d254132f55ff808ef59e3010a18f0f0a0d157e7a215635229950810a', 'recorder.py': 'd6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada', 'dataset.py': '25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7'}
+-FOOTER_TEMPLATE = "\n\n# RECORDER_5BB_DEFERRED_NAV_V1; default OFF.\n# Reviewed hook SHA256: @HOOK_SHA256@\n# One volatile ticket check at lazy import; no environment activation.\ntry:\n  os.lstat('/dev/shm/carrot-v3-input-capture/arm.ticket')\nexcept Exception:\n  pass\nelse:\n  try:\n    from openpilot.selfdrive.modeld.jetlink.input_recording.hook import install_discovered as _install_input_capture\n    _m18_input_capture = _install_input_capture(globals())\n  except Exception:\n    pass  # Recorder setup must never disable existing inference or fallback.\n"
++PACKAGE_PINS = {'__init__.py': 'e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca', 'format.py': 'f0bf4d1abbbc8bc89e02213198743d507fd57a6546a85b48f54fd46ea346cd25', 'recorder.py': 'd6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada', 'dataset.py': '25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7'}
++FOOTER_TEMPLATE = "\n\n# RECORDER_A559_EXECUTION_SWITCHES_V1; default OFF.\n# Reviewed hook SHA256: @HOOK_SHA256@\n# One volatile ticket check at lazy import; no environment activation.\ntry:\n  os.lstat('/dev/shm/carrot-v3-input-capture/arm.ticket')\nexcept Exception:\n  pass\nelse:\n  try:\n    from openpilot.selfdrive.modeld.jetlink.input_recording.hook import install_discovered as _install_input_capture\n    _m18_input_capture = _install_input_capture(globals())\n  except Exception:\n    pass  # Recorder setup must never disable existing inference or fallback.\n"
+ 
+ 
+ # M19-B0 activation-v2: /dev/shm is the exact810e Paths.shm_path convention.
+--- a/openpilot/selfdrive/modeld/jetlink/model.py
++++ b/openpilot/selfdrive/modeld/jetlink/model.py
+@@ -297,18 +297,3 @@
+       # Execute the native fallback before allowing an external-model join.
+       self.small_runs += 1
+     return result
+-
+-
+-# RECORDER_5BB_DEFERRED_NAV_V1; default OFF.
+-# Reviewed hook SHA256: 1b0331426cc13c3f1ec27910f69eea4c4bc210af339acdf63bebf5098e041f83
+-# One volatile ticket check at lazy import; no environment activation.
+-try:
+-  os.lstat('/dev/shm/carrot-v3-input-capture/arm.ticket')
+-except Exception:
+-  pass
+-else:
+-  try:
+-    from openpilot.selfdrive.modeld.jetlink.input_recording.hook import install_discovered as _install_input_capture
+-    _m18_input_capture = _install_input_capture(globals())
+-  except Exception:
+-    pass  # Recorder setup must never disable existing inference or fallback.
