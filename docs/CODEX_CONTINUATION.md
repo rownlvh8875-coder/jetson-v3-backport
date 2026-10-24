@@ -1,5 +1,37 @@
 # Codex continuation — 2026-10-24
 
+## Latest checkpoint: M19-C1 retry BLOCKED_NOT_OFFROAD; actual source untouched
+
+User reported normal ignition OFF, keeping comma/Jetson connected. Fresh new
+private terminal first commands again returned **IsOffroad=0 /IsOnroad=1**.
+Stopped actual work immediately. Do not reinterpret the user's physical OFF
+report as a device-state PASS. No fresh device.started/Panda ignition/onroad
+process/branch/HEAD/source/package/overlay/namespace/writer observations followed;
+their current state is NOT_CHECKED_THIS_RETRY. No source patch, backup, disposable
+device copy, ticket, activation, capture, restart, Params/USB/Jetson change or
+actual Git commit. Requested operating mutations NONE; content preservation
+NOT_ATTESTED without fresh before/after evidence. No cause of continuing onroad
+flags was diagnosed after STOP.
+
+Development retry start `a6e0f719726b031767ac2d9253865cc1120ba561`, clean/equal
+origin on the required feature. Local patch hashes PASS, upstream refs below
+queried again unchanged; actual target810e remains required-only, not observed.
+Remote main2519ad.../old-feature26c9c0... unchanged, no local protected heads.
+No production/patch/test changes, so suite was NOT_RERUN_THIS_RETRY: earlier C1
+415/0/0 stays explicitly prior evidence. Retry receipt/artifact/diff validation
+only; prior counts never added. Public C1 artifact now preserves both attempts;
+fresh terminal evidence is private under ignored `.reports/m19c1-retry-20261024/`.
+The helper sent exit and closed the connection; addresses/raw screens not public.
+
+**Next:** fresh read-only first-flag preflight when device naturally reports1/0;
+then started=false, ignition false/false, normal producer termination, before
+exact810e source/old-package/private-overlay checks. Do not force flags/processes,
+restart, pull/reset/checkout or automatically rebase/repatch. Existing C1 approval
+persists only behind every gate. Migration, ticket and capture remain NOT_RUN;
+ready for M19-B2 NO, PARITY_UNDETERMINED /M2 NO. See updated C1 report/artifact.
+Retry result commit resolves with
+`git log -1 --format=%H -- artifacts/m19c1_810e_actual_off_deployment_20261024.json`.
+
 ## Current checkpoint: M19-C1 BLOCKED_NOT_OFFROAD; migration NOT_RUN
 
 Read `docs/M19C1_810E_ACTUAL_OFF_DEPLOYMENT_20261024.md` and

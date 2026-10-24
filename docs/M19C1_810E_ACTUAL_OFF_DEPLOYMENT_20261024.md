@@ -2,6 +2,43 @@
 
 **BLOCKED_NOT_OFFROAD. No actual migration was performed.**
 
+## Retry after user-reported normal ignition OFF
+
+The user reported normal ignition OFF and requested a fresh read-only check.
+On this retry a newly created terminal again returned **IsOffroad=0 /
+IsOnroad=1** from the two required first commands. This was a new observation,
+not the previous terminal transcript. Deployment STOPPED at that first gate.
+The source of the continuing onroad flags was not investigated after STOP;
+no conclusion about ignition hardware or transition delay is justified here.
+
+`deviceState.started`, ignitionLine/ignitionCan and process termination were
+**NOT_CHECKED_THIS_RETRY**. Actual branch/HEAD and all package/source/overlay
+identities likewise remain unobserved on this retry. No disposable device copy,
+backup, source patch, ticket, activation, capture, restart, Params write or
+Jetson access occurred. The terminal helper sent exit and closed its connection.
+No before/after operating-content preservation assertion can be made.
+
+Development started clean/local-remote equal at
+`a6e0f719726b031767ac2d9253865cc1120ba561`, on the required feature branch.
+Forward/reverse patch identities were checked again locally and match the table
+below. The public upstream refs listed below were also queried again unchanged;
+they do not establish the actual device HEAD. Protected remote main/old-feature
+refs matched their prior values; only the feature branch exists as a local head.
+
+There was no code/patch/test change and no actual deployment, so the authoritative
+suite was **not repeated on this retry**. The 415/0/0 result below belongs to the
+preceding C1 attempt. Local retry validation instead checks the fresh receipt,
+its digest, sanitized artifact/history consistency, patch identities and diff.
+The machine artifact preserves both attempts and labels the earlier test run.
+
+Final retry state: **BLOCKED_NOT_OFFROAD**, migration NOT_RUN, recorder source
+state/default-OFF NOT_ATTESTED, M19-B2 readiness NO. Numerical decision stays
+PARITY_UNDETERMINED / M2 NO. Next action is another read-only first-flag check
+after the device naturally reports OFF/ON1/0, followed by fresh telemetry/process
+proof; never force Params or producer state to obtain the required values.
+
+## Preceding C1 attempt
+
 The first two actual comma commands read `IsOffroad=0 / IsOnroad=1`.
 Required values were1/0. Per the explicit STOP rule, no subsequent source,
 runtime-overlay, ticket, process or model inspection was performed. In

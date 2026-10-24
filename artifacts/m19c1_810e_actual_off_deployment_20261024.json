@@ -1,10 +1,10 @@
 {
-  "schema": 1,
+  "schema": 2,
   "stage": "M19-C1",
   "date": "2026-10-24",
   "status": "BLOCKED_NOT_OFFROAD",
   "development_branch": "feature/jetlink-multimodel-carrot",
-  "validation_head": "0d1c6bd811c5d7d798a26d2b08ee964d4297f84d",
+  "validation_head": "a6e0f719726b031767ac2d9253865cc1120ba561",
   "start_working_tree": "CLEAN",
   "start_local_remote_equal": true,
   "result_commit_resolution": "git log -1 --format=%H -- artifacts/m19c1_810e_actual_off_deployment_20261024.json",
@@ -26,14 +26,21 @@
     "observed_head": null,
     "device_state_started": null,
     "note": "Git identity, source and runtime not inspected after first OFF gate failed",
-    "flag_receipt_sha256": "28dfc7af5e5addb6b67da37220c740773311d28413136eb5c9896461970126f6"
+    "flag_receipt_sha256": "b04f2fbea3561ec8bdb8c12abf57f6978c6b0fe36d961b11a3eb7b26fead6630",
+    "local_terminal_created_at": "2026-10-24T14:48:17.028000+09:00",
+    "freshness": "NEW_TERMINAL_CREATED_TRUE; first two flag reads; prior transcript not reused",
+    "ignition_line": null,
+    "ignition_can": null,
+    "onroad_processes_terminated": "NOT_CHECKED_THIS_RETRY",
+    "transition_cause": "NOT_DIAGNOSED_AFTER_STOP"
   },
   "access": {
-    "previous_endpoint": "UNREACHABLE_NO_TERMINAL_CREATED",
+    "previous_endpoint": "NOT_RETRIED",
     "user_supplied_new_address_used": true,
     "network_scan": "NOT_RUN",
     "new_private_terminal_created": true,
-    "terminal_cleanup": "EXIT_SENT_AND_WEBSOCKET_CLOSED"
+    "terminal_cleanup": "EXIT_SENT_AND_WEBSOCKET_CLOSED",
+    "user_reported_normal_ignition_off_before_retry": true
   },
   "pre": {
     "pure810_model": "NOT_RUN",
@@ -114,12 +121,16 @@
     "fail_count": 0,
     "skip_count": 0,
     "new_receipt_tests": 0,
-    "unique_scope": "Fresh complete authoritative C0 scoped suite; no prior counts added",
+    "unique_scope": "Prior authoritative scoped run, 415 unique cases; not rerun or added to current retry",
     "elapsed_seconds": 103.98,
     "junit_sha256": "a7e4876dfbbdd5782df9e4803178799d049bf761406a66d8ebafe05d0f31ded0",
     "command": "PYTHONPATH=.:tests PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 python -m pytest -q -p no:cacheprovider tests/test_recorder_activation_v2.py tests/test_recorder_activation_deployment.py tests/test_u32_provenance.py tests/test_comma_dirty_baseline.py tests/test_comma_dirty_layout.py tests/test_v3_input_format.py tests/test_v3_input_recorder.py tests/test_v3_input_dataset.py tests/test_v3_input_hook.py tests/test_recorder_810e*.py --tb=short",
     "bare_pytest": "NOT_RERUN; historical collection SystemExit0 blocker remains documented",
-    "environment": "WSL2 Linux x86_64 / Python3.12.3 / NumPy2.5.4"
+    "environment": "WSL2 Linux x86_64 / Python3.12.3 / NumPy2.5.4",
+    "rerun_this_retry": false,
+    "result_scope": "PRECEDING_C1_ATTEMPT_ONLY; no code/patch/test changes on retry",
+    "validation_head": "0d1c6bd811c5d7d798a26d2b08ee964d4297f84d",
+    "retry_validation": "Fresh receipt parsing/digest, artifact history, patch identities, protected refs and sanitized docs diff"
   },
   "upstream": {
     "carrot_nav": "060de9c8e59f0e1c0f75d8da3a1ca0ba6058b46c",
@@ -130,6 +141,78 @@
     "actual_head": "NOT_CHECKED",
     "retargeted": false
   },
-  "next_action": "After normal ignition OFF, rerun fresh genuine-OFF preflight; do not force Params/process state or infer stationary from Offroad",
-  "authorization": "Existing C1 scope retained; failed gate grants no bypass, no ticket/capture/restart authority"
+  "next_action": "Fresh read-only first-flag preflight after device naturally reports 1/0, then fresh started/ignition/process evidence; do not force Params/process state",
+  "authorization": "Existing C1 scope retained; failed gate grants no bypass, no ticket/capture/restart authority",
+  "attempts": [
+    {
+      "id": "C1_INITIAL",
+      "development_start_head": "0d1c6bd811c5d7d798a26d2b08ee964d4297f84d",
+      "status": "BLOCKED_NOT_OFFROAD",
+      "actual": {
+        "classification": "COMMA_REAL_READ_ONLY",
+        "first_commands": "ONLY_TWO_PARAM_READS",
+        "flags": {
+          "IsOffroad": "0",
+          "IsOnroad": "1"
+        },
+        "genuine_off": "FAIL",
+        "observed_branch": null,
+        "observed_head": null,
+        "device_state_started": null,
+        "note": "Git identity, source and runtime not inspected after first OFF gate failed",
+        "flag_receipt_sha256": "28dfc7af5e5addb6b67da37220c740773311d28413136eb5c9896461970126f6"
+      },
+      "access": {
+        "previous_endpoint": "UNREACHABLE_NO_TERMINAL_CREATED",
+        "user_supplied_new_address_used": true,
+        "network_scan": "NOT_RUN",
+        "new_private_terminal_created": true,
+        "terminal_cleanup": "EXIT_SENT_AND_WEBSOCKET_CLOSED"
+      },
+      "tests": {
+        "classification": [
+          "CPU_FAKE",
+          "FIXTURE"
+        ],
+        "pass_count": 415,
+        "fail_count": 0,
+        "skip_count": 0,
+        "new_receipt_tests": 0,
+        "unique_scope": "Fresh complete authoritative C0 scoped suite; no prior counts added",
+        "elapsed_seconds": 103.98,
+        "junit_sha256": "a7e4876dfbbdd5782df9e4803178799d049bf761406a66d8ebafe05d0f31ded0",
+        "command": "PYTHONPATH=.:tests PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 python -m pytest -q -p no:cacheprovider tests/test_recorder_activation_v2.py tests/test_recorder_activation_deployment.py tests/test_u32_provenance.py tests/test_comma_dirty_baseline.py tests/test_comma_dirty_layout.py tests/test_v3_input_format.py tests/test_v3_input_recorder.py tests/test_v3_input_dataset.py tests/test_v3_input_hook.py tests/test_recorder_810e*.py --tb=short",
+        "bare_pytest": "NOT_RERUN; historical collection SystemExit0 blocker remains documented",
+        "environment": "WSL2 Linux x86_64 / Python3.12.3 / NumPy2.5.4"
+      },
+      "actual_apply": "NOT_RUN",
+      "result_commit": "a6e0f719726b031767ac2d9253865cc1120ba561"
+    },
+    {
+      "id": "C1_RETRY_AFTER_USER_REPORTED_IGNITION_OFF",
+      "development_start_head": "a6e0f719726b031767ac2d9253865cc1120ba561",
+      "start_working_tree": "CLEAN",
+      "start_local_remote_equal": true,
+      "status": "BLOCKED_NOT_OFFROAD",
+      "classification": "COMMA_REAL_READ_ONLY",
+      "local_terminal_created_at": "2026-10-24T14:48:17.028000+09:00",
+      "flags": {
+        "IsOffroad": "0",
+        "IsOnroad": "1"
+      },
+      "flag_receipt_sha256": "b04f2fbea3561ec8bdb8c12abf57f6978c6b0fe36d961b11a3eb7b26fead6630",
+      "remaining_actual_preflight": "NOT_RUN_AFTER_FIRST_OFF_GATE_FAILURE",
+      "actual_apply": "NOT_RUN",
+      "ticket": "NOT_CREATED",
+      "capture": "NOT_RUN",
+      "restart": "NOT_RUN",
+      "jetson_access": "NOT_RUN",
+      "cpu_suite": "NOT_RERUN_UNCHANGED_CODE"
+    }
+  ],
+  "protected_remote_refs": {
+    "main": "2519ad0bdbf6e796fa590063fc90d4d6461b6b8d",
+    "feature/cinque-v3-jetson": "26c9c06a5e51ff0e8d3a1e8575eece548e87f3b5",
+    "local_protected_heads": "ABSENT; only development feature exists locally"
+  }
 }
