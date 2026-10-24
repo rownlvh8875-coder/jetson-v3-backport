@@ -1,0 +1,229 @@
+{
+  "schema": 1,
+  "stage": "M19-B0_OFFLINE_ACTIVATION_REVIEW",
+  "date": "2026-10-24",
+  "status": "PASS_CPU_ONLY",
+  "development_start_head": "df2ecccd3d82a99ea21470b09ca95aee4e20911a",
+  "branch": "feature/jetlink-multimodel-carrot",
+  "actual_state": {
+    "head": "366d6eae9aa9962104391e1d997fe956dea8f64d",
+    "branch": "carrot-nav",
+    "last_attested_stage": "M19-A",
+    "source_state": "PATCH_LEFT_INSTALLED_OFF",
+    "recorder": "OFF_LAST_ATTESTED",
+    "contacted_this_stage": false,
+    "modified_this_stage": false,
+    "fresh_actual_preservation_attestation": "NOT_RUN"
+  },
+  "source_pins": {
+    "launch_chffrplus.sh": "776945088377db2e4f2d1157fd6f34f113baf369d72c28e8d556bd6ad8365acb",
+    "launch_env.sh": "61830cdac16b701883099fef245d77b3b034954f8cf7648b3fc2733a668358c9",
+    "launch_openpilot.sh": "2a61c637ee49e066dd1a7d6b614d61f6a2b141e234a85d5e146813a9914889ad",
+    "restart.sh": "ed74b5d1bf2282acae6650b1bdc41ce62f3af4690c0d23b339a5db76857fc83b",
+    "openpilot/selfdrive/modeld/modeld.py": "008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594",
+    "openpilot/selfdrive/modeld/jetlink/model.py": "c627644ff2f986883325aaca1b8410f216f45447c6595a123d8c1e53ef8c83da",
+    "openpilot/selfdrive/modeld/jetlink/prepare.py": "c6a9e9fc1fe122b655ea3a6fbbd3b0fff9ad7d3f918e720e9401fd19e0afb4e7",
+    "openpilot/system/hardware/hw.py": "ce93d27d57ca5082782394a5c8f147332d656b8a04fd64dc77bb154b56123ea6",
+    "openpilot/system/manager/manager.py": "d345dfc562125c4448f3986e30371294d66df8b0871142de714834b78efe0929",
+    "openpilot/system/manager/process.py": "fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752",
+    "openpilot/system/manager/process_config.py": "2c055a88dcc9d09a5d1cda7364f4785697172e0a9169d06fd89700ec9ec7ac92"
+  },
+  "source_scope": "Exact local Git366 blobs; no actual runtime import/memory proof claimed",
+  "source_facts": {
+    "modeld_only_onroad": true,
+    "card_only_onroad": true,
+    "camerad_driverview": true,
+    "python_process_default_spawn": false,
+    "Linux_Python312_default": "fork",
+    "manager_init_prepares_modules": true,
+    "modeld_lazy_import_in_main": true,
+    "manager_preimport_consumes_ticket": false,
+    "competing_import": "jetlink.prepare.main imports Warp from the same model module in a separate helper interpreter",
+    "restart_sh": "RESTART_SH_UNSUITABLE_FOR_PINNED_CAPTURE",
+    "restart_sh_git_pull": true,
+    "capture_env_not_cleared_by_launch_chain": true,
+    "manager_logs_environment": true
+  },
+  "strategies": {
+    "A": {
+      "assessment": "RISKY",
+      "new_target_code_if_unchanged_M18": 0,
+      "environment_inheritance": "SOURCE_BACKED_AND_FORK_FIXTURE_VERIFIED",
+      "shell_export_after_manager_start_effective": false,
+      "manager_relaunch_to_inject": true,
+      "normal_restart_sh_approved": false,
+      "launcher_update_build_bootstrap_side_effect_risk": true,
+      "cleanup_relaunch_required": true,
+      "env_persists_after_capture": true,
+      "current_M18_helper_can_consume_first": true
+    },
+    "B": {
+      "assessment": "SAFE_OFFLINE_CANDIDATE",
+      "modified_target_files": 2,
+      "new_target_modules": 0,
+      "manager_restart_required": false,
+      "launcher_changes": false,
+      "persistent_env_or_Param": false,
+      "missing_ticket_import_lstat_checks": 1,
+      "per_frame_discovery_checks": 0,
+      "modeld_launcher_role_guard": true,
+      "non_modeld_import_leaves_ticket": true,
+      "manager_env_persists_after_capture": false
+    }
+  },
+  "recommendation": "RECOMMEND_B",
+  "fixed_discovery": {
+    "path": "/dev/shm/carrot-v3-input-capture/arm.ticket",
+    "convention": "actual366 Paths.shm_path and existing Jetlink shm paths",
+    "production_mount_gate": "exact root-owned mode1777 /dev/shm tmpfs mount",
+    "directory_owner_mode": "effective UID/GID and0700",
+    "ticket_owner_mode": "effective UID/GID, regular single-link0600, no symlink/FIFO",
+    "creation": "existing arm_ticket O_EXCL/O_NOFOLLOW, same schema1",
+    "consumption": "existing consume_ticket hard-link/unlink + boot/monotonic/source/spec/path/capture-ID claim",
+    "expiry_seconds_max": 300,
+    "default_expiry_seconds": 60,
+    "default_frames": 10,
+    "default_depth": 4,
+    "no_automatic_rearm": true,
+    "unsafe_entry_cleanup": "leave untouched; explicit safe-state operator review",
+    "consumed_markers_cleanup": "retained on boot-local tmpfs; never auto-delete to rearm"
+  },
+  "activation_lifecycle": [
+    "NO_TICKET",
+    "ARMED_OFFROAD",
+    "CONSUMED_ON_MODEL_IMPORT",
+    "CAPTURING",
+    "COMPLETE_OR_FAILED",
+    "OFF_UNTIL_EXPLICIT_NEW_ARM"
+  ],
+  "expired_lifecycle": "owned regular invalid/expired/wrong-boot ticket is consumed and rejected; original name absent; no rearm",
+  "role_guard": {
+    "active_frames": [
+      "openpilot.system.manager.process.launcher",
+      "openpilot.selfdrive.modeld.modeld.main"
+    ],
+    "checks": [
+      "function code object identity",
+      "exact source file path",
+      "pinned source SHA256"
+    ],
+    "maximum_stack_frames": 64,
+    "source_pins_additional": {
+      "openpilot/system/manager/process.py": "fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752",
+      "openpilot/selfdrive/modeld/modeld.py": "008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594"
+    },
+    "not_authentication_against_same_UID_source_modification": true
+  },
+  "fork_fixtures": {
+    "count": 7,
+    "real_Linux_fork": true,
+    "production_process_prepare_start_launcher_ensure_running": "source AST copied unchanged into fixture",
+    "manager_prepare_loop": "exact source node only; full manager_init not executed",
+    "modeld_module": "original top-level imports/definitions retained, native dependencies stubbed",
+    "modeld_main": "reduced to exact original JoiningModel lazy import plus diagnostics",
+    "target_model": "fixture classes plus real footer",
+    "source_and_mount_checks": "explicit fixture source pins and temp-filesystem substitute",
+    "ticket_consume_and_role_guard": "real candidate implementation",
+    "B_helper_import_does_not_consume": true,
+    "B_first_child_then_second_child_active": [
+      true,
+      false
+    ],
+    "B_terminal_complete_or_failure_no_rearm": true,
+    "B_context_source_drift_no_activation": true,
+    "A_inherited_environment_first_child_then_second": [
+      true,
+      false
+    ],
+    "A_shell_only_environment_children": [
+      false,
+      false
+    ],
+    "A_helper_first_can_steal_ticket": true
+  },
+  "tests": {
+    "classification": [
+      "CPU_FAKE",
+      "FIXTURE"
+    ],
+    "unique_pass": 310,
+    "fail": 0,
+    "skip": 0,
+    "new_activation_tests": 52,
+    "existing_regression": 258,
+    "elapsed_seconds": 72.4,
+    "host_real_writer_fixture_complete_frames": 10,
+    "host_reader_exact_bytes": true,
+    "actual_capture": false
+  },
+  "off_benchmark": {
+    "classification": "CPU_HOST_BENCH",
+    "scope": "One missing-ticket import-footer execution on host Linux tmpfs; not per-frame or COMMA_REAL timing",
+    "iterations": 5000,
+    "warmup": 200,
+    "units": "microseconds",
+    "p50": 1.988,
+    "p95": 2.4891000000000005,
+    "p99": 3.3051200000000027,
+    "max": 48.101,
+    "python": "3.12.3",
+    "platform": "Linux/WSL",
+    "filesystem": "host tmpfs",
+    "capture_package_imports": 0,
+    "recorder_instances": 0,
+    "tensor_copies": 0,
+    "per_frame_discovery_checks": 0,
+    "production_approval_threshold": null
+  },
+  "actual_deployment": "NOT_RUN",
+  "ready_for_activation_delta_deployment": "YES_WITH_FRESH_ACTUAL_PRECHECK",
+  "ready_for_M19B_vehicle_capture": "NO",
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "M2_readiness": "NO",
+  "next_action": "Separately authorize detached/offroad deployment of only the reviewed activation delta after fresh M19-A POST, context source and tmpfs/owner checks; keep recorder OFF, no arm or capture.",
+  "scope": {
+    "actual_comma_access": "NOT_RUN",
+    "actual_ticket": "NOT_CREATED",
+    "actual_restart": "NOT_RUN",
+    "actual_capture": "NOT_RUN",
+    "Jetson": "NOT_RUN",
+    "USB_REAL": "NOT_RUN",
+    "TRT_REAL": "NOT_RUN",
+    "ROAD_TEST": "NOT_RUN",
+    "Params_write": false,
+    "model_selection_change": false
+  },
+  "upstreams_observed": {
+    "carrot_nav": "810e14aaf51176f1a50a113939dc2e70907b394b",
+    "carrot_wip": "dfab65d03fcd7100f572fe9e6908f4c6d1e988f6",
+    "carrot_jetson": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+    "zoompilot_jetlink": "d24328d849b0e5154b55f149dc18c5dfe8bd79cc",
+    "external_review": "a890f6df1bd3eb0478754c68d8b5f92f15e8b722"
+  },
+  "test_report_sha256": "6d47b591bab515e353411f55eca371162b62fabe263b67e97a9c92428d198678",
+  "result_commit_resolution": "git log -1 --format=%H -- artifacts/m19b0_activation_choreography_20261024.json",
+  "resolved_development_failures": [
+    "Initial RED missing offline adapter",
+    "RED competing helper import consumed ticket before modeld; fixed source-pinned active-call-chain guard",
+    "RED unexpected lstat RuntimeError escaped footer; fixed recorder-only Exception boundary",
+    "Windows reference generator rejected symlink status differences before creating output; used clean WSL reference without changing reference or weakening gate"
+  ],
+  "privacy": {
+    "actual_private_mapping_used": false,
+    "raw_actual_paths_argv_environment": false,
+    "network_addresses_in_artifact": false,
+    "actual_visual_data": false,
+    "candidate_path_is_public_design_constant": true
+  },
+  "future_capture_remaining_gates": [
+    "Separate actual delta deployment and fresh OFF POST attestation",
+    "Separate execution approval with existing V2/Nav Protocol2 tuple availability",
+    "Stationary telemetry must cover actual capture timestamps; automatic import activation can precede external verification; no stationary pre-first-frame proof claimed"
+  ],
+  "independent_final_review": {
+    "status": "PASS_NO_FINDINGS",
+    "scope": "Local source/delta/artifact/JUnit consistency; no device/network access, no test rerun, no file edits"
+  },
+  "upstream_start_end_equal": true,
+  "implementation_commit": "ef75b447fc66e4a5b526c0b6634d47f5cc4b429b"
+}

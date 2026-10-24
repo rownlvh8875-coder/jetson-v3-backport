@@ -1,5 +1,100 @@
 # Codex continuation — 2026-10-24
 
+## Current checkpoint: M19-B0 offline activation review, recommend B
+
+Read `docs/M19B0_ACTIVATION_CHOREOGRAPHY_20261024.md`,
+`artifacts/m19b0_activation_choreography_20261024.json` and
+`artifacts/m19b0_activation_v2_validation_20261024.json` first. **RECOMMEND_B /
+activation candidate PASS CPU_FAKE/FIXTURE.** No actual comma or Jetson access
+occurred this stage. Last actual state remains M19-A PATCH_LEFT_INSTALLED_OFF,
+exact366 carrot-nav, old M18 env footer OFF/no ticket/capture. This is last-attested,
+not a fresh actual read. No deployment/arming/restart/capture/Params/onroad/control/
+model selection/USB/GPU/road action. PARITY_UNDETERMINED / M2NO unchanged.
+
+Exact local Git366 review pins11files. PythonProcess.prepare preimports modeld;
+main lazy imports JoiningModel. Actual process constructor uses default Process
+unless spawn=True; modeld defaultfork on LinuxPython3.12. restart.sh startswith
+gitpull and has web/tmux lifecycle: RESTART_SH_UNSUITABLE_FOR_PINNED_CAPTURE,
+never execute for this workflow. A envinheritance works but requires parentlaunch
+mutation/relaunch, risks overlay/build/dependency/Params/web effects and leaves
+env in manager/descendants afterconsume. Shell-only export cannot alter parent.
+
+Critical new source fact: jetlink.prepare.main:72 ALSO imports targetWarp in a
+separate subprocess, potentially beforemodeld. A envfooter can steal ticket there;
+barefixedticketB wouldtoo. B candidate positively requires active source-pinned
+manager.process.launcher AND modeld.main frames beforeconsume. Functioncodeidentity,
+resolvedsourcefilename and sourcehash checked, stacklimit64; no env/proctitle trust.
+Additionalcontextpins modeld.py008b225da01394083fbfb691eee4af6b49d39adfe27eede863701c4ec1e00594,
+process.pyfa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752.
+Helper/prepare import leaves ticket; realnormalmodeldfork consumesonce. Arbitrary
+sameUIDsource modification is outside security/authentication claim.
+
+B fixedpublicdesignpath /dev/shm/carrot-v3-input-capture/arm.ticket. Exact366
+Paths.shm_path and existingJetlink shm paths justify convention, not freshactualmount
+proof. Guardexacttmpfsmount/root1777parent/privateeffectiveUIDGID0700directory/
+regularsinglelink0600ticket, no symlink/FIFO. Same schema1 arm_ticket/consume_ticket,
+O_EXCL/no-follow, boot/monotonic<=300s/source/spec/path/captureID claims. External
+freshgenuineOFF assertedonlyatarm; normalonroadconsume intentionallynoOFFquery.
+Defaultarm10/depth4/60sexpiry; max300unchanged. Consumedoriginalnamegone; retained
+volatilemarker/IDclaim preventrepeat. Unsafeentriesleftuntouched; explicitfuture
+safe-statecleanup only, noautodelete/rearm. No persistentParam/env/setting.
+Missingticket:1lstatonceatmoduleimport, capturepackage0/writer0/copies0, noframework.
+
+OriginalM18 patch/core frozen. Offline `adapters/carrot/recorder_activation.py`
+generatesonly2targetchanges: modelactivationfooter and hookactivationAPI/helpers.
+No manager/launcher/JoiningModel/Warp/infer/fallback/controls edits. Candidateignored
+`.candidate/m19b0-activation-v2-366d6eae`, manifestpinsall6files. Forwarddelta
+`patches/carrot-nav-v3-input-recorder-activation-v2.patch`, SHA
+ea18f2c2849e09e577882599a6374c13d09779ebbef5909d2d73934ed41ad6cb;
+reverse `.reverse.patch`, SHA0593e4a283d3ceec85c37367d0a3776ba0c80340ac857122bfe90f37ee36cf4a.
+CandidateMODEL0fbcba80a84fa6ffd22a6463cb75f111c95cd939697ce357e44ec45909109c91;
+HOOK9e688299d4fcefeea3a5ebc1460ee8fd72afd1c15c9f2d1a1fd3f58b1a5ca7de.
+Other4packagefilesunchanged. Tests original366->M18->delta->reverseM19A->reverse366
+exactPASS. Do NOT reapplyM18 toactual; only revieweddelta afterfreshM19A POST.
+
+Fresh CPU310PASS/0FAIL/0SKIP72.40s =52newactivation+258priorrecorder/checker/layout/
+provenance. Commandresultdoc; JUnitignoredprivateevidence. Seven realLinuxfork
+fixtures execute sourcePythonProcess/launcher/ensure_running and prepare-loop node;
+modeld originaltopimports/definitions withnative stubs, mainreducedtoexactlazyimport,
+targetmodelbodyfixtureclasses. Realcandidateconsume/roleguard withexplicitfixture
+source/mountpins; no actualmodeld/manager/GPU claim. B firstchildactive/secondOFF,
+helpernotconsume, complete/failureterminalsnoautorearm, contextsource drift rejects.
+A inheritedenv persists; shell-onlyenv ineffective; helperfirststeals. Concurrent
+consumeonewinner, source/spec/owner/mode/mount/malformed/boot/expiry/FIFO/symlink/
+output/writer failures isolated. Hostwriter10 syntheticfixtureCOMPLETE+byteexactreader
+PASS, not actualcapture. CPU_HOST_BENCH5000importchecks: p50=1.988us,p95=2.4891us,
+p99=3.30512us,max48.101us, not COMMAperformance or per-frame overhead.
+
+**Ready for activation-delta deployment: YES subjectto fresh actualpreflight and
+separate approval. Ready for M19-B vehicle10: NO, candidate not installed.** Next
+exactaction is separatelyapproved detached/OFF delta-only deployment: freshactual366,
+original48+M19A6 hashes, newcontextpins, reviewedv2isolation scope, actualtmpfs/owner/
+collision preflight, disposable/reverse, backup2changedfiles, apply2delta, OFFhealth,
+newPOSToriginal48+v2sixprofile. No arming/capture/restart required inthatstage.
+OldM193scopedproof cannot simplylabelnewhashesvalidwithoutrevieweddeltabinding;
+original48 identity/classification remainsfixed,U32notunused.
+
+A later separatelyapproved vehicle10 stage stillneeds existingV2/NavP2Jetson path.
+Automaticimportactivation canprecedeexternalstationaryverification; do notclaim
+pre-first-frame livestationaryproof. Futureplan mustkeepvehiclephysicallystopped,
+observeexistingtelemetrybeforetransition, validatecapturetimestampstationarycoverage
+and rejectunknown/moving intervals; neverforceproducers/fakeignition or proceedto
+road/P3. Existing256/512roadcapture notapproved. Ticketexpiry is a realstop.
+
+One independent final local read-only review PASS/no findings; source/delta/
+artifact/JUnit consistency checked, no device/network actions or test reruns.
+No fixes/second review required.
+
+Developmentstart clean/localremoteequaldf2ecccd3d82a99ea21470b09ca95aee4e20911a.
+Resultcommit: `git log -1 --format=%H -- artifacts/m19b0_activation_choreography_20261024.json`.
+Ignored `.reports/m19b0-20261024/` retains source11/sha, plan/ledger, benchmark,
+JUnit and localgeneration script. OneWindowsgenerator read rejectedreference
+symlinkstatusdifferences beforeoutput; cleanWSLusedwithoutchangingreferenceor
+weakeninggate. REDhelperconsumption andunexpecteddiscoveryexception fixedbefore
+GREENfinalsuite. No actualfiles touched. Upstreamrefs remainthoseinM19A below;
+actualtargetnotadvanced. Finalindependentreview/commit/push disposition recorded
+in resultartifact and future session mustverifylocalremote equality afresh.
+
 ## Current checkpoint: M19-A actual recorder installed, default OFF
 
 Read `docs/M19A_DETACHED_INSTALL_RESULT_20261024.md` and

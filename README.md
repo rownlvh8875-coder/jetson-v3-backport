@@ -9,6 +9,13 @@
 
 **최신 작업 인계:** [CODEX_CONTINUATION.md](docs/CODEX_CONTINUATION.md).
 
+2026-10-24 [M19-B0 activation 검토](docs/M19B0_ACTIVATION_CHOREOGRAPHY_20261024.md):
+**B 권고**, 기본 OFF/1회성 volatile ticket 후보를 오프라인 검증했다.
+준비용 subprocess의 잘못된 소비를 막는 modeld/launcher guard와 2파일 delta·reverse를 준비했고
+**CPU310 PASS**다. 실제 comma는 M19-A 설치 OFF 상태 그대로이며 후보 배포·capture는 하지 않았다.
+다음은 별도 승인된 detached/OFF activation-delta 배포이며 차량10프레임은 아직 NO다.
+
+
 2026-10-24 [M19-A detached 설치 결과](docs/M19A_DETACHED_INSTALL_RESULT_20261024.md):
 actual366의 원래48 overlay를 보존하고 exact recorder patch를 설치했다.
 **PATCH_LEFT_INSTALLED_OFF**, 재시작·ticket·활성화·capture는 하지 않았다.
