@@ -9,6 +9,12 @@
 
 **최신 작업 인계:** [CODEX_CONTINUATION.md](docs/CODEX_CONTINUATION.md).
 
+2026-10-24 [M19-C0.2 exact a559 호환성 검토](docs/M19C02_A559_EXECUTION_SWITCHES_20261024.md):
+CPU-overlap 두 순서와 실행 switch/shared-input16조합에서 recorder 입력의 정확성을 검증했다.
+**CPU627 PASS**, 별도 a559 프로필·30source pins·가역 migration 준비 완료다.
+실제 comma/Jetson 접근·배포·ticket·capture·restart는 없다. 다음은 별도 exact-a559 OFF
+preflight와 현재 overlay/old package attestation이며, HEAD가 바뀌면 중단한다.
+
 2026-10-24 [M19-C1.2 live 진단 재개](docs/M19C12_LIVE_ONROAD_DIAGNOSIS_20261024.md):
 집에서 fresh OFF/ON1/0, 12.09초 동안 device22/Panda112/manager22 samples를 확인했다.
 started=false·ignition=false/false·harness 미연결·onroad process inactive로 현재 정상 OFF다.

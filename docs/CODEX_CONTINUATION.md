@@ -1,5 +1,49 @@
 # Codex continuation — 2026-10-24
 
+## Latest checkpoint: M19-C0.2 exact-a559 offline compatibility PASS
+
+Read `docs/M19C02_A559_EXECUTION_SWITCHES_20261024.md` and
+`artifacts/m19c02_a559_execution_switches_20261024.json` first.
+**RECORDER_LOGIC_REUSABLE** under both CPU overlap orders. New distinct profile
+RECORDER_A559_EXECUTION_SWITCHES_V1 pins a559fcd971ccaa5a87befb8ec080f59a2966325b
+and30 source blobs.060de9..a559 is exactly six commits/14 changed files; model,
+link and daemon are the only changed prior source pins. Historical366/810/060
+profile/patch/evidence bytes remain unchanged.
+
+Fresh **627 unique CPU_FAKE/FIXTURE PASS/0FAIL/0SKIP**:533 project cases
+(449 old once+84 new),94 disjoint exact-a559 upstream transport.16 switch/shared
+combinations each execute five real JoiningModel.run/fill_inputs/Warp/Client source
+attempts through actual framing/reassembly/Session/EngineHost with native Linux
+AIO on a regular file/socket relay. QCOM/GPU/camera IPC/parser are named fixture
+boundaries; physical USB/actual/numerical/latency validation NOT_RUN.
+
+Every saved image/scalar hash equals original infer and engine input; all16 ordered
+input/packed lists match. Distinct sequential scalar hashes, desire pulse
+0/1/0/0/1, shared identity/single reservation, metadata/reset association, replay
+suppression, original exception/fallback ordering, no-ticket defaultOFF, actor/fork
+guard and30 source-drift rejections pass. Compact reply2066/18580 is output-only.
+Diagnostics logging failure is swallowed; internal bad-type errors can propagate
+after reply into existing session cleanup/reconnect. No unconditional diagnostics
+failure isolation claimed. Supplemental upstream diagnostics4 blocked collection
+by absent zstandard, not counted; exact class exercised by new tests. Existing
+root collection blocker remains documented, no full-root PASS claimed.
+
+Surviving366/B1→a559 migration changes three files only; clean alternative6.
+Forward aa983f2bc477f011da46d55b0b3305c77c7540e1e0d0619e200bf26bdcb6164e,
+reverse147888f44973025c56d35bc9cdd6dd3f2c50a88d561b8270666ef0299b114230.
+Both local roundtrips exact; six before/after hashes in artifact. N16 canonical
+spec remains63b2097c114bade03c5ec7ded978d73032a93bb525c03f9b78eddf49809f8b71;
+user's malformed repeated spec text was verified from exact Git JSON.
+
+No actual comma/Jetson access or mutation, ticket, activation, capture, restart,
+updater change or deployment. Prior live OFF is historical. Ready vehicle10NO,
+M2NO, numericalPARITY_UNDETERMINED. **Next:** separate exact-a559 genuine-OFF
+preflight plus current original overlay/surviving-package attestation before any
+migration; fresh OFF1/ON0, startedfalse, both ignitionfalse, exactHEAD,30pins,
+six old hashes, N16, ticketabsent/writer0, operating preservation andPOST required.
+If HEAD moves STOP; never auto-retarget. Result commit:
+`git log -1 --format=%H -- artifacts/m19c02_a559_execution_switches_20261024.json`.
+
 ## Latest checkpoint: M19-C1.2 resumed live diagnosis — current OFF, HEAD drift
 
 Read `docs/M19C12_LIVE_ONROAD_DIAGNOSIS_20261024.md` and
