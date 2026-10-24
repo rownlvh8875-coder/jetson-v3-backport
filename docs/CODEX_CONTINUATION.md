@@ -1,5 +1,57 @@
 # Codex continuation — 2026-10-24
 
+## Latest checkpoint: M19-C0.3 exact5bb review — recorder API incompatible
+
+Read docs/M19C03_5BB_DEFERRED_NAV_20261024.md and
+artifacts/m19c03_5bb_deferred_nav_20261024.json first.
+**RECORDER_LOGIC_CHANGE_REQUIRED**, separately
+**VEHICLE10_FOUR_INPUT_DATASET_SUFFICIENT** for frozen V3
+404a18cfd86d29637d20c697dfde245bb47c666ae016730ab674c65f4d1e1aa4.
+
+Exact a559..5bbbe160 is10ahead/0behind,22 changed paths audited. The unchanged
+a559 infer wrapper accepts no nav_metadata. Default negotiated deferred NAV in
+exact5bb passes this keyword even when None: TypeError before observation or
+original infer, then existing client close/local fallback. Rebinding HEAD/pins/
+footer alone is unsafe. functools.wraps can conceal the signature mismatch.
+
+Direct real-wrapper regressions and historical32-switch matrix preserve failure:
+NAV ON16cases zero observation/infer/engine calls; NAV OFF16cases work. Separate
+fixture-only boundary_probe32cases and4 supported AIO partitions prove the
+intended boundary sees current image/first12/navigation, not old map context.
+These probe passes are not installed-recorder compatibility PASS.
+
+Deferred Sender.prepare runs after the intended observer inside remote
+infer_begin; only wire map becomes a staged reference. Host packed is
+INTENTIONALLY_DIFFERENT_MAP when pixels differ, while camera/first12/navigation
+stay current. Map TTL350ms/transit150ms/use50ms/reset/gap/route/cache gates remain.
+Native8K/32K ownership, completion/cleanup failure, chunks/CRC/replay and USB
+lease are offline-checked; no physical latency/expiry-at-GPU claim.
+
+Original V3 ONNX rehashed before/after,766354845bytes. Actual7 inputs are four
+per-frame fields plus3 recurrent queues, no nav_map/navigation graph dependency.
+Four-field replay needs matched initial/reset state, feedback and continuity;
+it does not reconstruct full N16 or pre-capture recurrent history. N16/spec
+unchanged. Repository expected host0fb6c739/bundle2f51b10b.../64748504bytes;
+ACTUAL_JETSON_HOST NOT_RUN.
+
+Fresh unique CPU_FAKE/FIXTURE ledger:1021 PASS/0FAIL/0SKIP, including expected
+incompatibility assertions.533 project plus354 exact-target upstream plus59
+supplementary plus75 new review/matrix; prior627 not added twice. Four diagnostics
+tests collection-blocked by zstandard remain separate; known root collection
+SystemExit blocker remains separate. Superseded fixture runs are excluded.
+
+New5bb profile/patch/reader/manifest NOT_CREATED; migrations NOT_READY; approved
+roundtrip NOT_RUN because reuse gate fails. No automatic repair/rebind, no
+selector workaround. Actual comma/Jetson access NO; device mutations/ticket/
+capture/storage/restart/Params/updater work NONE. Historical evidence immutable.
+
+Development start5397ee2 CLEAN/equal, exact feature branch; protected refs intact.
+Exact5bb OFF deployment NO; storage preparation NO; Vehicle10 NO;
+PARITY_UNDETERMINED/M2NO. **Next:** separate offline infer-wrapper nav_metadata
+forwarding implementation/review, then repeat compatibility gates before any
+candidate or actual work. Result commit:
+git log -1 --format=%H -- artifacts/m19c03_5bb_deferred_nav_20261024.json
+
 ## Latest checkpoint: M19-C2.0 read-only diagnosis PASS — newer5bbbe160
 
 Read `docs/M19C20_SOURCE_PROFILE_DRIFT_DIAGNOSIS_20261024.md` and
