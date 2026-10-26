@@ -1,3 +1,36 @@
+# Latest continuation — M19-C1.5E offline ProcView acquisition · 2026-10-26
+
+## PASS_OFFLINE_ACQUISITION_WITH_LIMITS — no actual integration approval
+
+Read docs/M19C15E_PROC_VIEW_ACQUISITION_20261026.md and
+artifacts/m19c15e_proc_view_acquisition_20261026.json first. New pinned_proc_view
+library uses held FD-relative reads with native fstatfs/statx mount-ID checks,
+closed fields, generation/parent/command/exe brackets, bounded native readlinkat,
+typed failure provenance and cleanup preservation. All results are PRIVATE,
+unsanitized; injected/native backends differ. No public emitter/runtime wiring.
+
+Native profile requires Linux little-endian glibc LP64 x86_64/aarch64 plus returned
+STATX_MNT_ID (Linux5.8+); only local WSL x86_64 executed. Actual compatibility
+UNKNOWN, no fallback. Local proc reads/metadata pass but full scope correctly
+refuses UNREVIEWED_SUBMOUNT. Existing restrictions and old strict sampler unchanged.
+
+Fresh relevant 200 unique PASS/0FAIL/0SKIP =65 new+74 model+61 strict sampler.
+Earlier198 and historical1374 not added; root/diagnostics4/native FFmpeg blockers
+separate. Two independent static reviews;330 prior tracked+10private hashes held.
+No actual comma/Jetson access; actual current source/OFF/runtime NOT_OBSERVED.
+No actual sampling, deployment, storage, ticket, activation, capture or restart.
+Historical failures/helper unknown unchanged. Vehicle10NO; parityUNDETERMINED;M2NO.
+
+Audit is a512-operation tail, explicit dropped count/completefalse after eviction;
+not full-window evidence. Child mapping lacks authenticated pipe origin/ownership.
+All temporal/global/runtime/negative-witness/policy/fallback flags stay false;
+no automatic old-record conversion. FD trust/privileged filter ABA remain limits.
+Next: offline provider integration review for complete bounded evidence stream,
+child-pipe origin and supported visibility contract. Keep actual dispatcher strict.
+Result commit: git log -1 --format=%H -- artifacts/m19c15e_proc_view_acquisition_20261026.json
+
+---
+
 # Latest continuation — M19-C1.5D offline proc-view scope review · 2026-10-26
 
 ## PASS_OFFLINE_REVIEW — runtime scope replacement NOT APPROVED

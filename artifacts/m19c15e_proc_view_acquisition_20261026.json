@@ -1,0 +1,159 @@
+{
+  "schema": 1,
+  "stage": "M19-C1.5E_PROC_VIEW_ACQUISITION",
+  "date": "2026-10-26",
+  "status": "PASS_OFFLINE_ACQUISITION_WITH_LIMITS",
+  "starting_development_head": "918287cae9506e72abbe33b570bfddfbe16a09ac",
+  "branch": "feature/jetlink-multimodel-carrot",
+  "result_commit_locator": "git log -1 --format=%H -- artifacts/m19c15e_proc_view_acquisition_20261026.json",
+  "scope": {
+    "actual_comma_access": false,
+    "actual_jetson_access": false,
+    "actual_mutations": "NONE",
+    "actual_identity_OFF_ticket_writer_dataset": "NOT_OBSERVED_THIS_STAGE",
+    "actual_sampling": "NOT_RUN",
+    "recorder_deployment": "NOT_RUN",
+    "storage_mutation": "NONE",
+    "workflow_ticket": "NOT_CREATED",
+    "workflow_activation": "NOT_RUN",
+    "workflow_capture": "NOT_RUN",
+    "workflow_frames": 0,
+    "restart": "NOT_RUN",
+    "Jetson_mutation": "NONE",
+    "Params_service_USB_updater_configuration_changes": "NONE"
+  },
+  "deliverable": {
+    "kind": "FD_RELATIVE_ACQUISITION_LIBRARY_ONLY",
+    "module": "tools/pinned_proc_view.py",
+    "native_ABI": "LINUX_LITTLE_ENDIAN_GLIBC_LP64_X86_64_AARCH64",
+    "native_ABI_executed": "LOCAL_WSL_X86_64_ONLY",
+    "actual_kernel_libc_capability": "UNKNOWN_NOT_INFERRED",
+    "required_native_capabilities": [
+      "fstatfs",
+      "statx_AT_EMPTY_PATH_returned_STATX_MNT_ID",
+      "readlinkat_empty_path"
+    ],
+    "mount_id_support_floor": "LINUX_5_8",
+    "fallback": "NONE",
+    "backend_provenance": [
+      "NATIVE_GLIBC_LP64_STATX",
+      "INJECTED_TEST_BACKEND"
+    ],
+    "data_classification": "PRIVATE_UNSANITIZED_NO_PUBLIC_EMITTER",
+    "runtime_consumer_wiring": "NONE",
+    "existing_sampler_provider_changes": "NONE",
+    "source_hashes": {
+      "tools/pinned_proc_view.py": "eed424573f3d941e6f99de14c65d664392c7c0d98a517b99b1194971e9f5c145",
+      "tests/test_pinned_proc_view.py": "61c8b74914769568d3daa4efd59fd7b5e9c126a5378f98633f82712a9a61a2da",
+      "docs/superpowers/specs/2026-10-26-proc-view-acquisition-design.md": "1fbfe1396fbc3f45b74f5fad9bb4a9e00b54c2377edd9833135c54b5c67e9b54"
+    }
+  },
+  "decision": {
+    "runtime_replacement": "NOT_APPROVED",
+    "runtime_scope_confirmed": false,
+    "namespace_equality_proven": false,
+    "full_host_visibility_proven": false,
+    "temporal_visibility_proven": false,
+    "negative_pid_witness_allowed": false,
+    "policy_acceptance": false,
+    "legacy_fallback_allowed": false,
+    "child_record_origin_authenticated": false,
+    "child_wait_signal_authority": false,
+    "historical_helper_attribution": "UNCHANGED_UNKNOWN"
+  },
+  "local_native_result": {
+    "procfs_FD_type_mount_identity_reads": "PASS",
+    "local_process_metadata": "PASS",
+    "full_scope_endpoint_profile": "REFUSED_UNREVIEWED_SUBMOUNT",
+    "restriction_relaxed": false,
+    "local_full_scope_approval": false,
+    "aarch64_execution": "NOT_RUN",
+    "actual_comma_capability": "NOT_RUN"
+  },
+  "audit_contract": {
+    "retained_tail_operations": 512,
+    "eviction": "EXPLICIT_DROPPED_COUNT_COMPLETE_FALSE",
+    "full_window_evidence_stream": "NOT_IMPLEMENTED",
+    "fatal_metadata": "PRIVATE_PARTIAL_EVIDENCE_RETAINED",
+    "schema": "PROC_VIEW_ACQUISITION_V1_NOT_AUTOMATIC_OLD_RECORD_CONVERSION"
+  },
+  "trust_assumptions": [
+    "TRUSTED_SAME_PROCESS_FD_OWNERSHIP",
+    "NO_UNOBSERVED_PRIVILEGED_FILTER_OR_MOUNT_MUTATION",
+    "SUPPORTED_NATIVE_ABI",
+    "NO_ATOMIC_PROCESS_METADATA_ASSUMPTION"
+  ],
+  "unresolved_integration": [
+    "COMPLETE_BOUNDED_EVIDENCE_STREAM",
+    "EXPLICIT_PROC_VIEW_SAMPLER_PROVIDER_WIRING",
+    "OWNED_PIPE_CHILD_RECORD_ORIGIN",
+    "SUPPORTED_VISIBILITY_CONTRACT",
+    "ACTUAL_ABI_CAPABILITY",
+    "ACHIEVED_CADENCE",
+    "OPERATING_HELPER_POLICY"
+  ],
+  "tests": {
+    "status": "PASS_FRESH_RELEVANT_CPU_POSIX",
+    "pass": 200,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "unique_ids": 200,
+    "duplicates": 0,
+    "groups": {
+      "tests.test_pinned_proc_view": 65,
+      "tests.test_proc_view_scope_model": 74,
+      "tests.test_comma_process_sampler": 61
+    },
+    "new_acquisition": 65,
+    "existing_record_model": 74,
+    "existing_strict_sampler": 61,
+    "source_hashes": {
+      "tools/pinned_proc_view.py": "eed424573f3d941e6f99de14c65d664392c7c0d98a517b99b1194971e9f5c145",
+      "tests/test_pinned_proc_view.py": "61c8b74914769568d3daa4efd59fd7b5e9c126a5378f98633f82712a9a61a2da",
+      "docs/superpowers/specs/2026-10-26-proc-view-acquisition-design.md": "1fbfe1396fbc3f45b74f5fad9bb4a9e00b54c2377edd9833135c54b5c67e9b54"
+    },
+    "junit_sha256": "16f1e3669a1ab5b51cc11bf9418226c1cc49f9a34e8b748d94b0f3bda6396d5e",
+    "historical1374": "NOT_RERUN_NOT_RECOUNTED",
+    "earlier198": "SUPERSEDED_NOT_ADDED",
+    "actual_device_access": false,
+    "root_collection": "KNOWN_LIVE_FETCH_EXIT_BLOCKER_NOT_EXECUTED",
+    "diagnostics4": "HISTORICAL_DEPENDENCY_BLOCKER_NOT_RERUN_NOT_COUNTED",
+    "native_FFmpeg": "HISTORICAL_BLOCKER_NOT_RERUN_NOT_COUNTED",
+    "environment": {
+      "python": "3.12.3",
+      "pytest": "9.1.1",
+      "system": "LINUX_WSL_X86_64"
+    },
+    "command": "python -B -m pytest -q tests/test_pinned_proc_view.py tests/test_proc_view_scope_model.py tests/test_comma_process_sampler.py -p no:cacheprovider --tb=line",
+    "installs": "NONE"
+  },
+  "preservation": {
+    "prior_tracked_working_hashes_checked": 330,
+    "historical_private_critical_hashes_checked": 10,
+    "all_unchanged": true,
+    "continuation_old_body_sha256": "cd46014e342f05fa10baba1f5a07cf410f76bf269aad5864a0d13ef80ec60195",
+    "strict_sampler_sha256": "3f21cccfdf58a7044bfae21513a646343069119bb1081e493e653f3287070e94",
+    "strict_tests_sha256": "95f0ee117b0c609af4b0b5d888a1a760a7690e3a308ad3329ec5ebc272d7a217",
+    "old_record_model_sha256": "5bda1c8d502b8f2ea7a9f004f97be4580222d0af30bb8edd6d19812309a26f2d",
+    "historical_actual_failure_reinterpretation": "NONE"
+  },
+  "independent_reviews": {
+    "proof-review-final.json": "0a5cdbd2f2844e4366ffb25cecc453e92771c97efa5ed0917476e78d172485b2",
+    "integration-review-final.json": "f1ef8da53b43ceabcdb6c0d9ac80acfdce3db3702ed9e1c4a38382ca3ab63718"
+  },
+  "primary_sources": [
+    "https://man7.org/linux/man-pages/man2/open.2.html",
+    "https://man7.org/linux/man-pages/man2/statfs.2.html",
+    "https://man7.org/linux/man-pages/man2/statx.2.html",
+    "https://man7.org/linux/man-pages/man2/readlink.2.html",
+    "https://raw.githubusercontent.com/torvalds/linux/v6.1/include/uapi/linux/stat.h",
+    "https://raw.githubusercontent.com/bminor/glibc/release/2.39/master/sysdeps/unix/sysv/linux/bits/statfs.h"
+  ],
+  "ready_for_actual_diagnostic_adapter": false,
+  "ready_for_recorder_redeployment": false,
+  "ready_for_vehicle10": false,
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "M2": false,
+  "next_action": "Offline ProcView provider integration review for complete bounded evidence, owned-pipe origin and visibility contract; keep strict default/actual dispatcher unchanged."
+}
