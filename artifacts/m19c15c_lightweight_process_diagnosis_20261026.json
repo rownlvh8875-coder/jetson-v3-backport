@@ -1,0 +1,253 @@
+{
+  "schema": 1,
+  "stage": "M19-C1.5C_LIGHTWEIGHT_PROCESS_DIAGNOSIS",
+  "date": "2026-10-26",
+  "status": "BLOCKED_PROCESS_SCOPE_UNAVAILABLE",
+  "collection_status": "INCOMPLETE_READ_ONLY_LIGHTWEIGHT_COLLECTION",
+  "development": {
+    "tested_start_head": "1cd5d84906ab235cd1902aa373f3d908c47f7ded",
+    "branch": "feature/jetlink-multimodel-carrot",
+    "result_commit_locator": "git log -1 --format=%H -- artifacts/m19c15c_lightweight_process_diagnosis_20261026.json"
+  },
+  "scope": {
+    "actual_diagnostic_windows": 1,
+    "sampler_retry": false,
+    "separate_fresh_off_preflight": true,
+    "separate_bounded_missing_path_probe": true,
+    "policy_changed": false,
+    "actual_source_mutation": "NONE",
+    "Params_service_USB_configuration_commands": "NONE",
+    "storage_probe_or_creation": "NONE",
+    "ticket": "NOT_CREATED",
+    "writer": 0,
+    "frames": 0,
+    "dataset": "NONE",
+    "restart": "NOT_RUN",
+    "jetson_access": "NO",
+    "jetson_mutation": "NONE"
+  },
+  "actual_identity": {
+    "branch": "carrot-nav",
+    "head": "24c1ba5e4b3428f56fa0e402f5a10097e2e94c32",
+    "flags": {
+      "IsOffroad": "1",
+      "IsOnroad": "0"
+    },
+    "source_state": "PURE24C_WITH_SURVIVING5BB_PACKAGE",
+    "recorder24c_installed": false,
+    "footer_count": 0,
+    "pre_six_profile": "PASS",
+    "source_pins": {
+      "count": 41,
+      "pre_post_match": true
+    },
+    "N16_source_contract": "PASS",
+    "index_during_main_window": "PASS_STABLE",
+    "source_index_storage_preservation": "PASS",
+    "critical_process_identity_preservation": "NOT_ESTABLISHED",
+    "operating_preservation": "NOT_ESTABLISHED",
+    "updater_drift_during_observed_guards": "NONE",
+    "storage": "EXISTING_PRIVATE_ROOT_VALID_EMPTY_UNCHANGED",
+    "storage_capacity_remeasured": false,
+    "ticket_namespace": "CLEAN"
+  },
+  "fresh_off": {
+    "preflight_seconds": 12.080372668,
+    "preflight_samples": {
+      "deviceState": {
+        "samples": 22,
+        "seconds": 11.36048153
+      },
+      "managerState": {
+        "samples": 22,
+        "seconds": 11.351524332
+      },
+      "pandaStates": {
+        "samples": 111,
+        "seconds": 11.91004536
+      }
+    },
+    "simultaneous_seconds": 70.067792366,
+    "coverage": {
+      "deviceState": {
+        "bounded_coverage": true,
+        "fresh_samples": 129,
+        "limit_seconds": 5.0,
+        "maximum_gap_seconds": 0.557660925
+      },
+      "managerState": {
+        "bounded_coverage": true,
+        "fresh_samples": 129,
+        "limit_seconds": 5.0,
+        "maximum_gap_seconds": 0.567705232
+      },
+      "pandaStates": {
+        "bounded_coverage": true,
+        "fresh_samples": 647,
+        "limit_seconds": 1.0,
+        "maximum_gap_seconds": 0.120823571
+      }
+    },
+    "device_started": false,
+    "ignitionLine": false,
+    "ignitionCan": false,
+    "checks": {
+      "CANARIES_INDEX_STABLE": true,
+      "CURRENT_DATASET_NONE": true,
+      "DATASET_NONE": true,
+      "DEVICE_OFF": true,
+      "FLAGS": true,
+      "IDENTITY_STABLE": true,
+      "IGNITION_OFF": true,
+      "LEGACY_ENV_ABSENT": true,
+      "MANAGER_OFF": true,
+      "NO_TRACKED_DIFF": true,
+      "OS_OFF_end": true,
+      "OS_OFF_start": true,
+      "TICKET_ABSENT": true,
+      "WRITER0": true,
+      "deviceState_FRESH": true,
+      "managerState_FRESH": true,
+      "pandaStates_FRESH": true
+    }
+  },
+  "failed_process_observation": {
+    "fast_seconds": 60.016269732,
+    "baseline_records": 1,
+    "fast_records": 240,
+    "incomplete_empty_records": 241,
+    "process_generations_observed": 0,
+    "process_absence_proven": false,
+    "positive_read_witnesses": 0,
+    "bounded_lifetime_witnesses": 0,
+    "accepted_process_cadence": false,
+    "raw_empty_loop_timing": {
+      "head_gap_seconds": 0.000419061,
+      "max_start_gap_seconds": 0.256501903,
+      "median_start_gap_seconds": 0.250006588,
+      "max_work_seconds": 0.01288603,
+      "end_gap_seconds": 0.264557696
+    },
+    "interpretation": "NO_PROCESS_EVIDENCE; empty-loop timing is not process-sampler performance",
+    "failed_scope_error": "UNTAGGED_FileNotFoundError_ENOENT2_BEFORE_PID_ENUMERATION",
+    "checks": {
+      "BOOT_STABLE": true,
+      "FAST60_AND_CADENCE": false,
+      "FOOTER_ABSENT": true,
+      "FRESH_OFF_COVERAGE": true,
+      "GENUINE_OFF_70S": true,
+      "HEAD_BRANCH_STABLE": true,
+      "INDEX_STABLE": true,
+      "OBSERVER_NATURAL_OWNED_REAP": true,
+      "OFF_BRACKETS_FAST": true,
+      "PINS41_STABLE": true,
+      "PRE_SIX_STABLE": true,
+      "STORAGE_EMPTY_STABLE": true
+    },
+    "owned_observer": {
+      "status": "OBSERVED",
+      "owned_child_reaped": true,
+      "observer_exit_status": 0,
+      "owned_child_terminated": null,
+      "collector_error": null,
+      "protocol_error": null
+    }
+  },
+  "bounded_capability_probe": {
+    "status": "SCOPE_CAPABILITY_READ_COMPLETE",
+    "sampler_rerun": false,
+    "unavailable_field": "pid_namespace",
+    "path": "/proc/self/ns/pid",
+    "error": "FileNotFoundError",
+    "errno": 2,
+    "other_fields_available": [
+      "mount_namespace",
+      "mountinfo",
+      "boot_id",
+      "proc_directory"
+    ],
+    "proc_mount": [
+      {
+        "hidepid_options": [],
+        "mountpoint": "/proc",
+        "root": "/",
+        "type": "proc"
+      }
+    ],
+    "limit": "Later field-specific read supports the frozen scope-first failure; it does not identify kernel build configuration or repair the failed window."
+  },
+  "offline_correction": {
+    "status": "PASS_CPU_POSIX_ONLY",
+    "actual_redispatch": false,
+    "required_scope_gate_relaxed": false,
+    "changes": [
+      "Retain PID enumeration separately when scope acquisition fails.",
+      "Retain exact scope field/error, and failed baseline evidence.",
+      "Reject unconfirmed/empty baseline before any fast window or observer launch.",
+      "Separate timer cadence from valid process coverage; require both for cadence acceptance."
+    ],
+    "final_engine_sha256": "3f21cccfdf58a7044bfae21513a646343069119bb1081e493e653f3287070e94",
+    "final_tests_sha256": "95f0ee117b0c609af4b0b5d888a1a760a7690e3a308ad3329ec5ebc272d7a217",
+    "actual_embedded_engine_sha256": "9144e47cffc8d70b17a82524de7ecae9961b4abc77c787e817f47e3cd1a86ca7"
+  },
+  "process_policy": {
+    "historical_phase_A": "INSUFFICIENT_EVIDENCE",
+    "current_helper_classification": "UNKNOWN_REQUIRED_PROOF_INCOMPLETE",
+    "nmcli_this_window": "NOT_ESTABLISHED_BY_VALID_SAMPLER",
+    "critical_metadata": "NOT_ESTABLISHED",
+    "full_Params_service_USB_effect_absence": "NOT_ESTABLISHED",
+    "phase_B_acceptance": "NOT_RUN",
+    "redeployment": "NOT_RUN",
+    "capture": "NOT_RUN"
+  },
+  "tests": {
+    "kind": "CPU_FAKE_AND_POSIX_FIXTURE",
+    "fresh_authoritative_prior": 1313,
+    "fresh_final_sampler": 61,
+    "unique_total": 1374,
+    "pass": 1374,
+    "fail": 0,
+    "skip": 0,
+    "duplicate_ids": 0,
+    "earlier_54_and_60_case_runs": "SUPERSEDED_NOT_ADDED_AGAIN",
+    "root_collection": "BLOCKED_STATIC_AUDIT_ONLY_NOT_EXECUTED",
+    "diagnostics4": "BLOCKED_MISSING_ZSTANDARD_NOT_COUNTED",
+    "native_FFmpeg": "BLOCKED_NOT_COUNTED",
+    "installs": "NONE",
+    "environment": {
+      "os": "WSL Ubuntu-24.04",
+      "python": "3.12.3",
+      "numpy": "2.5.4",
+      "pytest": "9.1.1"
+    },
+    "final_aggregate_sha256": "c2420a068f73b8e274f7ec2c5d6f04f6d6039d2bd95f82a6ed8a3015d4217a5c",
+    "final_sampler_junit_sha256": "7d3ae9fadb9e5ed1d685885c6fc2887771df46b7cf00ca7979059c5a6098b861",
+    "baseline_audit_sha256": "b92689ac669b31a5b907f6e7e0e820107976ed9348b629c1d3aad4ae5f11fbf7"
+  },
+  "evidence_commitments": {
+    "first_flags": "5b1d7b58b46570353e59db9c324bfec8f35def187e120ea2445eaca2a46d62d3",
+    "fresh_off_preflight": "093130497abc04d0c324ad79c6732c7cc80a632e851bb7717239032cf5281efb",
+    "failed_main_receipt": "9715d71b38c5505b02b9e53d597bea917dea6ef02ebd8d3abe256b2315ea9d04",
+    "capability_receipt": "52ddf71595050275ee9c2462b5c53fd0c468235bfcf410c25b0ee97b8c0259ce",
+    "actual_source": "18b39973e949721f2e4194e030a1fbc73951ecaa40d647ad0a6bf9fc1f554983",
+    "actual_precheck_source": "543612044f13211444563cf20b547865baf09e84f56753166527a7f3385cb9f9",
+    "capability_source": "d3a3ef75078bab05bfc5a219177d3301a7ef63ca0cc61d0742e875f7050511a0",
+    "root_actual_replay": "86b71feeddfd17caf69cdf6e54f513ac2bcf49b88a01e80a46e02e8ecb4668bd",
+    "reviews": {
+      "read-only-boundary-review.json": "33f6fc3b38e0c8e162d6b4096a485249207dd8e6017726df7df51eddc2037f3d",
+      "off-precheck-review-addendum.json": "d47dc1181fe266e931933e88801f1bcd5e4841cc334e79dc339f2b814ead6165",
+      "independent-actual-proof-review.json": "a5b9bb0f1935e0239606c3e3081ac8d99d2209a8474f21fdbcd66c0e25afdc57",
+      "failed-actual-preservation-review.json": "35cc51a30c7e04dc3b85a4c6581ff74bf293470a737a2a1c2a4815ef3e8c9751"
+    }
+  },
+  "historical_evidence": {
+    "prior8341_files_preserved_by_regression_audit": true,
+    "earlier_failure_receipts_unchanged": true,
+    "initial_vacuous_analysis": "SUPERSEDED_BY_EXPLICIT_NO_EVIDENCE_RESULTS_NOT_PUBLISHED_AS_PASS"
+  },
+  "ready_for_redeployment": false,
+  "ready_for_vehicle10": false,
+  "parity": "PARITY_UNDETERMINED",
+  "M2": false,
+  "next_action": "Review an equivalent scope attestation for a device without /proc/self/ns/pid; keep attribution/preservation gates closed and do not auto-rerun or deploy."
+}

@@ -1,3 +1,34 @@
+# Latest continuation — M19-C1.5C lightweight diagnosis · 2026-10-26
+
+## BLOCKED_PROCESS_SCOPE_UNAVAILABLE — no installation or capture
+
+Read docs/M19C15C_LIGHTWEIGHT_PROCESS_DIAGNOSIS_20261026.md and
+artifacts/m19c15c_lightweight_process_diagnosis_20261026.json first.
+Fresh actual cats1/0, exact24c/PRE6/41pins/N16/index/storage passed. Separate
+12.08s OFF preflight and simultaneous70.07s OFF telemetry passed. One60.02s
+process attempt failed:241 scope-ENOENT records, zero generations. Empty-loop
+.25s timing is not process cadence or nmcli/absence/lifetime proof. One bounded
+capability probe found /proc/self/ns/pid ENOENT; other four scope fields readable.
+No kernel-configuration conclusion. No repeat window or actual source change.
+
+Offline correction retains PID lists despite scope errors, field-specific errors,
+failed baseline evidence, stops before fast observation on invalid capabilities,
+and requires timer cadence plus valid coverage. Required scope gate unchanged;
+corrected tool NOT rerun on actual. Fresh1313 prior +61 final unique sampler cases
+=1374PASS/0FAIL/0SKIP; earlier54/60 not counted twice. Diagnostics4/root/native
+FFmpeg blockers separate.8,341 historical evidence files preserved by baseline.
+
+Actual last guarded state: pure24c+surviving5bb package; footerABSENT, writer0,
+frames0, datasetNONE, ticket namespace clean; existing storage unchanged empty.
+No policy acceptance, redeployment, storage probe, Params/service/USB config write,
+restart or Jetson access. Critical/operating preservation and helper safety remain
+NOT_ESTABLISHED; historical A5 insufficient. Vehicle10NO;parityUNDETERMINED;M2NO.
+Next: equivalent scope-proof review for missing PID-namespace interface; no auto
+retry, auto-retarget, policy weakening, recorder apply or ticket.
+Result commit: git log -1 --format=%H -- artifacts/m19c15c_lightweight_process_diagnosis_20261026.json
+
+---
+
 # Latest continuation — M19-C1.5B fresh read-only diagnosis · 2026-10-26
 
 ## PASS_READ_ONLY_DIAGNOSIS_WITH_LIMITS — current nmcli observed; no deployment
