@@ -1,3 +1,32 @@
+# Latest continuation — M19-C1.5G actual capability attempt · 2026-10-27
+
+## BLOCKED_DEVICE_UNREACHABLE — capability NOT_RUN
+
+Read docs/M19C15G_ACTUAL_CAPABILITY_20261027.md and
+artifacts/m19c15g_actual_capability_20261027.json first. Starting feature HEAD
+f2b5e070d878b8900496e9ee3db484f0754d8f13 was CLEAN/equal. One existing comma
+terminal attempt returned ACCESS_ERROR with zero retained parsed frames/no owned metadata. Zero
+command sends recorded before that receipt; legacy socket closure/post-receipt
+send state NOT_RECORDED. Late-meta race exists; no evidence it occurred. No other
+address/scan/retry. Actual OFF/source/pins/storage/writer remain NOT_OBSERVED.
+
+Prepared count-only payload66708bytes/SHAbe13b17d4318d4dd0b9c0ff7e9f1e620c49a9690a5143092af44a0b98bf71767
+reverified locally; target invocation0. No observer/window, deployment, storage,
+ticket/activation/writer/capture/restart/Params/service/USB/updater or Jetson work
+invoked. No blanket operating-preservation claim. Original failed driver/receipt
+kept unchanged. New private guarded future transport NOT_DISPATCHED;12unique
+offline VM fixture PASS/0FAIL/0SKIP, fake sockets/timers/files only. Prior290
+historical, not rerun/added.348tracked+493historical-private hashes held.
+
+Next: user restores known connectivity with OFF power maintained or supplies IP;
+use guarded first-OFF/ON driver, then fresh source/profile/genuine OFF before at
+most one python -B/stdin capability query. No automatic sampling/redeployment/
+ticket/capture or network discovery. Helper/policy NOT_ESTABLISHED;Vehicle10NO;
+parityUNDETERMINED;M2NO. Result commit:
+git log -1 --format=%H -- artifacts/m19c15g_actual_capability_20261027.json
+
+---
+
 # Latest continuation — M19-C1.5F offline ProcView diagnostics · 2026-10-26→27
 
 ## PASS_OFFLINE_DIAGNOSTIC_INTEGRATION_WITH_LIMITS — actual work NOT RUN

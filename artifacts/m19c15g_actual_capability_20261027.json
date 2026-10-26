@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "stage": "M19-C1.5G",
+  "date": "2026-10-27",
+  "timezone": "Asia/Seoul",
+  "status": "BLOCKED_DEVICE_UNREACHABLE",
+  "starting_development_head": "f2b5e070d878b8900496e9ee3db484f0754d8f13",
+  "development_branch": "feature/jetlink-multimodel-carrot",
+  "development_start": "CLEAN_LOCAL_REMOTE_EQUAL",
+  "scope": "FRESH_OFF_SOURCE_GATES_THEN_AT_MOST_ONE_READ_ONLY_COUNT_ONLY_CAPABILITY_QUERY",
+  "transport": {
+    "path": "EXISTING_USER_PROVIDED_COMMA_TERMINAL_ONLY",
+    "address": "REDACTED",
+    "connection_attempts": 1,
+    "result": "BLOCKED_ACCESS_ERROR",
+    "owned_terminal_established": false,
+    "first_commands_if_connected": [
+      "cat /data/params/d/IsOffroad",
+      "cat /data/params/d/IsOnroad"
+    ],
+    "other_addresses_tried": 0,
+    "network_scan": false,
+    "automatic_retry": false,
+    "command_sends_recorded_before_failure_receipt": 0,
+    "post_receipt_command_send_state": "NOT_RECORDED_BY_LEGACY_DRIVER",
+    "socket_closure": "NOT_RECORDED_BY_LEGACY_DRIVER",
+    "legacy_driver_caveat": "LATE_META_AFTER_FINISH_NOT_GUARDED_NO_EVIDENCE_IT_OCCURRED",
+    "terminal_parsed_frames_retained": 0
+  },
+  "actual": {
+    "IsOffroad": "NOT_OBSERVED",
+    "IsOnroad": "NOT_OBSERVED",
+    "genuine_OFF": "NOT_RUN",
+    "branch": "NOT_OBSERVED",
+    "HEAD": "NOT_OBSERVED",
+    "source_profile_pins": "NOT_RUN",
+    "storage": "NOT_OBSERVED",
+    "ticket_namespace": "NOT_OBSERVED",
+    "writer": "NOT_OBSERVED",
+    "runtime_telemetry": "NOT_RUN",
+    "source_Git_Params_storage_service_USB_updater_mutation": "NONE_BY_WORKFLOW",
+    "Jetson_access": false,
+    "Jetson_mutation": "NONE",
+    "restart": "NOT_RUN",
+    "deployment": "NOT_RUN",
+    "ticket_creation": "NOT_RUN",
+    "activation": "NOT_RUN",
+    "capture": "NOT_RUN",
+    "frames_captured_this_stage": 0,
+    "dataset_created": "NONE",
+    "device_execution_after_failure_receipt": "NOT_OBSERVED"
+  },
+  "payload": {
+    "status": "PREPARED_IDENTITY_REVERIFIED_NOT_DISPATCHED",
+    "sha256": "be13b17d4318d4dd0b9c0ff7e9f1e620c49a9690a5143092af44a0b98bf71767",
+    "bytes": 66708,
+    "source_pins": {
+      "proc_view_scope_model": "5bda1c8d502b8f2ea7a9f004f97be4580222d0af30bb8edd6d19812309a26f2d",
+      "pinned_proc_view": "2676357620c11e785e290d59fe9684a2766c6a9de3f39270c3bfdfdf3ed3f5ca",
+      "proc_view_capability": "b3d1e0485e80a37c55d55ca3a61181d864d94a814ff553d6847ec06d94f19edd"
+    },
+    "target_invocations": 0,
+    "result": "NOT_RUN_FIRST_GATE_UNREACHABLE",
+    "required_invocation": "PYTHON_MINUS_B_FROM_STARTUP_OVER_STDIN_NO_TARGET_INSTALL",
+    "no_automatic_sampling_window": true,
+    "no_recorder_or_ticket_from_probe": true
+  },
+  "preservation": {
+    "prior_tracked_working_bytes": 348,
+    "historical_private_files": 493,
+    "baseline_manifest_sha256": "cce54406b21250fd9dfad4d95e4117d8402e843771441bb7bd5325146f1160f6",
+    "first_failure_receipt_sha256": "20698c8ac32453513abf5000f9bfdc32b4c2d1f91b374f0d1bfb6ab18221b2ac",
+    "first_driver_sha256": "157cbb1a6a2cd8a7be7b74b1e7863cba6221908325d8cb2a4d6ecb8efb94eaf5",
+    "historical_evidence": "UNCHANGED_NOT_UPGRADED",
+    "continuation_old_body_sha256": "ca935dd0bb8aaec8b55650a91e8f49da8854b6547e1f8b4abaa7404b4bc0fd86"
+  },
+  "tests": {
+    "this_stage": "OFFLINE_NODE_VM_TRANSPORT_FIXTURE_ONLY",
+    "prior_stage_unique_pass": 290,
+    "prior_stage_fail": 0,
+    "prior_stage_skip": 0,
+    "prior_stage_junit_sha256": "51d3ec83cf8dcbe52f9833f6f7f4ba40e59288580c41f23fabd911a6b4951ac0",
+    "prior_tested_source_hashes": "FRESH_MATCH_NO_CHANGES",
+    "historical_totals": "NOT_RERUN_NOT_ADDED",
+    "root_diagnostics4_native_FFmpeg_blockers": "UNCHANGED_SEPARATE_NOT_COUNTED",
+    "dependencies_installed": "NONE",
+    "pass_count": 12,
+    "fail_count": 0,
+    "skip_count": 0,
+    "unique_count": 12,
+    "environment": "LOCAL_NODE_26_7_0_VM_FAKE_WEBSOCKET_TIMERS_AND_FILESYSTEM",
+    "command": "node --test <private-VM-fixture>",
+    "no_network": true,
+    "final_log_sha256": "9f1206fc20a3b17a1c37814fb65db8658736abc9e59636fdcef4cca238e5d785",
+    "legacy_red": {
+      "unique": 8,
+      "pass": 2,
+      "fail": 6
+    },
+    "schema_red": {
+      "unique": 10,
+      "pass": 8,
+      "fail": 2
+    },
+    "intermediates": "NOT_ADDED_TO_FINAL12",
+    "prior_totals": "PRIOR290_NOT_RERUN_NOT_ADDED",
+    "review_red": {
+      "unique": 12,
+      "pass": 10,
+      "fail": 2
+    }
+  },
+  "decision": {
+    "runtime_scope_confirmed": false,
+    "policy_acceptance": false,
+    "helper_attribution": "NOT_ESTABLISHED",
+    "actual_redeployment_ready": false,
+    "Vehicle10_ready": false,
+    "numerical_decision": "PARITY_UNDETERMINED",
+    "M2": false
+  },
+  "next_action": "RESTORE_OFF_POWER_AND_KNOWN_DEVICE_CONNECTIVITY_OR_SUPPLY_CURRENT_IP_THEN_REPEAT_FRESH_FIRST_GATE_BEFORE_ANY_CAPABILITY_QUERY",
+  "result_commit_locator": "git log -1 --format=%H -- artifacts/m19c15g_actual_capability_20261027.json",
+  "guarded_future_transport": {
+    "status": "PREPARED_OFFLINE_NOT_DISPATCHED",
+    "sha256": "f71ba01d8fee02128d4326ac5a75e571a96c757a9c1494f61bc900c17eb7d295",
+    "fixture_sha256": "d411d51186b6fb79ab0381500a0ba72248f25a799423929b66c16b823dafcfdd",
+    "late_meta_and_send_state_guards": true,
+    "final_close_receipt_or_explicit_unknown": true,
+    "actual_dispatch_count": 0,
+    "legacy_driver_and_receipt": "PRESERVED_UNCHANGED",
+    "malformed_packet_rejected": true,
+    "cleanup_only_after_successful_cats_enqueue": true
+  }
+}
