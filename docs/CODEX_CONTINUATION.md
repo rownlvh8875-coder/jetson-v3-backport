@@ -1,3 +1,40 @@
+# Latest continuation — M19-C1.5A ordered workflow · 2026-10-26
+
+## BLOCKED_PHASE_A_INSUFFICIENT_EVIDENCE — B through E not run
+
+Read docs/M19C15A_PROCESS_ATTRIBUTION_GATE_20261026.md and
+artifacts/m19c15a_process_attribution_gate_20261026.json first, plus the distinct
+M19C15A_24C_REDEPLOYMENT_GATED and M19C2_24C_VEHICLE10_GATED receipts.
+New user authorized continuous conditionalA→B→C→D→E, with physical readiness
+checkpoint only after D. A5 still INSUFFICIENT_EVIDENCE: added historicalnmcli
+has only6fields, no parent/argv/UID/cgroup/first-lastseen/lifetime. Structural
+search31privateJSONreceipts finds only1matchingrow. Static callers/wrapper audit
+cannot supply historical ancestry. Original28rows retained; no complete required
+NetworkManager/system-critical identity/effect baseline.17offline assertions PASS;
+three independent reviews concur. These are not new CPU regression cases.
+
+User B-entry permits only SELF_INDUCED_OBSERVER_PROCESS or
+KNOWN_BOUNDED_EXTERNAL_HELPER; hard gate forbids next phase. B policy/sampler/
+tests NOT_RUN; C device characterization NOT_RUN; D apply/rollback NOT_RUN;
+E ACTION_REQUIRED/ticket/activation/capture NOT_RUN. Do not move C ahead of B
+inside this ordered workflow. Phase F sanitized blocked receipts only.
+No actual device/Jetson access or mutation, no source/policy/patch change,
+no storage change, no restart. Historical rollback remains immutable and current
+actual state is NOT_OBSERVED_THIS_STAGE, not freshOFF/READY. Last observed:
+pure24c+surviving5bb package, footerABSENT. Vehicle10NOT_RUN;M2NO;parityUNDETERMINED.
+
+Future inverse must remain safe under ownapply/stillexact/knownownedbytes; never
+force reverse on drift. Future sampler must handle lifetime censoring/PIDreuse.
+Old5bb capture monitor lackscanValid/finite-vEgo, insufficient for newE6; no code
+changed behind gate. Historical1313not recounted; no fresh regression required
+for this docs/evidence-only blocked outcome. Start2634d857 is ownone docs-only
+commit after expected3d5b7bde; initialfeaturebranchCLEAN/local=remote passed.
+Next: separately ordered freshOFF read-only attribution diagnosis before B,
+without deployment/capture; future observation cannot attribute historical PID.
+Result commit: git log -1 --format=%H -- artifacts/m19c15a_process_attribution_gate_20261026.json
+
+---
+
 # Latest continuation — M19-C1.5 offline process review · 2026-10-26
 
 ## nmcli membership addition confirmed; caller remains unresolved

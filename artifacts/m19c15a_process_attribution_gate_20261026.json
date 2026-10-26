@@ -1,0 +1,408 @@
+{
+  "A5": {
+    "classification": "INSUFFICIENT_EVIDENCE",
+    "full_critical_baseline_with_NetworkManager_ancestry_uid_cgroup_proven": false,
+    "historical_no_service_USB_full_Params_change_proven": false,
+    "original_28_source_related_identity_rows_preserved": true,
+    "required_attribution_proven": {
+      "bounded_lifetime": false,
+      "critical_identities": false,
+      "executable_and_cmdline": false,
+      "first_last_seen": false,
+      "not_recorder_spawned": false,
+      "parent_ancestry": false,
+      "source_index_Params_service_USB_preserved": false,
+      "uid_and_cgroup": false
+    }
+  },
+  "Jetson_access": "NO",
+  "Jetson_mutation": "NONE",
+  "M2": "NO",
+  "activation": "NOT_RUN",
+  "actual_access": "NO",
+  "actual_development_start": "2634d857fb30b16c0d4442f941bcfa6fbd82485c",
+  "actual_mutation": "NONE",
+  "actual_mutations": "NONE",
+  "actual_state_freshly_observed": false,
+  "assertion_count": 17,
+  "checks": {
+    "all_matching_retained_rows_lack_required_attribution": true,
+    "all_public_inputs_unchanged_during_audit": true,
+    "cannot_prove_allowed_A5_classification": true,
+    "collector_excludes_self_and_ancestors": true,
+    "collector_no_descendant_ancestry_exclusion": true,
+    "collector_no_nmcli_ps_pgrep_spawn": true,
+    "collector_preserves_start_ticks_not_pid_alone": true,
+    "development_expected_delta_is_one_own_documentation_commit": true,
+    "embedded_process_collector_ast_matches_public": true,
+    "exactly_one_added_nmcli_with_no_errors": true,
+    "fresh_pre_rows_match_transaction_expected": true,
+    "historical_result_not_reclassified": true,
+    "pre28_post29_retained28": true,
+    "rollback_discovered_from_requested_commit": true,
+    "separate_final_rows_equal_pre_not_continuous_proof": true,
+    "strict_post_failure_reproduced": true,
+    "strict_transaction_is_full_rows_equality": true
+  },
+  "complete_critical_baseline_proven": false,
+  "dataset_created_this_workflow": "NONE",
+  "date": "2026-10-26",
+  "development_gate": {
+    "branch": "feature/jetlink-multimodel-carrot",
+    "expected_start_head": "3d5b7bdedfa271a4752d3b713fa5c7822d3dad2b",
+    "explained_delta": "one own documentation/artifact commit2634d857 after expected3d5b7bde, no runtime delta",
+    "protected_refs_before": {
+      "feature/cinque-v3-jetson": "26c9c06a5e51ff0e8d3a1e8575eece548e87f3b5",
+      "main": "2519ad0bdbf6e796fa590063fc90d4d6461b6b8d"
+    },
+    "start_clean": true,
+    "start_local_upstream_remote_equal": true
+  },
+  "development_start_head": "2634d857fb30b16c0d4442f941bcfa6fbd82485c",
+  "direct_command_audit_interpretation": "No direct nmcli launch identified in reviewed collector/operation helpers/wrappers; dynamic calls/static absence cannot establish historical runtime causation.",
+  "discovered_inputs": {
+    "c05_artifact": "artifacts/m19c05_24c_hud_host_compatibility_20261026.json",
+    "c05_doc": "docs/M19C05_24C_HUD_HOST_COMPATIBILITY_20261026.md",
+    "manifest": "artifacts/m19c05_24c_surviving5bb_deployment_manifest_20261026.json",
+    "rollback_artifact": "artifacts/m19c15_24c_actual_off_deployment_rollback_20261026.json",
+    "rollback_doc": "docs/M19C15_24C_ACTUAL_OFF_DEPLOYMENT_ROLLBACK_20261026.md"
+  },
+  "execution_audit": {
+    "actual_helper_calls": {
+      "apply_transaction.py": [
+        {
+          "executable": "git",
+          "function": "subprocess.run",
+          "line": 257,
+          "shell_true": false
+        }
+      ],
+      "common.py": [],
+      "pre_collect.py": [],
+      "restore_guard.py": []
+    },
+    "collector_function_ast_sha256": "17ff290a795f2c56c9d2fded2f1d222d13f5d515b1ca882c688c5bf455a34adc",
+    "embedded_collector_calls": [
+      {
+        "executable": "DYNAMIC_OR_REDACTED",
+        "function": "subprocess.run",
+        "line": 277,
+        "shell_true": false
+      },
+      {
+        "executable": "DYNAMIC_OR_REDACTED",
+        "function": "subprocess.check_output",
+        "line": 280,
+        "shell_true": false
+      },
+      {
+        "executable": "DYNAMIC_OR_REDACTED",
+        "function": "subprocess.check_output",
+        "line": 294,
+        "shell_true": false
+      },
+      {
+        "executable": "DYNAMIC_OR_REDACTED",
+        "function": "subprocess.check_output",
+        "line": 288,
+        "shell_true": false
+      }
+    ],
+    "exact_source_NetworkManager_text_files": 23,
+    "exact_source_hashes": {
+      "openpilot/selfdrive/carrot/server/features/support_terminal.py": "8a1322c1182ee295619e1531d472f6d7f7f043244b10a92735d2150c14c6617f",
+      "openpilot/selfdrive/carrot/server/features/system.py": "e9ae276eb58bee43cb434437267fdc08b1cf43d1ea8d2b635ebc6674a7972053",
+      "openpilot/selfdrive/carrot/server/features/terminal.py": "c41b645d3bd245b33d016e106911550e252cf4993b05dffd2a29c858b0a6021b",
+      "openpilot/selfdrive/carrot/server/services/device_info.py": "b36924c612417778aeaecd477572bb8b280c9992215b6bf5e044843587ec2b87",
+      "openpilot/selfdrive/modeld/jetlink/startup.py": "04826795b2372c8ed82152c70a2a5a562813edeca07457e198f2d0c863c4f455",
+      "openpilot/selfdrive/test/setup_device_ci.sh": "49a0d561eb57202177893ff6e098625f85ca9cb6f44f4a13a4c69bb3f92f1d64",
+      "openpilot/system/athena/tests/test_athenad_ping.py": "19179f35fdf07e3c163d4349388d64a1130bbd1ddd8ab5d486adf25eaefda51a",
+      "openpilot/system/hardware/tici/hardware.py": "132d0dee5c5a4cf01d4d8e258936779080322617f1d7e7f78d51227b09016c4f",
+      "openpilot/system/ui/lib/networkmanager.py": "fcd4bc7d694706b3d4d923f3a0e266154be2f0977caf607d35be850f0d5d8eef",
+      "openpilot/system/ui/lib/wifi_manager.py": "d451446132a30ae916b7b9d869bf9b0c6c898ee4c182f44b04410baeec024ca3",
+      "tools/jetlink/boot_status.py": "1c4b060068f2c8572566e7237f4722fd8b32f70a7d4d6e380490dd4ee50b5e5c",
+      "tools/jetlink/build_sd_image.py": "8847b9333e8f040a28e1125d40d1a424aabb8f7ff023c147a31b565455b76d55",
+      "tools/jetlink/finalize_sd_image.py": "f5b97cee74d27752382a8c698094007fab1ea6036ff1eb6cd48f6d8d51c0549d",
+      "tools/jetlink/image_first_boot.py": "ffbebb76b9de08e58fcda32e3d3121cdc0908798da83c6a6c766df8f5d66f719",
+      "tools/jetlink/initrd_readonly.py": "50f28599f95414f871e13fc52d7c927e6ac106747086d2b16dd40ed037f91aed",
+      "tools/jetlink/install_protected.py": "dc0c899c5c3e2ffe1bdde7da168d1505879b262431a05156d13f782815ae303f",
+      "tools/jetlink/install_wifi.py": "70616b59aaf8ca544d87ddc5f97e1995e26f2cb13bb743b92282b45d55726035",
+      "tools/jetlink/persistent_state.py": "0a89a053210e6c9cd7cc2d72f192f76ac880df2d2b0371eb858ab973364fd171",
+      "tools/jetlink/protected_first_boot.py": "0ec786a4d999633d8443be427b2c353e526897f531cf2354d71a3e986d313608",
+      "tools/jetlink/refresh_sd_image.py": "30460477fd6b44f257b926594aa9f0ffa3350dac3a9de02779e04e4ab804ba78",
+      "tools/jetlink/setup_mobile.sh": "0fff2e2582e8493e71e02ce796f958b26640d5cf7572bf72d5595bb4912721fe",
+      "tools/jetlink/test_protected_storage.py": "ac2d23846a3a5273051ceedd6244e94077cc30d6ebdf3cc5401df79dee446ada",
+      "tools/jetlink/test_refresh_sd_image.py": "a5f88cb2b37f963da6849e2d4d21a0aba50b39a9881cd08f99f2e270be353e56",
+      "tools/jetlink/test_wifi.py": "0d90980ecb153a1478f629258b2db71757adf5b8bfdd7c58ff0ecfe29dfe90b8",
+      "tools/jetlink/wifi_apply.py": "574e716ac2ffb9551de420d2481a03a4b7b813585f430903530096d1db6a7d56",
+      "tools/jetlink/wifi_direct.py": "495e7228d61786b8fa6fc2f2eec1b68887cc6e569811777b72996542f8aa465b",
+      "tools/jetlink/wifi_direct_forward.py": "937df3e21e646484bfd61eb557b941abb98c21d275260ecc4be1d648034add54",
+      "tools/jetlink/wifi_protocol.py": "6ffa68fafe9e83599487b35ff3b17ef53e1acbd938ea9ff746737c91668a77c3",
+      "tools/jetlink/wifi_publisher.py": "9a6c0f148cbafaf7dcc8456f2fed2a62b47559871ddc7fd62c4727b585e3cab2"
+    },
+    "exact_source_nmcli_text_files": 6,
+    "limitation": "Static source does not prove caller or execution of a historical PID; native/system/external call inventory is incomplete.",
+    "literal_nmcli_launch_sites": [
+      {
+        "api": "subprocess.run",
+        "line": 275,
+        "path": "openpilot/selfdrive/carrot/server/services/device_info.py"
+      },
+      {
+        "api": "subprocess.run",
+        "line": 318,
+        "path": "openpilot/selfdrive/carrot/server/services/device_info.py"
+      },
+      {
+        "api": "subprocess.run",
+        "line": 20,
+        "path": "openpilot/system/athena/tests/test_athenad_ping.py"
+      },
+      {
+        "api": "shell nmcli command",
+        "line": 351,
+        "path": "tools/jetlink/setup_mobile.sh"
+      },
+      {
+        "api": "subprocess.run",
+        "line": 24,
+        "path": "tools/jetlink/wifi_apply.py"
+      },
+      {
+        "api": "subprocess.run",
+        "line": 40,
+        "path": "tools/jetlink/wifi_direct.py"
+      },
+      {
+        "api": "subprocess.run",
+        "line": 19,
+        "path": "tools/jetlink/wifi_publisher.py"
+      }
+    ],
+    "public_collector_calls": [
+      {
+        "executable": "DYNAMIC_OR_REDACTED",
+        "function": "subprocess.run",
+        "line": 277,
+        "shell_true": false
+      },
+      {
+        "executable": "DYNAMIC_OR_REDACTED",
+        "function": "subprocess.check_output",
+        "line": 280,
+        "shell_true": false
+      },
+      {
+        "executable": "DYNAMIC_OR_REDACTED",
+        "function": "subprocess.check_output",
+        "line": 294,
+        "shell_true": false
+      },
+      {
+        "executable": "DYNAMIC_OR_REDACTED",
+        "function": "subprocess.check_output",
+        "line": 288,
+        "shell_true": false
+      }
+    ],
+    "target_source_imported_or_executed": false,
+    "transport_wrappers": [
+      {
+        "bytes": 1840,
+        "networkmanager_token_occurrences": 0,
+        "nmcli_token_occurrences": 0,
+        "sha256": "5d33b2ec0c07e4633b7034138a63f03e0ca7d95d387ca632bc6daba600e92714",
+        "subprocess_tokens": []
+      },
+      {
+        "bytes": 3637,
+        "networkmanager_token_occurrences": 0,
+        "nmcli_token_occurrences": 0,
+        "sha256": "bd1842760988ff745170fd64ab390be59c2154828e7df118a2a7f5e19fee225a",
+        "subprocess_tokens": []
+      },
+      {
+        "bytes": 3637,
+        "networkmanager_token_occurrences": 0,
+        "nmcli_token_occurrences": 0,
+        "sha256": "bd1842760988ff745170fd64ab390be59c2154828e7df118a2a7f5e19fee225a",
+        "subprocess_tokens": []
+      },
+      {
+        "bytes": 1838,
+        "networkmanager_token_occurrences": 0,
+        "nmcli_token_occurrences": 0,
+        "sha256": "0379b2492cd0a6745991e82f4abb4fdb6f7c218bb11b8ffe789509e1f6691987",
+        "subprocess_tokens": []
+      },
+      {
+        "bytes": 3621,
+        "networkmanager_token_occurrences": 0,
+        "nmcli_token_occurrences": 0,
+        "sha256": "d83a3d2613d514450f0f6cabefec47e01ce43e0241e45b0194102d06c28e496a",
+        "subprocess_tokens": []
+      },
+      {
+        "bytes": 3624,
+        "networkmanager_token_occurrences": 0,
+        "nmcli_token_occurrences": 0,
+        "sha256": "f0fd2bc5a8520ba099593f1c1b7b8131f8a000eb35fdf054919e94c8d7856392",
+        "subprocess_tokens": []
+      },
+      {
+        "bytes": 1842,
+        "networkmanager_token_occurrences": 0,
+        "nmcli_token_occurrences": 0,
+        "sha256": "e8baec237b33fa9e08f8970c2f2d07cc90a47c811bde7b0a137bfff8e193a3bb",
+        "subprocess_tokens": []
+      }
+    ]
+  },
+  "expected_development_start": "3d5b7bdedfa271a4752d3b713fa5c7822d3dad2b",
+  "frames_created_this_workflow": 0,
+  "fresh_development_regression": "NOT_RUN_PHASE_B_NOT_ENTERED",
+  "fresh_regression": "NOT_RUN_PHASE_B_NOT_ENTERED",
+  "future_constraints_not_implemented": [
+    "never force reverse if own footprint or still-exact identity cannot be proved",
+    "first_last_seen span and source-selection disappearance do not prove full lifetime",
+    "old5bb monitor lacks canValid and finite-vEgo for newE6",
+    "fresh later observation cannot attribute the historical PID"
+  ],
+  "historical_receipt_sha256": {
+    "restore": "70a8af78e7c468fcb780b6fcc4412853747d287b8f26370af1f395f7d06acee4",
+    "transaction": "72ca231d5e4b8bb94dcd7c8441f2efb9abe05ac2a00f6b01850f8ea4a84cedb1"
+  },
+  "historical_regression": {
+    "fail_count": 0,
+    "pass_count": 1313,
+    "recounted_as_fresh": false,
+    "skip_count": 0
+  },
+  "independent_reviews": {
+    "capture-safety-review": {
+      "classification": "INSUFFICIENT_EVIDENCE",
+      "code_or_actual_mutation": "NONE",
+      "json_sha256": "784ccccdc90fb41d032550ec1d7cc286d1b0027b3219f4e31e9659abc9471e07",
+      "markdown_sha256": "164fb3362fe378426ce64ce1735a77c95c806ed778c09e3f2752a4622ecd6879",
+      "scope": "INDEPENDENT_OFFLINE_SOURCE_AND_RETAINED_EVIDENCE_REVIEW"
+    },
+    "process-review": {
+      "classification": "INSUFFICIENT_EVIDENCE",
+      "code_or_actual_mutation": "NONE",
+      "json_sha256": "cecc4649f80467bf8a3ad37fbb7b7d80560a8c1b0ad1b712b93aee3b22337873",
+      "markdown_sha256": "026e06b87800b2d7685216eae88ecfd7f38b2262a28c000bd764953f3328550e",
+      "scope": "INDEPENDENT_OFFLINE_SOURCE_AND_RETAINED_EVIDENCE_REVIEW"
+    },
+    "rollback-gate-review": {
+      "classification": "INSUFFICIENT_EVIDENCE",
+      "code_or_actual_mutation": "NONE",
+      "json_sha256": "7ac84b2bb0dd2921b1d65a1b6e5fb8e1c9113e79e93ca234abc788cdda859a99",
+      "markdown_sha256": "4ce6b51507c25319d2079fd53debd35ca5ff9aef437b1185e5ab3a27a9b4a15d",
+      "scope": "INDEPENDENT_OFFLINE_SOURCE_AND_RETAINED_EVIDENCE_REVIEW"
+    }
+  },
+  "last_observed_source_state": "HISTORICAL_ROLLED_BACK_PURE24C_SURVIVING5BB_FOOTER_ABSENT",
+  "missing_proof": [
+    "added-process parent and ancestry",
+    "actual cmdline",
+    "UID/cgroup",
+    "first_seen/last_seen and confirmed exit",
+    "complete bounded lifetime",
+    "complete required critical system baseline",
+    "complete Params/service/USB interval preservation"
+  ],
+  "new_stage_input_commitments": {
+    "offline_audit_helper_sha256": "9811c6fc2494dcd7b69f67897ab65799a3eda5a873c89a753b06c933a269194d",
+    "user_gate_excerpts_sha256": "3a695429ece71b24da61f8047753a5f73f4a54c4ae49c75ba702dfd7845c434b"
+  },
+  "next_action": "SEPARATELY_ORDER_FRESH_OFF_READ_ONLY_ATTRIBUTION_DIAGNOSIS_BEFORE_PHASE_B_WITHOUT_DEPLOYMENT_OR_CAPTURE",
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "partial_evidence": "All original28 source-related identities and selected manager roles retained; this does not cover all required system roles/metadata or the added nmcli lineage.",
+  "phase_A_audit_assertions": {
+    "fail_count": 0,
+    "pass_count": 17,
+    "regression_cases": false
+  },
+  "phases": {
+    "A": "COMPLETE_INSUFFICIENT_EVIDENCE",
+    "B": "NOT_RUN_PHASE_A_GATE",
+    "C": "NOT_RUN_PHASE_A_GATE",
+    "D": "NOT_RUN_PHASE_A_GATE",
+    "E": "NOT_RUN_PHASE_A_GATE",
+    "F": "SANITIZED_DOCUMENTATION_ONLY"
+  },
+  "policy_mutation": "NONE",
+  "policy_or_sampler_changed": false,
+  "policy_status": "NOT_RUN_PHASE_A_GATE",
+  "process_receipt": {
+    "added_executable": "nmcli",
+    "added_pid_row_matches": [
+      {
+        "evidence_sha256": "72ca231d5e4b8bb94dcd7c8441f2efb9abe05ac2a00f6b01850f8ea4a84cedb1",
+        "row_fields": [
+          "cwd",
+          "errors",
+          "exe",
+          "pid",
+          "resolution_env",
+          "start_ticks"
+        ]
+      }
+    ],
+    "added_rows": 1,
+    "post_rows": 29,
+    "pre_rows": 28,
+    "retained_fields": [
+      "pid",
+      "start_ticks",
+      "cwd",
+      "exe",
+      "resolution_env",
+      "errors"
+    ],
+    "retained_original_rows": 28,
+    "top_level_json_files_structurally_searched": 31
+  },
+  "public_input_sha256": {
+    "artifacts/m19c05_24c_hud_host_compatibility_20261026.json": "715aa8db717544bfb73d0813274c917c0a23d39061c762ba64b975b3422f80db",
+    "artifacts/m19c05_24c_surviving5bb_deployment_manifest_20261026.json": "65f9eadca9511292b29a1e4b38e9906a1a924233025d95033d018f687cbc17ba",
+    "artifacts/m19c15_24c_actual_off_deployment_rollback_20261026.json": "de4d5a4c4dead9f3b14e1f8b8428c85b7baa9c4f7d79aa0c98c3f0fed9ab87f5",
+    "artifacts/m19c15_nmcli_process_preservation_review_20261026.json": "57fcc3ee80cfe9948d931e145a43d3d2db6610680803fdfb28f249f2964921b7",
+    "docs/CODEX_CONTINUATION.md": "2c67b97b73380fa5ee0f8663efaec2bd2dc195ed13a8d0fd1b1ac1f0b0f1d32e",
+    "docs/M19C05_24C_HUD_HOST_COMPATIBILITY_20261026.md": "0956060a00e273b2ae8656d7c741b22c7393151f3451fc96118e830b019e1654",
+    "docs/M19C15_24C_ACTUAL_OFF_DEPLOYMENT_ROLLBACK_20261026.md": "857189cae905c29225427869bc1a1f9f74369b8e2df79df0953bb32670895e98",
+    "docs/M19C15_NMCLI_PROCESS_PRESERVATION_REVIEW_20261026.md": "a64a657814f8ee4f0443e5c3f2c3ff1aa3aa886b5f8f3efeb7e02ceb4af8fdcd",
+    "tests/test_comma_dirty_baseline.py": "b316076d20b7f89f9102508b885b7be426251775e50138e79917796636076768",
+    "tests/test_comma_dirty_layout.py": "670ea9166fa529f64e4d4e6d9be2d23bfbed235e73f3e8e849a5f5232b402c23",
+    "tools/check_comma_dirty_baseline.py": "3b8f77a388caeb380e78980ba13c02c8e24e8ce4017326f01fbbb7cbf3a90904"
+  },
+  "ready_for_M19C3": false,
+  "recorder_patch_change": "NONE",
+  "result_commit_lookup": "git log -1 --format=%H -- artifacts/m19c15a_process_attribution_gate_20261026.json",
+  "runtime_test_cases_added": 0,
+  "schema": 1,
+  "separate_historical_blockers": [
+    "diagnostics4_missing_zstandard",
+    "root_collection_blocker",
+    "native_FFmpeg_unavailable"
+  ],
+  "source_or_patch_changed": false,
+  "stage": "M19-C1.5A_PHASE_A",
+  "status": "BLOCKED_PHASE_A_INSUFFICIENT_EVIDENCE",
+  "target": "24c1ba5e4b3428f56fa0e402f5a10097e2e94c32",
+  "target_source_head": "24c1ba5e4b3428f56fa0e402f5a10097e2e94c32",
+  "terminal_status": "BLOCKED_PHASE_A_INSUFFICIENT_EVIDENCE",
+  "ticket": "NOT_CREATED",
+  "user_gate": {
+    "B_C_D_E_allowed": false,
+    "actual_A_classification": "INSUFFICIENT_EVIDENCE",
+    "allowed_A_classifications": [
+      "SELF_INDUCED_OBSERVER_PROCESS",
+      "KNOWN_BOUNDED_EXTERNAL_HELPER"
+    ],
+    "quote": "각 Phase의 하드 게이트가 실패하면 다음 Phase로 넘어가지 않는다.",
+    "reorder_C_before_B_allowed_in_this_workflow": false,
+    "source": "CURRENT_USER_PHASE_A5_AND_PHASE_B_ENTRY"
+  },
+  "workflow": "M19-C1.5A_TO_M19-C2_CONTINUOUS_EXECUTION"
+}

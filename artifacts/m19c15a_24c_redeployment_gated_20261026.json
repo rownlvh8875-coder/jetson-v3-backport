@@ -1,0 +1,93 @@
+{
+  "Jetson_access": "NO",
+  "Jetson_mutation": "NONE",
+  "M2": "NO",
+  "activation": "NOT_RUN",
+  "actual_access": "NO",
+  "actual_mutations": "NONE",
+  "actual_state_freshly_observed": false,
+  "candidate_integrity": {
+    "actual_apply": "NOT_RUN",
+    "forward_sha256": "28e68ced23a9ca9f0bea33c430346801272ae17532a73ffacf7c33ed5099162d",
+    "local_static_patch_digest": "PASS",
+    "new_candidate_created": false,
+    "reverse_sha256": "643eaa68f5c579d8874032817279a59c0754b6c98aa694fcc76949d569489d40"
+  },
+  "current_source_state": "BLOCKED_NOT_OBSERVED",
+  "dataset_created_this_workflow": "NONE",
+  "date": "2026-10-26",
+  "development_start_head": "2634d857fb30b16c0d4442f941bcfa6fbd82485c",
+  "expected_AFTER_six_hashes": {
+    "openpilot/selfdrive/modeld/jetlink/input_recording/__init__.py": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca",
+    "openpilot/selfdrive/modeld/jetlink/input_recording/dataset.py": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7",
+    "openpilot/selfdrive/modeld/jetlink/input_recording/format.py": "72978fd31a4e58081ce7e570ca527d50a7a403d51278f4c8122a0ae64ee1f31e",
+    "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py": "fec2efd042475952a9e4c81a84f8d58c3bd3610437bfd6e17d7c70663c8663f5",
+    "openpilot/selfdrive/modeld/jetlink/input_recording/recorder.py": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada",
+    "openpilot/selfdrive/modeld/jetlink/model.py": "71abe14b79c0336b67d58ba3ef8bb3bd4b82458915aada29ec4127dba0bab4f9"
+  },
+  "expected_PRE_six_hashes": {
+    "openpilot/selfdrive/modeld/jetlink/input_recording/__init__.py": "e70246cd5900e93d9c6176443895b9fd5e0487b1d416b861b63b34ff482292ca",
+    "openpilot/selfdrive/modeld/jetlink/input_recording/dataset.py": "25af73e6de65116cbb8050c7da2c89e1c2d1f7e275cfeaf54bd939ed9529e0f7",
+    "openpilot/selfdrive/modeld/jetlink/input_recording/format.py": "838cbb11d254132f55ff808ef59e3010a18f0f0a0d157e7a215635229950810a",
+    "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py": "1b0331426cc13c3f1ec27910f69eea4c4bc210af339acdf63bebf5098e041f83",
+    "openpilot/selfdrive/modeld/jetlink/input_recording/recorder.py": "d6004d0934a87fd23adb82e8873b44ec710935c1e7bd5ec8f1806a46513aeada",
+    "openpilot/selfdrive/modeld/jetlink/model.py": "6e04d29bca6b1802ecc012f8f8ea154f28ec7854961dbf4fd4b6b963328eccee"
+  },
+  "expected_branch": "carrot-nav",
+  "expected_contract_manifest": "artifacts/m19c05_24c_surviving5bb_deployment_manifest_20261026.json",
+  "expected_profile": "RECORDER_24C_HUD_HOST_V1",
+  "expected_source_pin_count": 41,
+  "expected_touched_paths": [
+    "openpilot/selfdrive/modeld/jetlink/input_recording/format.py",
+    "openpilot/selfdrive/modeld/jetlink/input_recording/hook.py",
+    "openpilot/selfdrive/modeld/jetlink/model.py"
+  ],
+  "frames_created_this_workflow": 0,
+  "fresh_checks": {
+    "30s_process_preservation": "NOT_RUN_PHASE_A_GATE",
+    "41_source_pins": "NOT_RUN_PHASE_A_GATE",
+    "60s_characterization": "NOT_RUN_PHASE_A_GATE",
+    "AFTER_six": "NOT_RUN_PHASE_A_GATE",
+    "N16_model_spec": "NOT_RUN_PHASE_A_GATE",
+    "POST_attestation": "NOT_RUN_PHASE_A_GATE",
+    "PRE_six": "NOT_RUN_PHASE_A_GATE",
+    "actual_apply": "NOT_RUN_PHASE_A_GATE",
+    "backup": "NOT_RUN_PHASE_A_GATE",
+    "checker_dry_run": "NOT_RUN_PHASE_A_GATE",
+    "disposable_roundtrip": "NOT_RUN_PHASE_A_GATE",
+    "first_OFF_reads": "NOT_RUN_PHASE_A_GATE",
+    "genuine_OFF": "NOT_RUN_PHASE_A_GATE",
+    "namespace": "NOT_RUN_PHASE_A_GATE",
+    "reachability": "NOT_RUN_PHASE_A_GATE",
+    "storage": "NOT_RUN_PHASE_A_GATE",
+    "wrapper_footer": "NOT_RUN_PHASE_A_GATE",
+    "writer": "NOT_RUN_PHASE_A_GATE"
+  },
+  "fresh_development_regression": "NOT_RUN_PHASE_B_NOT_ENTERED",
+  "historical_regression": {
+    "fail_count": 0,
+    "pass_count": 1313,
+    "recounted_as_fresh": false,
+    "skip_count": 0
+  },
+  "last_observed_source_state": "HISTORICAL_ROLLED_BACK_PURE24C_SURVIVING5BB_FOOTER_ABSENT",
+  "manifest_sha256": "65f9eadca9511292b29a1e4b38e9906a1a924233025d95033d018f687cbc17ba",
+  "next_action": "SEPARATELY_ORDER_FRESH_OFF_READ_ONLY_ATTRIBUTION_DIAGNOSIS_BEFORE_PHASE_B_WITHOUT_DEPLOYMENT_OR_CAPTURE",
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "phase_status": "NOT_RUN_PHASE_A_GATE",
+  "process_preservation": "NOT_RUN_PHASE_A_GATE",
+  "ready_for_M19C3": false,
+  "ready_for_Vehicle10": false,
+  "rollback": "NOT_RUN_NO_APPLY",
+  "schema": 1,
+  "separate_historical_blockers": [
+    "diagnostics4_missing_zstandard",
+    "root_collection_blocker",
+    "native_FFmpeg_unavailable"
+  ],
+  "stage": "M19-C1.5A_PHASE_D_REDEPLOYMENT",
+  "target_source_head": "24c1ba5e4b3428f56fa0e402f5a10097e2e94c32",
+  "terminal_status": "BLOCKED_PHASE_A_INSUFFICIENT_EVIDENCE",
+  "ticket": "NOT_CREATED",
+  "workflow": "M19-C1.5A_TO_M19-C2_CONTINUOUS_EXECUTION"
+}
