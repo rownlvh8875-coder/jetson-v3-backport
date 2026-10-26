@@ -1,3 +1,35 @@
+# Latest continuation — M19-C1.5D offline proc-view scope review · 2026-10-26
+
+## PASS_OFFLINE_REVIEW — runtime scope replacement NOT APPROVED
+
+Read docs/M19C15D_PROC_VIEW_SCOPE_REVIEW_20261026.md and
+artifacts/m19c15d_proc_view_scope_review_20261026.json first; proposed ADR/plan
+are under docs/superpowers. A genuinely held procfs view can supply conditional
+binding without the namespace symlink, but raw matching records cannot prove
+lease ownership, real acquisition, global namespace coverage or temporal
+visibility. Pinning does not freeze hidepid; matching A endpoints admit A-B-A.
+This also limits the legacy endpoint method. No actual-kernel/config inference.
+
+New pure model PINNED_PROC_VIEW_RECORD_V1 is OFFLINE_NOT_ADMISSIBLE even on coherent
+records; all runtime/negative-witness/policy/fallback flags false. Explicit synthetic
+asm-generic ABI; raw fdinfo flags/inode and namespace operation provenance checked.
+Old absolute metadata/parent/common/observer/child reads need one explicit
+FD-relative adapter, child mapping handshake and supported visibility trust
+contract before any new runtime integration. Adapter is not implemented here.
+
+Fresh relevant135PASS/0FAIL/0SKIP=74model+61unchanged sampler; historical1374 not
+rerun/recounted. Root/diagnostics/native FFmpeg blockers separate. Two independent
+reviews; prior324tracked raw hashes and10private critical hashes unchanged.
+No comma/Jetson access, no actual retry/source/policy/patch change, no storage,
+ticket, activation, capture or restart. Current actual identity/OFF/runtime state
+NOT_OBSERVED_THIS_STAGE; last C15C failure remains immutable, not upgraded.
+A5 remains unknown; Vehicle10NO; parityUNDETERMINED; M2NO.
+Next: offline FD-relative ProcView acquisition adapter with explicit visibility
+trust assumptions; strict default/actual dispatcher unchanged, no auto sampling.
+Result commit: git log -1 --format=%H -- artifacts/m19c15d_proc_view_scope_review_20261026.json
+
+---
+
 # Latest continuation — M19-C1.5C lightweight diagnosis · 2026-10-26
 
 ## BLOCKED_PROCESS_SCOPE_UNAVAILABLE — no installation or capture

@@ -1,0 +1,180 @@
+{
+  "schema": 1,
+  "stage": "M19-C1.5D_PROC_VIEW_SCOPE_REVIEW",
+  "date": "2026-10-26",
+  "status": "PASS_OFFLINE_REVIEW",
+  "runtime_replacement": "NOT_APPROVED_FULL_EQUIVALENCE_UNPROVEN",
+  "starting_development_head": "ec3f3bcc4dcf0e8e7551f1d56bd03f846b3580f9",
+  "branch": "feature/jetlink-multimodel-carrot",
+  "result_commit_locator": "git log -1 --format=%H -- artifacts/m19c15d_proc_view_scope_review_20261026.json",
+  "scope": {
+    "actual_comma_access": false,
+    "actual_jetson_access": false,
+    "actual_mutations": "NONE",
+    "actual_current_identity": "NOT_OBSERVED_THIS_STAGE",
+    "actual_off_state": "NOT_OBSERVED_THIS_STAGE",
+    "actual_sampling": "NOT_RUN",
+    "recorder_deployment": "NOT_RUN",
+    "storage_mutation": "NONE",
+    "ticket": "NOT_CREATED",
+    "capture": "NOT_RUN",
+    "workflow_frames": 0,
+    "restart": "NOT_RUN",
+    "Params_service_USB_updater_configuration_changes": "NONE",
+    "jetson_mutation": "NONE"
+  },
+  "decision": {
+    "mounted_view_binding": "CONDITIONALLY_DEFENSIBLE_UNDER_TRUSTED_FD_ACQUISITION",
+    "drop_in_replacement": "NO",
+    "full_scope_equivalence": "NOT_ESTABLISHED",
+    "temporal_visibility": "NOT_ESTABLISHED_BY_ENDPOINTS",
+    "global_host_visibility": "NOT_ESTABLISHED",
+    "namespace_equality": "NOT_ESTABLISHED_BY_NUMERIC_PID",
+    "historical_PID_attribution": "UNCHANGED_UNKNOWN",
+    "helper_safety": "UNCHANGED_UNKNOWN",
+    "A5_policy_gate": "UNCHANGED_INSUFFICIENT_EVIDENCE"
+  },
+  "model": {
+    "kind": "PINNED_PROC_VIEW_RECORD_V1",
+    "role": "OFFLINE_RECORD_RELATIONSHIP_MODEL_ONLY",
+    "positive_status": "CONDITIONALLY_CONSISTENT_MOUNTED_VIEW",
+    "admissibility": "OFFLINE_NOT_ADMISSIBLE",
+    "runtime_scope_confirmed": false,
+    "negative_pid_witness_allowed": false,
+    "policy_acceptance": false,
+    "legacy_fallback_allowed": false,
+    "actual_FD_acquisition_adapter": "NOT_IMPLEMENTED",
+    "runtime_consumer_wiring": "NONE",
+    "actual_flag_ABI": "NOT_OBSERVED_NOT_INFERRED",
+    "synthetic_flag_ABI": "LINUX_ASM_GENERIC_EXPLICIT_ONLY",
+    "model_sha256": "5bda1c8d502b8f2ea7a9f004f97be4580222d0af30bb8edd6d19812309a26f2d",
+    "tests_sha256": "c6a89c03c6dbb5300b47123351bbc1e0c166827f236865ea41c7372f9a234722",
+    "design_sha256": "b81df646fbf1535df88db61cdac1fcb21eb26e856f3aa50c95d592be1157d6fa",
+    "unproved_obligations": [
+      "TRUSTED_FD_ACQUISITION",
+      "CONTINUOUS_LEASE_OWNERSHIP",
+      "TEMPORAL_VISIBILITY",
+      "COMPLETE_PROVIDER_ADAPTATION",
+      "CHILD_MAPPED_VIEW_BINDING",
+      "ACTUAL_CAPABILITY_VALIDATION",
+      "FLAG_ABI_ATTESTATION"
+    ]
+  },
+  "review_findings": [
+    {
+      "finding": "A pinned mount does not freeze hidepid/remount filtering. Matching A endpoints cannot exclude an A-B-A interval.",
+      "resolution": "No temporal visibility, lifetime or operating acceptance from the model. Applies to legacy endpoint checks too."
+    },
+    {
+      "finding": "Legacy metadata, parent, receive-observer/common and owned-child reads reopen absolute proc paths.",
+      "resolution": "Require an explicit shared FD-relative interface or label those observations separate legacy evidence. No current wiring."
+    },
+    {
+      "finding": "Numeric self/fork PIDs do not establish namespace equality or proc-view child ownership.",
+      "resolution": "Separate mapped child identity handshake from direct-parent wait/signal authority."
+    },
+    {
+      "finding": "Raw fdinfo flags or optional inode can contradict declared acquisition intent.",
+      "resolution": "Validate under an explicit synthetic ABI; correlate optional root inode. Actual ABI/acquisition remain unproved."
+    },
+    {
+      "finding": "PID namespace value or ENOENT requires operation provenance.",
+      "resolution": "Require same lease/mount/timing operation and matching status; distinguish file target from readlink parent FD."
+    }
+  ],
+  "future_acquisition_contract": [
+    "authenticate procfs using reviewed fstatfs ABI",
+    "continuously owned root and generation FDs; no silent close/rebind",
+    "fresh numeric PID lookup distinct from held-generation metadata",
+    "closed field API and per-target mount crossing checks",
+    "fresh directory streams; no shared-offset inference",
+    "explicit child view mapping without numeric namespace assumptions",
+    "document supported visibility trust assumptions/evidence",
+    "adapt all providers, retain permissions/censoring/critical metadata gates"
+  ],
+  "tests": {
+    "fresh_pass": 135,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "new_model_CPU_FAKE": 74,
+    "existing_sampler_CPU_POSIX": 61,
+    "unique_case_ids": 135,
+    "duplicates": 0,
+    "historical1374": "NOT_RERUN_NOT_RECOUNTED",
+    "earlier_this_stage122": "SUPERSEDED_NOT_ADDED",
+    "environment": {
+      "python": "3.12.3",
+      "pytest": "9.1.1",
+      "system": "Linux"
+    },
+    "installs": "NONE",
+    "command": "python -B -m pytest -q tests/test_proc_view_scope_model.py tests/test_comma_process_sampler.py -p no:cacheprovider --tb=line",
+    "junit_sha256": "d7494c80d1ef778e6d309d7f5380c66c8c3f308072cc4324e486063439b7fa52",
+    "audit_sha256": "89f9bc57c9e4135179e378634e9c5f5b26ecfe62b841ea904acc9e3fda4534d6",
+    "root_collection": "KNOWN_LIVE_FETCH_EXIT_STATIC_BLOCKER_NOT_EXECUTED",
+    "diagnostics4": "HISTORICAL_DEPENDENCY_BLOCKER_NOT_RUN_NOT_COUNTED",
+    "native_FFmpeg": "HISTORICAL_BLOCKER_NOT_RUN_NOT_COUNTED"
+  },
+  "preservation": {
+    "existing_tracked_files_raw_hash_checked": 324,
+    "historical_private_critical_files_raw_hash_checked": 10,
+    "all_unchanged": true,
+    "strict_sampler_sha256": "3f21cccfdf58a7044bfae21513a646343069119bb1081e493e653f3287070e94",
+    "strict_tests_sha256": "95f0ee117b0c609af4b0b5d888a1a760a7690e3a308ad3329ec5ebc272d7a217",
+    "existing_patch_and_source_pin_changes": "NONE",
+    "before_commitment": "87cac6686be141cd0c167cb979322caa60f25f65ab0d6f85f276afaac1105053",
+    "after_commitment": "87cac6686be141cd0c167cb979322caa60f25f65ab0d6f85f276afaac1105053",
+    "failed_actual_receipt_not_reinterpreted_as_valid": "REJECTED_SCOPE_RECORD",
+    "old_receipt_sha256": "9715d71b38c5505b02b9e53d597bea917dea6ef02ebd8d3abe256b2315ea9d04"
+  },
+  "independent_reviews": {
+    "independent-proof-review.json": "076275123a1e37e0cf2ced5d0ce3b5c7266ff77467e0d910a973b0d896ce5faf",
+    "integration-boundary-review.json": "4f486452ad05ea6a38b30524b2332cac0dff6d9bd919ac33a036f2549b072c42"
+  },
+  "primary_sources_scope": "UPSTREAM_GENERIC_LINUX_ONLY_NOT_ACTUAL_KERNEL_IDENTIFICATION",
+  "primary_sources": [
+    {
+      "url": "https://man7.org/linux/man-pages/man7/pid_namespaces.7.html",
+      "supports": "mounted PID view; numeric self mapping is not global namespace identity"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/torvalds/linux/v6.1/fs/proc/root.c",
+      "supports": "procfs PID namespace reference and mutable options"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/torvalds/linux/v4.9/fs/proc/root.c",
+      "supports": "remount updates filtering without freezing mount identity"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man5/proc_pid_fdinfo.5.html",
+      "supports": "fdinfo mount ID, flags and optional inode"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man5/proc_pid_mountinfo.5.html",
+      "supports": "mount correlation, stacking and ID reuse"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/torvalds/linux/v3.18/fs/namespace.c",
+      "supports": "mount reference/cleanup lifetime basis"
+    },
+    {
+      "url": "https://www.kernel.org/doc/html/v6.5/filesystems/proc.html",
+      "supports": "visibility options and dead generation FD behavior"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/torvalds/linux/v6.1/include/uapi/asm-generic/fcntl.h",
+      "supports": "explicit synthetic flag-ABI values"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/torvalds/linux/v6.1/include/uapi/linux/magic.h",
+      "supports": "PROC_SUPER_MAGIC reference constant"
+    }
+  ],
+  "ready_for_actual_diagnostic_adapter": false,
+  "ready_for_recorder_redeployment": false,
+  "ready_for_vehicle10": false,
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "M2": false,
+  "next_action": "Implement an offline FD-relative ProcView acquisition adapter with explicit visibility trust assumptions; do not wire a device dispatcher."
+}
