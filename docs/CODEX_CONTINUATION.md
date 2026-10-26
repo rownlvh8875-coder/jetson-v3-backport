@@ -1,3 +1,44 @@
+# Latest continuation — 2026-10-26
+
+## M19-C0.5 exact24c HUD/host review — PASS_OFFLINE_CANDIDATE
+
+Read docs/M19C05_24C_HUD_HOST_COMPATIBILITY_20261026.md and
+artifacts/m19c05_24c_hud_host_compatibility_20261026.json first.
+Target24c1ba5e4b3428f56fa0e402f5a10097e2e94c32 is5 commits/8paths after5bb.
+14 hotpath files byte/AST unchanged; local nav_metadata API unchanged.
+RECORDER_LOGIC_REUSABLE; FOUR_INPUT_SUFFICIENT; current image/first12/navigation
+semantics unchanged. HUD_DISPLAY_PATH_ONLY: separate serialized/renderer RGBA
+pipe ownership; scheduling/contention/TTL timing is not guaranteed equivalent.
+
+RECORDER_24C_HUD_HOST_V1 candidate has41pins (old33 only host_release changes,
+plus8 HUD ownership interfaces), bound footer/package, strict reader, surviving5bb
+forward/reverse patches. Exactly model/format/hook touched; disposable byte-exact
+PRE restoration/index/syntax/defaultOFF PASS. Migration manifest:
+artifacts/m19c05_24c_surviving5bb_deployment_manifest_20261026.json.
+Future PRE: pure24c+surviving5bb package+NO footer. Fresh actual gates mandatory.
+
+Fresh authoritative1313 unique CPU_FAKE/POSIX PASS/0FAIL/0SKIP =1165 historical5bb
+controls+148 exact24c cases. Original1121PASS/44 overlong Unix socket temp-path
+harness failures retained; affected203+119 groups rerun short-path/selected once.
+8 concurrent HUD cases/40active model frames preserve observed/original/engine
+hashes; pipe child is fake, not H264. Native FFmpeg unavailable; diagnostics4
+missingzstandard/root collection blockers separate. No hardware/ORT/TRT claim.
+
+N16 SHA/spec unchanged. Repository expectedhost c3f2aeebf6acc645da9b499724e902dbc80401a5;
+ACTUAL_JETSON_HOST=NOT_RUN; no bundle download/authenticity/ABI-load attestation.
+Storage /data/v3_input_capture statically YES_EXPECTED reusable; no actual access.
+This stage did NO comma/Jetson access, source deployment, storage mutation, ticket,
+capture, restart, Params/Git/updater manipulation. Vehicle10NO; parityUNDETERMINED;
+M2NO. Historical5bb READY/capture instructions below are stale after observed24c
+HEAD/footer drift and MUST NOT be executed as current source authorization.
+
+Next: separately authorized exact24c OFF deployment with fresh genuineOFF,
+HEAD/PRE6/41pins/N16/namespace/index/overlay gates. Power-retention OFF issue
+remains unresolved; do not bypass it or auto-repatch/onroad patch. No ticket.
+Result commit: git log -1 --format=%H -- artifacts/m19c05_24c_hud_host_compatibility_20261026.json
+
+---
+
 # Codex continuation — 2026-10-24
 
 ## Latest checkpoint: M19-C2 exact5bb Vehicle10 — DEFERRED_BY_USER_NOT_ARMED
