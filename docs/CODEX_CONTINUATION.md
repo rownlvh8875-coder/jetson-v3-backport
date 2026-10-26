@@ -1,3 +1,40 @@
+# Latest continuation — M19-C1.5F offline ProcView diagnostics · 2026-10-26→27
+
+## PASS_OFFLINE_DIAGNOSTIC_INTEGRATION_WITH_LIMITS — actual work NOT RUN
+
+Read docs/M19C15F_PROC_VIEW_SAMPLER_20261026.md and
+artifacts/m19c15f_proc_view_sampler_20261026.json first. Optional fixed ProcView
+sink, complete bounded private semantic journal, opt-in provider/collector,
+owned-child pipe relay and replay-derived closed public summary are implemented.
+Strict default/old sampler/model/actual dispatcher/recorder patches remain intact.
+Replay requires fresh phase-bound matching results, baseline/final scope and
+count/cadence consistency; stale cached facts cannot become fresh witnesses.
+
+Fresh relevant290uniquePASS/0FAIL/0ERROR/0SKIP =90new+200existing. Earlier test
+iterations and historical1374 not added. Root/diagnostics4/nativeFFmpeg blockers
+separate. Two independent static reviews;335prior tracked+13private hashes held.
+Started26/completed27 Asia/Seoul; stage filenames retain20261026.
+
+Source-pinned count-only payload prepared offline,66708bytes, SHA256:
+be13b17d4318d4dd0b9c0ff7e9f1e620c49a9690a5143092af44a0b98bf71767.
+No target dispatch/install. Future invocation needs fresh OFF/source identity,
+external whole-payload SHA verification and python -B over stdin from startup.
+One local native check:BLOCKED_SCOPE_PROFILE/33events, no child/journal/window.
+Actual kernel/libc/ABI/current source/OFF/runtime remain NOT_OBSERVED/UNKNOWN.
+
+No comma/Jetson access, deployment, storage/ticket/activation/writer/capture or
+restart this stage. Historical helper unknown/failures remain unchanged. All
+policy/lifetime/negative/global/temporal/device authority flags false; no fallback.
+Callbacks/deadlines cooperative; held FD and privileged ABA assumptions remain.
+No diagnostic window/redeployment/Vehicle10 readiness. ParityUNDETERMINED;M2NO.
+
+Next: fresh OFF/source revalidation then at most one prepared in-memory read-only
+capability check. Unsupported profile stops; no automatic observer/window,
+recorder, ticket or capture. Result commit:
+git log -1 --format=%H -- artifacts/m19c15f_proc_view_sampler_20261026.json
+
+---
+
 # Latest continuation — M19-C1.5E offline ProcView acquisition · 2026-10-26
 
 ## PASS_OFFLINE_ACQUISITION_WITH_LIMITS — no actual integration approval

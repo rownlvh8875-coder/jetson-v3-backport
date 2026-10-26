@@ -1,0 +1,226 @@
+{
+  "schema": 1,
+  "stage": "M19-C1.5F",
+  "date_started": "2026-10-26",
+  "date_completed": "2026-10-27",
+  "timezone": "Asia/Seoul",
+  "status": "PASS_OFFLINE_DIAGNOSTIC_INTEGRATION_WITH_LIMITS",
+  "branch": "feature/jetlink-multimodel-carrot",
+  "starting_development_head": "2d17d47865c8b5500f8a4c14c1a650a871bc6e39",
+  "result_commit_locator": "git log -1 --format=%H -- artifacts/m19c15f_proc_view_sampler_20261026.json",
+  "scope": {
+    "actual_comma_access": false,
+    "actual_Jetson_access": false,
+    "actual_mutations": "NONE",
+    "actual_identity": "NOT_OBSERVED_THIS_STAGE",
+    "actual_OFF": "NOT_OBSERVED_THIS_STAGE",
+    "actual_runtime": "NOT_OBSERVED_THIS_STAGE",
+    "deployment": "NOT_RUN",
+    "storage_mutation": "NONE",
+    "ticket": "NOT_CREATED",
+    "activation": "NOT_RUN",
+    "writer_start": "NOT_RUN",
+    "capture": "NOT_RUN",
+    "frames_captured_this_stage": 0,
+    "dataset": "NONE_CREATED",
+    "restart": "NOT_RUN",
+    "Params_service_USB_updater_changes": "NONE"
+  },
+  "implementation": {
+    "source_test_sha256": {
+      "tools/pinned_proc_view.py": "2676357620c11e785e290d59fe9684a2766c6a9de3f39270c3bfdfdf3ed3f5ca",
+      "tools/proc_view_journal.py": "1860eba7373dcea2e9ceedf42a675088961a0b7bf1caf183244e25eb5cc15ef5",
+      "tools/proc_view_sampler.py": "0ad961a0592688386e886c8da766dcc387f930f164e0a4ec097632b2cbeb2652",
+      "tools/proc_view_observer.py": "e5652298d5d58280c3938670b004a6c0cbe562513f920d3d55f9c3f4598c5201",
+      "tools/proc_view_capability.py": "b3d1e0485e80a37c55d55ca3a61181d864d94a814ff553d6847ec06d94f19edd",
+      "tests/test_proc_view_journal.py": "70769e1c67e099a47cf906690e1e45e51596a69e491e56bbd5e2ff1308142877",
+      "tests/test_proc_view_sampler.py": "fcd7553572de334be446557a82470f2a0962171c65fe3e05b72f67a7ccecf4a4",
+      "tests/test_proc_view_observer.py": "7839c3ed26efb8ca02d7a2fad54b9e52056a4dcb0a6ceace3caf7625dbbaca0d",
+      "tests/test_proc_view_capability.py": "9deb05b74d2f4fdd0596f405cce05c4b5ae2ff837855b59da6e4220a7719ea81"
+    },
+    "acquisition_before_sha256": "eed424573f3d941e6f99de14c65d664392c7c0d98a517b99b1194971e9f5c145",
+    "acquisition_change": "OPTIONAL_FIXED_AUDIT_SINK_ONLY",
+    "strict_default": "UNCHANGED",
+    "legacy_prepare_collect": "UNCHANGED_AND_REFUSES_PROVIDER",
+    "recorder_patches_source_pins_actual_dispatcher": "UNCHANGED",
+    "journal": {
+      "coverage": "INSTRUMENTED_SEMANTIC_API_LIFECYCLE_ATTEMPTS_NOT_EVERY_SYSCALL",
+      "creation": "EXCLUSIVE_NOFOLLOW_PRIVATE_PARENT_0600_REGULAR_SINGLE_LINK",
+      "format": "CANONICAL_HASH_CHAIN_JSONL_CLOSED_BYTES_ENCODING",
+      "bounds": {
+        "bytes": 67108864,
+        "events": 200000,
+        "line_bytes": 2097152,
+        "terminal_reserve_bytes": 2048
+      },
+      "failures": "STICKY_NO_SUCCESSFUL_ANCHOR_AFTER_IO_OVERFLOW_FSYNC_CLOSE_FAILURE",
+      "trusted_anchor_required": true,
+      "producer_authentication_proven": false,
+      "semantic_complete_requires": "VIEW_LIFECYCLE_CALL_PAIRS_AND_CLEAN_CLOSE",
+      "killed_child": "PRESERVE_PRIVATE_ANCHOR_AND_EXPLICIT_INCOMPLETE_STATUS_NO_SYNTHETIC_CLOSE"
+    },
+    "fact_binding": {
+      "same_session_consumed_matching_result": true,
+      "baseline_required": true,
+      "scope_core_continuity_required": true,
+      "phase_sequence_and_begin_result_clock_required": true,
+      "cached_pre_list_probe_rejected": true,
+      "cached_pre_scan_enumeration_rejected": true,
+      "cached_pre_completion_final_scope_rejected": true,
+      "all_listed_first_probes_required": true,
+      "completed_scan_positive_required": true,
+      "counts_cadence_reconciled": true,
+      "rejected_partial_counts": "RETAINED_TIMING_UNKNOWN"
+    },
+    "provider": {
+      "opt_in": true,
+      "NOT_FOUND": "UNADMITTED_UNREADABLE_NEVER_ABSENT",
+      "native_interval_seconds": [
+        0.25,
+        0.5
+      ],
+      "short_test_clock": "INJECTED_ONLY",
+      "default_runner": "ONE_BASELINE_NO_CHILD_NO_WINDOW"
+    },
+    "observer": {
+      "origin": "OWNED_ANONYMOUS_PIPE_CHALLENGE_MAPPING_ACK",
+      "child_stream": "RELAY_TO_SOLE_PARENT_JOURNAL_AFTER_INHERITED_FD_DETACH",
+      "signals": "ONLY_UNREAPED_FORK_RETURN_DIRECT_CHILD_NEVER_SUPPLIED_PID",
+      "early_result_error": "FAIL_CLOSED_DURING_COLLECTION",
+      "timeout": "COOPERATIVE_NOT_HARD_PREEMPTION",
+      "helper_safety_proven": false
+    },
+    "public_output": "FRESH_CLOSED_ALLOWLIST_FIXED_ENUMS_COUNTS_TIMING_DIGESTS_NO_RAW_FIELDS"
+  },
+  "capability_handoff": {
+    "sha256": "be13b17d4318d4dd0b9c0ff7e9f1e620c49a9690a5143092af44a0b98bf71767",
+    "source_pins": {
+      "proc_view_scope_model": "5bda1c8d502b8f2ea7a9f004f97be4580222d0af30bb8edd6d19812309a26f2d",
+      "pinned_proc_view": "2676357620c11e785e290d59fe9684a2766c6a9de3f39270c3bfdfdf3ed3f5ca",
+      "proc_view_capability": "b3d1e0485e80a37c55d55ca3a61181d864d94a814ff553d6847ec06d94f19edd"
+    },
+    "payload_bytes": 66708,
+    "status": "PREPARED_OFFLINE_NOT_DISPATCHED",
+    "target_access": false,
+    "target_files_written": false,
+    "transport": "FUTURE_PYTHON_MINUS_B_STDIN_ONLY",
+    "required_preconditions": [
+      "FRESH_OFF",
+      "FRESH_SOURCE_IDENTITY",
+      "PAYLOAD_SHA_MATCH",
+      "PYTHON_MINUS_B_FROM_STARTUP"
+    ],
+    "actual_execution": "NOT_RUN",
+    "future_invocation": "PYTHON_MINUS_B_FROM_STARTUP_OVER_STDIN_NO_TARGET_INSTALL",
+    "no_automatic_target_dispatch": true,
+    "no_automatic_sampling_window": true
+  },
+  "local_native_check": {
+    "status": "BLOCKED_SCOPE_PROFILE",
+    "events": 33,
+    "evidence_kind": "NATIVE_LOCAL_PROCFS",
+    "machine": "LOCAL_WSL_X86_64",
+    "processes_created": 0,
+    "journal_created": false,
+    "sampling_window_started": false,
+    "ticket_created": false,
+    "device_validation": false,
+    "aarch64_execution": "NOT_RUN",
+    "target_kernel_libc_statx_ABI": "UNKNOWN"
+  },
+  "tests": {
+    "status": "PASS_FRESH_RELEVANT_CPU_POSIX",
+    "pass": 290,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "unique": 290,
+    "duplicates": 0,
+    "groups": {
+      "tests.test_proc_view_capability": 9,
+      "tests.test_proc_view_journal": 32,
+      "tests.test_proc_view_sampler": 30,
+      "tests.test_proc_view_observer": 19,
+      "tests.test_pinned_proc_view": 65,
+      "tests.test_proc_view_scope_model": 74,
+      "tests.test_comma_process_sampler": 61
+    },
+    "new_tests": 90,
+    "unchanged_existing_tests": 200,
+    "junit_sha256": "51d3ec83cf8dcbe52f9833f6f7f4ba40e59288580c41f23fabd911a6b4951ac0",
+    "sources": {
+      "tools/pinned_proc_view.py": "2676357620c11e785e290d59fe9684a2766c6a9de3f39270c3bfdfdf3ed3f5ca",
+      "tools/proc_view_journal.py": "1860eba7373dcea2e9ceedf42a675088961a0b7bf1caf183244e25eb5cc15ef5",
+      "tools/proc_view_sampler.py": "0ad961a0592688386e886c8da766dcc387f930f164e0a4ec097632b2cbeb2652",
+      "tools/proc_view_observer.py": "e5652298d5d58280c3938670b004a6c0cbe562513f920d3d55f9c3f4598c5201",
+      "tools/proc_view_capability.py": "b3d1e0485e80a37c55d55ca3a61181d864d94a814ff553d6847ec06d94f19edd",
+      "tests/test_proc_view_journal.py": "70769e1c67e099a47cf906690e1e45e51596a69e491e56bbd5e2ff1308142877",
+      "tests/test_proc_view_sampler.py": "fcd7553572de334be446557a82470f2a0962171c65fe3e05b72f67a7ccecf4a4",
+      "tests/test_proc_view_observer.py": "7839c3ed26efb8ca02d7a2fad54b9e52056a4dcb0a6ceace3caf7625dbbaca0d",
+      "tests/test_proc_view_capability.py": "9deb05b74d2f4fdd0596f405cce05c4b5ae2ff837855b59da6e4220a7719ea81"
+    },
+    "prior262_272_275_276_281_287": "SUPERSEDED_NOT_ADDED",
+    "historical1374": "NOT_RERUN_NOT_RECOUNTED",
+    "root_collection": "KNOWN_LIVE_FETCH_EXIT_BLOCKER_NOT_EXECUTED",
+    "diagnostics4": "HISTORICAL_DEPENDENCY_BLOCKER_NOT_RERUN_NOT_COUNTED",
+    "native_FFmpeg": "HISTORICAL_BLOCKER_NOT_RERUN_NOT_COUNTED",
+    "installs": "NONE",
+    "actual_device_access": false,
+    "command": "python -B -m pytest -q tests/test_proc_view_capability.py tests/test_proc_view_journal.py tests/test_proc_view_sampler.py tests/test_proc_view_observer.py tests/test_pinned_proc_view.py tests/test_proc_view_scope_model.py tests/test_comma_process_sampler.py -p no:cacheprovider --tb=line",
+    "environment": {
+      "OS": "WSL Ubuntu-24.04 Linux x86_64",
+      "python": "3.12.3",
+      "pytest": "9.1.1",
+      "dependency_installs": "NONE"
+    }
+  },
+  "preservation": {
+    "prior_tracked_working_byte_hashes_preserved": 335,
+    "historical_private_receipts_preserved": 13,
+    "baseline_manifest_sha256": "6ca52ba8eb4aba1facc2446f9389165d95cc840b13538962756fe4ec9d0ac1ca",
+    "continuation_old_body_sha256": "e15e670582bbed85a5edce96b33fbf414238de7f06a660bc69811d61955dedad",
+    "strict_sampler_sha256": "3f21cccfdf58a7044bfae21513a646343069119bb1081e493e653f3287070e94",
+    "strict_sampler_tests_sha256": "95f0ee117b0c609af4b0b5d888a1a760a7690e3a308ad3329ec5ebc272d7a217",
+    "model_sha256": "5bda1c8d502b8f2ea7a9f004f97be4580222d0af30bb8edd6d19812309a26f2d",
+    "historical_failures": "NOT_UPGRADED"
+  },
+  "independent_reviews": {
+    "proof-review-final.json": {
+      "sha256": "ab282d27de7f4b98fccf1504bedb15dc54d5f89df23d21d13e5c6d17ff3fcf78",
+      "status": "PASS_WITHIN_OFFLINE_PROVIDER_JOURNAL_OBSERVER_AND_PAYLOAD_SCOPE",
+      "method": "INDEPENDENT_STATIC_NO_EXECUTION"
+    },
+    "integration-review-final-290.json": {
+      "sha256": "123f5faf99d651b17992e8df9c95be59304749eb2d3ae770af25dd2edb059def",
+      "status": "PASS_OFFLINE_FRESHNESS_INTEGRATION_REVIEW_290",
+      "method": "INDEPENDENT_STATIC_NO_EXECUTION"
+    }
+  },
+  "authority": {
+    "runtime_scope_confirmed": false,
+    "namespace_equality_proven": false,
+    "full_host_visibility_proven": false,
+    "temporal_visibility_proven": false,
+    "negative_pid_witness_allowed": false,
+    "lifetime_acceptance": false,
+    "policy_acceptance": false,
+    "legacy_fallback_allowed": false,
+    "device_validation": false
+  },
+  "remaining_limits": [
+    "TRUSTED_CODE_FD_AND_COOPERATIVE_CALLBACKS",
+    "PRIVILEGED_REMOUNT_FILTER_EXEC_ABA_AND_NATIVE_THREADS",
+    "GLOBAL_SCOPE_CRITICAL_ROOT_METADATA_AND_DEVICE_CADENCE_UNPROVEN",
+    "HISTORICAL_UNKNOWN_HELPER_LIFETIME_EFFECTS_NOT_RETROATTRIBUTED",
+    "NO_DEVICE_REDEPLOYMENT_OR_CAPTURE_APPROVAL_FROM_OFFLINE_TESTS"
+  ],
+  "readiness": {
+    "prepared_count_only_capability_payload": "OFFLINE_READY_WITH_EXTERNAL_FRESH_GATES",
+    "actual_diagnostic_window": false,
+    "actual_redeployment": false,
+    "Vehicle10": false,
+    "numerical_decision": "PARITY_UNDETERMINED",
+    "M2": false
+  },
+  "next_action": "FRESH_OFF_AND_SOURCE_REVALIDATION_THEN_AT_MOST_ONE_PINNED_IN_MEMORY_READ_ONLY_CAPABILITY_CHECK_NO_WINDOW_RECORDER_OR_TICKET"
+}

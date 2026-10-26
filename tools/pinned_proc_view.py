@@ -8,8 +8,10 @@ from collections import deque
 from contextlib import contextmanager, ExitStack
 import fcntl
 import hashlib
+import functools
 import os
 import platform
+import secrets
 import stat
 import sys
 import threading
@@ -53,6 +55,26 @@ def _credentials():
 
 def _now():
     return time.clock_gettime_ns(time.CLOCK_BOOTTIME)
+
+
+def _semantic(name):
+    """Record the closed semantic API, not a trace of every native syscall."""
+    def decorate(function):
+        @functools.wraps(function)
+        def call(self,*args,**kwargs):
+            view=getattr(self,'_view',self)
+            if view._audit_sink is None:return function(self,*args,**kwargs)
+            view._emit('CALL_BEGIN',{'method':name})
+            try:
+                value=function(self,*args,**kwargs)
+            except BaseException as error:
+                view._emit('CALL_FAILED',{'method':name,'error':_error(error),
+                    'partial':getattr(error,'private_partial',None)},primary=error)
+                raise
+            view._emit('CALL_RESULT',{'method':name,'value':value})
+            return value
+        return call
+    return decorate
 
 
 class AcquisitionError(RuntimeError):
@@ -116,22 +138,27 @@ class NativeLinux:
 
 
 class ProcView:
-    def __init__(self, root='/proc', *, native=None):
+    def __init__(self, root='/proc', *, native=None, audit_sink=None):
         self._fds, self._identities, self._closed = set(), {}, False
-        _require(threading.get_native_id() == os.getpid() and threading.active_count() == 1,
-                 'THREAD_PROFILE')
-        self._owner = (os.getpid(), threading.get_ident(), _credentials())
+        _require(audit_sink is None or callable(audit_sink),'STREAM_CALLBACK')
+        self._audit_sink=audit_sink
+        self._stream_failed=False;self._stream_busy=False;self._stream_errors=[]
+        self._stream_session=secrets.token_hex(16);self._stream_events=0
         self._backend = 'INJECTED_TEST_BACKEND' if native is not None else 'NATIVE_GLIBC_LP64_STATX'
-        self._native = native or NativeLinux()
         self._operations = deque(maxlen=512)
         self._operation_count = 0
         self.cleanup_errors = []
         self._root = None
-        root = os.fspath(root)
-        _require(isinstance(root, str) and root.startswith('/') and
-                 all(p not in {'', '.', '..'} for p in root.split('/')[1:]), 'ROOT_PATH')
-        _require(root == '/proc' or native is not None, 'FIXTURE_NATIVE_REQUIRED')
         try:
+            self._emit('VIEW_BEGIN',{'backend':self._backend})
+            _require(threading.get_native_id() == os.getpid() and threading.active_count() == 1,
+                     'THREAD_PROFILE')
+            self._owner = (os.getpid(), threading.get_ident(), _credentials())
+            self._native = native or NativeLinux()
+            root = os.fspath(root)
+            _require(isinstance(root, str) and root.startswith('/') and
+                     all(p not in {'', '.', '..'} for p in root.split('/')[1:]), 'ROOT_PATH')
+            _require(root == '/proc' or native is not None, 'FIXTURE_NATIVE_REQUIRED')
             # Hold the named-root parent too; subsequent validation is relative.
             current = os.open('/', _DIR)
             self._fds.add(current)
@@ -152,8 +179,10 @@ class ProcView:
             self._self = self._open(self._root, _pid(self._mapped_pid), directory=True)
             self._self_identity = self._stat_at(self._self, self._mapped_pid)
             self._status_identity = self._owner_status()
+            self._emit('VIEW_READY',{'root':self._root_identity,'owner':self._self_identity})
         except BaseException as error:
-            self.close()
+            self._emit('VIEW_FAILED',{'error':_error(error)},primary=error)
+            self.close(error)
             error.private_cleanup_errors = copy.deepcopy(self.cleanup_errors)
             raise
 
@@ -162,12 +191,12 @@ class ProcView:
             self._guard()
             return self
         except BaseException as error:
-            self.close()
+            self.close(error)
             error.private_cleanup_errors = copy.deepcopy(self.cleanup_errors)
             raise
 
     def __exit__(self, kind, error, traceback):
-        self.close()
+        self.close(error)
         if self.cleanup_errors:
             if error is None:
                 error = AcquisitionError('CLEANUP_FAILED')
@@ -203,21 +232,49 @@ class ProcView:
         else:
             self._release(fd)
 
-    def close(self):
+    def close(self,primary=None):
+        if self._closed:return
         self._closed = True
         for fd in list(self._fds):
             try:
                 self._close(fd)
             except OSError as error:
                 self.cleanup_errors.append(_error(error))
+        if not self._stream_failed:
+            self._emit('VIEW_CLOSED',{'cleanup_errors':self.cleanup_errors,
+                'remaining_fds':len(self._fds),'attempts':self._operation_count},primary=primary)
+
+    def detach_in_child(self):
+        _require(os.getpid()!=self._owner[0],'NOT_CHILD')
+        self._audit_sink=None
+        self.close()
+        _require(not self.cleanup_errors,'INHERITED_CLEANUP_FAILED')
+
+    def _emit(self,event,details,primary=None):
+        if self._audit_sink is None:return
+        try:
+            _require(not self._stream_failed and not self._stream_busy,'STREAM_FAILED')
+            self._stream_busy=True;self._stream_events+=1
+            self._audit_sink(copy.deepcopy({'schema':1,'session':self._stream_session,
+                'sequence':self._stream_events,'timestamp_ns':_now(),
+                'event':event,'details':details}))
+            _require(not self._stream_failed,'STREAM_FAILED')
+        except BaseException as error:
+            self._stream_failed=True;self._stream_errors.append(_error(error))
+            if primary is not None:
+                primary.private_stream_errors=copy.deepcopy(self._stream_errors)
+            else:raise AcquisitionError('STREAM_FAILED') from error
+        finally:self._stream_busy=False
 
     @contextmanager
     def _attempt(self, operation, field):
         value = {'operation': operation, 'field': field, 'scheme': 'DIRFD',
                  'start_ns': _now(), 'status': 'OK'}
+        primary=None
         try:
             yield value
         except BaseException as error:
+            primary=error
             value.update(status='FAILED', error=_error(error))
             raise
         finally:
@@ -225,6 +282,7 @@ class ProcView:
             self._operation_count += 1
             value['sequence'] = self._operation_count
             self._operations.append(value)
+            self._emit('ATTEMPT',value,primary=primary)
 
     def audit(self):
         """Private bounded diagnostic tail, explicitly incomplete after eviction."""
@@ -232,6 +290,8 @@ class ProcView:
         return {'operations': copy.deepcopy(list(self._operations)),
                 'dropped_operations': dropped, 'complete': dropped == 0,
                 'cleanup_errors': copy.deepcopy(self.cleanup_errors),
+                'stream_enabled':self._audit_sink is not None,'stream_failed':self._stream_failed,
+                'stream_events':self._stream_events,
                 'acquisition_backend': self._backend, 'policy_acceptance': False}
 
     def _describe(self, fd):
@@ -247,6 +307,8 @@ class ProcView:
 
     def _guard(self):
         _require(not self._closed, 'VIEW_CLOSED')
+        if self._stream_busy:self._stream_failed=True
+        _require(not self._stream_failed,'STREAM_FAILED')
         _require(not self.cleanup_errors, 'CLEANUP_FAILED')
         _require(self._owner == (os.getpid(), threading.get_ident(), _credentials()), 'OWNER_CHANGED')
         _require(threading.get_native_id() == os.getpid() and threading.active_count() == 1,
@@ -347,6 +409,7 @@ class ProcView:
                 stack.enter_context(self._managed(current))
             return self._read(current, components[-1])
 
+    @_semantic('scope')
     def scope(self):
         """Endpoint acquisition only: no temporal-visibility/operating approval."""
         begin = _now()
@@ -397,6 +460,7 @@ class ProcView:
         value['end_ns'] = _now()
         return value
 
+    @_semantic('mapping_identity')
     def mapping_identity(self):
         """Child-side record, private until carried by a separately owned pipe."""
         value = self.scope()
@@ -405,6 +469,7 @@ class ProcView:
                 'root_device': self._root_identity['device'], 'root_inode': self._root_identity['inode'],
                 'boot_sha256': value['boot_sha256'], 'mount_namespace': value['mount_namespace']}
 
+    @_semantic('compare_child_mapping')
     def compare_child_mapping(self, child):
         """Compare mapping only. Never grants origin, ownership, wait or signal rights."""
         current = self.mapping_identity()
@@ -428,6 +493,7 @@ class ProcView:
             value['mapping_matches'] = False
         return value
 
+    @_semantic('enumerate')
     def enumerate(self):
         begin = _now()
         self._guard()
@@ -447,6 +513,7 @@ class ProcView:
         self._guard()
         return Generation(self, pid)
 
+    @_semantic('probe')
     def probe(self, pid):
         _pid(pid)
         begin = _now()
@@ -493,6 +560,7 @@ class Generation:
             self._closed = True
             self._view._release(self._fd, primary)
 
+    @_semantic('identity')
     def identity(self):
         _require(not self._closed, 'GENERATION_CLOSED')
         self._view._guard()
@@ -501,6 +569,7 @@ class Generation:
         _require(value == self._identity, 'GENERATION_CHANGED')
         return dict(value)
 
+    @_semantic('read')
     def read(self, field):
         if field not in {'stat', 'status', 'cmdline', 'cgroup'}:
             raise ValueError('FIELD')
@@ -509,6 +578,7 @@ class Generation:
         self.identity()
         return raw
 
+    @_semantic('link')
     def link(self, field):
         if field not in {'exe', 'cwd'}:
             raise ValueError('FIELD')
@@ -535,6 +605,7 @@ class Generation:
         with self._view.generation(pid) as parent:
             return parent.identity()
 
+    @_semantic('metadata')
     def metadata(self):
         self._partial_metadata = {}
         try:
