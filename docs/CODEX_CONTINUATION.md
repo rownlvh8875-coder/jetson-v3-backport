@@ -1,3 +1,28 @@
+# Latest continuation — M19-C1.5 · 2026-10-26
+
+## exact24c deployment — DEFERRED_BY_USER_NOT_DEPLOYED
+
+Read docs/M19C15_24C_ACTUAL_OFF_DEPLOYMENT_20261026.md and
+artifacts/m19c15_24c_actual_off_deployment_20261026.json first.
+STATUS BLOCKED_DEVICE_UNREACHABLE: prior comma cweb terminal connection failed
+with0 frames and0 delivered shell commands. First OFF/ON cats were NOT_REACHED.
+Actual OFF/source/PRE6/41pins/N16/storage/namespace/writer are UNKNOWN/NOT_RUN.
+No actual mutation, backup/apply/rollback, ticket, capture, restart or Jetson access.
+
+User said they will connect at the vehicle later and tell this chat. DO NOT
+retry connection, deploy, request ignition transition or arm automatically.
+Wait for that user message, then repeat fresh first cat OFF/ON and every actual
+gate. Source target remains exact24c, surviving5bb PRE only; no auto-retarget.
+Power-retained genuine OFF remains required; no onroad patch.
+
+Local forward/reverse SHA/manifest integrity PASS; C05 candidate/tested bytes
+unchanged. Fresh deployment regression/actual-PRE disposable proof NOT_RUN.
+Historical C05 1313 passes remain historical, not new deployment evidence.
+No READY actual state is established. Vehicle10NO; parityUNDETERMINED; M2NO.
+Result commit: git log -1 --format=%H -- artifacts/m19c15_24c_actual_off_deployment_20261026.json
+
+---
+
 # Latest continuation — 2026-10-26
 
 ## M19-C0.5 exact24c HUD/host review — PASS_OFFLINE_CANDIDATE

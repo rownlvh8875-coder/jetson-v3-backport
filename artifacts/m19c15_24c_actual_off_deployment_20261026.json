@@ -1,0 +1,181 @@
+{
+  "schema": 1,
+  "stage": "M19-C1.5",
+  "date": "2026-10-26",
+  "created_utc": "2026-10-26T03:48:50.153619+00:00",
+  "status": "BLOCKED_DEVICE_UNREACHABLE",
+  "execution_state": "DEFERRED_BY_USER_NOT_DEPLOYED",
+  "final_source_state": "BLOCKED",
+  "repository": "https://github.com/rownlvh8875-coder/jetson-v3-backport",
+  "development_branch": "feature/jetlink-multimodel-carrot",
+  "start_development_head": "4f244f44139d8cd527dacfe8a94e1e0692a358cc",
+  "start_working_tree": "CLEAN",
+  "start_local_remote_equal": true,
+  "result_commit_resolution": "git log -1 --format=%H -- artifacts/m19c15_24c_actual_off_deployment_20261026.json",
+  "authorized_target": "24c1ba5e4b3428f56fa0e402f5a10097e2e94c32",
+  "expected_profile": "RECORDER_24C_HUD_HOST_V1",
+  "user_timing": {
+    "status": "DEFERRED_BY_USER",
+    "instruction": "사용자가 나중에 차량에 연결한 뒤 이 채팅에 알리겠다고 함.",
+    "automatically_resume": false,
+    "connection_retry_after_deferral": false
+  },
+  "actual": {
+    "branch": null,
+    "HEAD": null,
+    "IsOffroad": null,
+    "IsOnroad": null,
+    "deviceState_started": null,
+    "ignitionLine": null,
+    "ignitionCan": null,
+    "source_identity_status": "NOT_OBSERVED",
+    "writer_count": null
+  },
+  "first_gate": {
+    "status": "NOT_REACHED",
+    "transport_result": "BLOCKED_ACCESS_ERROR",
+    "mechanism": "previously successful user-provided comma cweb terminal endpoint; fresh owned session requested",
+    "received_frames": 0,
+    "shell_commands_delivered": 0,
+    "intended_first_commands": [
+      "cat /data/params/d/IsOffroad",
+      "cat /data/params/d/IsOnroad"
+    ],
+    "actual_values": null,
+    "genuine_OFF": "NOT_RUN",
+    "connector_inventory": "Remote Desktop Commander devices offline; existing direct terminal fallback also failed",
+    "receipt_sha256": "972741aeffe7b16324b19f85ca6fdcefe1b26506a7db6af59309439fe4c8e20b"
+  },
+  "pre": {
+    "pure24c_model": "NOT_RUN",
+    "surviving5bb_package": "NOT_RUN",
+    "six_hashes": "NOT_RUN",
+    "footer": "NOT_RUN",
+    "overlay_attestation": "NOT_RUN",
+    "ticket_namespace": "UNKNOWN_NOT_READ",
+    "writer": "UNKNOWN_NOT_READ"
+  },
+  "source_contract": {
+    "source_pin_count": 41,
+    "source_pins": "NOT_RUN",
+    "N16_model": "NOT_RUN",
+    "N16_spec": "NOT_RUN",
+    "infer_API": "NOT_RUN",
+    "expected_manifest": "artifacts/m19c05_24c_surviving5bb_deployment_manifest_20261026.json"
+  },
+  "migration": {
+    "forward_sha256": "28e68ced23a9ca9f0bea33c430346801272ae17532a73ffacf7c33ed5099162d",
+    "reverse_sha256": "643eaa68f5c579d8874032817279a59c0754b6c98aa694fcc76949d569489d40",
+    "local_forward_SHA": "PASS",
+    "local_reverse_SHA": "PASS",
+    "disposable_roundtrip": "NOT_RUN_DEFERRED_BEFORE_ACTUAL_PRE",
+    "backup": "NOT_RUN",
+    "actual_apply": "NOT_RUN",
+    "rollback": "NOT_RUN",
+    "AFTER_six": "NOT_RUN",
+    "footer": "NOT_RUN",
+    "wrapper": "NOT_RUN"
+  },
+  "dataset_contract": {
+    "fields": "FOUR_INPUT_UNCHANGED_OFFLINE_CANDIDATE",
+    "sufficiency": "FOUR_INPUT_SUFFICIENT_HISTORICAL_C05",
+    "actual_verification": "NOT_RUN"
+  },
+  "recorder": {
+    "ticket": "NOT_CREATED",
+    "activation": "NOT_RUN",
+    "writer_started_by_workflow": false,
+    "frames_written_by_workflow": 0,
+    "dataset_created_by_workflow": "NONE",
+    "actual_writer_count": null,
+    "default_OFF": "NOT_RUN_ACTUAL_UNREACHABLE"
+  },
+  "storage": {
+    "root": "/data/v3_input_capture",
+    "state": "UNKNOWN_NOT_READ",
+    "mutation": "NONE"
+  },
+  "post": {
+    "attestation": "NOT_RUN",
+    "operating_preservation": "NOT_RUN_UNREACHABLE",
+    "updater_drift": "UNKNOWN_NOT_OBSERVED",
+    "source_mutation_by_workflow": false,
+    "index_mutation_by_workflow": false
+  },
+  "restart": "NOT_RUN_BY_SCOPE",
+  "capture": "NOT_RUN_BY_SCOPE",
+  "Jetson_access": "NO",
+  "Jetson_mutation": "NONE",
+  "Params_mutation": "NONE",
+  "updater_control": "NONE",
+  "vehicle_transition_requested": false,
+  "actual_mutations": "NONE",
+  "tests": {
+    "fresh_CPU_POSIX_regression": "NOT_RUN_DEFERRED_BEFORE_FIRST_ACTUAL_GATE",
+    "fresh_pass_count": 0,
+    "fresh_fail_count": 0,
+    "fresh_skip_count": 0,
+    "counts_mean_no_cases_executed": true,
+    "previous_authoritative": {
+      "reference": "artifacts/m19c05_24c_hud_host_compatibility_20261026.json",
+      "PASS": 1313,
+      "FAIL": 0,
+      "SKIP": 0,
+      "historical_only": true,
+      "recounted_as_fresh": false
+    },
+    "local_integrity_checks": {
+      "patch_SHA256": true,
+      "manifest41pins_and6PRE6AFTER": true,
+      "frozen_C05_tested_files_unchanged": true
+    },
+    "diagnostics4_root_collection_native_FFmpeg": "Historical separate blockers retained; not freshly executed"
+  },
+  "preservation": {
+    "required_historical_reads_unchanged": true,
+    "C05_candidate_and_tests_unchanged": true,
+    "private_first_gate_receipt_preserved": true,
+    "continuation": "prepend only",
+    "protected_refs": "unchanged; final dev Git verification follows"
+  },
+  "read_first": [
+    {
+      "path": "docs/CODEX_CONTINUATION.md",
+      "sha256": "fe3dc558f7dacc948adf3158bb41c3bef653007fd5ebfa55e6cd7610cb6b30fa"
+    },
+    {
+      "path": "docs/M19C05_24C_HUD_HOST_COMPATIBILITY_20261026.md",
+      "sha256": "0956060a00e273b2ae8656d7c741b22c7393151f3451fc96118e830b019e1654"
+    },
+    {
+      "path": "artifacts/m19c05_24c_hud_host_compatibility_20261026.json",
+      "sha256": "715aa8db717544bfb73d0813274c917c0a23d39061c762ba64b975b3422f80db"
+    },
+    {
+      "path": "artifacts/m19c05_24c_surviving5bb_deployment_manifest_20261026.json",
+      "sha256": "65f9eadca9511292b29a1e4b38e9906a1a924233025d95033d018f687cbc17ba"
+    },
+    {
+      "path": "docs/M19C14_5BB_ACTUAL_OFF_DEPLOYMENT_20261024.md",
+      "sha256": "038739b12c88f390c7f456a7a7aee52fb6aad0cfd3f2119f88988e9ece85713a"
+    },
+    {
+      "path": "artifacts/m19c14_5bb_actual_off_deployment_20261024.json",
+      "sha256": "e712b39b73cdf6da3cb0290e0cdc21e528f32d8d4e8afab9dd2e22af0b687255"
+    },
+    {
+      "path": "docs/M19C21_5BB_PRIVATE_CAPTURE_STORAGE_20261024.md",
+      "sha256": "47efd4490de39a1589d974e939f6435fb0b8206794ec5df0ef6ad6bb77d436a5"
+    },
+    {
+      "path": "artifacts/m19c21_5bb_private_capture_storage_20261024.json",
+      "sha256": "0087f638f6dec07c6dd319c17d63714378aed1d2b7b53272025535ec2848e3ae"
+    }
+  ],
+  "request_sha256": "a1aed307ed1b7cc271f18ff8c6d287e33490b5b23045b3b56991cf76bef05318",
+  "privacy": "No device address, private session ID, raw terminal data, credentials, route/boot/process identity in public evidence.",
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "M2_readiness": "NO",
+  "ready_for_Vehicle10": "NO",
+  "next_action": "Wait for the user to report comma connected with genuine OFF and power retained; then start again with fresh first cat OFF/ON reads. Do not retry automatically."
+}
