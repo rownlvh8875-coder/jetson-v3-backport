@@ -1,3 +1,35 @@
+# Latest continuation — M19-C1.5 rollback · 2026-10-26
+
+## Exact24c apply reversed — ROLLED_BACK (not installed)
+
+Read docs/M19C15_24C_ACTUAL_OFF_DEPLOYMENT_ROLLBACK_20261026.md and
+artifacts/m19c15_24c_actual_off_deployment_rollback_20261026.json first.
+User supplied comma-only power; freshOFF1/0,12sOFF,N16/PRE6/41pins/API passed.
+Current49entries/2011files overlay was freshly attested; storage existing validempty
+0700 UID/GID1000 ext4/data preserved. Disposable18 and fresh1313CPU/POSIX PASS;
+independent helper76 separate. One guarded forward applied and6AFTER/footer/wrapper
+passed. POST9/10: only exactprocessset failed—28old identities unchanged,1newnmcli
+observed (caller/arguments/purpose/duration NOT established). No gate relaxation.
+
+Guard applied exact reverse once after ownapply/head/OFF/index/boot/known6AFTER
+checks twice. PASS_EXACT_PRE_RESTORED. Separate readonly finalguard passed6PRE,
+41pins,exact24c,zerofooter,index/boot/storage,N16/API,fresh12+secondOFF.
+FINAL: pure24c+surviving5bb package, NO recorderfooter.24C recorder NOTINSTALLED.
+Operating preservation for deployment FAIL_PROCESS_MEMBERSHIP_ADDITION; source/
+index/storage restoration PASS. No updaterdrift, no auto-reapply/reset/clean.
+
+Private3source backups retained; no capture-root changes. TicketNOT_CREATED,
+activation/captureNOT_RUN,writer0,frames0,datasetNONE. No restart/reboot/Params/
+updater control/Jetson access/mutation/V3/P3/model switch. Vehicle10NO; parity
+UNDETERMINED; M2NO. Do not arm using stale5bb/a559/24c READY prose below.
+
+Next: offline review of addednmcli process observation/preservation policy before
+a new user-coordinated freshOFF deployment attempt. Do not weaken identity gate
+or automatically retry. Historical failed/deferred receipts remain immutable.
+Result commit: git log -1 --format=%H -- artifacts/m19c15_24c_actual_off_deployment_rollback_20261026.json
+
+---
+
 # Latest continuation — M19-C1.5 recheck · 2026-10-26
 
 ## Connected, first gate rejected — BLOCKED_NOT_OFFROAD
