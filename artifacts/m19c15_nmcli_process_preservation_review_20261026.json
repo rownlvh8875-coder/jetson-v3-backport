@@ -1,0 +1,301 @@
+{
+  "collector_review": {
+    "argv_used_for_selection_but_not_saved": true,
+    "core_role_only": false,
+    "embedded_collector_sha256": "3b8f77a388caeb380e78980ba13c02c8e24e8ce4017326f01fbbb7cbf3a90904",
+    "function": "_processes",
+    "matches_public_function_ast": true,
+    "process_snapshot_atomic": false,
+    "selection": "cwd/exe/maps/fd inside source root OR openpilot/manager argv heuristic; own observer lineage excluded",
+    "strict_gate_changed": false,
+    "strict_transaction_gate": "checks['PROCESS_IDENTITIES']=ids(post)==EXPECTED['processes']",
+    "subset_counterexample": "All PRE rows retained still permits an additional unknown process, so it cannot establish exact-set equality."
+  },
+  "date": "2026-10-26",
+  "decision": {
+    "automatic_redeploy": false,
+    "caller_attribution": "UNRESOLVED_INSUFFICIENT_HISTORICAL_FIELDS",
+    "current_gate": "RETAIN_EXACT_PROCESS_SET_EQUALITY",
+    "deploy_helper_policy_change": "NONE",
+    "failure_mechanism": "EXACT_PROCESS_SET_MEMBERSHIP_ADDITION_CONFIRMED",
+    "fresh_future_observation_can_prove_historical_pid_caller": false,
+    "ignore_transients_or_retry_until_equal": "NOT_APPROVED_NOT_IMPLEMENTED",
+    "next_action": "BOUNDED_FRESH_OFF_READ_ONLY_PROCESS_LINEAGE_DIAGNOSIS_BEFORE_ANY_REDEPLOYMENT",
+    "nmcli_allowlist": "NOT_APPROVED_NOT_IMPLEMENTED"
+  },
+  "development_gate": {
+    "branch": "feature/jetlink-multimodel-carrot",
+    "expected_public_changes": [
+      "docs/M19C15_NMCLI_PROCESS_PRESERVATION_REVIEW_20261026.md",
+      "artifacts/m19c15_nmcli_process_preservation_review_20261026.json",
+      "docs/CODEX_CONTINUATION.md"
+    ],
+    "protected_refs_before": {
+      "feature/cinque-v3-jetson": "26c9c06a5e51ff0e8d3a1e8575eece548e87f3b5",
+      "main": "2519ad0bdbf6e796fa590063fc90d4d6461b6b8d"
+    },
+    "result_commit_lookup": "git log -1 --format=%H -- artifacts/m19c15_nmcli_process_preservation_review_20261026.json",
+    "start_head": "3d5b7bdedfa271a4752d3b713fa5c7822d3dad2b",
+    "start_local_upstream_remote": "EQUAL",
+    "start_worktree": "CLEAN"
+  },
+  "development_start_head": "3d5b7bdedfa271a4752d3b713fa5c7822d3dad2b",
+  "exact_source_audit": {
+    "background_network_refresh": {
+      "browser_request_required_for_background_loop": false,
+      "discovery_arguments": [
+        "--rescan auto",
+        "ifname wlan0 --rescan no when direct_ap_active"
+      ],
+      "forced_network_endpoint_can_refresh": true,
+      "get_wifi_ip_address_timeout_seconds": 2,
+      "get_wifi_networks_timeout_seconds": 3,
+      "historical_added_pid_attributed_to_this_path": false,
+      "no_scan_claim_supported": false,
+      "ordinary_network_endpoint_uses_cache": true,
+      "registered": true,
+      "sleep_after_refresh_seconds": 15.0
+    },
+    "enumeration_complete_for_system_native_and_external_callers": false,
+    "evidence_lines": {
+      "openpilot/selfdrive/carrot/server/features/system.py": [
+        {
+          "line": 137,
+          "text": "force = request.query.get(\"force\") == \"1\""
+        },
+        {
+          "line": 240,
+          "text": "async def api_device_network(request: web.Request) -> web.Response:"
+        },
+        {
+          "line": 242,
+          "text": "force = request.query.get(\"force\") == \"1\""
+        },
+        {
+          "line": 243,
+          "text": "network = await asyncio.to_thread(refresh_device_network) if force else get_device_network_snapshot()"
+        },
+        {
+          "line": 344,
+          "text": "async def device_network_context(app: web.Application):"
+        },
+        {
+          "line": 348,
+          "text": "await asyncio.to_thread(refresh_device_network)"
+        },
+        {
+          "line": 353,
+          "text": "await asyncio.sleep(DEVICE_NETWORK_REFRESH_INTERVAL_SEC)"
+        },
+        {
+          "line": 369,
+          "text": "app.cleanup_ctx.append(device_network_context)"
+        }
+      ],
+      "openpilot/selfdrive/carrot/server/services/device_info.py": [
+        {
+          "line": 220,
+          "text": "DEVICE_NETWORK_REFRESH_INTERVAL_SEC = 15.0"
+        },
+        {
+          "line": 268,
+          "text": "def get_wifi_networks() -> List[Dict[str, Any]]:"
+        },
+        {
+          "line": 273,
+          "text": "discovery = [\"ifname\", \"wlan0\", \"--rescan\", \"no\"] if direct_ap_active() else [\"--rescan\", \"auto\"]"
+        },
+        {
+          "line": 276,
+          "text": "[\"nmcli\", \"-t\", \"-f\", \"ACTIVE,SSID,SECURITY,SIGNAL\", \"dev\", \"wifi\", \"list\", *discovery],"
+        },
+        {
+          "line": 316,
+          "text": "def get_wifi_ip_address() -> str:"
+        },
+        {
+          "line": 319,
+          "text": "[\"nmcli\", \"-t\", \"-f\", \"IP4.ADDRESS\", \"dev\", \"show\", \"wlan0\"],"
+        },
+        {
+          "line": 365,
+          "text": "def refresh_device_network() -> Dict[str, Any]:"
+        }
+      ],
+      "tools/jetlink/wifi_publisher.py": [
+        {
+          "line": 18,
+          "text": "def nm(*args):"
+        },
+        {
+          "line": 50,
+          "text": "fields = nm('--show-secrets', '-g',"
+        },
+        {
+          "line": 115,
+          "text": "next_ap = now + 30"
+        },
+        {
+          "line": 119,
+          "text": "refresh = now + 30"
+        }
+      ]
+    },
+    "new_recorder_source_profile": "NOT_CREATED",
+    "other_call_classes": [
+      "comma daemon WifiPublisher -> wifi_publisher query and --show-secrets; AP ensure separately",
+      "host-side wifi_apply configuration mutation: source example only, not attributed to comma",
+      "wifi_direct cached list",
+      "setup_mobile device managed change: installation source example, not observed execution"
+    ],
+    "source_pins_for_review_only": {
+      "openpilot/selfdrive/carrot/carrot_server.py": "2d5af0e46461e8b0d0e0804c6be48fe69e6c6ce29ca296938b0f4231d77ab96e",
+      "openpilot/selfdrive/carrot/server/app.py": "3e2a640c5ac08fc3c08f4a99eadfa7b1d09906d891a8303858bb97dd08624cd6",
+      "openpilot/selfdrive/carrot/server/features/__init__.py": "b7148d1d4575151c8fe8732d4413b902d832eefa942a9b21874c4310eac0b595",
+      "openpilot/selfdrive/carrot/server/features/system.py": "e9ae276eb58bee43cb434437267fdc08b1cf43d1ea8d2b635ebc6674a7972053",
+      "openpilot/selfdrive/carrot/server/services/device_info.py": "b36924c612417778aeaecd477572bb8b280c9992215b6bf5e044843587ec2b87",
+      "openpilot/selfdrive/modeld/jetlink/daemon.py": "f7038e4f417fdc093c4bd086c0d8184d6e8f2b235c11b519215a7aab4cad0670",
+      "openpilot/system/manager/process.py": "fa18404da91b45ad67ff990ac3a70a7488eca5987a26f7c61e66501dff704752",
+      "openpilot/system/manager/process_config.py": "2c055a88dcc9d09a5d1cda7364f4785697172e0a9169d06fd89700ec9ec7ac92",
+      "tools/jetlink/setup_mobile.sh": "0fff2e2582e8493e71e02ce796f958b26640d5cf7572bf72d5595bb4912721fe",
+      "tools/jetlink/wifi_apply.py": "574e716ac2ffb9551de420d2481a03a4b7b813585f430903530096d1db6a7d56",
+      "tools/jetlink/wifi_direct.py": "495e7228d61786b8fa6fc2f2eec1b68887cc6e569811777b72996542f8aa465b",
+      "tools/jetlink/wifi_protocol.py": "6ffa68fafe9e83599487b35ff3b17ef53e1acbd938ea9ff746737c91668a77c3",
+      "tools/jetlink/wifi_publisher.py": "9a6c0f148cbafaf7dcc8456f2fed2a62b47559871ddc7fd62c4727b585e3cab2"
+    },
+    "sources_executed_or_imported": false
+  },
+  "future_diagnostic_proposal_only": {
+    "collect_private": [
+      "boot binding and monotonic sample brackets",
+      "pid/start_ticks and ppid/parent_start_ticks",
+      "exe/cwd/uid/gid and parent identity",
+      "cgroup/unit if available",
+      "argv digest and non-sensitive exact command form only",
+      "source/role bindings and collection errors"
+    ],
+    "coverage": "best effort; short subprocesses may be missed; no event completeness guarantee",
+    "diagnostic_result_authorizes_gate_change_or_deployment": false,
+    "duration_seconds": 60,
+    "on_miss": "INCONCLUSIVE; do not trigger a subprocess or adjust timing until a passing snapshot appears.",
+    "privacy": "Never retain passwords, NM output, SSIDs, profile identifiers or arbitrary full process environments. Hash/redact unknown argv; classification remains unresolved.",
+    "prohibited": [
+      "nmcli execution",
+      "network viewer force refresh",
+      "wifi rescan",
+      "setter or secret query",
+      "stop/kill/restart",
+      "source or Params write",
+      "ticket/capture",
+      "audit/eBPF setup",
+      "Jetson access",
+      "automatic reapply"
+    ],
+    "race_handling": "Read process start identity before/after fields; unstable or exited parent is UNRESOLVED, never allowed by default.",
+    "sampling_interval_ms": 100
+  },
+  "historical_receipt_reanalysis": {
+    "added_collection_errors": [],
+    "added_cwd_class": "SOURCE_ROOT",
+    "added_executable_basename": "nmcli",
+    "added_rows": 1,
+    "caller": "UNDETERMINED",
+    "caused_by_deployment": "UNDETERMINED",
+    "changed_rows": 0,
+    "deployment_status_retained": "ROLLED_BACK",
+    "duration": "UNDETERMINED",
+    "failed_check": "PROCESS_IDENTITIES",
+    "harmless_query_proven": false,
+    "post_checks_fail": 1,
+    "post_checks_pass": 9,
+    "post_rows": 29,
+    "pre_rows": 28,
+    "purpose": "UNDETERMINED",
+    "removed_rows": 0,
+    "retained_unchanged_rows": 28,
+    "row_fields": [
+      "pid",
+      "start_ticks",
+      "cwd",
+      "exe",
+      "resolution_env",
+      "errors"
+    ],
+    "separate_final_rows_equal_pre": true,
+    "unavailable_attribution": [
+      "argv",
+      "ppid",
+      "parent_start_ticks",
+      "uid_gid",
+      "cgroup_or_service",
+      "observed_launch_exit_times"
+    ],
+    "whole_interval_network_unchanged_proven": false,
+    "whole_interval_process_continuity_proven": false
+  },
+  "mode": "OFFLINE_PRIVATE_RECEIPT_REANALYSIS_AND_EXACT_SOURCE_AUDIT",
+  "preservation": {
+    "actual_comma_access": "NO",
+    "actual_comma_mutation": "NONE",
+    "historical_evidence": "IMMUTABLE",
+    "jetson_access": "NO",
+    "jetson_mutation": "NONE",
+    "process_gate_change": "NONE",
+    "source_patch_change": "NONE",
+    "storage_ticket_activation_capture_restart": "NOT_RUN"
+  },
+  "readiness": {
+    "actual_current_state": "NOT_FRESHLY_OBSERVED",
+    "last_observed_source_state": "ROLLED_BACK_PURE24C_SURVIVING5BB_PACKAGE_FOOTER_ABSENT",
+    "m2": "NO",
+    "numerical_decision": "PARITY_UNDETERMINED",
+    "ready_for_automatic_redeployment": false,
+    "ready_for_vehicle10": false,
+    "recorder_candidate": "UNCHANGED_C05_CANDIDATE"
+  },
+  "schema": 1,
+  "stage": "M19-C1.5 OFFLINE NMCLI PROCESS PRESERVATION REVIEW",
+  "status": "PASS_OFFLINE_REVIEW_ATTRIBUTION_UNRESOLVED",
+  "target_source_head": "24c1ba5e4b3428f56fa0e402f5a10097e2e94c32",
+  "verification": {
+    "checks": {
+      "added_row_has_no_collection_errors": true,
+      "added_source_root_cwd": true,
+      "all_28_rows_retained_unchanged": true,
+      "all_historical_bytes_unchanged": true,
+      "collector_does_not_retain_cmdline_or_parent_fields": true,
+      "collector_function_matches_public_collector_ast": true,
+      "collector_selects_by_source_cwd_without_core_role_requirement": true,
+      "fresh_pre_matches_frozen_expected_rows": true,
+      "historical_schema_has_no_argv_or_ppid": true,
+      "historical_status_is_rolled_back": true,
+      "network_background_refresh_and_force_endpoint": true,
+      "network_worker_interval_15_seconds": true,
+      "network_worker_registered_as_background_context": true,
+      "one_added_nmcli": true,
+      "only_failed_post_check_is_process_identity": true,
+      "pre_count_28_post_count_29": true,
+      "publisher_has_secret_query_same_executable": true,
+      "separate_final_process_rows_match_pre": true,
+      "strict_equality_gate_reproduces_failure": true,
+      "subset_equality_is_insufficient_counterexample": true,
+      "wifi_apply_has_mutating_nmcli_path": true,
+      "wifi_list_can_select_auto_or_no_rescan": true
+    },
+    "fresh_cpu_regression": "NOT_RUN_DOC_AND_EVIDENCE_REVIEW_ONLY",
+    "historical_cpu_baseline": {
+      "fail": 0,
+      "pass": 1313,
+      "recounted": false,
+      "skip": 0
+    },
+    "historical_files_byte_preserved": 480,
+    "kind": "OFFLINE_EVIDENCE_ASSERTIONS_NOT_REGRESSION_CASES",
+    "offline_reanalysis_helper_sha256": "d54215223d81e05058f1c232574c12f433aa6049975c5a897fc6c3e534cb4294",
+    "private_receipt_commitments": {
+      "pre-private.json": "0395d6dc607eb0920aa78e67d89f506bceeb97966498f04e1dd44c3e54a0cb41",
+      "restore-guard-private.json": "70a8af78e7c468fcb780b6fcc4412853747d287b8f26370af1f395f7d06acee4",
+      "transaction-private.json": "72ca231d5e4b8bb94dcd7c8441f2efb9abe05ac2a00f6b01850f8ea4a84cedb1"
+    }
+  }
+}

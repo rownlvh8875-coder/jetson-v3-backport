@@ -1,3 +1,36 @@
+# Latest continuation — M19-C1.5 offline process review · 2026-10-26
+
+## nmcli membership addition confirmed; caller remains unresolved
+
+Read docs/M19C15_NMCLI_PROCESS_PRESERVATION_REVIEW_20261026.md and
+artifacts/m19c15_nmcli_process_preservation_review_20261026.json first.
+PASS_OFFLINE_REVIEW_ATTRIBUTION_UNRESOLVED. Replayed retained receipt:28PRE,
+29POST,all28 original rows unchanged,1additional nmcli; strict equality FAIL.
+Final28-row restoration snapshot does not retroactively establish POST PASS.
+Collector retains6fields, no argv/PPID/parent identity; historical attribution
+cannot be recovered offline. Exact24c has a registered background network
+refresh with15s sleep after refresh and nmcli queries, but other query/secret/
+configuration paths exist. Do not assume the observed PID came from that worker.
+The wifi-list auto-rescan branch does not prove guaranteed scan-free behavior.
+
+No comparator/allowlist/source/patch change, no automatic retry. Current exact
+process-set gate remains intact. No comma/Jetson access this stage; actual current
+state NOT_FRESHLY_OBSERVED. Last observed:ROLLED_BACK,pure24c+surviving5bb package,
+footerABSENT,storage validempty. Recorder24C NOTINSTALLED at that observation.
+No ticket/activation/capture/restart. Vehicle10NO;parityUNDETERMINED;M2NO.
+
+Fresh22 offline evidence assertions PASS; not regression cases. Historical1313
+not recounted. Prior480 evidence/helper/candidate/collector files byte-preserved.
+Next: bounded freshOFF read-only lineage diagnosis (private argv digest/safe
+command form,parent/start identity,race checks), not deployment. Future observations
+cannot attribute historical PID. No nmcli execution/force-refresh/rescan/secrets,
+process suppression,restart,source/Params write,ticket,Jetson or automatic reapply.
+Proposal60s/100ms sampling may miss short processes:INCONCLUSIVE on missing evidence.
+No diagnostic result alone authorizes a weaker gate or redeployment.
+Result commit: git log -1 --format=%H -- artifacts/m19c15_nmcli_process_preservation_review_20261026.json
+
+---
+
 # Latest continuation — M19-C1.5 rollback · 2026-10-26
 
 ## Exact24c apply reversed — ROLLED_BACK (not installed)
