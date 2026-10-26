@@ -1,3 +1,38 @@
+# Latest continuation — M19-C1.5B fresh read-only diagnosis · 2026-10-26
+
+## PASS_READ_ONLY_DIAGNOSIS_WITH_LIMITS — current nmcli observed; no deployment
+
+Read docs/M19C15B_READ_ONLY_PROCESS_DIAGNOSIS_20261026.md and
+artifacts/m19c15b_read_only_process_diagnosis_20261026.json first.
+User poweredcomma/providedcurrentaddress after the separately proposed read-only
+nextstep. Firstcommands twoOFF/ONcats=1/0; fresh exact24c/PRE6/41pins/footer0/index/
+namespace identity and separate12sOFF passed. One60.4816s/proc collection with
+simultaneous60.0538sreceive-only OFF passed10collectionchecks.117device/581panda/
+117managerfresh; startedfalse/ignitionfalsefalse. Source/index/storage preserved;
+pure24c+surviving5bbpackage,footerABSENT,recorder24CNOTINSTALLED at finalobservation.
+
+Onecurrentnmcligeneration observed2scans: /usr/bin/nmcli WiFi-list --rescan auto,
+UID/GID1000,onegeneration-verifiedcurrentcarrot_serverparent,samecgroup; later
+parentread unresolvedduringexit. Exit confirmed. This is currentparent/command
+evidence, not exactcallsite/recurrence/no-effects or historicalPID attribution.
+Requested.25s cadence NOTachieved:median1.5627/max2.5789s,38scans/550generations.
+Namespace metadataENOENT; no completekernel/boot-clock lifetime bound. Conditional
+6.2628spresencecandidate NOTaccepted asfull-lifetimeproof: no explicitpreceding
+absenceprobe/PIDlist retained. RootNMexe/cwd metadata inaccessible. Safehelper
+classification UNKNOWN_REQUIRED_PROOF_INCOMPLETE; originalA5 remainsinsufficient.
+
+No policy/checker/source/patch repair, no install, no storageprobe/mkdir; this
+diagnostic issued no Params/service/updater/USB configuration commands, no restart,
+no ticket/activation/capture,
+no Jetsonaccess/mutation. writer0/frames0/datasetNONE. Vehicle10NO;parityUNDETERMINED;
+M2NO. No autosampling retry or autoapply.30freshdiagnostic unit/staticchecks PASS,
+separatefromhistorical1313(notrerun/recounted);2independentbefore/afterreviews.
+Next: offline lightweight-sampler review for achievedcadence,explicitabsence/exit,
+and criticalmetadata gaps; no automaticdeployment/capture fromthiscollectionPASS.
+Result commit: git log -1 --format=%H -- artifacts/m19c15b_read_only_process_diagnosis_20261026.json
+
+---
+
 # Latest continuation — M19-C1.5A ordered workflow · 2026-10-26
 
 ## BLOCKED_PHASE_A_INSUFFICIENT_EVIDENCE — B through E not run

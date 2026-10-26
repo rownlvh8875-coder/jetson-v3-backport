@@ -1,0 +1,293 @@
+{
+  "branch": "carrot-nav",
+  "collection_checks": {
+    "BOOT_STABLE": true,
+    "FOOTER_ABSENT": true,
+    "GENUINE_OFF_60S": true,
+    "HEAD_BRANCH_STABLE": true,
+    "INDEX_STABLE": true,
+    "OFF_BOUNDED_FRESH_COVERAGE": true,
+    "SAMPLER_60S": true,
+    "SIX_PRE_STABLE": true,
+    "SOURCE_PINS_41_STABLE": true,
+    "STORAGE_EMPTY_STABLE": true
+  },
+  "collection_status": "PASS_READ_ONLY_DIAGNOSTIC_COLLECTION",
+  "current_process_observation": "SPONTANEOUS_NMCLI_OBSERVED",
+  "date": "2026-10-26",
+  "decision": {
+    "M2": "NO",
+    "Vehicle10_ready": false,
+    "capture": "NOT_RUN",
+    "deployment": "NOT_RUN",
+    "next_action": "OFFLINE_LIGHTWEIGHT_SAMPLER_REVIEW_FOR_ACHIEVED_CADENCE_EXPLICIT_ABSENCE_EXIT_AND_CRITICAL_METADATA_COVERAGE",
+    "numerical_decision": "PARITY_UNDETERMINED",
+    "policy_gate": "NOT_PASSED"
+  },
+  "development": {
+    "branch": "feature/jetlink-multimodel-carrot",
+    "protected_refs_before": {
+      "feature/cinque-v3-jetson": "26c9c06a5e51ff0e8d3a1e8575eece548e87f3b5",
+      "main": "2519ad0bdbf6e796fa590063fc90d4d6461b6b8d"
+    },
+    "result_commit_lookup": "git log -1 --format=%H -- artifacts/m19c15b_read_only_process_diagnosis_20261026.json",
+    "start_head": "e5c4cbb5c2019c8c109800ee85e9406b75ae2418",
+    "start_local_upstream_remote": "EQUAL",
+    "start_worktree": "CLEAN"
+  },
+  "evidence_sha256": {
+    "diagnostic-private.json": "5bdc9f9165ba671edd119ed4b72722e63d448890dd6f94e25bffbd034f2f0c78",
+    "dispatch-source-commitments.json": "4bbafd7f651ec3316df61bf7840263d367e91dd106632ac2fd421dcce8977e58",
+    "first-flags-private.json": "e3f4b942e4f2a0d5554663994fe3eac68a08829e97891bc527e4aeef62722e77",
+    "genuine-off-private.json": "987fd14db0f7656459a71cacf2cabb288b2c9dadb522dce3fd6fd3891adf4491",
+    "identity-private.json": "05d40c99ff74f830e9d9e549766b36acf0d48f421c1c353987ed7aba18351495",
+    "sampler-offline-checks.json": "aa9a2cac394c5177b290dbfe5948e4e4bf4b6280bd481b8f9e6858e2396ba63a"
+  },
+  "flags": {
+    "IsOffroad": "1",
+    "IsOnroad": "0"
+  },
+  "independent_evidence_reviews": {
+    "diagnosis-preservation-review": {
+      "json_sha256": "d5d33225439bb5d4335d9a8bc3f0d75e71f3f11870a2064b635485a35e98edf3",
+      "markdown_sha256": "6596a5cf0d52d9d790ba1928bd662b9a516be62a4d9a7fa9b7354b24f74f7fb6",
+      "policy_acceptance": "NOT_ESTABLISHED",
+      "scope": "INDEPENDENT_OFFLINE_RECEIPT_REPLAY_AND_PRESERVATION_PRIVACY_LIMITS"
+    },
+    "process-evidence-review": {
+      "json_sha256": "537261934911ab80a6defa2f5a14324ef57592a942c1d9ba853919658af31822",
+      "markdown_sha256": "dcdfe3bf66d4afe1f629ea84775985f80cc1930a29c547c7fada240c8d5a3f42",
+      "policy_acceptance": "NOT_ESTABLISHED",
+      "scope": "INDEPENDENT_OFFLINE_RECEIPT_REPLAY_AND_PRESERVATION_PRIVACY_LIMITS"
+    }
+  },
+  "observed_nmcli": [
+    {
+      "command_form": "WIFI_LIST_AUTO_RESCAN_POSSIBLE",
+      "conditional_candidate_accepted_as_full_lifetime": false,
+      "conditional_presence_candidate_seconds": 6.262796033,
+      "current_verified_parent_roles": [
+        "carrot_server"
+      ],
+      "direct_preceding_absence_probe_or_enumerated_pid_list_retained": false,
+      "executable": "/usr/bin/nmcli",
+      "exit_confirmed": true,
+      "lifetime_proven": false,
+      "lifetime_upper_seconds": null,
+      "metadata_error_fields": [
+        "parent_binding",
+        "time_namespace"
+      ],
+      "metadata_incomplete": true,
+      "no_scan_or_no_effects_proven": false,
+      "non_sensitive_exact_args": [
+        "-t",
+        "-f",
+        "ACTIVE,SSID,SECURITY,SIGNAL",
+        "dev",
+        "wifi",
+        "list",
+        "--rescan",
+        "auto"
+      ],
+      "observations": 2,
+      "observer_relation": "UNRESOLVED",
+      "other_generations": 0,
+      "parent_binding_claim": "CURRENT_PARENT_GENERATION_VERIFIED_IN_ONE_OBSERVATION_NOT_FULL_CALLSITE_TRACE",
+      "prior_target_pid_initial_errors": 0,
+      "safe_helper_gate_classification": "UNKNOWN_REQUIRED_PROOF_INCOMPLETE",
+      "same_cgroup_as_verified_parent": true,
+      "stable_initial_executable_cmdline": true,
+      "uid_gid": [
+        1000,
+        1000
+      ],
+      "unresolved_parent_observations": true
+    }
+  ],
+  "old_process_attribution": "STILL_UNDETERMINED_NOT_RETROACTIVELY_ATTRIBUTED",
+  "proc_observation": {
+    "achieved_start_gap_maximum_seconds": 2.578895275,
+    "achieved_start_gap_median_seconds": 1.562745301,
+    "actor_generations": 550,
+    "boottime_lifetime_gate_supported": false,
+    "elapsed_seconds": 60.481590789,
+    "initial_proc_read_error_events": 10,
+    "limitation": "Broad enumeration missed requested cadence; short processes may be missed; no absence implies no process claim.",
+    "requested_cadence_achieved": false,
+    "requested_interval_seconds": 0.25,
+    "samples": 38,
+    "time_namespace_metadata_available": false
+  },
+  "publication": {
+    "historical_evidence": "UNCHANGED",
+    "raw_dataset": "NONE_CREATED_OR_PUBLISHED",
+    "raw_process_ids_boot_ids_addresses_private_paths": "NOT_PUBLISHED",
+    "source_policy_patch_changes": "NONE"
+  },
+  "receive_only_OFF": {
+    "elapsed_seconds": 60.053768469,
+    "ignitionCan": false,
+    "ignitionLine": false,
+    "services": {
+      "deviceState": {
+        "bounded_coverage": true,
+        "fresh_samples": 117,
+        "limit_seconds": 5.0,
+        "maximum_gap_seconds": 0.541666004
+      },
+      "managerState": {
+        "bounded_coverage": true,
+        "fresh_samples": 117,
+        "limit_seconds": 5.0,
+        "maximum_gap_seconds": 0.544072773
+      },
+      "pandaStates": {
+        "bounded_coverage": true,
+        "fresh_samples": 581,
+        "limit_seconds": 1.0,
+        "maximum_gap_seconds": 0.111525572
+      }
+    },
+    "started": false,
+    "statement": "Bounded fresh samples and gap thresholds passed; not an atomic or continuous whole-device snapshot."
+  },
+  "recognized_critical_roles": {
+    "NetworkManager": {
+      "executable_cwd_metadata_complete": false,
+      "limitation": "Permission failures retained; full required critical identity coverage is not established.",
+      "recognized_actors": 1,
+      "sampled_generations_stable": true
+    },
+    "hardwared": {
+      "pre_count": 1,
+      "samples": [
+        {
+          "metadata_error_fields": [
+            "time_namespace"
+          ],
+          "observed": true,
+          "sampled_generation_stable": true
+        }
+      ]
+    },
+    "jetlinkd": {
+      "pre_count": 1,
+      "samples": [
+        {
+          "metadata_error_fields": [
+            "time_namespace"
+          ],
+          "observed": true,
+          "sampled_generation_stable": true
+        }
+      ]
+    },
+    "manager": {
+      "pre_count": 2,
+      "samples": [
+        {
+          "metadata_error_fields": [
+            "time_namespace"
+          ],
+          "observed": true,
+          "sampled_generation_stable": true
+        },
+        {
+          "metadata_error_fields": [
+            "time_namespace"
+          ],
+          "observed": true,
+          "sampled_generation_stable": true
+        }
+      ]
+    },
+    "pandad": {
+      "pre_count": 2,
+      "samples": [
+        {
+          "metadata_error_fields": [
+            "time_namespace"
+          ],
+          "observed": true,
+          "sampled_generation_stable": true
+        },
+        {
+          "metadata_error_fields": [
+            "time_namespace"
+          ],
+          "observed": true,
+          "sampled_generation_stable": true
+        }
+      ]
+    }
+  },
+  "runtime_scope": {
+    "Jetson_access": "NO",
+    "Jetson_mutation": "NONE",
+    "activation": "NOT_RUN",
+    "actual_device_access": "READ_ONLY",
+    "actual_mutations": "NONE",
+    "dataset": "NONE",
+    "frames": 0,
+    "policy_or_checker_change": "NONE",
+    "restart": "NOT_RUN",
+    "scope_of_no_mutation_claim": "COMMANDS_ISSUED_BY_THIS_DIAGNOSTIC; FULL_RUNTIME_EFFECTS_NOT_PROVEN",
+    "source_patch_or_apply": "NONE",
+    "ticket": "NOT_CREATED",
+    "writer_count_pre_post": 0,
+    "writer_started": false
+  },
+  "safe_helper_gate_classification": "UNKNOWN_REQUIRED_PROOF_INCOMPLETE",
+  "schema": 1,
+  "source_preservation": {
+    "HEAD": true,
+    "N16_source_model_sha": "01effc679eb46d6036ce0302673a87fe2dcfcc95a679daeeb929679e53c3647a",
+    "N16_source_spec_sha": "63b2097c114bade03c5ec7ded978d73032a93bb525c03f9b78eddf49809f8b71",
+    "PRE_six": true,
+    "current_source_state": "PURE24C_SURVIVING5BB_PACKAGE_FOOTER_ABSENT_RECORDER24C_NOT_INSTALLED",
+    "footer_count": 0,
+    "index": true,
+    "index_flags_all_H": true,
+    "source_contract_only_no_live_Jetson_identity_claim": true,
+    "source_pins_41": true,
+    "updater_drift": "NONE_OBSERVED"
+  },
+  "stage": "M19-C1.5B_SEPARATE_READ_ONLY_DIAGNOSIS",
+  "status": "PASS_READ_ONLY_DIAGNOSIS_WITH_LIMITS",
+  "storage_preservation": {
+    "existing_root": "REVIEWED_PRIVATE_CAPTURE_ROOT",
+    "filesystem": "ext4",
+    "free_space_measured_this_stage": false,
+    "mode": "0700",
+    "mount": "/data",
+    "owner_uid_gid": [
+      1000,
+      1000
+    ],
+    "probe_or_mutation": "NONE",
+    "unchanged_empty": true
+  },
+  "target_head": "24c1ba5e4b3428f56fa0e402f5a10097e2e94c32",
+  "tests": {
+    "authoritative_1313_fresh": "NOT_RUN",
+    "fail": 0,
+    "fresh_diagnostic_checks": 30,
+    "historical_1313_recounted": false,
+    "kind": "OFFLINE_DIAGNOSTIC_UNIT_AND_STATIC_CHECKS"
+  },
+  "transmitted_raw_source_commitments": {
+    "diagnose.py": {
+      "bytes": 92170,
+      "raw_sha256": "d61bb3d30668938c2df8399e1e9c38415a81cabb015523d7b43c44fc88b8d7e6"
+    },
+    "diagnostic_stream.cjs": {
+      "bytes": 3635,
+      "raw_sha256": "3e295e57a11f1a9ae7e8cf7f499615c5bccd16b43e1a3a8d440964b861713304"
+    },
+    "proc_sampler.py": {
+      "bytes": 16449,
+      "raw_sha256": "9c70b32801a8a3423b1b71ba75b5c5a7af190e8a0c68ae48ff3afac49f443eef"
+    }
+  }
+}
