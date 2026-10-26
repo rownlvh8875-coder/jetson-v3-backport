@@ -1,3 +1,28 @@
+# Latest continuation — M19-C1.5 recheck · 2026-10-26
+
+## Connected, first gate rejected — BLOCKED_NOT_OFFROAD
+
+Read docs/M19C15_24C_ACTUAL_OFF_DEPLOYMENT_RECHECK_20261026.md and
+artifacts/m19c15_24c_actual_off_deployment_recheck_20261026.json first.
+User reported ignitionON and comma/Jetson connected, resuming the first gate.
+New owned comma terminal connected; first cat OFF/ON reads returned0/1.
+STOPPED immediately. No source/HEAD/profile/storage/ticket/writer reads followed;
+those actual identities/states are UNKNOWN, not historical24c/empty/writer0 proof.
+
+No apply/backup/rollback, source/index/Params/storage mutation, ticket, activation,
+writer start, frames, capture, operating restart or Jetson access/mutation.
+Current approval still requires genuine OFF with power retained; no onroad patch,
+gate override, automatic retry or ignition transition request. Power retention
+issue remains unresolved. ReadyVehicle10NO; parityUNDETERMINED; M2NO.
+
+Prior unreachable/deferred receipt is immutable below; this new receipt supersedes
+only its connection observation. C05 candidate remains unchanged. Fresh regression
+NOT_RUN_FIRST_GATE_REJECTED; historical1313 not recounted. Next: user-coordinated
+power-retained genuineOFF connection, then fresh first cat OFF/ON.
+Result commit: git log -1 --format=%H -- artifacts/m19c15_24c_actual_off_deployment_recheck_20261026.json
+
+---
+
 # Latest continuation — M19-C1.5 · 2026-10-26
 
 ## exact24c deployment — DEFERRED_BY_USER_NOT_DEPLOYED

@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "stage": "M19-C1.5",
+  "attempt": "USER_RESUMED_FIRST_GATE_RECHECK",
+  "date": "2026-10-26",
+  "status": "BLOCKED_NOT_OFFROAD",
+  "final_source_state": "BLOCKED",
+  "created_utc": "2026-10-26T07:56:54.975242+00:00",
+  "development_branch": "feature/jetlink-multimodel-carrot",
+  "start_development_head": "b327b7727ab18c5a06068a4a7f3d5a4f91acc0bc",
+  "start_working_tree": "CLEAN",
+  "start_local_remote_equal": true,
+  "result_commit_resolution": "git log -1 --format=%H -- artifacts/m19c15_24c_actual_off_deployment_recheck_20261026.json",
+  "first_gate": {
+    "status": "BLOCKED_NOT_OFFROAD",
+    "connected": true,
+    "owned_terminal": true,
+    "commands": [
+      "cat /data/params/d/IsOffroad",
+      "cat /data/params/d/IsOnroad"
+    ],
+    "actual_values": {
+      "IsOffroad": "0",
+      "IsOnroad": "1"
+    },
+    "required_values": {
+      "IsOffroad": "1",
+      "IsOnroad": "0"
+    },
+    "received_frames": 5,
+    "raw_receipt_sha256": "3b87d78f00a9564012c2eb03331dba89096c44e917666dce10ec0a0ce2946446",
+    "parser_independent_recheck": "PASS",
+    "further_operational_commands": false,
+    "teardown": "Only owned terminal shell history suppression/exit; no operating process kill/restart"
+  },
+  "actual": {
+    "branch": null,
+    "HEAD": null,
+    "installed_profile": null,
+    "deviceState_started": null,
+    "ignitionLine": null,
+    "ignitionCan": null,
+    "identity": "NOT_READ_AFTER_FIRST_GATE_REJECTION",
+    "genuine_OFF": "FAIL_FIRST_FLAGS",
+    "receive_only_window": "NOT_RUN",
+    "writer_count": null,
+    "ticket_namespace": "UNKNOWN_NOT_READ",
+    "storage": "UNKNOWN_NOT_READ"
+  },
+  "intended_target": "24c1ba5e4b3428f56fa0e402f5a10097e2e94c32",
+  "intended_profile": "RECORDER_24C_HUD_HOST_V1",
+  "pre_six": "NOT_RUN",
+  "source_pins41": "NOT_RUN",
+  "N16": "NOT_RUN",
+  "infer_API": "NOT_RUN",
+  "overlay_attestation": "NOT_RUN",
+  "disposable_roundtrip": "NOT_RUN",
+  "backup": "NOT_RUN",
+  "actual_apply": "NOT_RUN",
+  "AFTER_six": "NOT_RUN",
+  "wrapper_footer": "NOT_RUN",
+  "rollback": "NOT_RUN",
+  "POST_attestation": "NOT_RUN",
+  "operating_preservation": "NOT_RUN",
+  "updater_drift": "UNKNOWN_NOT_OBSERVED",
+  "source_mutation": "NONE",
+  "storage_mutation": "NONE",
+  "actual_Git_index_mutation": "NONE",
+  "Params_mutation": "NONE",
+  "ticket_created": false,
+  "activation": "NOT_RUN",
+  "writer_started_by_workflow": false,
+  "frames_written_by_workflow": 0,
+  "dataset_created_by_workflow": "NONE",
+  "restart": "NOT_RUN_BY_SCOPE",
+  "capture": "NOT_RUN_BY_SCOPE",
+  "Jetson_access": "NO",
+  "Jetson_mutation": "NONE",
+  "vehicle_transition_requested": false,
+  "automatic_retry": false,
+  "tests": {
+    "fresh_regression": "NOT_RUN_FIRST_GATE_REJECTED",
+    "no_cases_executed": true,
+    "prior_1313_PASS": "HISTORICAL_C05_ONLY_NOT_RECOUNTED",
+    "C05_candidate_and_tested_files_unchanged": true,
+    "local_receipt_and_publication_checks": "PASS_NOT_CPU_REGRESSION_CASES"
+  },
+  "historical_receipts_preserved": [
+    {
+      "path": "docs/M19C15_24C_ACTUAL_OFF_DEPLOYMENT_20261026.md",
+      "sha256": "67f5bc8900a25c5e8b255ac714f2dee6a3050220c2c809e031528bbc85038365"
+    },
+    {
+      "path": "artifacts/m19c15_24c_actual_off_deployment_20261026.json",
+      "sha256": "6436ef5336f660ed3c716eb8d922a1deb384e8c2a17e4f398fe4ac555a49b291"
+    }
+  ],
+  "numerical_decision": "PARITY_UNDETERMINED",
+  "M2_readiness": "NO",
+  "ready_for_Vehicle10": "NO",
+  "next_action": "Establish a power-retained genuine-OFF connection with the user before another fresh first gate. Do not patch while IsOnroad=1 or automatically retry.",
+  "privacy": "Address, session ID and raw terminal output remain private; public evidence contains only flags and commitments."
+}
