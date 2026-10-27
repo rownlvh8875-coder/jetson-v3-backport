@@ -1,3 +1,33 @@
+# Latest continuation — M19-C1.5N local openat2 bootstrap · 2026-10-27
+
+## PASS_LOCAL_BOOTSTRAP_ONLY — actual capability/deployment gates remain closed
+
+Read docs/M19C15N_OPENAT2_BOOTSTRAP_ORIGIN_20261027.md and
+artifacts/m19c15n_openat2_bootstrap_origin_20261027.json. Start cd43033 CLEAN/equal.
+Fdinfo-only witness/cyclic bootstrap REJECTED by static bind countermodel.
+Separate tools/proc_openat2_bootstrap.py now implements an independent kernel
+openat2 noncrossing origin anchor for every below-root component/leaf. Own-proc
+root/self/owner/fdinfo/stat/status, native flags/identity, owner brackets, strict
+fdinfo and named-root reopen checked; all owned FDs closed before return.
+No statx describe query, fallback, retry or weaker flags. Linux/glibc LP64 LE
+x86_64/aarch64; syscall437/open_how24 only; legacy statx symbol still required. Linux5.6
+primitive may be unavailable on actual target: NOT_RUN/UNKNOWN, no device fix.
+Full ProcView/provider integration NOT_IMPLEMENTED; full scope/namespace/global/
+temporal/negative-witness/policy flags false. Existing strict modules/defaults/
+schema2 payloads/patches/pins unchanged. 370 prior files preserved outside this
+prepend. Fresh406 unique local PASS =358 retained +48 new, 0 fail/error/skip; no repeated
+run totals added. Independent review found identity-registration cleanup defect;
+3RED cases reproduced, fixed, independent48 PASS and bounded proof/code approval.
+No actual comma/Jetson access or source/Params/storage/updater/service/USB/model
+change, ticket, activation, capture, restart or branch retarget. Historical L
+UNSUPPORTED_MOUNT_ID/CONSTRUCT/errnoNONE unchanged. Wip604bc runtime still requires
+separate exact-source review before recorder migration. Vehicle10NO;M2NO;
+parityUNDETERMINED. Next: OFFLINE protected ProcView integration review retaining
+all scope/ownership/temporal gates before any new actual query.
+Result commit:git log -1 --format=%H -- artifacts/m19c15n_openat2_bootstrap_origin_20261027.json
+
+---
+
 # Latest continuation — M19-C1.5M offline mount-ID / carrot-wip review · 2026-10-27
 
 ## PASS_OFFLINE_REVIEW_ONLY — native blocker and deployment gates remain closed

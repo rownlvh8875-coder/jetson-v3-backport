@@ -1,0 +1,194 @@
+{
+  "schema": 1,
+  "stage": "M19-C1.5N",
+  "date": "2026-10-27",
+  "status": "PASS_LOCAL_BOOTSTRAP_ONLY",
+  "starting_development_head": "cd43033271bab680f9621df89691b995fc26cfd6",
+  "development_branch": "feature/jetlink-multimodel-carrot",
+  "development_start": "CLEAN_LOCAL_REMOTE_EQUAL",
+  "fdinfo_only_review": {
+    "classification": "REJECTED",
+    "countermodel": "STATIC_SAME_SUPERBLOCK_BIND_SUBSTITUTION_OF_READER_RECORDS",
+    "fresh_witness_authenticates_only_its_own_lookup": true,
+    "cyclic_certificate_accepted": false,
+    "actual_tampering_claimed": false
+  },
+  "candidate": {
+    "module": "tools/proc_openat2_bootstrap.py",
+    "sha256": "6c7473462693aacadfa75ccc17a9a55baf154f7f890434e5ae8f9f331ac70567",
+    "role": "SEPARATE_BOUNDED_LOCAL_ORIGIN_BOOTSTRAP_NOT_PROCVIEW_PROVIDER",
+    "resolve": [
+      "NO_XDEV",
+      "NO_MAGICLINKS",
+      "NO_SYMLINKS",
+      "BENEATH"
+    ],
+    "resolve_mask": 15,
+    "every_below_root_intermediate_and_leaf_protected": true,
+    "only_crossing_exception": "INITIAL_AND_REOPENED_NAMED_PROCFS_ROOT_FROM_HELD_PARENT",
+    "final_self_link": "OPATH_NOFOLLOW_HELD_READLINKAT_NOT_TRAVERSED",
+    "independent_premise": "KERNEL_NONCROSSING_BEFORE_FDINFO_INTERPRETATION",
+    "recursive_reader_certificate": false,
+    "root_named_reopen": "NATIVE_IDENTITY_AND_AUTHENTICATED_MOUNT_ID_EQUAL",
+    "owner_brackets": [
+      "PID",
+      "START_TICKS",
+      "THREAD_LEADER_AND_PYTHON_THREAD_COUNT",
+      "CREDENTIALS",
+      "UID_GID_GROUP_STATUS"
+    ],
+    "fdinfo_checks": [
+      "UNIQUE_POSITIVE_MOUNT_ID",
+      "STRICT_FIELDS",
+      "OCTAL_FLAGS_EQUAL_FCNTL_WITH_CLOEXEC",
+      "OPTIONAL_INODE_EQUAL_NATIVE_FSTAT",
+      "ALL_PERSISTENT_TARGET_IDS_EQUAL"
+    ],
+    "limits": {
+      "read_bytes_per_file": 16384,
+      "restricted_opens": 64,
+      "read_calls": 4096
+    },
+    "cleanup": "ONE_CLOSE_ATTEMPT_PER_OWNED_FD_ALL_REMAINING_ATTEMPTED_PRIMARY_PRESERVED",
+    "root_lease_closed_before_return": true,
+    "ABI": "LINUX_GLIBC_LP64_LITTLE_ENDIAN_X86_64_OR_AARCH64",
+    "syscall_number": 437,
+    "open_how_bytes": 24,
+    "documented_since": "LINUX_5_6",
+    "legacy_statx_describe_called": false,
+    "legacy_statx_symbol_still_required": true,
+    "errors_no_retry_or_weaker_flags": [
+      "ENOSYS",
+      "EINVAL",
+      "EPERM",
+      "EXDEV",
+      "EAGAIN",
+      "ALL_OTHER_ERRORS"
+    ],
+    "ordinary_open_fallback_below_procfs": false,
+    "assumptions": [
+      "TRUSTED_NATIVE_BINDINGS",
+      "EXCLUSIVE_SAME_PROCESS_FD_OWNERSHIP",
+      "NO_UNOBSERVED_PRIVILEGED_MOUNT_OR_FILTER_ABA",
+      "NO_UNOBSERVED_NATIVE_THREAD_INTERFERENCE"
+    ],
+    "implementation_integration": "NOT_RUN_NOT_WIRED",
+    "full_scope_checked": false,
+    "namespace_equality_proven": false,
+    "full_host_visibility_proven": false,
+    "temporal_visibility_proven": false,
+    "negative_pid_witness_allowed": false,
+    "runtime_scope_confirmed": false,
+    "policy_acceptance": false,
+    "legacy_fallback_allowed": false
+  },
+  "validation": {
+    "fresh_unique_tests": {
+      "current_unique": 406,
+      "retained_unique": 358,
+      "new_unique": 48,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "historical_red_or_focused_counts_added": false
+    },
+    "test_file": "tests/test_proc_openat2_bootstrap.py",
+    "test_sha256": "dab3fe449a663edc78551285e8ed2f155b27e74caaeb3d62179f2d8a17c0165e",
+    "environment": {
+      "system": "LOCAL_WSL_LINUX",
+      "machine": "x86_64",
+      "glibc": "2.39",
+      "python": "3.12.3",
+      "pytest": "9.1.1",
+      "actual_device": false
+    },
+    "command": "python -B -m pytest -q tests/test_native_mount_id_compatibility_review.py tests/test_comma_process_sampler.py tests/test_proc_view_scope_model.py tests/test_pinned_proc_view.py tests/test_proc_view_journal.py tests/test_proc_view_sampler.py tests/test_proc_view_observer.py tests/test_proc_view_capability.py tests/test_proc_view_failure_projection.py tests/test_proc_view_payload_v2.py tests/test_readonly_payload_gate.py tests/test_proc_openat2_bootstrap.py",
+    "real_local_cases": [
+      "OWN_PROC_BOOTSTRAP",
+      "INDEPENDENT_STATX_ORACLE_CALIBRATION_ONLY",
+      "EXISTING_CROSS_MOUNT_EXDEV",
+      "SYMLINK_TRAVERSAL_REJECTED",
+      "FINAL_HELD_SYMLINK"
+    ],
+    "injected_evidence_label": "INJECTED_FIXTURE_NOT_NATIVE_PROOF",
+    "privileged_mount_created": false,
+    "hostile_bind_mount_executed": false,
+    "bind_semantics_evidence": "DOCUMENTED_KERNEL_SEMANTICS_AND_INJECTED_EXDEV_ONLY",
+    "TDD": [
+      "MISSING_MODULE_RED",
+      "EARLY_CLOSE_CLASSIFICATION_RED_TO_GREEN",
+      "INDEPENDENT_REVIEW_IDENTITY_FAILURE_CLEANUP_RED_TO_GREEN"
+    ],
+    "separate_blockers_not_counted": [
+      "ROOT_COLLECTION",
+      "DIAGNOSTICS_4_ZSTANDARD",
+      "NATIVE_FFMPEG"
+    ],
+    "dependencies_installed": false
+  },
+  "preservation": {
+    "old_tracked_files_unchanged_excluding_continuation": 370,
+    "continuation": "PREPEND_ONLY",
+    "frozen_module_sha256": {
+      "tools/proc_view_scope_model.py": "5bda1c8d502b8f2ea7a9f004f97be4580222d0af30bb8edd6d19812309a26f2d",
+      "tools/pinned_proc_view.py": "2676357620c11e785e290d59fe9684a2766c6a9de3f39270c3bfdfdf3ed3f5ca",
+      "tools/proc_view_capability.py": "04e1ccae4bc76d5893a0069c6623edb27faa633676a6bd63533efa39e86130b2",
+      "tools/readonly_payload_gate.py": "5753fc0d88904106a004618cd22b3d2c2859402af1c74e2bd996d2f617f71743"
+    },
+    "historical_schema2_payload_sha256": "e8116a412a79224105065c067d7b54d4c330febb0ed41386291e7c3f58c725c1",
+    "historical_schema2_payload_bytes": 72286,
+    "strict_selected_backend_and_defaults": "UNCHANGED",
+    "recorder_patches_and_pins": "UNCHANGED",
+    "new_actual_payload": "NOT_CREATED"
+  },
+  "actual": {
+    "comma_access": "NO",
+    "comma_mutation": "NO",
+    "Jetson_access": "NO",
+    "Jetson_mutation": "NO",
+    "source_or_branch_retarget": "NO",
+    "storage_or_Params_write": "NO",
+    "updater_or_service_or_USB_change": "NO",
+    "ticket": "NOT_CREATED",
+    "activation": "NOT_RUN",
+    "capture": "NOT_RUN",
+    "frames": 0,
+    "dataset": "NONE_CREATED",
+    "restart_or_reboot": "NOT_RUN",
+    "openat2_support": "NOT_RUN_UNKNOWN",
+    "aarch64_execution": "NOT_RUN",
+    "historical_L": "UNSUPPORTED_MOUNT_ID_CONSTRUCT_ERRNO_NONE_UNCHANGED"
+  },
+  "decision": {
+    "finite_local_origin_bootstrap": "IMPLEMENTED_VALIDATED_UNDER_STATED_PREMISES",
+    "fdinfo_only_finite_certificate": "REJECTED",
+    "complete_protected_ProcView_integration": "NOT_IMPLEMENTED",
+    "actual_native_blocker_resolved": false,
+    "carrot_wip_runtime_approval": "NOT_GRANTED",
+    "ready_for_actual_query": false,
+    "ready_for_deployment": false,
+    "ready_for_Vehicle10": false,
+    "numerical_decision": "PARITY_UNDETERMINED",
+    "M2": "NO",
+    "next_action": "OFFLINE_PROTECTED_PROCVIEW_INTEGRATION_REVIEW_RETAINING_ALL_SCOPE_OWNERSHIP_TEMPORAL_GATES"
+  },
+  "sources": [
+    "https://man7.org/linux/man-pages/man2/openat2.2.html",
+    "https://github.com/torvalds/linux/blob/v5.6/include/uapi/linux/openat2.h",
+    "https://github.com/torvalds/linux/blob/v5.6/arch/x86/entry/syscalls/syscall_64.tbl",
+    "https://github.com/torvalds/linux/blob/v5.6/include/uapi/asm-generic/unistd.h",
+    "https://github.com/torvalds/linux/blob/v5.6/arch/arm64/include/uapi/asm/unistd.h"
+  ],
+  "independent_review": {
+    "reasoning_only_fdinfo_proposal": "REJECTED_STATIC_BIND_COUNTERMODEL",
+    "whole_change": "PASS_AFTER_IDENTITY_REGISTRATION_CLEANUP_CORRECTION",
+    "independent_focused_tests": {
+      "pass": 48,
+      "fail": 0,
+      "skip": 0,
+      "not_added_to_unique_total": true
+    },
+    "proof_scope": "ONLY_BOUNDED_LOCAL_CLOSED_BOOTSTRAP_UNDER_STATED_PREMISES",
+    "publication": "PASS"
+  }
+}
