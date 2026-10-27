@@ -1,0 +1,206 @@
+{
+  "schema": 2,
+  "stage": "M19-C1.5L",
+  "date": "2026-10-27",
+  "status": "BLOCKED_NATIVE_CAPABILITY",
+  "starting_development_head": "0b5dfd507f60abdfd1a81f04ca6c6fbcf0b2b618",
+  "branch": "feature/jetlink-multimodel-carrot",
+  "development_start": "CLEAN_LOCAL_REMOTE_EQUAL",
+  "first_gate": {
+    "flags": {
+      "IsOffroad": "1",
+      "IsOnroad": "0"
+    },
+    "reads": 2,
+    "close_observed": true
+  },
+  "actual_source": {
+    "branch": "carrot-nav",
+    "head": "24c1ba5e4b3428f56fa0e402f5a10097e2e94c32",
+    "PRE_files": 6,
+    "source_pins": 41,
+    "pre_and_post_result": "PASS",
+    "verification": "PINNED_PREFLIGHT_ASSERT_GATES_EXECUTED_UNDER_UNCONDITIONAL_OPTIMIZATION_ZERO_AND_BYTECODE_SUPPRESSION_GUARD",
+    "individual_41_hash_rows_returned": false,
+    "layout": "PURE24C_MODEL_PLUS_SURVIVING_5BB_BOUND_PACKAGE_FOOTER_ABSENT",
+    "N16": "REVIEWED_SOURCE_SPEC_PIN_MATCH_NO_MODEL_BINARY_EXECUTION_OR_FRESH_BINARY_HASH"
+  },
+  "genuine_OFF": [
+    {
+      "position": "PRE",
+      "seconds": 12.076173105,
+      "all_checks": true,
+      "samples": {
+        "deviceState": 22,
+        "managerState": 22,
+        "pandaStates": 111
+      },
+      "fresh_summary": {
+        "deviceState": {
+          "samples": 22,
+          "seconds": 11.42438543
+        },
+        "managerState": {
+          "samples": 22,
+          "seconds": 11.42970896
+        },
+        "pandaStates": {
+          "samples": 110,
+          "seconds": 11.851246503
+        }
+      },
+      "started": false,
+      "ignitionLine": false,
+      "ignitionCan": false
+    },
+    {
+      "position": "POST",
+      "seconds": 12.012163173,
+      "all_checks": true,
+      "samples": {
+        "deviceState": 23,
+        "managerState": 23,
+        "pandaStates": 111
+      },
+      "fresh_summary": {
+        "deviceState": {
+          "samples": 22,
+          "seconds": 11.376654054
+        },
+        "managerState": {
+          "samples": 23,
+          "seconds": 11.921728703
+        },
+        "pandaStates": {
+          "samples": 111,
+          "seconds": 11.913364884
+        }
+      },
+      "started": false,
+      "ignitionLine": false,
+      "ignitionCan": false
+    }
+  ],
+  "prepared_release": {
+    "payload_sha256": "e8116a412a79224105065c067d7b54d4c330febb0ed41386291e7c3f58c725c1",
+    "payload_bytes": 72286,
+    "source_pins": {
+      "proc_view_scope_model": "5bda1c8d502b8f2ea7a9f004f97be4580222d0af30bb8edd6d19812309a26f2d",
+      "pinned_proc_view": "2676357620c11e785e290d59fe9684a2766c6a9de3f39270c3bfdfdf3ed3f5ca",
+      "proc_view_capability": "04e1ccae4bc76d5893a0069c6623edb27faa633676a6bd63533efa39e86130b2"
+    },
+    "asset_sha256": {
+      "native-failure-payload-v2.py": "e8116a412a79224105065c067d7b54d4c330febb0ed41386291e7c3f58c725c1",
+      "capability-decoder.py": "d6612dd1dd0311d3596f80a2d32d5e0d80d31deb4046a88b0607508c67eaebb3",
+      "preflight-decoder.py": "c8a57b4d138ad95f7de48085a5e58d4895cf9122bb623eca98aaa21c7f5f55be"
+    },
+    "local_hash_checks": 9,
+    "status": "FRESH_MATCH"
+  },
+  "capability": {
+    "bytecode_mode": "SUPPRESSED",
+    "device_validation": false,
+    "errno_code": "NONE",
+    "events": 3,
+    "evidence_kind": "NATIVE_LOCAL_PROCFS",
+    "failure_phase": "CONSTRUCT",
+    "journal_created": false,
+    "lifetime_acceptance": false,
+    "negative_pid_witness_allowed": false,
+    "optimization_mode": "DISABLED",
+    "policy_acceptance": false,
+    "processes_created": 0,
+    "reason_code": "UNSUPPORTED_MOUNT_ID",
+    "sampling_window_started": false,
+    "schema": 2,
+    "status": "BLOCKED_NATIVE_CAPABILITY",
+    "temporal_visibility_proven": false,
+    "ticket_created": false
+  },
+  "source_analysis": {
+    "path": "tools/pinned_proc_view.py",
+    "method": "NativeLinux.describe",
+    "failed_requirement": "STATX_MNT_ID_MASK_BIT_AND_POSITIVE_MOUNT_ID",
+    "precise_raw_mask_and_mount_id": "NOT_EXPOSED_BY_REVIEWED_PROJECTION",
+    "kernel_or_libc_root_cause": "NOT_DETERMINED",
+    "automatic_fdinfo_or_other_fallback": false,
+    "repeat_query": false
+  },
+  "dispatches": {
+    "first_reads": 2,
+    "preflight": 1,
+    "schema2_queries": 1,
+    "postflight": 1,
+    "transport_receipts": [
+      {
+        "operation": "precheck",
+        "execute_sends": 1,
+        "close_observed": true,
+        "final_ready_state": 3
+      },
+      {
+        "operation": "capability",
+        "execute_sends": 1,
+        "close_observed": true,
+        "final_ready_state": 3
+      },
+      {
+        "operation": "postcheck",
+        "execute_sends": 1,
+        "close_observed": true,
+        "final_ready_state": 3
+      }
+    ]
+  },
+  "preservation": {
+    "source_canaries": 12,
+    "source_canaries_cross_endpoint": "PASS",
+    "index_cross_endpoint": "PASS",
+    "tracked_and_untracked_status_cross_endpoint": "PASS",
+    "managed_role_endpoint_identities": "PASS_SAME_PID_STARTTIME_AND_RECORDED_FIELDS",
+    "global_process_preservation": "NOT_ESTABLISHED",
+    "storage": "VALID_EMPTY_REVIEWED_ROOT_GATE_PASS",
+    "ticket_namespace": "ABSENT",
+    "writer": "ZERO_MATCHES_IN_REVIEWED_SCAN_NOT_FULL_HOST_NEGATIVE_PROOF",
+    "prior_tracked_files_preserved": 364,
+    "historical_H": "CAUSE_UNKNOWN_FULL_PRE6_41_UNCONFIRMED_REMAINS_UNCHANGED",
+    "historical_J_K": "IMMUTABLE_PRIOR_BLOCKED_RECEIPTS"
+  },
+  "scope": {
+    "source_Git_Params_service_USB_updater_storage_model_writes": "NONE_BY_WORKFLOW",
+    "deployment": "NOT_RUN",
+    "ticket": "NOT_CREATED",
+    "activation": "NOT_RUN",
+    "writer_start": "NOT_RUN",
+    "capture": "NOT_RUN",
+    "frames": 0,
+    "dataset_created": "NONE",
+    "restart_reboot": "NOT_RUN",
+    "Jetson_access": false,
+    "Jetson_mutation": "NONE",
+    "probe_created_processes": 0,
+    "transport_helpers": "DECODER_AND_RECEIVER_PYTHON_HELPERS_USED_SEPARATELY_FROM_PROBE_COUNT",
+    "process_sampler_or_owned_observer_collection": "NOT_RUN"
+  },
+  "tests": {
+    "this_stage": "NO_RUNTIME_OR_TEST_SOURCE_CHANGE_NO_REGRESSION_RERUN",
+    "historical342_and_transport12": "NOT_RERUN_NOT_ADDED",
+    "root_diagnostics4_nativeFFmpeg": "SEPARATE_UNCHANGED_NOT_COUNTED"
+  },
+  "decision": {
+    "process_policy_acceptance": false,
+    "actual_redeployment_ready": false,
+    "Vehicle10_ready": false,
+    "M2": false,
+    "numerical_decision": "PARITY_UNDETERMINED"
+  },
+  "private_receipt_sha256": {
+    "first-flags-private.json": "a133647855dffcc9b96580f66f189861201117b828f6a6b57cf56065e9bc3c76",
+    "fresh-query-gate.json": "fc488d32f0e68b8742328f39b89ffa70108d014d71c15ce70609ca8c71c7f363",
+    "precheck-private.json": "8799b17c967d69dcb30602ed4666833d6311d240b7a2a1085cfd3c9b2b6b2b20",
+    "capability-private.json": "2629ddeb02fbaa397d20ba45389ae0ef1d25609c75027d10d4978f7738d6bda7",
+    "postcheck-private.json": "3e80f39a58aac759d597fb11d2d69977e12e5b0180c5c151cd76013eed8b142f"
+  },
+  "next_action": "OFFLINE_MOUNT_ID_BACKEND_COMPATIBILITY_REVIEW_WITH_SCOPE_GATES_PRESERVED_NO_ACTUAL_RETRY_OR_REDEPLOYMENT",
+  "result_commit_locator": "git log -1 --format=%H -- artifacts/m19c15l_actual_schema2_capability_20261027.json"
+}

@@ -1,3 +1,27 @@
+# Latest continuation — M19-C1.5L actual schema2 capability · 2026-10-27
+
+## BLOCKED_NATIVE_CAPABILITY — UNSUPPORTED_MOUNT_ID / CONSTRUCT / errno NONE
+
+Read docs/M19C15L_ACTUAL_SCHEMA2_CAPABILITY_20261027.md and
+artifacts/m19c15l_actual_schema2_capability_20261027.json. Start0b5dfd5 CLEAN/equal.
+Fresh firstcats1/0; PRE12.076s/POST12.012s receive-only OFF PASS. Exact24c
+PRE6/41 gates pass under pinned unconditional optimization0/-B decoder; individual
+41 rows not returned. Source/spec pinned, no model execution/binary hashing.
+Exactly1 schema2 query: events3, UNSUPPORTED_MOUNT_ID in constructor, errnoNONE;
+all authority flags false. No sampler/journal/observer collection/retry or
+fallback. Three transport executions/owned closes observed; transport Python
+helpers separate from probe-created-processes0.12canaries/index/status and
+managed-role endpoint identities stable; no global process-preservation proof.
+Storage empty, namespace absent, writer scan0. No redeployment/source/Params/
+updater/storage/service/USB/model writes,ticket/capture/restart/Jetson access.
+Frames0/no dataset created. H/J/K evidence unchanged; no retroactive H cause.
+No regression rerun/source change; historical counts not added. Vehicle10NO;
+M2NO; parityUNDETERMINED. Next: OFFLINE mount-ID backend compatibility review
+retaining scope gates. No automatic actual retry/redeployment.
+Result commit:git log -1 --format=%H -- artifacts/m19c15l_actual_schema2_capability_20261027.json
+
+---
+
 # Latest continuation — M19-C1.5K schema2 OFF gate · 2026-10-27
 
 ## BLOCKED_NOT_OFFROAD — connectivity restored, schema2 query NOT_RUN
