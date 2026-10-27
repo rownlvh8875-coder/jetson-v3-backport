@@ -1,3 +1,38 @@
+# Latest continuation — M19-C1.5P offline schema3 release · 2026-10-27
+
+## PASS_OFFLINE_RELEASE_ONLY — actual query/deployment not performed
+
+Read docs/M19C15P_OPENAT2_CAPABILITY_RELEASE_20261027.md and
+artifacts/m19c15p_openat2_capability_release_20261027.json. Start57981c8 CLEAN/equal.
+New portable builder/projector embeds five exact sources; schema3 has29 fixed
+fields. One endpoint inspection only, no full ProcView/provider. Generated scripts
+require optimize0/-I/-B; pins checked before bundled execution, aliases/bytecode
+restored. Whole payload bound262144 matches unchanged outer source gate. New
+independent native-only receiver accepts one canonical <=8192B frame and seals on
+any attempt; source/context/runtime/type/status/authority mismatches reject.
+Caller must verify whole receiver/gate SHAs and bind checked execution/transport.
+Receiver is grammar/context checking, NOT producer authentication/global replay.
+Private challenge/raw reply stay local; public artifact has hashes/commitment.
+Release payload106250B SHA3b78e52b..., receiver13750B SHA77ff5922..., gatee69c4487....
+Fresh558 unique local PASS=458retained+100new,0fail/error/skip; RED/focused/review/
+manual mutation counts not added. Private-activity and whole-size defects
+reproduced/fixed. Independent100PASS/code review clean. Real local exact release
+pipeline remained BLOCKED_ENDPOINT_SCOPE/UNREVIEWED_SUBMOUNT/INSPECT/errnoNONE;
+receiver accepted that blocked contract unchanged. No native scope approval or
+waiver. Two harness interpreters separate from probe-created-processes0. Failure
+lease_closed=false is not attestation and not a leak finding. All authority false.
+382 old files preserved outside prepend; schema2/N/O/defaults/patches/pins/receipts
+unchanged. Historical L blocker unchanged. Actual identity/support NOT_READ/UNKNOWN.
+No actual comma/Jetson access/query, source/storage/Params/updater/USB/model/service
+write, ticket/activation/capture/restart or branch retarget. Frames0/no dataset.
+Next: fresh read-only OFF/source/profile/namespace gates before a separately
+authorized at-most-one schema3 query. Fresh gates NOT_RUN; query readinessNO.
+Carrot-wip/runtime/provider/recorder deployment/Vehicle10 not approved; M2NO;
+parityUNDETERMINED.
+Result commit:git log -1 --format=%H -- artifacts/m19c15p_openat2_capability_release_20261027.json
+
+---
+
 # Latest continuation — M19-C1.5O protected scope endpoints · 2026-10-27
 
 ## PASS_OFFLINE_SCOPE_INTEGRATION_ONLY — no actual query/deployment
