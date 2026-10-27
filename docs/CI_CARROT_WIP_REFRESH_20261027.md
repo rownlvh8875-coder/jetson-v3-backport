@@ -1,6 +1,6 @@
 # Current carrot-wip CI compatibility repair — 2026-10-27
 
-Status: PASS_CPU_SOFTWARE_CONTRACTS. GitHub post-push result is recorded below after execution.
+Status: PASS_CPU_SOFTWARE_CONTRACTS_AND_GITHUB_ACTIONS.
 This work is offline software preparation. No comma/Jetson connection or mutation occurred.
 
 ## Failure and repair
@@ -30,7 +30,7 @@ engine digest check; this is not a claim of crash-atomic pair publication.
 N16 is not enabled on protocol3 by this repair. It is rejected before adoption,
 HELLO preserves its resident state, and late worker notifications cannot authorize
 it or replace a previously adopted generation. V2 and managed V3 protocol3 continue
-through their existing tested paths. No model, engine, runtime or package installation
+through their existing tested paths. No device model, engine, runtime or package installation
 was performed.
 
 ## Verification
@@ -68,8 +68,16 @@ contains sanitized source pins and counts, without device addresses or private p
 
 ## GitHub post-push verification
 
-PENDING. A local PASS is not a GitHub Actions PASS. Inspect the run for the pushed
-software commit and retain its job result before declaring the recurring failure fixed.
+[Run40525149037](https://github.com/rownlvh8875-coder/jetson-v3-backport/actions/runs/40525149037)
+completed **success** for software commit `ae1438e5a255c062597d26ac3ac5df1c599d8031`.
+Job122262658492 passed every step:24 rolling gates,126 preservation gates,
+and411 candidate cases, totaling561 PASS /0FAIL /0SKIP. GitHub used pytest8.4.2,
+NumPy2.5.4 and ONNX1.23.2. Artifact12744046192 ZIP digest
+`7d81f5bb3673d18591cab0ac8c6f64763115bdbb25236d5954248260995fc0bd`
+was verified; its report names that exact implementation SHA, ONLINE_LATEST PASS,
+stable upstream refs, no baseline update and all required groups passing.
+The subsequent receipt commit changes documentation/evidence only; it does not
+change tested implementation sources. Historical failed runs remain as evidence.
 
 ## Handoff
 

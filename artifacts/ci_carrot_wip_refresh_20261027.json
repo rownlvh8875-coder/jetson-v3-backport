@@ -20,7 +20,21 @@
     "run_url": "https://github.com/rownlvh8875-coder/jetson-v3-backport/actions/runs/40518639645",
     "stage": "candidate-adapter"
   },
-  "github_postpush_verification": "PENDING; see accompanying report for final run",
+  "github_postpush_verification": {
+    "artifact_digest_verified": true,
+    "artifact_id": 12744046192,
+    "artifact_zip_sha256": "7d81f5bb3673d18591cab0ac8c6f64763115bdbb25236d5954248260995fc0bd",
+    "failed": 0,
+    "job_id": 122262658492,
+    "passed": 561,
+    "pytest": "8.4.2",
+    "report_head_status_upstreams_verified": true,
+    "run_id": 40525149037,
+    "skipped": 0,
+    "status": "PASS",
+    "tested_code_commit": "ae1438e5a255c062597d26ac3ac5df1c599d8031",
+    "url": "https://github.com/rownlvh8875-coder/jetson-v3-backport/actions/runs/40525149037"
+  },
   "guards": {
     "finite_all_outputs": true,
     "generation": true,
