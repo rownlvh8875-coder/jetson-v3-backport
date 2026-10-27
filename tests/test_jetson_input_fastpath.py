@@ -215,8 +215,10 @@ def overlay(tmp_path_factory):
     before = files.copy()
     changed = module('fastpath_adapter').fastpath_optimization_files(files)
     assert files == before
-    assert set(changed) == {'third_party/jetlink/jetlink/' + name
-                            for name in ('queues.py', 'input_cast.c', 'input_cast.py', 'direct_inputs.py')}
+    modern = 'third_party/jetlink/jetlink/server/backends/trt/managed_engine.py' in files
+    names = ('queues.py', 'managed_input_cast.c', 'managed_input_cast.py', 'direct_inputs.py') if modern else (
+        'queues.py', 'input_cast.c', 'input_cast.py', 'direct_inputs.py')
+    assert set(changed) == {'third_party/jetlink/jetlink/' + name for name in names}
     target = tmp_path_factory.mktemp('input-fastpath-candidate')
     # These are the actual current candidate modules, in a separate namespace.
     import shutil

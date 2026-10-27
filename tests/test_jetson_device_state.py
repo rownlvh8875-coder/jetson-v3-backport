@@ -33,10 +33,11 @@ def device_candidate(tmp_path_factory):
     before = standard.copy()
     optional = device_optimization_files(standard)
     assert standard == before, 'overlay must not mutate the baseline files'
+    modern = 'third_party/jetlink/jetlink/server/backends/trt/managed_engine.py' in standard
     assert set(optional) == {
         'third_party/jetlink/jetlink/server/session.py',
-        'third_party/jetlink/jetlink/server/backends/trt/engine.py',
-        'third_party/jetlink/jetlink/server/backends/trt/device_state.py',
+        'third_party/jetlink/jetlink/server/backends/trt/' + ('managed_engine.py' if modern else 'engine.py'),
+        'third_party/jetlink/jetlink/server/backends/trt/' + ('managed_device_state.py' if modern else 'device_state.py'),
     }
     from experimental.jetson_optimizations.fastpath_adapter import fastpath_optimization_files
     base = {**standard, **optional}

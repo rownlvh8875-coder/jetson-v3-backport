@@ -41,10 +41,25 @@ def _section(source: str, start: str, end: str, new: str) -> str:
 def server_files(reference: Path) -> dict[str, bytes]:
     """Return changed/new repo-relative files; reject changed upstream seams."""
     out: dict[str, bytes] = {}
+    from adapters.carrot.current_server import CURRENT_SOURCES, split_native_session, retain_native_session
+    sources = {name: (reference / PREFIX / name).read_text(encoding='utf-8') for name in REFERENCE_SOURCES}
+    hashes = {name: hashlib.sha256(value.encode()).hexdigest() for name, value in sources.items()}
+    modern = hashes == CURRENT_SOURCES
+    if not modern and hashes != REFERENCE_SOURCES:
+        mismatch = next(name for name in hashes if hashes[name] != REFERENCE_SOURCES[name])
+        raise ValueError(f'current server source body changed; review required: {mismatch}')
+    expected = REFERENCE_SOURCES
+    if modern:
+        from adapters.carrot.current_server import NATIVE_SOURCES
+        expected = CURRENT_SOURCES | NATIVE_SOURCES
+        for name, digest in NATIVE_SOURCES.items():
+            body = (reference / PREFIX / name).read_text(encoding='utf-8')
+            if hashlib.sha256(body.encode()).hexdigest() != digest:
+                raise ValueError(f'current server source body changed; review required: {name}')
 
     def read(name):
         source = (reference / PREFIX / name).read_text(encoding='utf-8')
-        if hashlib.sha256(source.encode('utf-8')).hexdigest() != REFERENCE_SOURCES[name]:
+        if hashlib.sha256(source.encode('utf-8')).hexdigest() != expected[name]:
             raise ValueError(f'current server source body changed; review required: {name}')
         return source
 
@@ -82,6 +97,10 @@ def server_files(reference: Path) -> dict[str, bytes]:
     spec = _replace(spec, "      'output_slices': {k: [v.start, v.stop] for k, v in self.output_slices.items()},\n    }", "      'output_slices': {k: [v.start, v.stop] for k, v in self.output_slices.items()},\n    }\n    if self.input_dtypes:\n      d['input_dtypes'] = dict(self.input_dtypes)\n    if self.output_dtypes:\n      d['output_dtypes'] = dict(self.output_dtypes)\n    return d")
     spec = _replace(spec, "      checkpoint=d.get('checkpoint'))", "      checkpoint=d.get('checkpoint'),\n      input_dtypes=dict(d.get('input_dtypes', {})),\n      output_dtypes=dict(d.get('output_dtypes', {})))")
     spec = _replace(spec, '    checkpoint=meta.model_checkpoint,', '    checkpoint=meta.model_checkpoint,\n    input_dtypes=dict(meta.input_types) if STATEFUL_FRAME in meta.inputs else {},\n    output_dtypes=dict(meta.output_types) if STATEFUL_FRAME in meta.inputs else {},')
+    if modern:
+        # N16's canonical wire spec must not acquire the managed V3 extension.
+        spec = spec.replace('if STATEFUL_FRAME in meta.inputs else {}',
+                            "if STATEFUL_FRAME in meta.inputs and 'nav_map' not in meta.inputs else {}")
     save('spec.py', spec)
 
     # Keep the CURRENT queued implementation, append the existing reviewed state.
@@ -92,6 +111,10 @@ def server_files(reference: Path) -> dict[str, bytes]:
     save('cinque_v3.py', (ROOT / 'jetlink/cinque_v3.py').read_text(encoding='utf-8'))
 
     session = read('server/session.py')
+    if modern:
+        session, native_warm, native_infer, native_checks, native_hello = split_native_session(session)
+        session = _replace(session, "      spec = ModelSpec.from_dict({**value, 'frame_skip': frame_skip})", "      spec = ModelSpec.from_dict(value)\n      if spec.frame_skip != frame_skip:\n        raise ValueError('cached frame_skip mismatch')")
+        session = _replace(session, '    if d is not None:\n      spec = self._decode_cached_spec', "    if d is not None:\n      cached = ModelSpec.from_dict(d)\n      _check_request_spec(req, cached)\n      spec = self._decode_cached_spec")
     session = _replace(session, '  def __init__(self, cache: EngineCache, telemetry=None, sleep_after: float = 0.0):',
                           '  def __init__(self, cache: EngineCache, telemetry=None, sleep_after: float = 0.0,\n               managed_selection: bool = False, offroad=None):')
     session = _replace(session, '    self.cache = cache\n', '    self.cache = cache\n    self.managed_selection = bool(managed_selection)\n    self.offroad = offroad\n')
@@ -132,8 +155,9 @@ def server_files(reference: Path) -> dict[str, bytes]:
         if req.nbytes not in (0, self.loaded.spec.nbytes):
           return {'state': 'failed', 'sha256': req.sha256, 'chunk': CHUNK, 'detail': 'model size mismatch'}
         return self._ready(self.loaded)''')
-    session = _replace(session, "      return ModelSpec.from_dict({**d, 'frame_skip': req.frame_skip})", "      cached = ModelSpec.from_dict(d)\n      if (cached.sha256 != req.sha256 or cached.frame_skip != req.frame_skip\n          or req.nbytes not in (0, cached.nbytes)):\n        raise ValueError('cached spec identity/size/frame_skip mismatch')\n      return cached")
-    session = _replace(session, "    spec = ModelSpec.from_dict({**d, 'frame_skip': frame_skip})", "    spec = ModelSpec.from_dict(d)\n    if spec.sha256 != sha256 or spec.frame_skip != frame_skip:\n      log.error('remembered model differs from exact cached spec; refusing preload')\n      return")
+    if not modern:
+        session = _replace(session, "      return ModelSpec.from_dict({**d, 'frame_skip': req.frame_skip})", "      cached = ModelSpec.from_dict(d)\n      if (cached.sha256 != req.sha256 or cached.frame_skip != req.frame_skip\n          or req.nbytes not in (0, cached.nbytes)):\n        raise ValueError('cached spec identity/size/frame_skip mismatch')\n      return cached")
+        session = _replace(session, "    spec = ModelSpec.from_dict({**d, 'frame_skip': frame_skip})", "    spec = ModelSpec.from_dict(d)\n    if spec.sha256 != sha256 or spec.frame_skip != frame_skip:\n      log.error('remembered model differs from exact cached spec; refusing preload')\n      return")
     session = _replace(session, '      assert spec is not None\n      self._write_spec(entry, spec)', '      assert spec is not None\n      _check_request_spec(req, spec)\n      self._write_spec(entry, spec)')
     session = _replace(session, "    self._build(model_path, entry.path, {'spec': spec.to_dict()})", "    _check_request_spec(req, spec)\n    self._build(model_path, entry.path, {'spec': spec.to_dict()})")
     session = _section(session, '  def _warm(self, engine, spec: ModelSpec) -> Loaded:\n', '  def unload(self) -> None:\n', '''  def _warm(self, engine, spec: ModelSpec) -> Loaded:
@@ -207,6 +231,8 @@ def server_files(reference: Path) -> dict[str, bytes]:
       packed = np.concatenate((packed, previous))''')
     session = _section(session, '    # Gathers land straight in TensorRT', '    total_us = int((time.perf_counter() - t0) * 1e6)\n', INFER)
     session = _replace(session, '      parts.append(json.dumps(self.telemetry.read()).encode())', "      parts.append(json.dumps({**self.telemetry.read(), 'loaded': self.host.loaded.sha256 if self.host.loaded and self.host.loaded.valid else None}).encode())")
+    if modern:
+        session = retain_native_session(session, native_warm, native_infer, native_checks, native_hello)
     save('server/session.py', session)
 
     onnx_patch = read('onnx_patch.py')
@@ -222,11 +248,18 @@ def server_files(reference: Path) -> dict[str, bytes]:
   elif needs_patch(model):
     patch_uint8_inputs(model)''')
     save('onnx_patch.py', onnx_patch)
+    if modern:
+        onnx_patch = _replace(onnx_patch, "  if any(vi.name == 'new_img' for vi in model.graph.input):\n    validate_source(src, spec)", "  from jetlink.output_projection import eligible\n  from jetlink.spec import ModelSpec\n  native_n16 = spec is not None and eligible(ModelSpec.from_dict(spec))\n  if native_n16:\n    patch_uint8_inputs(model)\n  elif any(vi.name == 'new_img' for vi in model.graph.input):\n    validate_source(src, spec)")
+        save('onnx_patch.py', onnx_patch)
     meta = read('onnx_meta.py')
     meta = _replace(meta, "    return pickle.loads(codecs.decode(raw.encode(), 'base64'))", "    from jetlink.cinque_v3 import decode_output_slices\n    return {name: slice(*bounds) for name, bounds in decode_output_slices(raw).items()}")
     save('onnx_meta.py', meta)
 
     build = read('server/backends/trt/build.py')
+    if modern:
+        # The managed publisher still uses these helpers; native publication
+        # keeps the reviewed fsync/replace/CacheEntry implementation below.
+        build = _replace(build, 'import logging\n', 'import json\nimport shutil\nimport logging\n')
     build = _replace(build, '                 timing_cache: str | Path | None = None) -> Path:',
                       '                 timing_cache: str | Path | None = None, authorize=None) -> Path:')
     build = _replace(build, '  onnx_path, out_path = Path(onnx_path), Path(out_path)', '  if authorize is not None:\n    authorize()\n  onnx_path, out_path = Path(onnx_path), Path(out_path)')
@@ -252,16 +285,24 @@ def server_files(reference: Path) -> dict[str, bytes]:
     build = _replace(build, '    report(\'patch\', 1.0, \'patched\')', '''    if v3_source is not None:
       v3.validate_graph_file(patched, semantic, patched=True)
     report('patch', 1.0, 'patched')''')
-    build = _replace(build, '    shutil.move(str(staged), str(out_path))', '''    if v3_source is not None:
+    publish = '    shutil.move(str(staged), str(out_path))'
+    sidecar = "  out_path.with_suffix('.json').write_text(json.dumps(meta, indent=2))"
+    if modern:
+        publish = build[build.index('    # rename 실패'):build.index('\n  meta = {')]
+        sidecar = "  from jetlink.server.cache import CacheEntry\n  CacheEntry(out_path, out_path.with_suffix('.json')).write_meta(meta)"
+    build = _replace(build, publish, '''    if v3_source is not None:
       v3_record = v3.build_record(v3_source, patched, staged, semantic)
     else:
-      shutil.move(str(staged), str(out_path))''')
-    build = _replace(build, "  out_path.with_suffix('.json').write_text(json.dumps(meta, indent=2))", "  if v3_record is not None:\n    meta['cinque_v3_record'] = v3_record\n    meta['cinque_v3_record_sha256'] = v3.record_digest(v3_record)\n    if authorize is not None:\n      authorize()\n    _publish_v3(staged, out_path, meta)\n  else:\n    out_path.with_suffix('.json').write_text(json.dumps(meta, indent=2))")
+''' + ''.join('  ' + line if line.strip() else line for line in publish.splitlines(keepends=True)))
+    build = _replace(build, sidecar, "  if v3_record is not None:\n    meta['cinque_v3_record'] = v3_record\n    meta['cinque_v3_record_sha256'] = v3.record_digest(v3_record)\n    if authorize is not None:\n      authorize()\n    _publish_v3(staged, out_path, meta)\n  else:\n" + ''.join('  ' + line if line.strip() else line for line in sidecar.splitlines(keepends=True)))
     # Keep the existing builder/configuration. Only extend the lifetime of its
     # temporary directory until the V3 plan/sidecar pair has been published.
     tail = build.index('  meta = {', build.index('def build_engine('))
     build = build[:tail] + ''.join('  ' + line if line.strip() else line for line in build[tail:].splitlines(keepends=True))
     build += PUBLISH_V3
+    if modern:
+        build = _replace(build, "  semantic = (meta_extra or {}).get('spec')", "  semantic = (meta_extra or {}).get('spec')\n  from jetlink.output_projection import eligible\n  from jetlink.spec import ModelSpec\n  native_n16 = semantic is not None and eligible(ModelSpec.from_dict(semantic))")
+        build = _replace(build, '  if v3.is_v3_spec(semantic):', '  if v3.is_v3_spec(semantic) and not native_n16:')
     save('server/backends/trt/build.py', build)
     backend = read('server/backends/trt/__init__.py')
     backend = _replace(backend, '            meta_extra: dict | None = None) -> Path:', '            meta_extra: dict | None = None, authorize=None) -> Path:')
@@ -285,6 +326,12 @@ def server_files(reference: Path) -> dict[str, bytes]:
                      semantic_spec=semantic, dtype_transforms=transforms)''')
     save('server/backends/trt/__init__.py', backend)
     engine = read('server/backends/trt/engine.py')
+    if modern:
+        from adapters.carrot.current_server import MANAGED_ENGINE
+        native_engine = engine
+        engine = MANAGED_ENGINE
+        backend = _replace(backend, '    transforms = {}', "    from jetlink.output_projection import eligible\n    from jetlink.spec import ModelSpec\n    if semantic is not None and eligible(ModelSpec.from_dict(semantic)):\n      return TrtEngine(str(artifact), device=self.device if self.device else None)\n    from .managed_engine import TrtEngine\n    transforms = {}")
+        save('server/backends/trt/__init__.py', backend)
     engine = _replace(engine, '  def __init__(self, plan_path: str, log_severity=trt.Logger.WARNING, device: int | None = None):',
                         '  def __init__(self, plan_path: str, log_severity=trt.Logger.WARNING, device: int | None = None,\n               semantic_spec: dict | None = None, dtype_transforms: dict | None = None):')
     engine = _replace(engine, '    self.context = self.engine.create_execution_context()', '''    self.dtype_transforms = dict(dtype_transforms or {})
@@ -303,7 +350,9 @@ def server_files(reference: Path) -> dict[str, bytes]:
       if actual != v3.physical_contract(semantic_spec):
         raise ValueError('V3 engine physical contract mismatch before buffer allocation')
     self.context = self.engine.create_execution_context()''')
-    save('server/backends/trt/engine.py', engine)
+    save('server/backends/trt/managed_engine.py' if modern else 'server/backends/trt/engine.py', engine)
+    if modern:
+        save('server/backends/trt/engine.py', native_engine)
     control = read('server/control.py')
     for method in ('_cmd_download', '_cmd_prepare', '_cmd_import'):
         anchor = f'  def {method}(self, client: _Client, msg: dict) -> dict:\n'

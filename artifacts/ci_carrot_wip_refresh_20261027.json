@@ -1,0 +1,236 @@
+{
+  "M2": "NO",
+  "actual_comma_access": "NONE",
+  "actual_jetson_access": "NONE",
+  "baseline_updated": false,
+  "branch": "feature/jetlink-multimodel-carrot",
+  "capture": "NOT_RUN",
+  "changed_existing_server_bodies": [
+    "spec.py",
+    "queues.py",
+    "server/session.py",
+    "onnx_patch.py",
+    "server/backends/trt/build.py",
+    "server/backends/trt/engine.py"
+  ],
+  "date": "2026-10-27",
+  "device_mutations": "NONE",
+  "failure": {
+    "error": "ValueError: current server source body changed; review required: spec.py",
+    "run_url": "https://github.com/rownlvh8875-coder/jetson-v3-backport/actions/runs/40518639645",
+    "stage": "candidate-adapter"
+  },
+  "github_postpush_verification": "PENDING; see accompanying report for final run",
+  "guards": {
+    "finite_all_outputs": true,
+    "generation": true,
+    "model_identity": true,
+    "no_required_skips": true,
+    "offroad_provisioning": true,
+    "shape_dtype": true,
+    "source_body": true
+  },
+  "implementation_source_sha256": {
+    ".github/workflows/carrot-wip-compat.yml": "68b5dc91d66fac2e70489da6a625dfc347bd9276b66d2bca74d4573c5e5aa9b0",
+    "adapters/__init__.py": "1a15f4637d7201b55c38d5022c4271970facc3c17f0140ece6c37f9e1a5e8f4d",
+    "adapters/carrot/__init__.py": "8635e3b83ef6442f4763aa8bd5f75c9296fe0b41fdfb5a341f6e3d438c25fc80",
+    "adapters/carrot/current_server.py": "cd9811d7b123a7f6f869a5d27e2128e9e999d5bdb8d8d0f9bf84e1b793dcd764",
+    "adapters/carrot/integration.py": "386ce5950eb568425101cd5cce2486dc63fa21583eaebe904269fbc58de95033",
+    "adapters/carrot/nav.py": "18caade14c90bd44e635a674f9b67002e4241f05cc0308600959a9cd91e099dc",
+    "adapters/carrot/peer_policy.py": "5a3374bd886febcc8f236b704a9a14ce7192ca344476d8418c7de0a4eebca819",
+    "adapters/carrot/recorder.py": "6673be6bc217554d04cc376c2dd1e8e140577819128f956ac33b5b8786b263e6",
+    "adapters/carrot/recorder_060de9.py": "d42c5f96fff01ea78325fb8cc5b712d98cf3d868e2a893ef74d4c7e05614e329",
+    "adapters/carrot/recorder_24c.py": "b6a99dceb43da97db1769abb17faa0449ef63aa1a9aacf21af66737250d87469",
+    "adapters/carrot/recorder_5bb.py": "d3da367e87936e2c950fe3de47ff49d587cc6492f67c896abe86b6e31be3000c",
+    "adapters/carrot/recorder_810e.py": "6759c4847e1a667889703d76d04a226a7490b0563a16a7f0b82d244c9b410f37",
+    "adapters/carrot/recorder_a559.py": "2db248c27ddecf53880e9b0334d64e565b0034662f204fb925c47062ade3622d",
+    "adapters/carrot/recorder_activation.py": "d11e7334af635ce8fd701ff5b88987dd738a02dcc0106946ce6f743ed33c96ef",
+    "adapters/carrot/server.py": "8b771c19c4fc748e0ab8a7d5dfc736f056e2fbafd8a4095545bed6e8ce0364d7",
+    "artifacts/cinque_v3.json": "c4445632dcea7a4de12f420a69ae4a836fad779a776b2eadc48919faff8b6c62",
+    "experimental/__init__.py": "8c3ca904eecf4d4fde00e3d55d6c34003745cf9f3e94aa2d34d6d45ff0315442",
+    "experimental/jetson_optimizations/LICENSE": "f3343693685f4bb06083abf83607b54beec44229ca609779fdfb8086b75abef3",
+    "experimental/jetson_optimizations/UPSTREAM.md": "20aa52f6ed90b6149b3dfe929f63ceac386d6fda2cf223f587c878db7aa88655",
+    "experimental/jetson_optimizations/__init__.py": "49a00349b0eee2114f4cce1c37631d762be5b3a2ea3279e72f678ebfc43b9b86",
+    "experimental/jetson_optimizations/aio_writer_native.py": "8e5f560a5efaef76db6a6436a30fb436e8734ad910f32f18e3cbf28add8b095c",
+    "experimental/jetson_optimizations/device_adapter.py": "c331424d99558d98fa41616e232c8307db17e83511bf99b09adc770f51c7d660",
+    "experimental/jetson_optimizations/device_state.py": "3944678e306172742d54dbdbc5a263e4af62d56de5e36de88f74d433130a603c",
+    "experimental/jetson_optimizations/direct_inputs.py": "2ab450cabda936cd004755a1978c0b967b3a2fa90f0ee41039590e5ce2f38d11",
+    "experimental/jetson_optimizations/fastpath_adapter.py": "b507649163be3ab3fd34662146d7fbabffa096ae80fea694041d7b4a8162dc79",
+    "experimental/jetson_optimizations/ffs_aio.py": "e2233aa8813f0123f77a881927db538582f5a339dd853fc23cef3d76cb8cfcff",
+    "experimental/jetson_optimizations/input_cast.c": "a586af3a901b3e8fdce7454201f8c1d9bf7358e3de683dcd5bb12747e58688b8",
+    "experimental/jetson_optimizations/input_cast.py": "1d0d17dc2d77c9fc250f9af76c1332d7f85f0540e4dcf6a456f433a87b70778c",
+    "jetlink/cinque_v3.py": "0805c74ae7d1fce7bc8e11f073dcc79ace1b4458720b079a4ec5519b8098049f",
+    "jetlink/multimodel_policy.py": "97b64bce07af71742a90a3f8b2923ff59445c7cbb5593f1c43070732309be91e",
+    "jetlink/onnx_meta.py": "6af350f87df333fc1d7993c72b6c24e6e219b53622e594757afa2d5580b528f4",
+    "jetlink/queues.py": "8745cd8dd5af8592e97cf59c9293f56be91489ea65e6275032a27f6828ab2c0e",
+    "jetlink/spec.py": "b85cfd75ad36fe3edcdb1468df644ccba4d2f7bd7ea5175450a267c523e5661a",
+    "tests/current_carrot_loopback_peer.py": "f26b84aa9e6b6ef9d3010026ded5f17cb8bed8c2e90c8851a825ede7044ee40b",
+    "tests/current_carrot_server_peer.py": "607777a286d065a57e21e78c3f3bb1bcc0a2482bf06fdbfa5f4801f06e47564f",
+    "tests/current_carrot_server_trt.py": "ead20d2fac5a477304554d21f20d76ac8f705dbe4ad94d24d02efc38752d015c",
+    "tests/jetson_device_state_peer.py": "76d25f9d386e7b3912ce22cd786b0e4debf54410d3014d0d23d886be738ee88a",
+    "tests/jetson_input_fastpath_peer.py": "0b2ea85aaa643d3ccdecec1042aa73045764318b851c0a335e05e01fe66f4db5",
+    "tests/test_current_carrot_adapter.py": "6832bc0574f9af501498234a71dcac0bf4a4fd6ffde5a75a412e6fb267573e2d",
+    "tests/test_current_carrot_integration.py": "e2d4343ec02e209a7e128f7c625eb69db5a115b5f8cd0311a085dbb6c9a1bc58",
+    "tests/test_current_carrot_loopback.py": "bd965c40c172175ee186d7a9542c2cb01e7b8df06563c6880a0c20f19e0da34b",
+    "tests/test_current_carrot_server.py": "1705faa7746f3adab8e5a442a6d45be84ae8930923741d9a1dda0b22695c604f",
+    "tests/test_jetson_aio_candidate.py": "8853a67030a3fbba1a6ce7f3f099ed370d0d485dbc8ec6e0b923c617822f5b4b",
+    "tests/test_jetson_device_state.py": "c0bb14d2cf4baaf06248f97c70a38f80688c97179fdfded75ec4d1865f215898",
+    "tests/test_jetson_input_fastpath.py": "1267457fb853cd321a3c6789e167220f1956920809bea378fa55275503736601",
+    "tests/test_jetson_m1.py": "ddc69a2eaf45996588f424c6e3a23706262b34a4afcb7807a42b5ff179d302ac",
+    "tests/test_jetson_m15_semantic.py": "91c0052553873940cd1c4580b603072062600e82bc686ea22ee242cc5a690677",
+    "tests/test_jetson_m16_acceptance.py": "9c5576a005612cf4357e16ee56c9d27af2982768466fd642c17f5dbf9a1486eb",
+    "tests/test_jetson_m16_analysis.py": "7e5d9e05f038b7eaf477a51efb9344a630ed350f4b0a01d83fe8aec0f6802751",
+    "tests/test_jetson_m1_parity.py": "169ffef3000d84f5d36f66323fb23b7fc41450a4e9a3146617a28fe5ae7ff002",
+    "tests/test_jetson_m1_recurrent.py": "a6b577f63aa62689b35f64ab6950f3821bd3e2060a794e4e49866b466bac3f49",
+    "tests/test_jetson_optimization_integration.py": "af4db9517e3156ebf5311cd37a9f0457d4a692174321cdf8d3983bc077de7902",
+    "tests/test_latest_carrot_compat.py": "ad7e4f925293a17b133606ebddda3b3098c6bb8e1b16b1de23e9df80ae20ebfb",
+    "tests/test_multimodel_policy.py": "e49fd097b188350daa862b70b230798b8731378fe948f1bef20ed9df56a78e41",
+    "tests/test_production_v3.py": "285dc15c08add117cd8d0eb8eaf923ca798605ea31b0438dc44510ef337fdde6",
+    "tests/test_v3_build_verify.py": "8e01277466c116bd700e35dfe102cd7cf3526b9ccba24e3702a8ac73d6cfb5e3",
+    "tools/build_trt_v3.py": "a33f113c82104bd7942ba9bec5b2ae0ef2bbc861871153fd3857f2954829f686",
+    "tools/check_latest_carrot_compat.py": "284c8c54503a5b2c29d070841daf924ec79c188252dc54dd59b43ce9421b211b",
+    "tools/patch_v3_uint8.py": "8e1298345ec5fb5505f9e0845f61227cc58f0b2745db8a1401de5295b4489d06"
+  },
+  "independent_review": {
+    "findings_fixed": [
+      "native C dependency pins",
+      "unsupported P3 N16 adoption, HELLO reset and late notification"
+    ],
+    "status": "PASS",
+    "targeted_reruns_added_to_unique_total": false
+  },
+  "legacy_profile_retained": true,
+  "local_verification": {
+    "candidate_passed": 411,
+    "environment": {
+      "numpy": "2.5.4",
+      "onnx": "1.23.2",
+      "os": "Ubuntu24.04 WSL x86_64",
+      "pytest": "9.1.1",
+      "python": "3.12.3"
+    },
+    "failed": 0,
+    "groups": [
+      {
+        "name": "current-carrot-integration",
+        "passed": 44,
+        "skipped": 0,
+        "status": "PASS",
+        "tests": 44
+      },
+      {
+        "name": "multimodel-policy",
+        "passed": 9,
+        "skipped": 0,
+        "status": "PASS",
+        "tests": 9
+      },
+      {
+        "name": "trt-builder-cpu-contracts",
+        "passed": 41,
+        "skipped": 0,
+        "status": "PASS",
+        "tests": 41
+      },
+      {
+        "name": "upstream-phase-linux-sockets",
+        "passed": 6,
+        "skipped": 0,
+        "status": "PASS",
+        "tests": 6
+      },
+      {
+        "name": "upstream-wire-model-cache",
+        "passed": 69,
+        "skipped": 0,
+        "status": "PASS",
+        "tests": 69
+      },
+      {
+        "name": "upstream-modeld-ipc-warp",
+        "passed": 30,
+        "skipped": 0,
+        "status": "PASS",
+        "tests": 30
+      },
+      {
+        "name": "upstream-native-n16",
+        "passed": 113,
+        "skipped": 0,
+        "status": "PASS",
+        "tests": 113
+      },
+      {
+        "name": "optional-optimization-contracts",
+        "passed": 99,
+        "skipped": 0,
+        "status": "PASS",
+        "tests": 99
+      }
+    ],
+    "mode": "ONLINE_LATEST",
+    "skipped": 0,
+    "status": "PASS",
+    "unique_workflow_tests_passed": 561,
+    "workflow_gate_tests_passed": 150
+  },
+  "managed_v3": "ISOLATED_EXISTING_STRICT_ENGINE_AND_STATE",
+  "mixed_or_unknown_source_profile": "REJECTED",
+  "native_n16_protocol2": "PRESERVED",
+  "native_n16_protocol3": "REJECTED_BEFORE_ADOPTION_AND_LATE_NOTIFICATION",
+  "parity": "UNDETERMINED",
+  "reviewed_native_dependency_sha256": {
+    "block_codec.py": "a42299bd1fccdf53022afd50066909caa5740f4790cec1a88eec9665f8e7ad5e",
+    "direct_map.py": "bc2e9be99ffc36fa9e39eb5a68f241d1fa3a11a77a30212e35df04a185210161",
+    "finite.c": "04196af6ea6c6823f9d6b2dbeeb3c94f8ac3f77ece74e9aeec983b74e2a663b0",
+    "finite.py": "94b7a40d8b00a89d480075cf4763d827ac75e27ba95b194fba8d138507131f6c",
+    "input_cast.c": "d14dc4b88fa5af1e30e8fbc74d2830a1537d6d1e75dbeded1dd08b6b9ca4188f",
+    "input_cast.py": "8f115c4a2c52f60d9ff339b1111184a29c69874a99223fe61af7f3afe66c47a0",
+    "output_projection.py": "d76547e3426c488c6f8ab341a2b1f0613c183a02c6b6710c9871af8a94d3a534",
+    "packed_codec.py": "8d67a94951e6188d811c8ad7072e5db1b40ff9ef24ec28049634b07cb26c9004",
+    "server/backends/trt/cudart.py": "d4079ec3bebb889b4b2b7dce3bd5629f64e357733d75d35e2cf3fa7eb5836db1",
+    "server/backends/trt/device_state.py": "80cd6159dc6ab9ec3559f4556986752d49dd670ef6d6f6c5d8ab863fa84dfa4b",
+    "server/backends/trt/state_buffers.py": "0942c00bf24e00eb030607648a35ae69efbda3ebce631647c1d17cbf0c8f6519",
+    "server/cache.py": "259d5abc99609f866f091ed0e1d0a9d9846849cc082bbf1475d2b9b5f048aeeb"
+  },
+  "reviewed_server_profile_sha256": {
+    "onnx_meta.py": "17eabd7f663020c857f6c426c78aa021e7853fd9b761f3cb1f3d481ea584db94",
+    "onnx_patch.py": "742fa6080ee81d8c5f61c9ee3d4616d6d28fee7f99e691463561e71121bf9c1c",
+    "queues.py": "c251eecc45e38704c15b2a10f0969c270cd9fa11603ebdaae88c1b1187112ea8",
+    "server/backends/trt/__init__.py": "dd604510a62aa8b8d2ee7b44b5bd91ab9386666805b5eef9b656e3af6ba2d009",
+    "server/backends/trt/build.py": "45d7080bf85c897e0cf92980ae1006e4db9205b27ae2e335244f3a4ec657c8c1",
+    "server/backends/trt/engine.py": "44cfa18fa841bf83c70dfeab0e53debf07675c9c7d5ff23838d86eb509762c6e",
+    "server/control.py": "f69345e416faf74e11ddee7bd89e69f570504b1ffa730f6c416db01ed28918f4",
+    "server/main.py": "db09427220eae1eb5346ea4ebb9b5dc286dea491dd34e3baac7ac3e2f31f5813",
+    "server/session.py": "975e36a680fe57a1ed6e865c3bba119903508a0ed21032d83b77295580998591",
+    "spec.py": "ec844ccaf13ffc1d7c03ad683b0e3f2ce6a1d78f4088067739aaa419af422170"
+  },
+  "schema": 1,
+  "starting_development_head": "29e921f22b6bf8e5983428baa457c056633e9d1c",
+  "status": "PASS_CPU_SOFTWARE_CONTRACTS",
+  "supplemental_legacy_run": {
+    "failed": 0,
+    "included_in_unique_total": false,
+    "passed": 80,
+    "skipped": 0
+  },
+  "ticket": "NOT_CREATED",
+  "upstreams": {
+    "carrot-jetson": {
+      "ref": "refs/heads/main",
+      "sha": "d0dc96fa32410403dfb2fefff3e2909c11ec109b",
+      "url": "https://github.com/ajouatom/carrot-jetson.git"
+    },
+    "carrot-wip": {
+      "ref": "refs/heads/carrot-wip",
+      "sha": "604bc0a22733e648ec05b268da1ffaae7db52a69",
+      "url": "https://github.com/ajouatom/openpilot.git"
+    },
+    "zoompilot/jetlink": {
+      "ref": "refs/heads/main",
+      "sha": "bf4dc940e98f5d3ed9b7163adb021439010d634f",
+      "url": "https://github.com/zoompilot/jetlink.git"
+    }
+  },
+  "upstreams_stable_during_verification": true
+}

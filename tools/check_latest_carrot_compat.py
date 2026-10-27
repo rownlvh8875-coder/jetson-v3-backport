@@ -49,6 +49,7 @@ SPARSE_PATHS = (
     "openpilot/common", "openpilot/selfdrive/modeld", "third_party/jetlink",
     "tools/jetlink", "openpilot/selfdrive/carrot/server/features",
     "openpilot/selfdrive/carrot/web", "openpilot/system/camerad/cameras",
+    "openpilot/selfdrive/navigation",
 )
 CURRENT_TESTS = (
     "test_current_carrot_adapter.py", "test_current_carrot_server.py",
@@ -145,6 +146,9 @@ def required_suites(repo, candidate):
         ("upstream-wire-model-cache", [candidate / "tools/jetlink" / name for name in (
             "test_stateful_protocol.py", "test_app_models.py", "test_cache_persistence.py")]),
         ("upstream-modeld-ipc-warp", [candidate / "openpilot/selfdrive/modeld/tests/test_jetlink.py"]),
+        ("upstream-native-n16", [candidate / "tools/jetlink" / name for name in (
+            "test_resaction_session.py", "test_output_projection.py", "test_packed_codec.py",
+            "test_state_buffers.py", "test_device_state.py", "test_direct_map.py", "test_block_codec.py")]),
         ("optional-optimization-contracts", [repo / 'tests' / name for name in (
             'test_jetson_device_state.py', 'test_jetson_input_fastpath.py',
             'test_jetson_aio_candidate.py', 'test_jetson_optimization_integration.py')]),

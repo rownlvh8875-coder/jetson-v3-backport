@@ -14,10 +14,20 @@ def _replace(source, old, new):
 
 def device_optimization_files(files: dict[str, bytes]) -> dict[str, bytes]:
     """Return ONLY the optional changed files, without mutating ``files``."""
-    engine_name = PREFIX + 'server/backends/trt/engine.py'
+    modern = PREFIX + 'server/backends/trt/managed_engine.py' in files
+    engine_name = PREFIX + 'server/backends/trt/' + ('managed_engine.py' if modern else 'engine.py')
     session_name = PREFIX + 'server/session.py'
     engine = files[engine_name].decode('utf-8')
     session = files[session_name].decode('utf-8')
+    native_warm = native_infer = ''
+    if '  def _warm_native(' in session:
+        # Experimental recurrence belongs only to the managed V3 branch.
+        # Retain upstream N16 methods and their module dependencies verbatim.
+        start, end = session.index('  def _warm_native('), session.index('  def unload(')
+        native_warm = session[start:end]
+        session = session[:start] + session[end:]
+        start = session.index('  def _infer_native(')
+        native_infer, session = session[start:], session[:start]
     engine = _replace(engine, 'import ctypes\n', 'import ctypes\nimport os\n')
     engine = _replace(engine, '    self.logger = trt.Logger(log_severity)', '''    device_flag = os.environ.get('CARROT_TRT_DEVICE_STATE', '0')
     if device_flag not in ('0', '1'):
@@ -131,6 +141,12 @@ def device_optimization_files(files: dict[str, bytes]) -> dict[str, bytes]:
 
 def _check_request_spec(req: Request, spec: ModelSpec) -> None:
 ''')
+    if native_warm:
+        session = session.replace('  def unload(', native_warm + '  def unload(', 1) + native_infer
+    module_name = 'managed_device_state.py' if modern else 'device_state.py'
+    if modern:
+        engine = engine.replace('from jetlink.server.backends.trt.device_state import DeviceState',
+                                'from jetlink.server.backends.trt.managed_device_state import DeviceState')
     module = Path(__file__).with_name('device_state.py').read_text(encoding='utf-8').encode('utf-8')
     return {engine_name: engine.encode(), session_name: session.encode(),
-            PREFIX + 'server/backends/trt/device_state.py': module}
+            PREFIX + 'server/backends/trt/' + module_name: module}

@@ -478,6 +478,34 @@ def orchestrate(scenario, version=3, model='v3'):
                 server.communicate(timeout=5)
 
 
+def native_protocol3():
+    import jetlink
+    root = Path(jetlink.__file__).resolve().parents[3]
+    spec = ModelSpec.from_dict(json.loads((root / 'openpilot/selfdrive/modeld/jetlink/jetson_model.json').read_text()))
+    resets, sent = [], []
+    with tempfile.TemporaryDirectory() as tmp:
+        host = EngineHost(EngineCache(Path(tmp), CpuBackend()))
+        host.loaded = SimpleNamespace(spec=spec, sha256=spec.sha256, valid=True, prev_feat=None,
+                                      queues=SimpleNamespace(reset=lambda: resets.append(True)),
+                                      engine=SimpleNamespace(close=lambda: None))
+        transport = SimpleNamespace(protocol_version=3, send=lambda kind, seq, parts, flags=0: sent.append(json.loads(bytes(parts[0]))))
+        session = Session(transport, host)
+        try:
+            session.on_hello(SimpleNamespace(seq=1))
+            session.on_engine_req(SimpleNamespace(seq=2, payload=memoryview(json.dumps(
+                {'sha256': spec.sha256, 'nbytes': spec.nbytes, 'frame_skip': spec.frame_skip}).encode())))
+            assert sent[-1]['state'] == 'failed', 'unsupported P3 N16 must not become ready'
+            assert not resets, 'P3 HELLO must not reset the resident native N16 generation'
+            session.engine_update()
+            assert sent[-1]['state'] == 'failed', 'late engine notification must not authorize unsupported N16'
+            assert session._prepared_loaded is None
+            assert not resets
+            assert host.loaded.valid
+        finally:
+            host.close()
+    return {'evidence': 'CPU_FAKE/FIXTURE', 'passed': True}
+
+
 if __name__ == '__main__':
     action = sys.argv[1]
     if action == 'serve':
@@ -492,6 +520,8 @@ if __name__ == '__main__':
         print(json.dumps(run()))
     elif action == 'offroad':
         print(json.dumps(offroad()))
+    elif action == 'native-protocol3':
+        print(json.dumps(native_protocol3()))
     else:
         print(json.dumps(orchestrate(action, int(sys.argv[2]) if len(sys.argv) > 2 else 3,
                                      sys.argv[3] if len(sys.argv) > 3 else 'v3')))

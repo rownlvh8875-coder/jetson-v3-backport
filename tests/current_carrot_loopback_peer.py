@@ -212,7 +212,7 @@ def hardware_boundaries():
     diagnostics = []
     sys.modules['openpilot.common.params'] = NS(Params=lambda: NS(
         get_bool=lambda key: key == 'IsOffroad', put_bool_nonblocking=lambda *args: None))
-    sys.modules['openpilot.common.runtime_diagnostics'] = NS(RuntimeDiagnostics=lambda *args: NS(
+    sys.modules['openpilot.common.runtime_diagnostics'] = NS(RuntimeDiagnostics=lambda *args, peak_metric=None: NS(
         record=lambda **kwargs: diagnostics.append(kwargs)))
     sys.modules['openpilot.common.swaglog'] = NS(cloudlog=NS(
         event=lambda *args, **kwargs: None, warning=lambda *args, **kwargs: None,
@@ -348,12 +348,16 @@ def drive_daemon(remote, peer, scenario, spec, cache, diagnostics, report):
                 def __init__(self):
                     self.images = iter((42, 133))
 
-                def __call__(self, *args, prepare=None):
+                def __call__(self, *args, prepare=None, output_buffer=None):
                     # Nav overlaps same-frame CPU input preparation with warp.
                     # Execute that actual callback at this camera hardware seam.
                     if prepare is not None:
                         prepare()
-                    return np.full(spec.warped_shape, next(self.images), np.uint8)
+                    value = np.full(spec.warped_shape, next(self.images), np.uint8)
+                    if output_buffer is not None:
+                        np.copyto(output_buffer, value)
+                        return output_buffer
+                    return value
 
             # QCOM constructor is the hardware seam; run() is the current method.
             joined = model.JoiningModel.__new__(model.JoiningModel)

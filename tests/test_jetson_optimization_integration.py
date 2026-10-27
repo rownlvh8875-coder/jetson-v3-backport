@@ -30,8 +30,15 @@ def copies(tmp_path_factory):
 def test_standard_candidate_has_no_optimization_code_or_env_imports(copies):
     standard, experiment, base, opt = copies
     assert 'experimental_optimizations' not in base or base['experimental_optimizations'] is False
-    assert not (standard/'third_party/jetlink/jetlink/server/backends/trt/device_state.py').exists()
-    assert not (standard/'third_party/jetlink/jetlink/input_cast.py').exists()
+    reference = Path(os.environ.get('CARROT_REFERENCE_ROOT', ROOT / '.reference/carrot-wip-ba186'))
+    for name in ('third_party/jetlink/jetlink/server/backends/trt/device_state.py',
+                 'third_party/jetlink/jetlink/input_cast.py'):
+        # Upstream now ships native N16 implementations at these paths. Their
+        # presence is not evidence that our V3 experiment was activated.
+        if (reference/name).exists():
+            assert (standard/name).read_bytes() == (reference/name).read_bytes()
+        else:
+            assert not (standard/name).exists()
     for entry in base['touched_files']:
         assert hashlib.sha256((standard/entry['path']).read_bytes()).hexdigest() == entry['after_sha256']
 

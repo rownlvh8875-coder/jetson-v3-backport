@@ -88,13 +88,14 @@ def main():
                 loaded.queues.step_into(warped, packed, loaded.host_inputs)
                 assert engine.buffers['new_img'].tobytes() == warped.astype(np.float16).tobytes()
                 assert all(np.array_equal(engine.buffers[n], value) for n, value in states.items())
+            converter = 'jetlink.managed_input_cast' if 'jetlink.managed_input_cast' in sys.modules else 'jetlink.input_cast'
             report.update(state_untouched=True, exact_images=True,
-                          native_loaded='jetlink.input_cast' in sys.modules,
+                          native_loaded=converter in sys.modules,
                           source=str(Path(sys.modules['jetlink.queues'].__file__).resolve()))
             # Compilation is confined to preparation; after cache clear, a
             # frame must still use its already prepared closure without loading.
-            if 'jetlink.input_cast' in sys.modules:
-                sys.modules['jetlink.input_cast'].native_u8_to_f16.cache_clear()
+            if converter in sys.modules:
+                sys.modules[converter].native_u8_to_f16.cache_clear()
                 import subprocess
                 subprocess.run = lambda *a, **kw: (_ for _ in ()).throw(AssertionError('per-frame compilation'))
                 loaded.queues.step_into(warped, packed, loaded.host_inputs)

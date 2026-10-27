@@ -67,7 +67,14 @@ def fixture(flag='1', *, full=False):
         backend = gpu.backend.TrtBackend()
         plan = root / 'fixture.plan'
         backend.build(source.path, plan, meta_extra={'spec': source.spec})
-        import jetlink.server.backends.trt.device_state as module
+        import importlib
+        package = 'jetlink.server.backends.trt.'
+        try:
+            module = importlib.import_module(package + 'managed_device_state')
+        except ModuleNotFoundError as error:
+            if error.name != package + 'managed_device_state':
+                raise
+            module = importlib.import_module(package + 'device_state')
         trace, pending = [], []
         options = NS(scan_bad=False, gpu_bad=None, cpu_bad=None, d2d_failure=0,
                      d2d_count=0, drain_failure=False, kernels=0, capturing=False,

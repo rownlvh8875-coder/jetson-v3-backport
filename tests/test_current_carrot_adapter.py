@@ -140,7 +140,8 @@ except mac.PreparationDeferred: pass
 else: raise AssertionError('onroad V2 to V3 switch accepted')
 assert prepare(True).sha256 == spec.sha256
 peer.clear(); peer.update(protocol=2, backend='trt',carrot_host='jetson')
-client.result=mac.SPEC
+native_spec = getattr(mac, 'JETSON_SPEC', mac.SPEC)
+client.result=native_spec
 mac.prepare(client,peer,lambda:True,lambda:True,lambda *a:None,cache)
-assert client.calls[-1][0] == mac.SPEC.sha256
+assert client.calls[-1][0] == native_spec.sha256
 ''')

@@ -1,3 +1,22 @@
+# Latest continuation — current carrot-wip GitHub CI repair · 2026-10-27
+
+Read docs/CI_CARROT_WIP_REFRESH_20261027.md and
+artifacts/ci_carrot_wip_refresh_20261027.json. Starting29e921f CLEAN/equal.
+Recurring Actions failure was the source-body guard rejecting current604bc0a;
+six guarded server bodies changed. Reviewed old/new whole profiles and12 native
+dependency pins now coexist; no mixed/unknown-body bypass or baseline advance.
+Native N16 P2 is preserved; managed V3 engine/state/fastpath use isolated namespaces.
+P3 native-N16 adoption and late notification reject before touching resident state.
+Fresh ONLINE_LATEST software suite411PASS plus workflow gates150PASS =561unique,
+0FAIL/0SKIP; supplemental80 old-layout cases/reviewer reruns not counted twice.
+Independent review clean. GitHub post-push result still PENDING until run inspected;
+see report for final receipt. Actual comma/Jetson access0 and mutation0, no ticket,
+capture/restart/storage/Params/Git/updater/device work. Historical recorder evidence
+and deployment pins/patches preserved. This does not authorize new-device retarget
+or prove real model parity. M2NO; parityUNDETERMINED.
+
+---
+
 # Latest continuation — M19-C1.5Q fresh actual OFF/source gate · 2026-10-27
 
 ## BLOCKED_DEVICE_UNREACHABLE — device commands0, actual state unobserved

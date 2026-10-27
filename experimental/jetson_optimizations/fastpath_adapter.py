@@ -47,8 +47,13 @@ def fastpath_optimization_files(files: dict[str, bytes]) -> dict[str, bytes]:
 ''' + anchor, 1)
     result[name] = (before + state).encode('utf-8')
     for module in ('input_cast.c', 'input_cast.py', 'direct_inputs.py'):
-        target = PREFIX + module
+        modern = PREFIX + 'server/backends/trt/managed_engine.py' in files
+        target = PREFIX + ('managed_' + module if modern and module.startswith('input_cast') else module)
         if target in files:
             raise ValueError(f'Input fastpath module already exists: {target}')
-        result[target] = (SOURCE / module).read_text(encoding='utf-8').encode('utf-8')
+        body = (SOURCE / module).read_text(encoding='utf-8')
+        if modern:
+            body = body.replace('from jetlink.input_cast import', 'from jetlink.managed_input_cast import')
+            body = body.replace("with_name('input_cast.c')", "with_name('managed_input_cast.c')")
+        result[target] = body.encode('utf-8')
     return result
