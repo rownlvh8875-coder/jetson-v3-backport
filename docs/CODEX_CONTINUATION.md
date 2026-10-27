@@ -1,3 +1,35 @@
+# Latest continuation — M19-C1.5H actual native capability · 2026-10-27
+
+## BLOCKED_NATIVE_CAPABILITY — one query, full profile assurance unconfirmed
+
+Read docs/M19C15H_ACTUAL_CAPABILITY_20261027.md and
+artifacts/m19c15h_actual_capability_20261027.json first. New user endpoint; guarded
+firstcats1/0 and ownedclose confirmed. Receive-only12.014s pre/12.032s post OFF
+observations PASS:startedfalse/ignitionfalse,false. Directly observedcarrot-nav@
+24c1ba5e4b3428f56fa0e402f5a10097e2e94c32.12recordedcanaries/index/status/storage
+endpoints stable;2PREfiles/1of41pins directmatch. Legacy fullPRE6/41checks used
+asserts; targetoptimizationstate NOT_RECORDED, assurance UNCONFIRMED. N16 full
+freshpin assurance notestablished. No global process/helper-policy acceptance.
+
+One66708-byte payloadbe13b17d4318d4dd0b9c0ff7e9f1e620c49a9690a5143092af44a0b98bf71767
+via python3 -B stdin returned BLOCKED_NATIVE_CAPABILITY/events3/allauthorityfalse.
+LocalSHA verified; actualdecoder wholeSHAassert enforcement UNCONFIRMED. Embedded
+modulechecks explicit. Count-only result gives no kernel/libc/ABI/mount cause.
+Transport helpers separate from probechildcount0; ownedcloses confirmed. No retry,
+60s process-sampler/owned-observer collection, redeployment, source/Params/service/
+USB/updater/storage write,ticket/activation/writer/capture/restart or Jetsonaccess.
+Legacywriter scan0 is not full-hostabsence. Frames0/datasetNONE;Vehicle10NO;
+M2NO;parityUNDETERMINED. Historical failures/helper safety remain unproved.
+
+22fresh localfixture PASS/0FAIL/0SKIP=12rerun+8newtransport+2futuredecoder. Future
+copy explicitSHA/optimization if-raise NOT_DISPATCHED; doesnot retroprove actual.
+Prior290historical, notrerun/added;350tracked+523historical-private hashesheld.
+Next: offline fixed-enum failure-attribution and unconditional-gate review. No
+automatic second actualprobe, weakening, recorder or ticket. Result commit:
+git log -1 --format=%H -- artifacts/m19c15h_actual_capability_20261027.json
+
+---
+
 # Latest continuation — M19-C1.5G actual capability attempt · 2026-10-27
 
 ## BLOCKED_DEVICE_UNREACHABLE — capability NOT_RUN
