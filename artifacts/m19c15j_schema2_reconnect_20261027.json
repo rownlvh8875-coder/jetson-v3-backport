@@ -1,0 +1,98 @@
+{
+  "schema": 2,
+  "stage": "M19-C1.5J",
+  "date": "2026-10-27",
+  "timezone": "Asia/Seoul",
+  "status": "BLOCKED_DEVICE_UNREACHABLE",
+  "starting_development_head": "14865da8f8f29c63c80214305cb97639feb4c7ca",
+  "branch": "feature/jetlink-multimodel-carrot",
+  "development_start": "CLEAN_LOCAL_REMOTE_EQUAL",
+  "connection": {
+    "endpoint": "REDACTED_LAST_USER_PROVIDED_COMMA_ENDPOINT",
+    "attempts": 1,
+    "status": "BLOCKED_ACCESS_ERROR",
+    "retained_parsed_frames": 0,
+    "owned_metadata_observed": false,
+    "command_sends": 0,
+    "first_reads_queued": 0,
+    "close_event_observed": true,
+    "final_ready_state": 3,
+    "terminal_guard": true,
+    "late_frames_ignored": 0,
+    "other_addresses_tried": 0,
+    "network_scan": false,
+    "automatic_retry": false,
+    "receipt_sha256": "f20bb43f9ae53e26ae8de8d1f9680196381468f99fa394bd3a40ed6152ea291a",
+    "driver_sha256": "c5a8ebc9e130f238d15f8dc4d63f348aadeb9372b4cf45eab81f4b243db7e52b"
+  },
+  "actual": {
+    "IsOffroad": "NOT_OBSERVED",
+    "IsOnroad": "NOT_OBSERVED",
+    "genuine_OFF": "NOT_RUN",
+    "branch": "NOT_OBSERVED",
+    "head": "NOT_OBSERVED",
+    "source_profile_pins": "NOT_RUN",
+    "storage_namespace_writer": "NOT_OBSERVED",
+    "preflight_dispatches": 0,
+    "schema2_queries": 0,
+    "postflight_dispatches": 0,
+    "capability_result": "NOT_RUN_FIRST_CONNECTION_GATE_FAILED",
+    "deployment": "NOT_RUN",
+    "storage_write": "NONE",
+    "source_Git_Params_service_USB_updater_model_writes": "NONE_BY_WORKFLOW",
+    "ticket": "NOT_CREATED",
+    "activation": "NOT_RUN",
+    "writer_start": "NOT_RUN",
+    "capture": "NOT_RUN",
+    "frames_captured_this_stage": 0,
+    "dataset_created": "NONE",
+    "restart_reboot": "NOT_RUN",
+    "Jetson_access": false,
+    "Jetson_mutation": "NONE",
+    "global_operating_preservation": "NOT_OBSERVED"
+  },
+  "prepared_release": {
+    "status": "REVERIFIED_LOCALLY_NOT_DISPATCHED",
+    "payload_sha256": "e8116a412a79224105065c067d7b54d4c330febb0ed41386291e7c3f58c725c1",
+    "payload_bytes": 72286,
+    "source_pins": {
+      "proc_view_scope_model": "5bda1c8d502b8f2ea7a9f004f97be4580222d0af30bb8edd6d19812309a26f2d",
+      "pinned_proc_view": "2676357620c11e785e290d59fe9684a2766c6a9de3f39270c3bfdfdf3ed3f5ca",
+      "proc_view_capability": "04e1ccae4bc76d5893a0069c6623edb27faa633676a6bd63533efa39e86130b2"
+    },
+    "asset_sha256": {
+      "native-failure-payload-v2.py": "e8116a412a79224105065c067d7b54d4c330febb0ed41386291e7c3f58c725c1",
+      "capability-decoder.py": "d6612dd1dd0311d3596f80a2d32d5e0d80d31deb4046a88b0607508c67eaebb3",
+      "preflight-decoder.py": "c8a57b4d138ad95f7de48085a5e58d4895cf9122bb623eca98aaa21c7f5f55be"
+    },
+    "transport_sha256": "ca7d2fdcfa75f6b3f5bb1b0a1f9fc466777fa9afe7fb537463b9783e6b4041c7",
+    "required_receiver_schema": 2,
+    "fresh_OFF_source_asset_gates": "STILL_REQUIRED",
+    "native_failure_reason": "NO_NEW_RESULT"
+  },
+  "preservation": {
+    "prior_tracked_hashes": 360,
+    "historical_private_hashes": 603,
+    "baseline_sha256": "04e8094c68095a72562001b1550dc20cb8e282d4d2a6077c7f205d8264d65871",
+    "continuation_old_body_sha256": "fa9a3eb0527483ab0a60dce283fc3860843afaf886a641cab86c0cd6881a2257",
+    "historical_H": "BLOCKED_NATIVE_CAPABILITY_REASON_UNKNOWN_FULL_PRE6_41_UNCONFIRMED_NOT_UPGRADED",
+    "historical_I": "OFFLINE_PREPARED_NOT_ACTUAL_APPROVAL"
+  },
+  "tests": {
+    "this_stage": "NOT_RUN_NO_SOURCE_OR_TEST_CHANGES",
+    "historical_python342": "NOT_RERUN_NOT_ADDED",
+    "historical_transport12": "NOT_RERUN_NOT_ADDED",
+    "release_source_and_asset_hashes": "FRESH_MATCH",
+    "root_diagnostics4_nativeFFmpeg": "SEPARATE_UNCHANGED_NOT_COUNTED",
+    "dependency_installs": "NONE"
+  },
+  "decision": {
+    "actual_redeployment_ready": false,
+    "Vehicle10_ready": false,
+    "M2": false,
+    "policy_acceptance": false,
+    "numerical_decision": "PARITY_UNDETERMINED"
+  },
+  "next_action": "USER_CONFIRMS_OFF_POWER_AND_CURRENT_IP_THEN_NEW_FRESH_FIRST_GATE_BEFORE_ANY_SCHEMA2_QUERY",
+  "result_commit_locator": "git log -1 --format=%H -- artifacts/m19c15j_schema2_reconnect_20261027.json"
+}

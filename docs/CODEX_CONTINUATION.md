@@ -1,3 +1,28 @@
+# Latest continuation — M19-C1.5J schema2 reconnect · 2026-10-27
+
+## BLOCKED_DEVICE_UNREACHABLE — schema2 query NOT_RUN
+
+Read docs/M19C15J_SCHEMA2_RECONNECT_20261027.md and
+artifacts/m19c15j_schema2_reconnect_20261027.json first. Feature start14865da...
+CLEAN/equal. Reviewed schema2 assets/sourcepins freshly matched. One connection
+to last known user endpoint failed. Guarded receipt:parsedframes0, commands0,
+readcats0, terminalguardtrue, closeobservedtrue/state3. No other address/scan/
+retry. CurrentactualOFF/source/profile/pins/storage/namespace/writer NOT_OBSERVED.
+Preflight0/schema2query0/postflight0. No failure code or physicalcause inferred.
+
+Prepared72286-byte payloadSHAe8116a412a79224105065c067d7b54d4c330febb0ed41386291e7c3f58c725c1
+remains NOT_DISPATCHED. No sampler/ownedobserver collection, deployment, source/
+Params/service/USB/updater/storage/model write,ticket/activation/writer/capture/
+restart or Jetsonaccess. Frames0/datasetNONE. Globaloperatingpreservation unknown.
+360tracked+603historical-private hashesheld. No tests rerun/no source changes;
+prior342Python/12transport historical, notadded. HnativecauseUNKNOWN/fullPRE6-41
+UNCONFIRMED and Ioffline notactualapproval, unchanged. Vehicle10NO;M2NO;
+parityUNDETERMINED. Next:userconfirms OFFpower/currentIP, then fresh firstcats
+and sourcegates before at most1schema2readonly query. No ignitionON needed.
+Result commit:git log -1 --format=%H -- artifacts/m19c15j_schema2_reconnect_20261027.json
+
+---
+
 # Latest continuation — M19-C1.5I offline failure projection/gate · 2026-10-27
 
 ## PASS_OFFLINE_FAILURE_PROJECTION_AND_UNCONDITIONAL_GATE — no actual query
