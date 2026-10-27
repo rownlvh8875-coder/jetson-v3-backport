@@ -1,3 +1,31 @@
+# Latest continuation — M19-C1.5Q fresh actual OFF/source gate · 2026-10-27
+
+## BLOCKED_DEVICE_UNREACHABLE — device commands0, actual state unobserved
+
+Read docs/M19C15Q_FRESH_OFF_SOURCE_GATE_20261027.md and
+artifacts/m19c15q_fresh_off_source_gate_20261027.json. Start a897eb0 CLEAN/equal.
+User authorized next fresh read-only OFF/source check, not schema3 dispatch.
+Remote-access inventory all offline. One prior reviewed Cweb endpoint attempt,
+no scan/alternate/retry. First-flag transport reused with stage session label
+only changed and local syntax PASS. Connection failed before any frame/metadata;
+BLOCKED_ACCESS_ERROR, command_sends0/read_commands0/frames0. Socket closure
+observed/state3, gate terminal. No actual OFF/ignition/branch/HEAD/profile/pins/
+storage/namespace/writer/process observation obtained. Failure causeUNKNOWN;
+not an OFF failure or proof of device power/source state. Further workNOT_RUN.
+Schema3/schema2 queries0; no device source/Git/Params/storage/updater/service/USB/
+model command, ticket/activation/capture/restart/reboot or Jetson access. Frames0,
+no dataset created. Actual operating preservation NOT_REATTESTED, not PASS.
+390 old tracked files preserved outside prepend; historical L/O/P and release/
+backend/defaults/patches/pins unchanged. No Python regression rerun or historical
+558 added; private transport syntax check only. Fresh actual info requested:
+powered ignition-OFF availability/current address; no ignition ON needed.
+Next: new user-triggered first cats, then fresh observations/source identity if
+OFF passes. No historical OFF reuse or auto-retarget. Query/deployment/Vehicle10
+readinessNO; M2NO; parityUNDETERMINED.
+Result commit:git log -1 --format=%H -- artifacts/m19c15q_fresh_off_source_gate_20261027.json
+
+---
+
 # Latest continuation — M19-C1.5P offline schema3 release · 2026-10-27
 
 ## PASS_OFFLINE_RELEASE_ONLY — actual query/deployment not performed
