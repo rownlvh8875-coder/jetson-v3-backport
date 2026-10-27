@@ -1,3 +1,23 @@
+# Latest continuation — M19-C1.5K schema2 OFF gate · 2026-10-27
+
+## BLOCKED_NOT_OFFROAD — connectivity restored, schema2 query NOT_RUN
+
+Read docs/M19C15K_SCHEMA2_OFF_GATE_20261027.md and
+artifacts/m19c15k_schema2_off_gate_20261027.json. User explicitly resumed the
+a9d7fa9 schema2 workflow, not the separate Git-pull diagnosis. Start a9d7fa9
+CLEAN/local-remote equal. One fresh owned connection: first cats0/1, so OFF
+gate failed. Closed observed/state3. No retry/preflight/schema2 query/postflight,
+deployment, ticket, capture, restart, storage/source/Params/updater writes or
+Jetson access. Frames0/no dataset created. Source/profile/storage/namespace/
+writer not revalidated this stage. Local reviewed schema2 release hashes match;
+not device capability approval. Historical J/H/I evidence unchanged. No test
+rerun or historical count added. Vehicle10NO; M2NO; parityUNDETERMINED.
+Next: park safely, maintain comma power with ignition OFF, then fresh first
+cats and all source/profile/storage gates before at most one schema2 query.
+Result commit:git log -1 --format=%H -- artifacts/m19c15k_schema2_off_gate_20261027.json
+
+---
+
 # Latest continuation — M19-C1.5J schema2 reconnect · 2026-10-27
 
 ## BLOCKED_DEVICE_UNREACHABLE — schema2 query NOT_RUN

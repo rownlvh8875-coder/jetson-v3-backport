@@ -1,0 +1,82 @@
+{
+  "schema": 2,
+  "stage": "M19-C1.5K",
+  "date": "2026-10-27",
+  "status": "BLOCKED_NOT_OFFROAD",
+  "starting_development_head": "a9d7fa9ba4f3992ef04e773c3b5f349fe9e7ebc3",
+  "branch": "feature/jetlink-multimodel-carrot",
+  "development_start": "CLEAN_LOCAL_REMOTE_EQUAL",
+  "scope": "RESUME_REVIEWED_SCHEMA2_WORK_AFTER_A9D7FA9_NOT_GIT_PULL_DIAGNOSIS",
+  "connection": {
+    "endpoint": "REDACTED_USER_PROVIDED_COMMA_ENDPOINT",
+    "attempts": 1,
+    "owned_metadata_observed": true,
+    "read_commands": 2,
+    "first_reads": [
+      "IsOffroad",
+      "IsOnroad"
+    ],
+    "flags": {
+      "IsOffroad": "0",
+      "IsOnroad": "1"
+    },
+    "close_event_observed": true,
+    "final_ready_state": 3,
+    "terminal_guard": true,
+    "automatic_retry": false,
+    "receipt_sha256": "ed1542a9bc0e740fb1c39c17c1ba06b6b9e5dcc8348d514460a712475a2c7c2b",
+    "driver_sha256": "2add44ae8d7d8f1b63356e0c64d992daa246df1db1e7c85192fada3bf894164e"
+  },
+  "actual": {
+    "genuine_OFF": "NOT_RUN_FIRST_FLAGS_FAILED",
+    "source_profile_pins": "NOT_REVALIDATED_THIS_STAGE",
+    "storage_namespace_writer": "NOT_OBSERVED_THIS_STAGE",
+    "preflight_dispatches": 0,
+    "schema2_queries": 0,
+    "postflight_dispatches": 0,
+    "deployment": "NOT_RUN",
+    "ticket": "NOT_CREATED",
+    "activation": "NOT_RUN",
+    "writer_start": "NOT_RUN_BY_WORKFLOW",
+    "capture": "NOT_RUN",
+    "frames_captured_this_stage": 0,
+    "dataset_created_this_stage": "NONE",
+    "source_Git_Params_service_USB_updater_model_storage_writes": "NONE_BY_WORKFLOW",
+    "restart_reboot": "NOT_RUN",
+    "Jetson_access": false,
+    "Jetson_mutation": "NONE",
+    "global_operating_preservation": "NOT_ESTABLISHED"
+  },
+  "prepared_release": {
+    "status": "FRESH_LOCAL_HASH_MATCH_NOT_DISPATCHED",
+    "payload_bytes": 72286,
+    "checks": {
+      "native-failure-payload-v2.py": "e8116a412a79224105065c067d7b54d4c330febb0ed41386291e7c3f58c725c1",
+      "capability-decoder.py": "d6612dd1dd0311d3596f80a2d32d5e0d80d31deb4046a88b0607508c67eaebb3",
+      "preflight-decoder.py": "c8a57b4d138ad95f7de48085a5e58d4895cf9122bb623eca98aaa21c7f5f55be",
+      "tools/proc_view_scope_model.py": "5bda1c8d502b8f2ea7a9f004f97be4580222d0af30bb8edd6d19812309a26f2d",
+      "tools/pinned_proc_view.py": "2676357620c11e785e290d59fe9684a2766c6a9de3f39270c3bfdfdf3ed3f5ca",
+      "tools/proc_view_capability.py": "04e1ccae4bc76d5893a0069c6623edb27faa633676a6bd63533efa39e86130b2",
+      "future_schema2_transport.cjs": "ca7d2fdcfa75f6b3f5bb1b0a1f9fc466777fa9afe7fb537463b9783e6b4041c7"
+    }
+  },
+  "preservation": {
+    "prior_tracked_files_checked": 362,
+    "prior_tracked_hashes": "UNCHANGED_EXCEPT_CONTINUATION_PREPEND",
+    "continuation_old_body_sha256": "5ba2d571ca26220184bd68e585fe7c4bf324a49bc8ea4bf3048f4b10009679e9",
+    "historical_J": "IMMUTABLE_DEVICE_UNREACHABLE_RECEIPT_NOT_REPLACED"
+  },
+  "tests": {
+    "this_stage": "NOT_RERUN_NO_RUNTIME_OR_TEST_CHANGES",
+    "historical_python342_transport12": "NOT_RERUN_NOT_ADDED",
+    "root_diagnostics4_nativeFFmpeg": "SEPARATE_UNCHANGED_NOT_COUNTED"
+  },
+  "decision": {
+    "actual_redeployment_ready": false,
+    "Vehicle10_ready": false,
+    "M2": false,
+    "numerical_decision": "PARITY_UNDETERMINED"
+  },
+  "next_action": "PARK_SAFELY_THEN_KEEP_COMMA_POWERED_WITH_IGNITION_OFF_AND_REPEAT_FRESH_FIRST_GATE",
+  "result_commit_locator": "git log -1 --format=%H -- artifacts/m19c15k_schema2_off_gate_20261027.json"
+}
