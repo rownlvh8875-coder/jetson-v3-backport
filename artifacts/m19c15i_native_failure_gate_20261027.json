@@ -1,0 +1,239 @@
+{
+  "schema": 2,
+  "stage": "M19-C1.5I",
+  "date": "2026-10-27",
+  "timezone": "Asia/Seoul",
+  "status": "PASS_OFFLINE_FAILURE_PROJECTION_AND_UNCONDITIONAL_GATE",
+  "starting_development_head": "51be5e93a40ad97ff5cb2b0b4e681f426aa35675",
+  "branch": "feature/jetlink-multimodel-carrot",
+  "scope": {
+    "actual_comma_access": false,
+    "actual_Jetson_access": false,
+    "actual_queries": 0,
+    "current_actual_source_OFF_runtime": "NOT_OBSERVED_THIS_STAGE",
+    "source_deployment": "NOT_RUN",
+    "storage_write": "NONE",
+    "ticket": "NOT_CREATED",
+    "activation": "NOT_RUN",
+    "writer_start": "NOT_RUN",
+    "capture": "NOT_RUN",
+    "frames_captured_this_stage": 0,
+    "dataset_created": "NONE",
+    "restart_reboot_Params_service_USB_updater_model_changes": "NONE"
+  },
+  "failure_projection": {
+    "schema": 2,
+    "fields": [
+      "reason_code",
+      "failure_phase",
+      "errno_code",
+      "optimization_mode",
+      "bytecode_mode"
+    ],
+    "known_reason": "EXACT_ALLOWLIST_SYMBOL_ONLY",
+    "unknown": "GENERIC_BLOCKED_NO_RAW_DETAIL",
+    "phase": "CONSTRUCT_ENTER_SCOPE_CLOSE_COMPLETE_RUNTIME_PAYLOAD",
+    "errno": "FIXED_SYMBOL_OR_NONE_OTHER",
+    "raw_error_type_message_path_PID_argv_environment_cause_chain": "NOT_EMITTED",
+    "physical_root_cause_inference": false,
+    "optimization": "REJECT_BEFORE_VIEW_CONSTRUCTION",
+    "fallback_retry_sampling_child_journal": "NONE",
+    "policy_flags": "ALL_FALSE"
+  },
+  "unconditional_decoder": {
+    "source": "tools/readonly_payload_gate.py",
+    "modes": [
+      "execute",
+      "stdout"
+    ],
+    "production_asserts": 0,
+    "guards": [
+      "OPTIMIZATION_DISABLED",
+      "BYTECODE_SUPPRESSED",
+      "BASE64_CANONICAL_AND_BOUNDED",
+      "ZLIB_SINGLE_COMPLETE_STREAM",
+      "SOURCE_SIZE_BOUNDED",
+      "EXACT_SHA_BEFORE_EXEC_OR_OUTPUT"
+    ],
+    "source_limit_bytes": 262144,
+    "compressed_limit_bytes": 1048576,
+    "base64_limit_chars": 1398104,
+    "rejection_exit": 78,
+    "stderr": "FIXED_READONLY_PAYLOAD_GATE_CODE_ONLY_FOR_GUARD_REJECTION",
+    "trusted_pinned_source_errors": "PRIVATE_CALLER_HANDLING_REQUIRED",
+    "legacy_preflight": "UNCHANGED543612_HASH_EXECUTED_ONLY_WITH_OPTIMIZATION_DISABLED",
+    "sandbox_or_producer_authentication": false
+  },
+  "payload": {
+    "schema": 2,
+    "status": "PREPARED_OFFLINE_NOT_DISPATCHED",
+    "payload_sha256": "e8116a412a79224105065c067d7b54d4c330febb0ed41386291e7c3f58c725c1",
+    "payload_bytes": 72286,
+    "source_pins": {
+      "proc_view_scope_model": "5bda1c8d502b8f2ea7a9f004f97be4580222d0af30bb8edd6d19812309a26f2d",
+      "pinned_proc_view": "2676357620c11e785e290d59fe9684a2766c6a9de3f39270c3bfdfdf3ed3f5ca",
+      "proc_view_capability": "04e1ccae4bc76d5893a0069c6623edb27faa633676a6bd63533efa39e86130b2"
+    },
+    "preflight_source_sha256": "543612044f13211444563cf20b547865baf09e84f56753166527a7f3385cb9f9",
+    "decoder_source_sha256": "5753fc0d88904106a004618cd22b3d2c2859402af1c74e2bd996d2f617f71743",
+    "asset_sha256": {
+      "native-failure-payload-v2.py": "e8116a412a79224105065c067d7b54d4c330febb0ed41386291e7c3f58c725c1",
+      "capability-decoder.py": "d6612dd1dd0311d3596f80a2d32d5e0d80d31deb4046a88b0607508c67eaebb3",
+      "preflight-decoder.py": "c8a57b4d138ad95f7de48085a5e58d4895cf9122bb623eca98aaa21c7f5f55be"
+    },
+    "required_runtime": [
+      "OPTIMIZATION_DISABLED",
+      "BYTECODE_SUPPRESSED_FROM_STARTUP"
+    ],
+    "execution": "PINNED_PREFLIGHT_AFTER_EXPLICIT_RUNTIME_AND_SHA_GUARDS_THEN_CAPABILITY_STDIN",
+    "receiver_schema": 2,
+    "legacy_schema1_transport": "NOT_COMPATIBLE_NO_AUTOMATIC_UPGRADE",
+    "actual_access": false,
+    "actual_queries": 0,
+    "policy_acceptance": false,
+    "Vehicle10_ready": false,
+    "M2": false,
+    "historical_H_result": "BLOCKED_NATIVE_CAPABILITY_CAUSE_UNKNOWN_FULL_PRE6_41_UNCONFIRMED"
+  },
+  "future_handoff": {
+    "schema": 2,
+    "status": "OFFLINE_SCHEMA2_HANDOFF_PREPARED_NOT_DISPATCHED",
+    "payload_sha256": "e8116a412a79224105065c067d7b54d4c330febb0ed41386291e7c3f58c725c1",
+    "payload_bytes": 72286,
+    "source_pins": {
+      "proc_view_scope_model": "5bda1c8d502b8f2ea7a9f004f97be4580222d0af30bb8edd6d19812309a26f2d",
+      "pinned_proc_view": "2676357620c11e785e290d59fe9684a2766c6a9de3f39270c3bfdfdf3ed3f5ca",
+      "proc_view_capability": "04e1ccae4bc76d5893a0069c6623edb27faa633676a6bd63533efa39e86130b2"
+    },
+    "preflight_source_sha256": "543612044f13211444563cf20b547865baf09e84f56753166527a7f3385cb9f9",
+    "decoder_source_sha256": "5753fc0d88904106a004618cd22b3d2c2859402af1c74e2bd996d2f617f71743",
+    "asset_sha256": {
+      "native-failure-payload-v2.py": "e8116a412a79224105065c067d7b54d4c330febb0ed41386291e7c3f58c725c1",
+      "capability-decoder.py": "d6612dd1dd0311d3596f80a2d32d5e0d80d31deb4046a88b0607508c67eaebb3",
+      "preflight-decoder.py": "c8a57b4d138ad95f7de48085a5e58d4895cf9122bb623eca98aaa21c7f5f55be"
+    },
+    "required_runtime": [
+      "OPTIMIZATION_DISABLED",
+      "BYTECODE_SUPPRESSED_FROM_STARTUP"
+    ],
+    "execution": "PINNED_PREFLIGHT_AFTER_EXPLICIT_RUNTIME_AND_SHA_GUARDS_THEN_CAPABILITY_STDIN",
+    "receiver_schema": 2,
+    "legacy_schema1_transport": "NOT_COMPATIBLE_NO_AUTOMATIC_UPGRADE",
+    "actual_access": false,
+    "actual_queries": 0,
+    "policy_acceptance": false,
+    "Vehicle10_ready": false,
+    "M2": false,
+    "historical_H_result": "BLOCKED_NATIVE_CAPABILITY_CAUSE_UNKNOWN_FULL_PRE6_41_UNCONFIRMED",
+    "transport_sha256": "ca7d2fdcfa75f6b3f5bb1b0a1f9fc466777fa9afe7fb537463b9783e6b4041c7",
+    "transport_fixture_sha256": "82cef8237841ed07418f2a2b97a4d6be47b9db44c22a7f0bb3ca5405370512b1",
+    "transport_fixture_log_sha256": "847beb699e03d50661bd98cf1f9f4fdcba10018d75b6fbe8a5316e5876394196",
+    "transport_fixture_pass": 12,
+    "transport_fixture_fail": 0,
+    "transport_fixture_skip": 0,
+    "transport_cases": "11_VM_FAKE_IO_AND_ONE_LOCAL_WSL_POSIX_QUOTING",
+    "syntax": "NODE_CHECK_PASS",
+    "address": "REDACTED_FUTURE_REVALIDATION_REQUIRED",
+    "fresh_preconditions": [
+      "FIRST_OFF_ON_CATS_1_0",
+      "GENUINE_OFF",
+      "EXACT_SOURCE_PROFILE",
+      "CLEAN_NAMESPACE_PRIVATE_STORAGE",
+      "PINNED_DECODER_AND_PAYLOAD_SHA",
+      "SCHEMA2_RECEIVER_BINDING"
+    ],
+    "actual_dispatches": 0,
+    "actual_redeployment_ready": false
+  },
+  "historical_preservation": {
+    "H_actual_status": "BLOCKED_NATIVE_CAPABILITY",
+    "H_reason": "UNKNOWN_NOT_RECONSTRUCTED",
+    "H_full_PRE6_41_assurance": "UNCONFIRMED_NOT_UPGRADED",
+    "old_be13_payload_sha256": "be13b17d4318d4dd0b9c0ff7e9f1e620c49a9690a5143092af44a0b98bf71767",
+    "old_actual_sources_receipts_patches_pins": "UNCHANGED",
+    "unchanged_prior_tracked_hashes": 351,
+    "unchanged_historical_private_hashes": 561,
+    "authorized_old_file_change": "tools/proc_view_capability.py_AND_CONTINUATION_PREPEND_ONLY",
+    "capability_before_sha256": "b3d1e0485e80a37c55d55ca3a61181d864d94a814ff553d6847ec06d94f19edd",
+    "continuation_old_body_sha256": "ed8e9022ec1f6d8ddcfbded558eb4d76db651013bc4b264a7b8607bf347e4abc",
+    "baseline_manifest_sha256": "fab9e26c02962c5007353a27459d3817da867ae17995be956bac614e30078bd6"
+  },
+  "validation": {
+    "status": "PASS_FRESH_RELEVANT_OFFLINE_CPU_POSIX",
+    "pass": 342,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "unique": 342,
+    "duplicates": 0,
+    "new_tests": 52,
+    "retained_existing_tests": 290,
+    "groups": {
+      "tests.test_proc_view_failure_projection": 25,
+      "tests.test_readonly_payload_gate": 21,
+      "tests.test_proc_view_payload_v2": 6,
+      "tests.test_proc_view_capability": 9,
+      "tests.test_proc_view_journal": 32,
+      "tests.test_proc_view_sampler": 30,
+      "tests.test_proc_view_observer": 19,
+      "tests.test_pinned_proc_view": 65,
+      "tests.test_proc_view_scope_model": 74,
+      "tests.test_comma_process_sampler": 61
+    },
+    "sources": {
+      "tools/proc_view_capability.py": "04e1ccae4bc76d5893a0069c6623edb27faa633676a6bd63533efa39e86130b2",
+      "tools/readonly_payload_gate.py": "5753fc0d88904106a004618cd22b3d2c2859402af1c74e2bd996d2f617f71743",
+      "tests/test_proc_view_failure_projection.py": "b1e97558be0c6da822f2aa1743e1382956fbb637f9a178be98662cc397038c15",
+      "tests/test_readonly_payload_gate.py": "b939c761eec61e76fb581fb218ec9cfeed6fb6cb8bf7bd562a702fbb1096aad5",
+      "tests/test_proc_view_payload_v2.py": "b5af11e10fbb21fc4e8630b8c8586aed79a13ce3f73c7924fb26505924dd8706"
+    },
+    "junit_sha256": "3b499719dd1831ec0c0647e8dea8dac185bf64da6566a38d791404591df09e2f",
+    "red_receipts": {
+      "projection-red.xml": "7d5182593c68264915922cb5d6ec8130257f13c6ff2a1ff19ae4fc3347939282",
+      "decoder-red-final.xml": "1d0b37eaae11316e29f1a81aaff3f5affc7897d32753839f4c84ac9e0a97f719",
+      "payload-red.xml": "1d4db43ba3d3f76a18aa49b9485f7d72d06f4e5580b1048f29ce878f03cd2814"
+    },
+    "preserved": [
+      351,
+      561
+    ],
+    "historical_counts": "NOT_ADDED",
+    "root_diagnostics4_nativeFFmpeg": "SEPARATE_NOT_RERUN_NOT_COUNTED",
+    "actual_access": false,
+    "installs": "NONE"
+  },
+  "independent_code_review": {
+    "status": "PASS_STATIC_WHOLE_CHANGE_REVIEW",
+    "receipt_sha256": "3abaa7fa5537926288b87ddc0a09071bac0c29564e888a0c2270908bdd0629ab",
+    "method": "STATIC_DATA_HASH_XML_INSPECTION_NO_EXECUTION"
+  },
+  "transport_validation": {
+    "pass": 12,
+    "fail": 0,
+    "skip": 0,
+    "kind": "11_VM_FAKE_TRANSPORT_AND_ONE_LOCAL_WSL_POSIX_QUOTING",
+    "separate_from_python342": true,
+    "log_sha256": "847beb699e03d50661bd98cf1f9f4fdcba10018d75b6fbe8a5316e5876394196",
+    "first_quote_failure_retained": true,
+    "actual_endpoint_use": false
+  },
+  "limitations": [
+    "ACTUAL_H_CAUSE_REMAINS_UNKNOWN",
+    "NO_NEW_DEVICE_NATIVE_ABI_OR_VISIBILITY_PROOF",
+    "FRESH_OFF_SOURCE_GATES_REQUIRED_BEFORE_ANY_FUTURE_QUERY",
+    "EXPECTED_PINS_REQUIRE_EXTERNAL_TRUST",
+    "SOURCE_EXECUTION_IS_NOT_A_SANDBOX",
+    "LITERAL_MINUS_B_FROM_STARTUP_REMAINS_REQUIRED",
+    "JSON_FORMATTING_OF_BLOCKED_RECEIPT_SUPPRESSES_BYTECODE_BUT_CANNOT_UNDO_STARTUP_WRITES_WITHOUT_MINUS_B",
+    "NO_GLOBAL_PROCESS_HELPER_POLICY_OR_REDEPLOYMENT_APPROVAL"
+  ],
+  "readiness": {
+    "schema2_readonly_candidate": "OFFLINE_PREPARED_NOT_DISPATCHED",
+    "actual_redeployment": false,
+    "Vehicle10": false,
+    "M2": false,
+    "numerical_decision": "PARITY_UNDETERMINED"
+  },
+  "next_action": "FRESH_OFF_SOURCE_PROFILE_AND_ASSET_SHA_REVALIDATION_THEN_AT_MOST_ONE_SCHEMA2_READ_ONLY_FAILURE_QUERY_NO_SAMPLING_DEPLOYMENT_OR_TICKET",
+  "result_commit_locator": "git log -1 --format=%H -- artifacts/m19c15i_native_failure_gate_20261027.json"
+}

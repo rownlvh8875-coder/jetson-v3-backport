@@ -1,3 +1,35 @@
+# Latest continuation — M19-C1.5I offline failure projection/gate · 2026-10-27
+
+## PASS_OFFLINE_FAILURE_PROJECTION_AND_UNCONDITIONAL_GATE — no actual query
+
+Read docs/M19C15I_NATIVE_FAILURE_GATE_20261027.md and
+artifacts/m19c15i_native_failure_gate_20261027.json first. Schema2 capability adds
+closed reason/phase/errno/runtime modes; no raw private error fields. Native
+requirements/strict defaults unchanged. Optimized probe rejects before view.
+Standalone decoder explicitly guards optimization/-B/encoding/zlib/size/SHA
+before trusted preflight exec or capability stdout; no production assert gate.
+Legacy543612preflight unchanged; permitted only under explicit optimization0.
+
+Prepared72286-byte schema2payloadSHAe8116a412a79224105065c067d7b54d4c330febb0ed41386291e7c3f58c725c1
+plus pinned decoders and strict schema2 private transport, NOT_DISPATCHED. It
+rejects oldschema1 and binds decoder SHA/POSIX quoting. Fresh OFF/source/profile/
+storage/namespace and exact asset-SHA gates required before any future1query.
+Python342uniquePASS=52new+290retained,0fail/error/skip. Separate12transportPASS
+(11VM+1localWSLquoting); intermediate/historical totals notadded. Root/diagnostics4/
+nativeFFmpeg blockers separate.351tracked+561historical-private hashes held.
+
+No actual comma/Jetson access/query, deployment, storage write, ticket/activation/
+writer/capture/restart/Params/service/USB/updater/model change. Frames0/datasetNONE.
+Currentactualsource/OFF NOT_OBSERVED. Oldbe13payload/Hreceipts preserved: Hnative
+BLOCKED/causeUNKNOWN/fullPRE6-41UNCONFIRMED, not upgraded. Expectedpins require
+independenttrust; decoder is notsandbox. -B required fromstartup; flags alone
+cannot undo earlier writes. Global/helperpolicy/redeployment/Vehicle10NO;M2NO;
+parityUNDETERMINED. Next: fresh OFF/source/profile/asset-SHA then at most one
+schema2 readonly failure query; no automatic sampling, recorder or ticket.
+Result commit:git log -1 --format=%H -- artifacts/m19c15i_native_failure_gate_20261027.json
+
+---
+
 # Latest continuation — M19-C1.5H actual native capability · 2026-10-27
 
 ## BLOCKED_NATIVE_CAPABILITY — one query, full profile assurance unconfirmed
