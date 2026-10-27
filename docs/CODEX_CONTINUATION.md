@@ -1,3 +1,33 @@
+# Latest continuation — M19-C1.5O protected scope endpoints · 2026-10-27
+
+## PASS_OFFLINE_SCOPE_INTEGRATION_ONLY — no actual query/deployment
+
+Read docs/M19C15O_OPENAT2_SCOPE_INTEGRATION_20261027.md and
+artifacts/m19c15o_openat2_scope_integration_20261027.json. Start c5e69c9 CLEAN/equal.
+New separate inspect_protected_scope uses a fresh continuous root/owner/fdinfo
+lease for bootstrap plus every strict scope endpoint. No closed N receipt reuse.
+Fixed openat2 guards below root, old mount/stat validators, boot/namespace/mount
+endpoints, owner/FD/mount-ID/named-root end checks and successful all-close required.
+N64open/4096read/16KiB limits unchanged; large input rejects, no truncation/waiver.
+Distinct OPENAT2_ENDPOINT_SCOPE_V1/private backend; no full ProcView/provider,
+generation/metadata/exe/child/journal/sampler/payload/decoder integration. All
+namespace/global/temporal/negative-witness/lifetime/policy/fallback flags false.
+Independent review found P2 validation-ENOENT laundering; 2RED cases reproduced,
+native-open origin tag fixed it; independent52 PASS and code/proof reapproval.
+Fresh458 unique local PASS =406 retained +52 new,0fail/error/skip; no reruns added.
+Real local native scope: REJECTED UNREVIEWED_SUBMOUNT, no FD leak, no profile
+waiver; separate from injected success. Actual support NOT_RUN/UNKNOWN. Prior
+L blocker unchanged.376 old files preserved outside prepend; N/strict defaults/
+modules/schema2/patches/pins/receipts unchanged. No actual comma/Jetson access,
+source/Params/storage/updater/service/USB/model changes, ticket/capture/restart
+or branch retarget. Current actual identity NOT_READ. Wip runtime unapproved.
+Next: OFFLINE separate source-pinned capability-only payload/receiver review;
+actual query still NO. Complete process-provider adaptation remains separate.
+Vehicle10NO; M2NO; parityUNDETERMINED.
+Result commit:git log -1 --format=%H -- artifacts/m19c15o_openat2_scope_integration_20261027.json
+
+---
+
 # Latest continuation — M19-C1.5N local openat2 bootstrap · 2026-10-27
 
 ## PASS_LOCAL_BOOTSTRAP_ONLY — actual capability/deployment gates remain closed
